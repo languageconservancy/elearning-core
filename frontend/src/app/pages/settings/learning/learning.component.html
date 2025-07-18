@@ -1,0 +1,95 @@
+<div class="px-lg-3 py-lg-2">
+    <div class="row align-items-center">
+        <div class="col-5">
+            <h4 class="text-left settings-path-label">Learning Path</h4>
+        </div>
+        <div class="col-7">
+            <div class="learning-drop">
+                <div class="dropdown">
+                    <button
+                        class="lrn-drop py-2 p-lg-3 dropdown-toggle text-wrap"
+                        data-display="static"
+                        type="button"
+                        id="learningPath"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                    >
+                        <span *ngIf="currentPath">{{ currentPath.label }}</span>
+                        <span *ngIf="!currentPath">Select Learning Path</span>
+                    </button>
+                    <div
+                        id="learning-path-dropped-menu"
+                        class="dropdown-menu dropdown-menu-right"
+                        aria-labelledby="dropdownMenuButton"
+                    >
+                        <div class="dropdown-menu-wrap">
+                            <div class="path-check" *ngFor="let path of learningPaths; let i = index">
+                                <div class="form-row">
+                                    <div class="col-9">
+                                        <dl>
+                                            <dt>{{ path.label }}</dt>
+                                            <dd class="secondary-font-size">{{ path.description }}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="custom-control custom-radio">
+                                            <input
+                                                id="path-{{ i + 1 }}"
+                                                name="radio-stacked-path"
+                                                type="radio"
+                                                value="{{ path.id }}"
+                                                class="custom-control-input"
+                                                required=""
+                                                [checked]="user.learningpath_id === path.id"
+                                                (change)="pathChanged(path)"
+                                            />
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 text-left">
+        <p>More committed learners will gain extra points when they accomplish their goals.</p>
+        <p>How committed are you to learning {{ environment.LANGUAGE }}?</p>
+    </div>
+    <div class="mt-2">
+        <div class="path-check" *ngFor="let speed of learningSpeeds; let j = index">
+            <div class="form-row">
+                <div class="col-6">
+                    <dl>
+                        <dt>
+                            <h5>{{ speed.label }}</h5>
+                        </dt>
+                    </dl>
+                </div>
+                <div class="col-3 col-md-4">
+                    <dl>
+                        <dd class="secondary-font-size">{{ speed.description }}</dd>
+                    </dl>
+                </div>
+                <div class="col-3 col-md-2">
+                    <label class="custom-control custom-radio">
+                        <input
+                            id="speed-{{ j + 1 }}"
+                            name="radio-stacked-speed"
+                            type="radio"
+                            value="{{ speed.id }}"
+                            class="custom-control-input"
+                            required=""
+                            [checked]="user.learningspeed_id === speed.id"
+                            (change)="speedChanged(speed)"
+                        />
+                        <span class="custom-control-indicator rounded-pill"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

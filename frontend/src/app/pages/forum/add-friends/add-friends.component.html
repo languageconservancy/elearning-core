@@ -1,0 +1,107 @@
+<app-friend-sidebar></app-friend-sidebar>
+<app-page-title [pageTitle]="'Add Friends'"></app-page-title>
+
+<div class="row mt-2">
+    <div class="col">
+        <div class="row justify-content-center">
+            <div class="col">
+                <div class="d-flex short-by-fld">
+                    <input
+                        type="text"
+                        name="searchTxt"
+                        [(ngModel)]="searchItem.search"
+                        class="form-control input-default seoc-btn-width"
+                        placeholder="Search here"
+                        aria-label="Search here"
+                        aria-describedby="basic-addon2"
+                        (input)="search()"
+                    />
+                    <span [hidden]="searchItem.search === ''" class="icon-close" (click)="clear()">
+                        <i class="fa fa-times-circle"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center text-center units-container mx-0">
+    <div class="col-12 l-speed">
+        <div class="row justify-content-start" *ngIf="friends.length > 0">
+            <div *ngFor="let friend of friends" class="logo-container-box forum-box col-12">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="profile-pic-section">
+                            <div class="forum-profile-pic" (click)="goToProfile(friend)">
+                                <img *ngIf="!friend.image" src="./assets/images/user_img.png" />
+                                <img *ngIf="friend.image" [src]="friend.image" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="forum-content pb-0">
+                            <div class="row">
+                                <div class="col cursor-pointer" (click)="goToProfile(friend)">
+                                    <h4>{{ friend.name }}</h4>
+                                </div>
+                            </div>
+
+                            <p *ngIf="friend.profile_desc">{{ friend.profile_desc }}</p>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div
+                                [ngClass]="{
+                                    'friends-btn': friend.friendstatus,
+                                    'add-friends-btn': !friend.friendstatus,
+                                }"
+                            >
+                                <a
+                                    (click)="friendAddRemove(1, friend)"
+                                    *ngIf="!friend.friendstatus"
+                                    href="javascript:void(0)"
+                                    >Add Friend</a
+                                >
+                                <a
+                                    (click)="friendAddRemove(0, friend)"
+                                    *ngIf="friend.friendstatus"
+                                    href="javascript:void(0)"
+                                    >Friends</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <img src="./assets/images/ro-red.png" class="w-4 mt-1 mx-1" />
+                        <img src="./assets/images/btn-review.png" class="w-4 mt-1 mx-1" />
+                        <img
+                            *ngIf="friend.userType === 'google'"
+                            src="./assets/images/google_img.png"
+                            alt=""
+                            class="w-4 mt-2 mx-1"
+                        />
+                        <img
+                            *ngIf="friend.userType === 'fb'"
+                            src="./assets/images/face-icon.png"
+                            alt=""
+                            class="w-4 mt-2 mx-1"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="forum-box col-12" *ngIf="friends.length > limit">
+                <button
+                    type="button"
+                    *ngIf="allUsers.length !== friends.length"
+                    class="btn btn-primary btn-load-more"
+                    (click)="loadMore()"
+                >
+                    Load More Users
+                </button>
+            </div>
+        </div>
+        <div class="row justify-content-center text-center" *ngIf="friends.length < 1">
+            <div class="col-12 text-center">
+                <h3 class="text-white no-units">No friends to show</h3>
+            </div>
+        </div>
+    </div>
+</div>

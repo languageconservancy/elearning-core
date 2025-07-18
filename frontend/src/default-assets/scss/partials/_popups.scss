@@ -1,0 +1,71 @@
+@use "../modules/theme";
+@use "../modules/variables";
+@use "../modules/bootstrap-helpers";
+@use "../modules/mixins";
+
+.result-box {
+    max-width: 400px;
+    background: theme.$primary-color-dark;
+    border-width: 10px;
+    border-style: solid;
+    border-radius: 155px;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    margin-bottom: 30px;
+    -webkit-box-shadow: 5px 5px 5px #00000026;
+    box-shadow: 5px 5px 5px #00000026;
+    z-index: bootstrap-helpers.$zindex-fixed;
+    text-align: center;
+    left: 44%;
+    left: 0;
+    right: 0;
+    animation-name: pop-up;
+    animation-timing-function: ease-in;
+    @include bootstrap-helpers.media-breakpoint-down(md) {
+        bottom: 15%;
+    }
+    @include bootstrap-helpers.media-breakpoint-up(lg) {
+        top: 30%;
+    }
+}
+.result-box-success {
+    border-color: theme.$correct-color;
+}
+.result-box-fail {
+    border-color: theme.$incorrect-color;
+}
+.result-box h1 {
+    font-size: 30px;
+    line-height: 52px;
+    font-weight: bold;
+    color: theme.$text-primary-contrast;
+    padding-bottom: 0px;
+    padding-top: 17px;
+}
+.result-box-feather {
+    position: absolute;
+    left: -20px;
+    // top: -10px;
+    bottom: 50%;
+    @include mixins.transformTranslate(0, 50%);
+    width: 66px;
+}
+.result-box-feather img {
+    max-width: 100%;
+}
+.result-rewards {
+    position: relative;
+}
+.result-rewards h6 {
+    font-size: 30px;
+    color: theme.$text-primary-contrast;
+}
+
+#update-modal {
+    animation: fadeIn 0.3s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

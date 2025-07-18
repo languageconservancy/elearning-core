@@ -1,0 +1,147 @@
+<div *ngIf="!!frame && frame.lesson_frame_blocks?.length > 0" class="block-container-box">
+    <!-- Frame Audio -->
+    <a
+        *ngIf="frame.FrameAudioUrl"
+        class="pull-right"
+        href="javascript:void(0);"
+        (click)="playAudio(frame.FrameAudioUrl)"
+    >
+        <img
+            *ngIf="audioService.getAudioSrc() !== frame.FrameAudioUrl || audioService.audioIsPaused()"
+            src="./assets/images/sound-mute-blue-btn.png"
+        />
+        <img
+            *ngIf="audioService.getAudioSrc() === frame.FrameAudioUrl && !audioService.audioIsPaused()
+                && audioService.audioType === 'frame'"
+            src="./assets/images/sound-blue-btn.png"
+        />
+    </a>
+
+    <div class="row justify-content-evenly align-items-center no-gutters">
+        <!-- One or two blocks (wrapped) -->
+        <ng-container *ngIf="frame.number_of_block === 1 || frame.number_of_block === 2">
+            <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[0], idx: 0 }">
+            </ng-container>
+            <ng-container *ngIf="frame.number_of_block === 2">
+                <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[1], idx: 1 }">
+                </ng-container>
+            </ng-container>
+        </ng-container>
+
+        <!-- Three blocks -->
+        <ng-container *ngIf="frame.number_of_block === 3">
+            <!-- Small screens -->
+            <div class="col d-lg-none d-block">
+                <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[0], idx: 0 }">
+                </ng-container>
+                <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[1], idx: 1 }">
+                </ng-container>
+                <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[2], idx: 2 }">
+                </ng-container>
+            </div>
+            <!-- Large screens -->
+            <div class="col-lg-6 d-none d-lg-block">
+                <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[0], idx: 0 }">
+                </ng-container>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[1], idx: 1 }">
+                </ng-container>
+                <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[2], idx: 2 }">
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<div *ngIf="!frame || frame.lesson_frame_blocks?.length <= 0" class="block-container-box">
+    <div class="text-center">
+        <p class="font-language">Lesson frame is empty</p>
+    </div>
+</div>
+
+<ng-template #frameBlock let-block="block" let-idx="idx">
+    <div id="block-{{ idx }}" class="blue-border" (click)="checkAudio(block, 'block-' + idx)">
+        <!-- Card Audio -->
+        <a
+            *ngIf="block.is_card_audio === 'Y' && block.CardDetails.FullAudioUrl"
+            class="pull-right"
+            href="javascript:void(0);"
+        >
+            <i
+                class="fa-solid fa-volume-off"
+                *ngIf="audioService.getAudioSrc() !== block.CardDetails.FullAudioUrl || audioService.audioIsPaused()
+                    || audioService.audioType !== 'block-' + idx"
+            ></i>
+            <i
+                class="fa-solid fa-volume-high"
+                *ngIf="audioService.getAudioSrc() === block.CardDetails.FullAudioUrl && !audioService.audioIsPaused()
+                    && audioService.audioType === 'block-' + idx"
+            ></i>
+        </a>
+        <div class="text-center position-relative" *ngIf="block.type === 'card'">
+            <!-- Card Language text -->
+            <p
+                class="lakota-text px-10 font-language"
+                *ngIf="block.is_card_lakota === 'Y' && block.CardDetails.lakota"
+                [innerHTML]="block.CardDetails.lakota | safeHtml"
+            ></p>
+            <!-- Card Image -->
+            <span class="">
+                <app-image-zoom
+                    clazz="lesson-card-image"
+                    *ngIf="block.is_card_image === 'Y' && block.CardDetails.image"
+                    [src]="block.CardDetails.image.ResizeImageUrl"
+                    alt="{{ block.CardDetails.image.name }}"
+                    (error)="imageError($event, 0)"
+                >
+                </app-image-zoom>
+            </span>
+            <!-- Card Video -->
+            <div
+                *ngIf="block.is_card_video === 'Y' && block.CardDetails.video && block.is_card_image !== 'y'"
+                class="text-center"
+            >
+                <video controls controlslist="nodownload" autoplay="false" preload="auto" class="lesson-video">
+                    <source [src]="block.CardDetails.video.FullUrl" />
+                </video>
+            </div>
+            <!-- Card English text -->
+            <p
+                class="lesson-english-text mt-4 font-language"
+                *ngIf="block.is_card_english === 'Y' && block.CardDetails.english"
+                [innerHTML]="block.CardDetails.english | safeHtml"
+            ></p>
+        </div>
+        <!-- Custom HTML block -->
+        <div
+            class="text-center custom-html-lesson font-language"
+            *ngIf="block.type === 'html'"
+            [innerHTML]="block.custom_html | safeHtml"
+        ></div>
+        <!-- Audio block -->
+        <div class="text-center" *ngIf="block.type === 'audio'">
+            <a class="frame-audio-file" href="javascript:void(0);">
+                <i
+                    class="fa-solid fa-volume-off"
+                    *ngIf="audioService.getAudioSrc() !== block.AudioUrl || audioService.audioIsPaused()"
+                ></i>
+                <i
+                    class="fa-solid fa-volume-high"
+                    *ngIf="audioService.getAudioSrc() === block.AudioUrl && !audioService.audioIsPaused()
+                        && audioService.audioType === 'block-' + idx"
+                ></i>
+            </a>
+        </div>
+        <!-- Image block -->
+        <div class="blue-border p-2 text-center" id="box-{{ idx + 1 }}" *ngIf="block.type === 'image'">
+            <app-image-zoom [src]="block.ImageUrl" clazz="lesson-image-block" (load)="setBlockSizes()"></app-image-zoom>
+        </div>
+        <!-- Video block -->
+        <div *ngIf="block.type === 'video'" class="text-center">
+            <video controls controlslist="nodownload" autoplay="false" preload="auto" class="lesson-video">
+                <source [src]="block.VideoUrl" />
+            </video>
+        </div>
+    </div>
+</ng-template>

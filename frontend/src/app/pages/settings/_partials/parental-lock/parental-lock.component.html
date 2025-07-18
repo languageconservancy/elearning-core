@@ -1,0 +1,51 @@
+<div
+    class="modal fade modal-n"
+    id="parentalLockInput"
+    data-backdrop="static"
+    data-keyboard="false"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ParentalLock"
+>
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="myModalLabel">Parental Lock</h3>
+                <button type="button" class="close" aria-label="Close" (click)="backToDashboard()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form
+                name="parentalLockInputForm"
+                [formGroup]="parentalLockInputForm"
+                (submit)="checkParentalLock(parentalLockInputForm)"
+            >
+                <div class="modal-body modal-n-table">
+                    <input
+                        type="password"
+                        class="form-control input-default seoc-btn-width"
+                        formControlName="parentalLock"
+                        name="parentalLock"
+                        [ngClass]="{
+                            'has-error':
+                                parentalLockInputForm.controls.parentalLock.invalid &&
+                                parentalLockInputForm.controls.parentalLock.touched,
+                        }"
+                        placeholder="Parental Lock Code"
+                    />
+                </div>
+                <div class="modal-footer parental-lock-btn code-verify">
+                    <button
+                        type="button"
+                        class="btn btn-gray-text-hover"
+                        data-dismiss="modal"
+                        (click)="backToDashboard()"
+                    >
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+<app-page-title [pageTitle]="'Contact Us'"></app-page-title>
+<div class="row justify-content-center text-center">
+    <div class="col col-md-8 col-lg-6 sign-up-box success">
+        <p>
+            Are you having any trouble? Find
+            <a href="javascript:void()" (click)="urlLink('help')">help</a> here
+        </p>
+        <form name="contactUsForm" [formGroup]="contactUsForm">
+            <span
+                [ngClass]="{
+                    tick:
+                        contactUsForm.value.name &&
+                        !contactUsForm.controls.name.invalid &&
+                        contactUsForm.controls.name.touched,
+                }"
+            >
+                <input
+                    id="name-input"
+                    formControlName="name"
+                    [ngClass]="{
+                        'has-error':
+                            contactUsForm.value.name &&
+                            contactUsForm.controls.name.invalid &&
+                            contactUsForm.controls.name.touched,
+                    }"
+                    class="form-control input-default seoc-btn-width no-virtual-keyboard"
+                    type="text "
+                    placeholder="Name"
+                    (click)="hideVirtualKeyboard()"
+                />
+            </span>
+            <span
+                [ngClass]="{
+                    tick:
+                        contactUsForm.value.email &&
+                        !contactUsForm.controls.email.invalid &&
+                        contactUsForm.controls.email.touched,
+                }"
+            >
+                <input
+                    id="email-input"
+                    formControlName="email"
+                    class="form-control input-default seoc-btn-width no-virtual-keyboard"
+                    [ngClass]="{
+                        'has-error':
+                            contactUsForm.value.email &&
+                            contactUsForm.controls.email.invalid &&
+                            contactUsForm.controls.email.touched,
+                    }"
+                    type="email"
+                    placeholder="Email"
+                    inputmode="email"
+                    (click)="hideVirtualKeyboard()"
+                />
+            </span>
+            <span
+                [ngClass]="{
+                    tick:
+                        contactUsForm.value.issue &&
+                        !contactUsForm.controls.issue.invalid &&
+                        contactUsForm.controls.issue.touched,
+                }"
+            >
+                <select
+                    name="Issue List"
+                    class="form-control seoc-btn-contact-us seoc-btn-width"
+                    [ngClass]="{
+                        'has-error':
+                            contactUsForm.value.issue &&
+                            contactUsForm.controls.issue.invalid &&
+                            contactUsForm.controls.issue.touched,
+                    }"
+                    formControlName="issue"
+                    id="issue"
+                    (click)="hideVirtualKeyboard()"
+                >
+                    <option value="">Select issue</option>
+                    <option *ngFor="let issue of issueList" value="{{ issue.name }}">
+                        {{ issue.name }}
+                    </option>
+                </select>
+            </span>
+            <span
+                [ngClass]="{
+                    tick:
+                        contactUsForm.value.problemdetails &&
+                        !contactUsForm.controls.problemdetails.invalid &&
+                        contactUsForm.controls.problemdetails.touched,
+                }"
+            >
+                <input
+                    id="problemdetails"
+                    formControlName="problemdetails"
+                    appScrollIntoView
+                    [ngClass]="{
+                        'has-error':
+                            contactUsForm.value.problemdetails &&
+                            contactUsForm.controls.problemdetails.invalid &&
+                            contactUsForm.controls.problemdetails.touched,
+                    }"
+                    class="form-control input-default seoc-btn-width rounded-6 font-language"
+                    type="text"
+                    placeholder="Problem details"
+                    inputmode="none"
+                    autocomplete="off"
+                    (focus)="setActiveInput($event)"
+                    (click)="showVirtualKeyboard()"
+                />
+            </span>
+        </form>
+
+        <div class="seoc-btn-width mx-auto">
+            <button
+                type="submit"
+                id="contact-us-send-btn"
+                class="btn btn-white float-right"
+                (click)="contactUsSend(contactUsForm)"
+            >
+                Send
+            </button>
+        </div>
+    </div>
+</div>
+
+<app-virtual-keyboard
+    #virtualKeyboard
+    [inputs]="inputs"
+    [debug]="!environment.production"
+    [customClass]="'contactUsKeyboard'"
+    (newVirtualKeyPress)="virtualKeyPressed($event)"
+    (newPhysicalKeyPress)="physicalKeyPressed($event)"
+    (inputValueChanged)="onInputValueChange($event)"
+    class="fixed-bottom"
+></app-virtual-keyboard>

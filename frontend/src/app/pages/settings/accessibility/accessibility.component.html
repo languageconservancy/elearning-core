@@ -1,0 +1,26 @@
+<div class="notify-detail">
+    <div class="text-left">
+        <p>
+            Visual and Hearing impairments should not detract from your learning {{ environment.LANGUAGE }}. Please use
+            the online version of {{ environment.SITE_NAME }} if you are visually impaired.
+        </p>
+    </div>
+    <div class="scroll-y">
+        <div class="path-check">
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-9 col-lg-9">
+                    <dl>
+                        <dt>Hearing Impaired</dt>
+                        <dd>Turn off Audio Functionality</dd>
+                    </dl>
+                </div>
+                <div class="col-xs-12 col-sm-3 col-lg-3">
+                    <label class="switch">
+                        <input type="checkbox" disabled [(ngModel)]="hearing.checked" (change)="setHearingImpaired()" />
+                        <span class="slider round greyed-out"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

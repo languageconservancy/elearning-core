@@ -1,0 +1,391 @@
+<app-friend-sidebar></app-friend-sidebar>
+<app-page-title [pageTitle]="'Post Details'"></app-page-title>
+<div class="row justify-content-center text-center">
+    <div class="col-12 l-speed">
+        <div class="row justify-content-start forum-box" *ngIf="!noPostFlag">
+            <!-- row starts-->
+            <div class="logo-container-box forum-box col-12 blue-border bg-white pb-3">
+                <div class="row mx-1">
+                    <div class="col-2 px-0">
+                        <div class="profile-pic-section">
+                            <div class="forum-profile-pic" (click)="goToProfile(postDetails?.user)">
+                                <img
+                                    *ngIf="
+                                        !postDetails?.user ||
+                                        (postDetails?.user &&
+                                            !postDetails?.user?.usersetting?.FullProfileImageUrl)
+                                    "
+                                    src="./assets/images/user_img.png"
+                                />
+                                <img
+                                    *ngIf="postDetails?.user?.usersetting?.FullProfileImageUrl"
+                                    [src]="postDetails?.user?.usersetting.FullProfileImageUrl"
+                                />
+                            </div>
+                            <h4
+                                *ngIf="postDetails?.user_id === user.id"
+                                (click)="goToProfile(postDetails?.user)"
+                            >
+                                You
+                            </h4>
+                            <h4
+                                *ngIf="postDetails?.user_id !== user.id"
+                                (click)="goToProfile(postDetails?.user)"
+                                class="text-break"
+                            >
+                                {{ postDetails?.user?.name }}
+                            </h4>
+                            <div class="forum-profile-logos">
+                                <a href="javascript:void(0)"
+                                    ><img
+                                        *ngIf="
+                                            postDetails?.user?.badge?.socialpoint &&
+                                            postDetails?.user?.badge?.socialpoint > 4
+                                        "
+                                        [src]="
+                                            imgfunc(
+                                                postDetails?.user?.badge?.socialpoint,
+                                                'socialpoint'
+                                            )
+                                        "
+                                /></a>
+                                <a href="javascript:void(0)"
+                                    ><img
+                                        *ngIf="
+                                            postDetails?.user?.badge?.firebadges &&
+                                            postDetails?.user?.badge?.firebadges?.fire_days > 0
+                                        "
+                                        [src]="
+                                            imgfunc(
+                                                postDetails?.user?.badge?.firebadges,
+                                                'firebadges'
+                                            )
+                                        "
+                                /></a>
+                                <a
+                                    href="javascript:void(0)"
+                                    *ngIf="postDetails?.user?.badge?.levelbadge"
+                                >
+                                    <span
+                                        *ngFor="
+                                            let levelbadgeImg of postDetails?.user?.badge
+                                                ?.levelbadge | badgeImage
+                                        "
+                                    >
+                                        <img [src]="levelbadgeImg.image" />
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- <div class="col-sm-3"> -->
+                        <a
+                            href="javascript:void(0)"
+                            *ngIf="
+                                user.id !== postDetails?.user_id ||
+                                user.role_id === 4 ||
+                                user.role_id === 1
+                            "
+                            class="report-post"
+                            (click)="openReportPostModal(postDetails)"
+                        >
+                            <img src="./assets/images/report.png" alt="" title="Report this post" />
+                        </a>
+                        <!-- </div> -->
+                    </div>
+                    <div class="col-10">
+                        <div class="forum-content">
+                            <h4 class="font-language">{{ postDetails?.title }}</h4>
+                            <h6>
+                                {{ postDetails?.entry_time }} -
+                                {{ postDetails?.viewer_count }} views
+                                <a
+                                    href="javascript:void(0);"
+                                    *ngIf="
+                                        postDetails?.user_id === user.id ||
+                                        user.role_id === 4 ||
+                                        user.role_id === 1
+                                    "
+                                    (click)="editPostModal('newPost', 'edit', postDetails)"
+                                >
+                                    - Edit</a
+                                >
+                                <a
+                                    href="javascript:void(0);"
+                                    *ngIf="
+                                        postDetails?.user_id === user.id ||
+                                        user.role_id === 4 ||
+                                        user.role_id === 1
+                                    "
+                                    (click)="deletePost(postDetails)"
+                                >
+                                    - Delete</a
+                                >
+                            </h6>
+                            <p class="prewrap font-language">{{ postDetails?.content }}</p>
+                        </div>
+                        <div class="bottom-replies-panel">
+                            <div>
+                                <!-- blank-->
+                            </div>
+                        </div>
+                        <div class="bottom-replies-panel no-reply no-reply-margin">
+                            <div>
+                                <!-- blank-->
+                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-blue btn-main-reply"
+                                (click)="openModal(postDetails?.id, 'reply')"
+                            >
+                                Reply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--row ends -->
+
+            <!-- row starts-->
+            <div class="col-1"></div>
+            <div class="col-11 units-container" *ngIf="postDetails?.child_forum_posts?.length > 0">
+                <div
+                    *ngFor="let post of postDetails?.child_forum_posts"
+                    class="logo-container-box forum-box reply-box-section col-12"
+                >
+                    <div class="row mx-1">
+                        <div class="col-2 px-0">
+                            <div class="profile-pic-section">
+                                <div class="forum-profile-pic" (click)="goToProfile(post.user)">
+                                    <img
+                                        *ngIf="!post.user.usersetting.FullProfileImageUrl"
+                                        src="./assets/images/user_img.png"
+                                    />
+                                    <img
+                                        *ngIf="post.user.usersetting.FullProfileImageUrl"
+                                        [src]="post.user.usersetting.FullProfileImageUrl"
+                                    />
+                                </div>
+                                <h4
+                                    *ngIf="post.user_id === user.id"
+                                    (click)="goToProfile(post.user)"
+                                >
+                                    You
+                                </h4>
+                                <h4
+                                    *ngIf="post.user_id !== user.id"
+                                    (click)="goToProfile(post.user)"
+                                    class="text-break"
+                                >
+                                    {{ post.user.name }}
+                                </h4>
+                                <!-- <div class="col-sm-3"> -->
+                                <a
+                                    href="javascript:void(0)"
+                                    *ngIf="
+                                        user.id !== post?.user_id ||
+                                        user.role_id === 4 ||
+                                        user.role_id === 1
+                                    "
+                                    class="report-post"
+                                    (click)="openReportPostModal(post)"
+                                >
+                                    <img
+                                        src="./assets/images/report.png"
+                                        alt=""
+                                        title="Report this reply"
+                                    />
+                                </a>
+                                <!-- </div> -->
+                            </div>
+                        </div>
+                        <div class="col-10">
+                            <div class="forum-content">
+                                <h6>{{ post.entry_time }}</h6>
+                                <p class="prewrap font-language">{{ post.content }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--row ends -->
+        </div>
+        <div class="row justify-content-start" *ngIf="noPostFlag">
+            <div class="col-12 text-center">
+                <h3 class="text-white no-units">Post details unavailable</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Welcome section -->
+
+<div
+    class="modal fade modal-n"
+    id="replyPost"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ResetProgressData"
+    appAdjustModalForKeyboard
+>
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="reset-progress-data">Reply Post</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="switch-box">
+                <h4>{{ environment.LANGUAGE }} Keyboard</h4>
+                <label class="switch">
+                    <input
+                        type="checkbox"
+                        class="no-virtual-keyboard"
+                        [(ngModel)]="keyboardFlag"
+                        (change)="toggleReplyPostKeyboard(keyboardFlag)"
+                    />
+                    <span class="slider round" id="reply-toggle"></span>
+                </label>
+            </div>
+            <form name="postForm" [formGroup]="postForm" (submit)="replyPost(postForm)">
+                <div class="modal-body modal-n-table">
+                    <input
+                        type="text"
+                        readonly
+                        placeholder="Title"
+                        name="title"
+                        value="{{ postDetails?.title }}"
+                        class="form-control input-default seoc-btn-width font-language"
+                        inputmode="none"
+                        appAutoScrollModalInput
+                        [ngClass]="{ 'no-virtual-keyboard': isDesktop }"
+                    />
+                    <textarea
+                        name="content"
+                        id="reptextarea_id"
+                        placeholder="Description"
+                        formControlName="content"
+                        class="form-control input-default seoc-btn-width font-language"
+                        (focus)="setActiveInput($event)"
+                        [(ngModel)]="inputs.reptextarea_id"
+                        inputmode="none"
+                        appAutoScrollModalInput
+                        [ngClass]="{ 'no-virtual-keyboard': isDesktop }"
+                    ></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-text-hover"
+                        data-dismiss="modal"
+                        (click)="closeVirtualKeyboard()"
+                    >
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" (click)="closeVirtualKeyboard()">
+                        Submit
+                    </button>
+                </div>
+                <p id="typing-area-1"></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div
+    class="modal fade modal-n"
+    id="newPost"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby=""
+    appAdjustModalForKeyboard
+>
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="reset-progress-data">{{ modalTitle }}</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="switch-box">
+                <h4>{{ environment.LANGUAGE }} Keyboard</h4>
+                <label class="switch">
+                    <input
+                        type="checkbox"
+                        [(ngModel)]="newPostKeyboardFlag"
+                        class="no-virtual-keyboard"
+                        (change)="toggleNewPostKeyboard(newPostKeyboardFlag)"
+                    />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <form name="newPostForm" [formGroup]="newPostForm" (submit)="createPost(newPostForm)">
+                <div class="modal-body modal-n-table">
+                    <input
+                        type="text"
+                        placeholder="Title"
+                        id="input_id"
+                        (focus)="setActiveInput($event)"
+                        formControlName="title"
+                        name="title"
+                        class="form-control input-default seoc-btn-width font-language"
+                        [(ngModel)]="inputs.input_id"
+                        inputmode="none"
+                        appAutoScrollModalInput
+                        [ngClass]="{ 'no-virtual-keyboard': isDesktop }"
+                    />
+                    <textarea
+                        name="content"
+                        placeholder="Description"
+                        id="textarea_id"
+                        formControlName="content"
+                        class="form-control input-default seoc-btn-width font-language"
+                        (focus)="setActiveInput($event)"
+                        [(ngModel)]="inputs.textarea_id"
+                        inputmode="none"
+                        appAutoScrollModalInput
+                        [ngClass]="{ 'no-virtual-keyboard': isDesktop }"
+                    ></textarea>
+                    <select
+                        *ngIf="
+                            (user.role_id === 4 || user.role_id === 1) &&
+                            postDetails?.user_id !== user.id
+                        "
+                        formControlName="postStatus"
+                        class="form-control input-default seoc-btn-width"
+                    >
+                        <option value="R" selected>Reject</option>
+                        <option value="A">Approve</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-text-hover"
+                        data-dismiss="modal"
+                        (click)="closeVirtualKeyboard()"
+                    >
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" (click)="closeVirtualKeyboard()">
+                        Submit
+                    </button>
+                </div>
+                <p id="typing-area-2"></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<app-report-post-modal></app-report-post-modal>
+
+<app-virtual-keyboard
+    #virtualKeyboard
+    [inputs]="inputs"
+    [debug]="!environment.production"
+    [customClass]="'postDetailsKeyboard'"
+    class="fixed-bottom"
+    style="z-index: 1050 !important"
+></app-virtual-keyboard>

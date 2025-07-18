@@ -1,0 +1,131 @@
+<div class="modal fade modal-n" id="agreements-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="AgreementsAcceptance">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title">Review and Accept Agreements</h3>
+            </div>
+            <div class="modal-body modal-n-table">
+                <div class="justify-content-center text-center">
+                    <h5>We now require explicit agreement to our terms in order to comply with regulations.</h5>
+                    <!-- Tabs -->
+                    <div class="">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item bg-white rounded-top-left-3 rounded-top-right-3">
+                                <a
+                                    class="nav-link rounded-top-left-3 rounded-top-right-3"
+                                    [ngClass]="{
+                                        'active': activeTab === 'terms',
+                                        'cursor-pointer': activeTab !== 'terms',
+                                        'font-weight-bold': activeTab === 'terms',
+                                    }"
+                                    id="terms-tab"
+                                    data-toggle="tab"
+                                    role="tab"
+                                    aria-controls="terms"
+                                    aria-selected="true"
+                                    (click)="onTabClick('terms')"
+                                >
+                                    Terms & Conditions
+                                </a>
+                            </li>
+                            <li class="nav-item bg-white rounded-top-left-3 rounded-top-right-3">
+                                <a
+                                    class="nav-link cursor-pointer rounded-top-left-3 rounded-top-right-3"
+                                    [ngClass]="{
+                                        'active': activeTab === 'privacy',
+                                        'cursor-pointer': activeTab !== 'privacy',
+                                        'font-weight-bold': activeTab === 'privacy',
+                                    }"
+                                    id="privacy-tab"
+                                    data-toggle="tab"
+                                    role="tab"
+                                    aria-controls="privacy"
+                                    aria-selected="false"
+                                    (click)="onTabClick('privacy')"
+                                >
+                                    Privacy Policy
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white path-box text-left l-speed mt-0">
+
+                        <!-- Terms and conditions content -->
+                        <div
+                            *ngIf="activeTab === 'terms'"
+                            class="path-wrap-scroll px-2 overflow-x-hidden"
+                            (scroll)="onScroll('terms', $event)"
+                            [innerHTML]="termsAndConditions.text | safeHtml"
+                        >
+                        </div>
+
+                        <!-- Terms and conditions content -->
+                        <div
+                            *ngIf="activeTab === 'privacy'"
+                            class="path-wrap-scroll px-2 overflow-x-hidden"
+                            (scroll)="onScroll('privacy', $event)"
+                            [innerHTML]="privacyPolicy.text | safeHtml"
+                        >
+                        </div>
+
+                        <div class="mt-5">
+                            <!-- Checkbox to accept terms and conditions -->
+                            <ng-container *ngIf="activeTab === 'terms'">
+                                <input
+                                    class="cursor-pointer"
+                                    type="checkbox"
+                                    id="termsAcceptance"
+                                    [(ngModel)]="isTermsAccepted"
+                                    (change)="onAcceptanceChange('terms', $event)"
+                                    [disabled]="!termsScrolledToBottom"
+                                />
+                                <label class="pl-2 label-default d-inline cursor-pointer" for="termsAcceptance"
+                                    [ngClass]="{ 'text-disabled': !termsScrolledToBottom }">
+                                    I have read and accepted the terms and conditions.
+                                </label>
+                            </ng-container>
+
+                            <!-- Checkbox to accept privacy policy -->
+                            <ng-container *ngIf="activeTab === 'privacy'">
+                                <input
+                                    class="cursor-pointer"
+                                    type="checkbox"
+                                    id="privacyAcceptance"
+                                    [(ngModel)]="isPrivacyAccepted"
+                                    (change)="onAcceptanceChange('privacy', $event)"
+                                    [disabled]="!privacyScrolledToBottom"
+                                />
+                                <label class="pl-2 label-default d-inline cursor-pointer" for="privacyAcceptance"
+                                    [ngClass]="{ 'text-disabled': !privacyScrolledToBottom }">
+                                    I have read and accepted the privacy policy.
+                                </label>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next button -->
+            <div class="modal-footer">
+                <!-- Do not accept and delete account button -->
+                <button
+                    type="submit"
+                    class="btn btn-secondary font-weight-normal"
+                    (click)="rejectBtnPressed()"
+                >
+                    Reject
+                </button>
+                <button
+                    [disabled]="!(isTermsAccepted && isPrivacyAccepted)"
+                    type="submit"
+                    class="btn btn-primary"
+                    [ngClass]="{ 'pointer-events-none': !(isTermsAccepted && isPrivacyAccepted) }"
+                    (click)="acceptBtnPressed()"
+                >
+                    Accept
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

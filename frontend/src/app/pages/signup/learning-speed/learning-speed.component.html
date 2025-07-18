@@ -1,0 +1,45 @@
+<div class="row justify-content-center text-center">
+    <h2 class="blue-bg">Learning Speed</h2>
+    <div class="col-11 bg-white path-box l-speed">
+        <h5 class="my-3">More committed learners will gain extra points when they accomplish their goals.</h5>
+        <h5 class="mb-5">How committed are you to learning {{ environment.LANGUAGE }}?</h5>
+        <div class="path-check" *ngFor="let speed of learningSpeeds; let i = index">
+            <div class="form-row">
+                <div class="col-5 my-auto">
+                    <dl>
+                        <dt>{{ speed.label }}</dt>
+                    </dl>
+                </div>
+                <div class="col-4 my-auto">
+                    <dl>
+                        <dd>{{ speed.description }}</dd>
+                    </dl>
+                </div>
+                <div class="col-3 my-auto">
+                    <label class="custom-control custom-radio">
+                        <input
+                            id="radioStacked{{ i + 1 }}"
+                            name="radio-stacked"
+                            value="{{ speed.id }}"
+                            [(ngModel)]="speedModel.selected"
+                            type="radio"
+                            class="custom-control-input"
+                            required
+                        />
+                        <span class="custom-control-indicator"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col d-flex">
+        <button
+            type="submit"
+            class="btn btn-white mt-5 ml-auto"
+            [ngClass]="{ disabled: !speedModel.selected }"
+            (click)="submit()"
+        >
+            Next
+        </button>
+    </div>
+</div>

@@ -1,0 +1,201 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="mar-bot-15 text-center prompt-font-size">{{ exerciseService.exercise?.instruction }}</div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6 hide-borders">
+        <div
+            class="left-content-section blue-border"
+            (click)="audioService.playPauseAudio(exerciseService.question?.FullAudioUrl)"
+        >
+            <!-- English -->
+            <div class="prompt anagram-prompt" *ngIf="exerciseService.promptTypes.indexOf('e') > -1">
+                <h4 [innerHTML]="exerciseService.question.english | safeHtml"></h4>
+            </div>
+            <!-- Image -->
+            <div
+                class="prompt anagram-prompt"
+                *ngIf="
+                    (exerciseService.promptTypes.indexOf('i') > -1 ||
+                        exerciseService.exercise.card_type === 'custom') &&
+                    exerciseService.question.image
+                "
+            >
+                <a class="" href="javascript:void(0)">
+                    <img class="block-img" [src]="exerciseService.question.image.FullUrl" alt="" />
+                </a>
+            </div>
+            <!-- Lakota -->
+            <div class="prompt anagram-prompt" *ngIf="exerciseService.promptTypes.indexOf('l') > -1">
+                <h4 [innerHTML]="exerciseService.question.lakota | safeHtml"></h4>
+            </div>
+            <!-- Custom HMTL -->
+            <div
+                class="line-60"
+                *ngIf="
+                    exerciseService.exercise.card_type === 'custom' && exerciseService.question.PromptType === 'html'
+                "
+                [innerHTML]="exerciseService.question.prompt_html | safeHtml"
+            ></div>
+            <!-- Audio -->
+            <div
+                class="text-center"
+                *ngIf="exerciseService.promptTypes.indexOf('a') > -1 && exerciseService.question.FullAudioUrl"
+                [ngClass]="{ 'audio-icon': exerciseService.promptTypes.length > 1 }"
+            >
+                <a class="audio-prompt" href="javascript:void(0)">
+                    <img
+                        *ngIf="
+                            (audioService.getAudioSrc() !== exerciseService.question.FullAudioUrl ||
+                                audioService.audioIsPaused()) &&
+                            exerciseService.promptTypes.length === 1
+                        "
+                        src="./assets/images/audio-large-mute.png"
+                    />
+                    <img
+                        *ngIf="
+                            audioService.getAudioSrc() === exerciseService.question.FullAudioUrl &&
+                            exerciseService.promptTypes.length === 1 &&
+                            !audioService.audioIsPaused()
+                        "
+                        src="./assets/images/audio-large.png"
+                    />
+                    <img
+                        *ngIf="
+                            (audioService.getAudioSrc() !== exerciseService.question.FullAudioUrl ||
+                                audioService.audioIsPaused()) &&
+                            exerciseService.promptTypes.length > 1
+                        "
+                        src="./assets/images/sound-mute-blue-btn.png"
+                    />
+                    <img
+                        *ngIf="
+                            audioService.getAudioSrc() === exerciseService.question.FullAudioUrl &&
+                            exerciseService.promptTypes.length > 1 &&
+                            !audioService.audioIsPaused()
+                        "
+                        src="./assets/images/sound-blue-btn.png"
+                    />
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 text-center">
+        <div class="response-audio" [hidden]="exerciseService.response.exerciseOptions.response_true_false === 'N'">
+            <div class="col-sm-12 resp-aud-wave">
+                <div id="waveform"></div>
+            </div>
+            <div class="play-icon">
+                <span class="disable-play" *ngIf="disablePlay"></span>
+                <img [hidden]="isPlaying" src="./assets/images/playIcon.png" alt="" (click)="togglePlay()" />
+                <img [hidden]="!isPlaying" src="./assets/images/stopIcon.png" alt="" (click)="togglePlay()" />
+            </div>
+        </div>
+        <app-audio-record></app-audio-record>
+        <div class="submit-btn">
+            <button type="button" class="btn btn-blue" [disabled]="!firstRecorded" (click)="shareFile()">Share</button>
+            <button type="submit" class="btn btn-blue" [disabled]="!firstRecorded" (click)="submit()">Submit</button>
+        </div>
+    </div>
+</div>
+
+<!-- Share select modal -->
+<div class="modal fade modal-n" id="share" tabindex="-1" role="dialog" aria-labelledby="ShareRecording">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="reset-progress-data">Share</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body modal-n-table">
+                <div class="row">
+                    <div class="col-sm-4 share-icons fb-share">
+                        <i class="fa fa fa-facebook-official" (click)="share('fb')"></i>
+                    </div>
+                    <div class="col-sm-4 share-icons email-share">
+                        <i class="fa fa-envelope" (click)="share('email')"></i>
+                    </div>
+                    <div class="col-sm-4 share-icons forum-share">
+                        <i class="fa fa-users" (click)="share('forum')"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-text-hover" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Share select modal -->
+
+<!-- Email Share modal -->
+<div class="modal fade modal-n" id="email-share" tabindex="-1" role="dialog" aria-labelledby="ShareRecordingviaEmail">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="reset-progress-data">Share via email</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body modal-n-table">
+                <div class="form-group">
+                    <!-- <input type="text" data-role="tagsinput" class="form-control input-default seoc-btn-width" placeholder="Enter email(s)"> -->
+                    <tag-input
+                        [(ngModel)]="emailShareModel"
+                        addOnPaste="true"
+                        class="form-control input-default seoc-btn-width"
+                        placeholder="Enter email(s)"
+                    ></tag-input>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-text-hover" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-blue" (click)="emailShare()">Share</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Email Share modal -->
+
+<!-- Forum Share modal -->
+<div class="modal fade modal-n" id="forum-share" tabindex="-1" role="dialog" aria-labelledby="ShareRecordingviaForum">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="reset-progress-data">Share on forum</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body modal-n-table">
+                <div class="form-group">
+                    <input
+                        type="text"
+                        class="form-control input-default seoc-btn-width"
+                        [(ngModel)]="forumShareModel.title"
+                        placeholder="Title"
+                    />
+                </div>
+                <div class="form-group">
+                    <textarea
+                        class="form-control input-default seoc-btn-width"
+                        cols="30"
+                        rows="3"
+                        [(ngModel)]="forumShareModel.content"
+                        placeholder="Say something..."
+                    ></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-text-hover" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-blue" (click)="forumShare()">Share</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Forum Share modal -->

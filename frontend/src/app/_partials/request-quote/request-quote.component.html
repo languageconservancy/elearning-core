@@ -1,0 +1,181 @@
+<div class="col-6 col-sm-7 col-lg-12 sign-up-box success">
+    <div class="d-flex justify-content-center row">
+        <div class="col-xs-6 col-sm-7 col-lg-12 mb-3 mt-3 d-flex justify-content-center">
+            <h2 class="blue-bg">Introducing the {{ environment.SITE_NAME }} Teacher Portal</h2>
+            <br />
+        </div>
+        <div class="card col-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+            <img
+                class="card-img-top"
+                src="https://owoksape.s3.us-west-2.amazonaws.com/Dashboard.jpg"
+                alt="Card image cap"
+            />
+            <div class="card-body">
+                <h5 class="card-title">Track Student Progress</h5>
+                <ul>
+                    <li>Instant Feedback on Student Activities</li>
+                    <li>Live header message to inform students or provide zoom links</li>
+                    <li>Advanced Reports</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card col-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+            <img
+                class="card-img-top"
+                src="https://owoksape.s3.us-west-2.amazonaws.com/Classrooms.jpg"
+                alt="Card image cap"
+            />
+            <div class="card-body">
+                <h5 class="card-title">Manage Your Students and Classrooms</h5>
+                <ul>
+                    <li>Reset Student Passwords</li>
+                    <li>Schedule Release of Curriculum</li>
+                    <li>Apply modes for creating scored tests or bonus assignments</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card col-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+            <img
+                class="card-img-top"
+                src="https://owoksape.s3.us-west-2.amazonaws.com/Lessons.jpg"
+                alt="Card image cap"
+            />
+            <div class="card-body">
+                <h5 class="card-title">Design Your Own Curriculum</h5>
+                <ul>
+                    <li>Arrange The Units of {{ environment.SITE_NAME }} for your specific students</li>
+                    <li>Copy and edit curriculum for a new class</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-7 col-lg-12 mb-3 d-flex justify-content-center">
+            <span
+                >Have more general questions? Find
+                <a href="javascript:void()" (click)="rullink('help')">help</a> here</span
+            >
+        </div>
+        <!--<div class="col-xs-6 col-sm-7 col-lg-12 mb-3 d-flex justify-content-center">
+		<h2 class="blue-bg">Request A Quote</h2><br>
+	</div>-->
+    </div>
+    <!--<form name="quoteForm" [formGroup]="quoteForm">
+	<div class="row mb-3">
+	<div class="col-xs-6 col-sm-7 col-lg-6">
+	<h5>Primary Contact (Administrator)</h5>
+	<div class="ml-3 mb-3 seoc-btn-row">
+	<span><label for="schoolName">Name</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.adminName && !quoteForm.controls.adminName.invalid && quoteForm.controls.adminName.touched}">
+		<input formControlName="adminName" [ngClass]="{'has-error': quoteForm.value.adminName && quoteForm.controls.adminName.invalid && quoteForm.controls.adminName.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="First & Last Name">
+	</span><br>
+	<span><label for="adminEmail">Email</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.adminEmail && !quoteForm.controls.adminEmail.invalid && quoteForm.controls.adminEmail.touched}">
+		<input formControlName="adminEmail" [ngClass]="{'has-error': quoteForm.value.adminEmail && quoteForm.controls.adminEmail.invalid && quoteForm.controls.adminEmail.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="Admin@School.edu">
+	</span><br>
+	<span><label for="schoolName">Phone</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.adminPhone && !quoteForm.controls.adminPhone.invalid && quoteForm.controls.adminPhone.touched}">
+		<input formControlName="adminPhone" [ngClass]="{'has-error': quoteForm.value.adminPhone && quoteForm.controls.adminPhone.invalid && quoteForm.controls.adminPhone.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="(555)555-5555 ext 5">
+	</span><br>
+	</div></div>
+	<div class="col-xs-6 col-sm-7 col-lg-6">
+	<h5>Technical Contact (IT Department)</h5>
+	<div class="ml-3 mb-3 seoc-btn-row">
+	<span><label for="schoolName">Name</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.techName && !quoteForm.controls.techName.invalid && quoteForm.controls.techName.touched}">
+		<input formControlName="techName" [ngClass]="{'has-error': quoteForm.value.techName && quoteForm.controls.techName.invalid && quoteForm.controls.techName.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="First & Last Name">
+	</span><br>
+	<span><label for="schoolName">Email</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.techEmail && !quoteForm.controls.techEmail.invalid && quoteForm.controls.techEmail.touched}">
+		<input formControlName="techEmail" [ngClass]="{'has-error': quoteForm.value.techEmail && quoteForm.controls.techEmail.invalid && quoteForm.controls.techEmail.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="Admin@School.edu">
+	</span><br>
+	<span><label for="schoolName">Phone</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.techPhone && !quoteForm.controls.techPhone.invalid && quoteForm.controls.techPhone.touched}">
+		<input formControlName="techPhone" [ngClass]="{'has-error': quoteForm.value.techPhone && quoteForm.controls.techPhone.invalid && quoteForm.controls.techPhone.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="(555)555-5555 ext 5">
+	</span><br>
+	</div></div></div>
+	<div class="row">
+	<div class="col-xs-6 col-sm-7 col-lg-6">
+	<h5>School/District Information</h5>
+	<div class="ml-3 mb-3 seoc-btn-row">
+	<span><label for="schoolName">Name</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.schoolName && !quoteForm.controls.schoolName.invalid && quoteForm.controls.schoolName.touched}">
+		<input formControlName="schoolName" [ngClass]="{'has-error': quoteForm.value.schoolName && quoteForm.controls.schoolName.invalid && quoteForm.controls.schoolName.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="School HS">
+	</span><br>
+	<span><label for="schoolName">Website</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.schoolEmail && !quoteForm.controls.schoolEmail.invalid && quoteForm.controls.schoolEmail.touched}">
+		<input formControlName="schoolEmail" [ngClass]="{'has-error': quoteForm.value.schoolEmail && quoteForm.controls.schoolEmail.invalid && quoteForm.controls.schoolEmail.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="School.edu">
+	</span><br>
+	<span><label for="schoolName">Phone</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.schoolPhone && !quoteForm.controls.schoolPhone.invalid && quoteForm.controls.schoolPhone.touched}">
+		<input formControlName="schoolPhone" [ngClass]="{'has-error': quoteForm.value.schoolPhone && quoteForm.controls.schoolPhone.invalid && quoteForm.controls.schoolPhone.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="(555)555-5555">
+	</span><br>
+	<span><label for="schoolName">Address</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.schoolAddress && !quoteForm.controls.schoolAddress.invalid && quoteForm.controls.schoolAddress.touched}">
+		<input formControlName="schoolAddress" [ngClass]="{'has-error': quoteForm.value.schoolAddress && quoteForm.controls.schoolAddress.invalid && quoteForm.controls.schoolAddress.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="123 School Rd">
+	</span><br>
+	<span>
+		<span><label for="schoolCity">City</label></span><input class="form-control seoc-btn-width seoc-btn-thin" type="text " placeholder="Sioux Falls">
+	</span>
+	<span>
+		<span><label for="schoolState">State</label></span><input class="form-control seoc-btn-width seoc-btn-thin" size=4 type="text " placeholder="SD">
+	</span>
+	<span>
+		<span><label for="schoolZip">Zipcode</label></span><input class="form-control seoc-btn-width seoc-btn-thin" size=5 type="text " placeholder="57101">
+	</span><br>
+	</div></div>
+	<div class="col-xs-6 col-sm-7 col-lg-6">
+	<h5>School/District Details</h5>
+	<div class="ml-3 mb-3 seoc-btn-row">
+	<span><label for="numSchools">Number of Schools</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.numSchools && !quoteForm.controls.numSchools.invalid && quoteForm.controls.numSchools.touched}">
+		<input formControlName="numSchools" size=4 [ngClass]="{'has-error': quoteForm.value.numSchools && quoteForm.controls.numSchools.invalid && quoteForm.controls.numSchools.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="##">
+	</span><br>
+	<span><label for="numStudents">Number of Students</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.numStudents && !quoteForm.controls.numStudents.invalid && quoteForm.controls.numStudents.touched}">
+		<input formControlName="numStudents" size=4 [ngClass]="{'has-error': quoteForm.value.numStudents && quoteForm.controls.numStudents.invalid && quoteForm.controls.numStudents.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="##">
+	</span><br>
+	<span><label for="numTeachers">Number of Lakota Teachers</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.numTeachers && !quoteForm.controls.numTeachers.invalid && quoteForm.controls.numTeachers.touched}">
+		<input formControlName="numTeachers" size=4 [ngClass]="{'has-error': quoteForm.value.numTeachers && quoteForm.controls.numTeachers.invalid && quoteForm.controls.numTeachers.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="##">
+	</span><br>
+	<span><label for="schoolName">School Start Date</label></span>
+	<span [ngClass]="{'tick-quote': quoteForm.value.startDate && !quoteForm.controls.startDate.invalid && quoteForm.controls.startDate.touched}">
+		<input formControlName="startDate" [ngClass]="{'has-error': quoteForm.value.startDate && quoteForm.controls.startDate.invalid && quoteForm.controls.startDate.touched}"
+		class="form-control	seoc-btn-thin seoc-btn-width" type="date" placeholder="">
+	</span><br>
+	<span><label>Hardware Available to Students</label></span><br>
+	<div *ngFor="let tech of techList">
+		<span>
+		<input type="checkbox" name="{{tech.value}}" id="{{tech.value}}"
+		id="studentTech">
+		</span>
+		<span>
+		<label for="{{tech.value}}">{{tech.name}}</label>
+		</span>
+	</div><br>
+	<span><label for="studentTechNotes">Additional Notes on Technology Limitations</label></span>
+	<span>
+		<textarea id="studentTechNotes" name="studentTechNotes" class="seoc-btn-thin seoc-btn-width" type="text " placeholder="Limited WiFi, Only in Computer Lab..."></textarea>
+	</span><br>
+	</div>
+	</div></div>
+</form>
+<div class="col-12 mb-3">
+	<div class="text-center">
+	<button type="submit" class="btn btn-blue" (click)="quoteSend(quoteForm)">Submit Quote Request</button>
+	</div>
+</div>-->
+</div>

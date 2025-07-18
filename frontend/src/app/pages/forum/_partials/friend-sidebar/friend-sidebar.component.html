@@ -1,0 +1,53 @@
+<!-- <div class="overlay" [@showOverlay]="showOverlay"></div> -->
+<!-- <div class="openDrawer"  (click)="navigationDrawer()">
+		<span class="glyphicon glyphicon-menu-hamburger">&#9776;</span>
+	</div> -->
+
+<div class="navigation" [@navigation]="navigation">
+    <div
+        id="drawer-opener"
+        class="arrowOpen"
+        [ngClass]="{ '': toggleArrow, arrowClose: !toggleArrow }"
+        (click)="navigationDrawer()"
+    >
+        <i class="fa fa-angle-right"></i>
+        <i class="fa fa-angle-left"></i>
+    </div>
+    <div class="close-nav" (click)="navigationDrawer()">
+        <span class="glyphicon glyphicon-menu-left"></span>
+    </div>
+    <div class="forum-friend-panel">
+        <div class="find-friend-panel justify-content-center">
+            <input
+                type="text"
+                class="flex-fill"
+                placeholder="Friends"
+                [(ngModel)]="searchItem.search"
+                (input)="search()"
+            />
+            <div class="input-group-append">
+                <button class="input-default btn" type="button" (click)="goToAddFriendsPage()">
+                    <i class="fa fa-plus-square"></i>
+                </button>
+            </div>
+        </div>
+        <div class="forum-friend-list align-items-center">
+            <div *ngIf="friendsList.length > 0">
+                <div *ngFor="let friend of friendsList" class="forum-friend-block">
+                    <div class="forum-profile-pic" (click)="goToProfile(friend)">
+                        <img *ngIf="!friend.image" src="./assets/images/user_img.png" />
+                        <img *ngIf="friend.image" [src]="friend.image" />
+                    </div>
+                    <h4>{{ friend.name }}</h4>
+                    <a (click)="goToPost(friend.id)" href="javaScript:void(0)"
+                        >{{ friend.postCounter }} new topic<span *ngIf="friend.postCounter > 1">s</span></a
+                    >
+                    <!-- <a (click)="goToReplyCounter(friend);" href="javaScript:void(0)">{{friend.replyCounter}} new repl<span *ngIf="friend.postCounter > 1">ies</span><span *ngIf="friend.postCounter < 2">y</span></a> -->
+                </div>
+            </div>
+            <div *ngIf="friendsList.length < 1">
+                <h3 class="text-white text-center no-units">No friends to show</h3>
+            </div>
+        </div>
+    </div>
+</div>

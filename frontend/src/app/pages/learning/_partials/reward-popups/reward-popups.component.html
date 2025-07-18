@@ -1,0 +1,440 @@
+<div *ngIf="showPopup">
+    <div *ngIf="popupType === 'unit' && !isClassroom" class="popup-overlay" (click)="closeUnitPopup('review')"></div>
+    <div *ngIf="popupType === 'unit' && isClassroom" class="popup-overlay" (click)="closeUnitPopup('classroom')"></div>
+    <div
+        *ngIf="popupType === 'exerciseSet' || popupType === 'exerciseSetPerfect'"
+        class="popup-overlay"
+        (click)="closePopupExSet()"
+    ></div>
+    <div *ngIf="popupType === 'lesson'" class="popup-overlay" (click)="closePopup('lesson')"></div>
+    <div *ngIf="popupType === 'exercise'" class="popup-overlay" (click)="closePopup('exercise question')"></div>
+
+    <!--lesson popup starts-->
+    <div class="popup-wrapper popup-blue-bg popup-padd-top-bottom" *ngIf="popupType === 'lesson'">
+        <!--popup title starts -->
+        <div class="align-middle align-items-center d-grid grid-cols-1-4-1 my-0 mx-auto">
+            <img class="filter-dropshadow-img" src="./assets/images/feather-single-left.png" />
+            <h3 class="text-primary-contrast my-auto popup-header px-2 font-bold font-language text-center" [innerHTML]="getCorrectAnswerHeader(popupData.total)">
+            </h3>
+            <img class="filter-dropshadow-img" src="./assets/images/feather-single-right.png" />
+        </div>
+        <!--popup title ends -->
+        <!--popup main content starts -->
+        <div class="popup-main-content popup-lesson">
+            <div class="lesson-panel">
+                <h5 class="custom-font">Lesson Completed</h5>
+                <div class="divider-line custom-font" *ngIf="popupData.total > 0"></div>
+                <h5 class="custom-font" *ngIf="popupData.total > 0">+{{ popupData.total }} XP</h5>
+            </div>
+        </div>
+        <hr *ngIf="reviewCards.length > 0" />
+        <!--popup main content ends -->
+        <!-- review panel starts -->
+        <div class="review-panel" *ngIf="reviewCards.length > 0">
+            <h4 class="custom-font">Quick Review</h4>
+            <div class="d-flex align-items-center justify-content-center flex-nowrap">
+                <a
+                    href="javascript:void(0)"
+                    (click)="previous()"
+                    [ngClass]="{ 'disabled-arrow': previousDisable }"
+                    class="review-arrow review-arrow-left d-flex align-items-center justify-content-center"
+                >
+                    <img src="./assets/images/review-arrow-left.png" />
+                </a>
+                <div class="review-blue-box">
+                    <div class="review-content">
+                        <h5 class="font-language font-bold">{{ OwoksapeUtils.stripHtml(activeCard.lakota) }}</h5>
+                        <h6 class="font-language fond-bold">{{ OwoksapeUtils.stripHtml(activeCard.english) }}</h6>
+                    </div>
+                    <div class="speaker-icon pl-2" *ngIf="activeCard.FullAudioUrl">
+                        <a href="javascript:void(0)" (click)="audioService.playPauseAudio(activeCard.FullAudioUrl)">
+                            <img
+                                *ngIf="
+                                    audioService.getAudioSrc() !== activeCard.FullAudioUrl ||
+                                    audioService.audioIsPaused()
+                                "
+                                src="./assets/images/sound-icon-mute-white-small.png"
+                            />
+                            <img
+                                *ngIf="
+                                    audioService.getAudioSrc() === activeCard.FullAudioUrl &&
+                                    !audioService.audioIsPaused()
+                                "
+                                src="./assets/images/sound-icon-white-small.png"
+                            />
+                        </a>
+                    </div>
+                </div>
+                <a
+                    href="javascript:void(0)"
+                    (click)="next()"
+                    [ngClass]="{ 'disabled-arrow': nextDisable }"
+                    class="review-arrow review-arrow-right d-flex align-items-center justify-content-center"
+                >
+                    <img src="./assets/images/review-arrow-right.png" />
+                </a>
+            </div>
+        </div>
+        <!-- review panel ends -->
+        <button type="button" class="btn btn-white float-right popup-next custom-font" (click)="closePopup('lesson')">
+            Next
+        </button>
+    </div>
+    <!--lesson popup ends-->
+
+    <!--exercise popup starts-->
+    <div
+        class="result-box position-fixed"
+        *ngIf="popupType === 'exercise'"
+        [ngClass]="{ 'result-box-success': popupStatus, 'result-box-fail': !popupStatus }"
+        (click)="audioService.playPauseAudio(activeCard.FullAudioUrl)"
+        [@fadeScaleBounceAnimation]="'initial'"
+    >
+        <div class="result-box-feather" *ngIf="popupStatus">
+            <img class="filter-dropshadow-img" src="./assets/images/result-box-feather.png" />
+        </div>
+        <h1 class="font-language font-bold" *ngIf="popupStatus" [innerHTML]="getCorrectAnswerHeader(popupData.total)"></h1>
+        <h1 class="font-language fond-bold" *ngIf="!popupStatus" [innerHTML]="wrongAnswerHeader"></h1>
+        <div class="result-rewards">
+            <h6 class="xp custom-font" *ngIf="popupStatus && popupData.total > 0">+{{ popupData.total }} XP</h6>
+            <a
+                href="javascript:void(0)"
+                *ngIf="!popupStatus && review && !previousDisable"
+                (click)="previous()"
+                [ngClass]="{ 'disabled-arrow': previousDisable }"
+                class="review-arrow review-arrow-left"
+            ></a>
+            <div class="review-incorrect-wrapper" *ngIf="!popupStatus && review">
+                <div *ngIf="!popupData.correctHtmlResponse || popupData.correctHtmlResponse === ''; else elseBlock">
+                    <div class="review-incorrect-content">
+                        <h5 class="font-language font-bold">{{ OwoksapeUtils.stripHtml(activeCard.lakota) }}</h5>
+                        <h6 class="font-language font-bold">{{ OwoksapeUtils.stripHtml(activeCard.english) }}</h6>
+                    </div>
+                    <div id="audio-playback" class="speaker-incorrect-icon" *ngIf="activeCard.FullAudioUrl">
+                        <a href="javascript:void(0)">
+                            <img
+                                *ngIf="
+                                    audioService.getAudioSrc() !== activeCard.FullAudioUrl ||
+                                    audioService.audioIsPaused()
+                                "
+                                src="./assets/images/sound-icon-mute-white-small.png"
+                            />
+                            <img
+                                *ngIf="
+                                    audioService.getAudioSrc() === activeCard.FullAudioUrl &&
+                                    !audioService.audioIsPaused()
+                                "
+                                src="./assets/images/sound-icon-white-small.png"
+                            />
+                        </a>
+                    </div>
+                </div>
+                <ng-template #elseBlock>
+                    <div *ngIf="popupData.correctHtmlResponse !== ''">
+                        <div class="review-incorrect-content">
+                            <h5 class="font-language font-bold">
+                                {{ OwoksapeUtils.stripHtml(popupData.correctHtmlResponse) }}
+                            </h5>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+            <a
+                href="javascript:void(0)"
+                *ngIf="!popupStatus && review && !nextDisable"
+                (click)="next()"
+                [ngClass]="{ 'disabled-arrow': nextDisable }"
+                class="review-arrow review-arrow-right"
+            ></a>
+        </div>
+        <a *ngIf="!popupStatus" class="btn-reward" (click)="closePopup('exercise question')">X</a>
+    </div>
+    <!--exercise popup ends-->
+
+    <!--exerciseSet perfect popup starts-->
+    <div class="popup-wrapper popup-blue-bg" *ngIf="popupType === 'exerciseSetPerfect'">
+        <!--popup title starts -->
+        <div class="popup-title popup-title-big d-flex justify-content-center align-items-center">
+            <div class="align-middle align-items-center d-grid grid-cols-1-4-1 my-0 mx-auto">
+                <img class="filter-dropshadow-img" src="./assets/images/feather-double-left.png" />
+                <h3 class="font-language font-bold text-center px-2 my-auto" [innerHTML]="getCorrectAnswerHeader(popupData.total)">
+                </h3>
+                <img class="filter-dropshadow-img" src="./assets/images/feather-double-right.png" />
+            </div>
+        </div>
+        <!--popup title ends -->
+        <!--popup main content starts -->
+        <div class="popup-main-content content-width-medium">
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Listening</span>
+                        <span>
+                            <i class="fa-solid fa-ear-listen fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.points.listening_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Writing</span>
+                        <span>
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.points.writing_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Reading</span>
+                        <span>
+                            <i class="fa-solid fa-book-open-reader fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.points.reading_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250 box-btm-mrgn-10">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Speaking</span>
+                        <span>
+                            <i class="fa-solid fa-microphone fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.points.speaking_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5 class="custom-font">Bonus Points</h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.points.path_score_total }}</h6>
+                </div>
+            </div>
+            <div class="total-points-panel">
+                <div class="points-block">
+                    <h5 class="custom-font">Total</h5>
+                </div>
+                <div class="points-block">
+                    <h5 class="xp custom-font">{{ popupData.total }} XP</h5>
+                </div>
+                <div class="points-block">
+                    <h5 class="custom-font">Earned</h5>
+                </div>
+            </div>
+        </div>
+        <!--popup main content ends -->
+        <button type="button" class="btn btn-white float-right popup-next custom-font" (click)="closePopupExSet()">
+            Next
+        </button>
+    </div>
+    <!--exerciseSet perfect popup ends-->
+
+    <!--exerciseSet popup starts-->
+    <div class="popup-wrapper popup-blue-bg" *ngIf="popupType === 'exerciseSet'">
+        <!--popup title starts -->
+        <div class="popup-title">
+            <div class="align-middle align-items-center d-grid grid-cols-1-4-1 my-0 mx-auto">
+                <img class="filter-dropshadow-img" src="./assets/images/feather-small-left.png" />
+                <h3 class="font-bold font-language" [innerHTML]="getCorrectAnswerHeader(popupData.total)"></h3>
+                <img class="filter-dropshadow-img" src="./assets/images/feather-small-right.png" />
+            </div>
+        </div>
+        <!--popup title ends -->
+        <!--popup main content starts -->
+        <div class="popup-main-content content-width-medium">
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Listening</span>
+                        <span>
+                            <i class="fa-solid fa-ear-listen fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="">{{ popupData.points.listening_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Writing</span>
+                        <span>
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="">{{ popupData.points.writing_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Reading</span>
+                        <span>
+                            <i class="fa-solid fa-book-open-reader fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="">{{ popupData.points.reading_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250 box-btm-mrgn-10">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width">Speaking</span>
+                        <span>
+                            <i class="fa-solid fa-microphone fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.points.speaking_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5 class="custom-font">Bonus Points</h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.points.path_score_total }}</h6>
+                </div>
+            </div>
+            <div class="total-points-panel">
+                <div class="points-block">
+                    <h5 class="custom-font">Total</h5>
+                </div>
+                <div class="points-block">
+                    <h5 class="xp custom-font">{{ popupData.total }} XP</h5>
+                </div>
+                <div class="points-block">
+                    <h5 class="custom-font">Earned</h5>
+                </div>
+            </div>
+        </div>
+        <!--popup main content ends -->
+        <!-- review panel starts -->
+        <div class="review-panel" *ngIf="reviewCards.length > 0">
+            <h4 class="custom-font">Quick Review</h4>
+            <div class="review-wrapper">
+                <a
+                    href="javascript:void(0)"
+                    (click)="previous()"
+                    [ngClass]="{ 'disabled-arrow': previousDisable }"
+                    class="review-arrow review-arrow-left"
+                ></a>
+                <div class="review-blue-box">
+                    <div class="review-content">
+                        <h5 class="font-bold font-language">{{ OwoksapeUtils.stripHtml(activeCard.lakota) }}</h5>
+                        <h6 class="font-bold font-language">{{ OwoksapeUtils.stripHtml(activeCard.english) }}</h6>
+                    </div>
+                    <div class="speaker-icon">
+                        <a href="javascript:void(0)" (click)="audioService.playPauseAudio(activeCard.FullAudioUrl)">
+                            <img
+                                *ngIf="
+                                    audioService.getAudioSrc() !== activeCard.FullAudioUrl ||
+                                    audioService.audioIsPaused()
+                                "
+                                src="./assets/images/sound-icon-mute-white-small.png"
+                            />
+                            <img
+                                *ngIf="
+                                    audioService.getAudioSrc() === activeCard.FullAudioUrl &&
+                                    !audioService.audioIsPaused()
+                                "
+                                src="./assets/images/sound-icon-white-small.png"
+                            />
+                        </a>
+                    </div>
+                </div>
+                <a
+                    href="javascript:void(0)"
+                    (click)="next()"
+                    [ngClass]="{ 'disabled-arrow': nextDisable }"
+                    class="review-arrow review-arrow-right"
+                ></a>
+            </div>
+        </div>
+        <!-- review panel ends -->
+        <button type="button" class="btn btn-white float-right popup-next custom-font" (click)="closePopupExSet()">
+            Next
+        </button>
+    </div>
+    <!--exerciseSet popup ends-->
+
+    <!--unit popup starts-->
+    <div class="popup-wrapper popup-blue-bg popup-padd-top-bottom" *ngIf="popupType === 'unit'">
+        <!--popup title starts -->
+        <div class="unit-complete-title">
+            <h3 class="font-language font-bold">You have completed</h3>
+            <h3 class="font-language font-bold">{{ popupData.unitname }}</h3>
+            <h3 class="font-language font-bold" *ngIf="popupData.total > 0">+{{ popupData.total }} XP</h3>
+            <h5 class="font-language font-bold py-2">{{ popupData.message }}</h5>
+        </div>
+        <!--popup title ends -->
+        <!--popup main content starts -->
+        <div class="popup-main-content">
+            <div class="unit-screen-content text-center flex-wrap">
+                <div class="unit-block" (click)="closeUnitPopup(isClassroom ? 'classroom' : 'review')">
+                    <a
+                        class="block-img big-img"
+                        href="javascript:void(0)"
+                        [ngClass]="{
+                            'big-img': fireData.progressData?.pathTimeMinute > fireData.progressData?.reviewTimeMinute,
+                        }"
+                    >
+                        <img *ngIf="fireImage === 'dead'" src="./assets/images/fire_dead.png" alt="" />
+                        <img *ngIf="fireImage === 'low'" src="./assets/images/fire_low.png" alt="" />
+                        <img *ngIf="fireImage === 'medium'" src="./assets/images/fire_med.png" alt="" />
+                        <img *ngIf="fireImage === 'high'" src="./assets/images/fire_high.png" alt="" />
+                        <img *ngIf="fireImage === 'ultra'" src="./assets/images/fire_ultra.png" alt="" />
+                    </a>
+                    <h5>
+                        <a
+                            [ngClass]="
+                                keyboardUnitPopupHighlightIndex === 0
+                                    ? 'option-white-underline'
+                                    : 'option-white-underline-invisible'
+                            "
+                            href="javascript:void(0)"
+                            class="custom-font"
+                            >{{ isClassroom ? "Back to Classroom" : "Start Review" }}</a
+                        >
+                    </h5>
+                </div>
+                <app-social-share></app-social-share>
+            </div>
+            <div class="unit-repeat justify-content-center d-flex mt-4">
+                <h3
+                    [ngClass]="
+                        keyboardUnitPopupHighlightIndex === 1
+                            ? 'option-white-underline'
+                            : 'option-white-underline-invisible'
+                    "
+                    (click)="closeUnitPopup('lessons-and-exercises')"
+                >
+                    <i aria-hidden="true" class="fa fa-refresh"></i>Repeat Unit
+                </h3>
+            </div>
+        </div>
+        <!--popup main content ends -->
+    </div>
+    <!--unit popup ends-->
+</div>

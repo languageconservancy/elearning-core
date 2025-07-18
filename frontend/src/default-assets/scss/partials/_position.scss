@@ -1,0 +1,103 @@
+@use "../modules/variables";
+
+@each $size, $length in variables.$integer-sizes {
+    .top-#{$size} {
+        top: #{$length} !important;
+    }
+    .top-n-#{$size} {
+        top: -#{$length} !important;
+    }
+    .bottom-#{$size} {
+        bottom: #{$length} !important;
+    }
+    .bottom-n-#{$size} {
+        bottom: -#{$length} !important;
+    }
+    .left-#{$size} {
+        left: #{$length} !important;
+    }
+    .left-n-#{$size} {
+        left: -#{$length} !important;
+    }
+    .right-#{$size} {
+        right: #{$length} !important;
+    }
+    .right-n-#{$size} {
+        right: -#{$length} !important;
+    }
+}
+
+@each $size, $percent in variables.$sizes {
+    .top-#{$size}-p {
+        top: #{$percent} !important;
+    }
+    .top-n-#{$size}-p {
+        top: -#{$percent} !important;
+    }
+    .bottom-#{$size}-p {
+        bottom: #{$percent} !important;
+    }
+    .bottom-n-#{$size}-p {
+        bottom: -#{$percent} !important;
+    }
+    .left-#{$size}-p {
+        left: #{$percent} !important;
+    }
+    .left-n-#{$size}-p {
+        left: -#{$percent} !important;
+    }
+    .right-#{$size}-p {
+        right: #{$percent} !important;
+    }
+    .right-n-#{$size}-p {
+        right: -#{$percent} !important;
+    }
+}
+
+.transX-50 {
+    transform: translateX(50%);
+}
+
+.transX-n-50 {
+    transform: translateX(-50%);
+}
+
+.transY-50 {
+    transform: translateY(50%);
+}
+
+.transY-n-50 {
+    transform: translateY(-50%);
+}
+
+.trans-n-50 {
+    transform: translate(-50%, -50%);
+}
+
+.trans-50 {
+    transform: translate(50%, 50%);
+}
+
+.top-n-1p3 {
+    top: -1.3rem !important;
+}
+
+.flex-grow-ex-cards {
+    flex-grow: 1 1 48% !important;
+}
+
+.flex-1-1-50 {
+    flex: 1 1 50% !important;
+}
+
+.flex-gap-p75 {
+    gap: 0.75rem !important;
+}
+
+.flex-gap-1 {
+    gap: 1rem !important;
+}
+
+.top-n-1p5 {
+    top: -1.5rem !important;
+}

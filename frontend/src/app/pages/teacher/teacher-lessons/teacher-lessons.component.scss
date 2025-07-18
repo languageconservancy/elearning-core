@@ -1,0 +1,141 @@
+@use "./assets/scss/modules/_theme";
+
+.table td,
+.table th {
+    padding: 0.15rem;
+    vertical-align: center !important;
+    border-top: 1px solid #dee2e6;
+}
+.col-lg-3,
+.col-lg-12 {
+    padding-right: 0;
+}
+
+#class-overview {
+    margin-top: 0;
+}
+
+#student-overview .panel {
+    max-height: 300px;
+    overflow: auto;
+    scrollbar-color: theme.$primary-color #ffffff14;
+    scrollbar-width: thin;
+}
+
+#class-overview tbody {
+    max-height: 275px;
+}
+#teacher-info {
+    height: 100%;
+    padding: 10px;
+}
+.overview-table {
+    overflow: auto;
+    margin-bottom: 10px;
+}
+i {
+    padding-left: 10px;
+}
+
+.css-checkbox {
+    /* position: absolute;
+z-index: -1000;
+left: -1000px;
+overflow: hidden;
+clip: rect(0 0 0 0);
+height: 1px;
+width: 1px;
+margin: -1px;
+padding: 0;
+border: 0; */
+}
+
+input[type="checkbox"].css-checkbox + label.css-label-sortable {
+    padding-left: 44px;
+    height: 17px;
+    display: inline-block;
+    line-height: 19px;
+    background-repeat: no-repeat;
+    font-size: 15px;
+    vertical-align: middle;
+    cursor: pointer;
+    margin: 10px 0 0 0;
+    color: theme.$text-ui-panel-light-contrast-light;
+}
+
+input[type="checkbox"].css-checkbox:checked + label.css-label-sortable {
+    background-position:
+        0 0,
+        22px -17px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.dnd-sortable-drag {
+    transform: scale(1);
+    opacity: 0.7;
+    border: 1px dashed black;
+}
+.panel-body {
+    min-height: 200px;
+}
+
+.overview-levels ul {
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+    margin-bottom: 3px;
+    padding-bottom: 0;
+    overflow-x: auto;
+    scrollbar-color: theme.$primary-color #ffffff14;
+    scrollbar-width: thin;
+}
+
+.level-container li {
+    display: inline;
+}
+
+.active-level a {
+    background: theme.$primary-color !important;
+    color: white !important;
+}
+
+.level-container {
+    max-height: 200px;
+}
+
+.level-container li a {
+    color: black;
+    background: white;
+    height: 80px;
+    width: 160px;
+    border: 2px solid theme.$primary-color;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 12px;
+    text-decoration: none;
+    margin: 5px;
+    padding-top: 10px;
+    display: inline-block;
+}
+
+.level-container li a:hover {
+    background: theme.$primary-color;
+    color: white;
+    & i {
+        color: white;
+    }
+}
+
+.level-container img {
+    height: 40px;
+    border-radius: 50%;
+}
+.level-container a i {
+    font-size: 28px;
+    color: theme.$primary-color;
+    margin-left: 0;
+    padding-left: 0;
+}

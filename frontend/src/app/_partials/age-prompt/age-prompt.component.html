@@ -1,0 +1,115 @@
+<div class="modal fade modal-n" id="age-prompt" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="AgePrompt">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                <h3 class="modal-title">Let us know your age</h3>
+                <div>Providing your age ensures you get the right experience. For more details, visit our <a [routerLink]="Routes.AboutPrivacy" target="_blank">Privacy Policy</a></div>
+            </div>
+            <div class="modal-body modal-n-table success">
+                <form name="form" [formGroup]="form">
+                    <!-- Age -->
+                    <span
+                        [ngClass]="{
+                            tick:
+                                form.value.age &&
+                                !form.controls.age.invalid &&
+                                form.controls.age.touched,
+                        }"
+                    >
+                        <input
+                            formControlName="age"
+                            class="form-control input-default"
+                            (blur)="ageChanged(form.value.age)"
+                            [ngClass]="{
+                                'has-error':
+                                    form.value.age &&
+                                    form.controls.age.invalid &&
+                                    form.controls.age.touched,
+                            }"
+                            type="text"
+                            placeholder="Age"
+                            name="age"
+                            autocomplete="age"
+                            inputmode="age"
+                        />
+                    </span>
+                    <!-- Username -->
+                    <span
+                        [hidden]="!show.usernameField"
+                        [ngClass]="{
+                            tick:
+                                form.value.username &&
+                                !form.controls.username.invalid &&
+                                form.controls.username.touched,
+                        }"
+                    >
+                        <input
+                            formControlName="username"
+                            [ngClass]="{
+                                'has-error':
+                                    form.value.username &&
+                                    form.controls.username.invalid &&
+                                    form.controls.username.touched,
+                            }"
+                            class="form-control input-default"
+                            type="text "
+                            placeholder="Username (not your real name)"
+                            name="username"
+                        />
+                    </span>
+                    <!-- Parent's Email -->
+                    <span
+                        [hidden]="!show.parentsEmailField"
+                        [ngClass]="{
+                            tick:
+                                form.value.parentsEmail &&
+                                !form.controls.parentsEmail.invalid &&
+                                form.controls.parentsEmail.touched,
+                        }"
+                    >
+                        <input
+                            formControlName="parentsEmail"
+                            class="form-control input-default"
+                            [ngClass]="{
+                                'has-error':
+                                    form.value.parentsEmail &&
+                                    form.controls.parentsEmail.invalid &&
+                                    form.controls.parentsEmail.touched,
+                            }"
+                            type="email"
+                            placeholder="Parent's email"
+                            name="parentsEmail"
+                            autocomplete="email"
+                            inputmode="email"
+                        />
+                    </span>
+                    <div
+                        [hidden]="!show.parentsEmailField"
+                        class="text-left mx-4 mt-n4 mb-1"
+                        *ngIf="
+                            form.get('parentsEmail').value !== '' &&
+                            form.get('parentsEmail').invalid &&
+                            form.get('parentsEmail').errors &&
+                            (form.get('parentsEmail').dirty || form.get('parentsEmail').touched)
+                        "
+                    >
+                        <small class="text-danger input-error-shadow" *ngIf="form.get('parentsEmail').hasError('pattern')"
+                            >Invalid email.</small
+                        >
+                    </div>
+                </form>
+            </div>
+
+            <!-- Next button -->
+            <div class="modal-footer">
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    (click)="submitForm(form)"
+                >
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

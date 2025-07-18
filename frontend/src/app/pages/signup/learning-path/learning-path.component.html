@@ -1,0 +1,46 @@
+<div class="row justify-content-center text-center">
+    <h2 class="blue-bg">Learning Path</h2>
+    <div class="col-11 bg-white path-box l-speed">
+        <h5 class="my-3 mb-5">Choose the path that best fits how you are learning {{ environment.LANGUAGE }}.</h5>
+        <div class="path-wrap-scroll">
+            <div class="path-check" *ngFor="let path of learningPaths; let i = index">
+                <div class="form-row">
+                    <div class="col-5 my-auto">
+                        <dl>
+                            <dt>{{ path.label }}</dt>
+                        </dl>
+                    </div>
+                    <div class="col-4 my-auto">
+                        <dl>
+                            <dd>{{ path.description }}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-3 my-auto">
+                        <label class="custom-control custom-radio">
+                            <input
+                                id="radioStacked{{ i + 1 }}"
+                                name="radio-stacked"
+                                value="{{ path.id }}"
+                                [(ngModel)]="pathModel.selected"
+                                type="radio"
+                                class="custom-control-input"
+                                required
+                            />
+                            <span class="custom-control-indicator"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col d-flex">
+        <button
+            type="submit"
+            class="btn btn-white mt-5 ml-auto"
+            [ngClass]="{ disabled: !pathModel.selected }"
+            (click)="submit()"
+        >
+            Next
+        </button>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+    phpVersion: 70400
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    ignoreErrors:
+        # Ignore errors about methods with no return type specified
+        - '#Method .* has no return type specified#'
+        # Ignore errors about expected type mismatch
+        - '#.* expects .*, .* given#'
+        # Ignore errors about parameters with no value type specified in iterable type array
+        - '#Method .* has parameter .* with no value type specified in iterable type array#'
+        - '#Method .* has parameter .* with no type specified.#'
+        - '#Method .* has parameter .* with no type specified.#'
+        - '#Method .* return type has no value type specified in iterable type array.#'

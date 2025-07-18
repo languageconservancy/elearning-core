@@ -1,0 +1,65 @@
+@use "theme";
+@use "variables";
+@use "../modules/bootstrap-helpers";
+
+@mixin transition($duration, $type) {
+    -o-transition: all $duration $type;
+    -moz-transition: all $duration $type;
+    -webkit-transition: all $duration $type;
+    transition: all $duration $type;
+}
+
+@mixin transformScale($x, $y) {
+    transform: scale($x, $y);
+    -moz-transform: scale($x, $y);
+    -webkit-transform: scale($x, $y);
+}
+
+@mixin transformTranslate($x, $y) {
+    transform: translate($x, $y);
+    -moz-transform: translate($x, $y);
+    -webkit-transform: translate($x, $y);
+}
+
+@mixin userSelect($value) {
+    -webkit-user-select: $value;
+    -moz-user-select: $value;
+    -ms-user-select: $value;
+    user-select: $value;
+}
+
+@mixin displayInlineFlex() {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+}
+
+@mixin buttonDefault($background, $color) {
+    background: $background;
+    color: $color;
+    padding: 0.5rem 1.4rem;
+    border-radius: 1.5rem 1.5rem;
+    // @include bootstrap-helpers.media-breakpoint-up(lg) {
+    // 	font-size: 1.5rem;
+    // }
+    cursor: pointer;
+    box-shadow: 0.3rem 0.3rem 0.3rem #00000026;
+    font-weight: bold;
+    @include transition(0.2s, ease-in-out);
+}
+
+@mixin inputDefault($fontSize, $marginBottom) {
+    background: theme.$ui-panel-light;
+    font-family: variables.$font-main;
+    font-size: $fontSize;
+    color: theme.$text-ui-panel-light-contrast;
+    border-radius: 4rem;
+    box-shadow: 0.3rem 0.3rem 0.3rem #00000026;
+    // max-width: 23rem;
+    // display: block;
+    margin: 0 auto;
+    margin-bottom: $marginBottom;
+    // padding: .7rem 0;
+    text-decoration: none;
+    -webkit-appearance: none;
+}

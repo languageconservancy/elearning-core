@@ -1,0 +1,133 @@
+<!-- Footer -->
+<div class="footer_part">
+    <div class="container">
+        <div class="row">
+            <div class="col-10">
+                <div class="row">
+                    <div class="col-3">
+                        <h4>{{ environment.SITE_NAME }}</h4>
+                        <div class="footer_link">
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrlOther('')">Home</a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="javascript:void(0)"
+                                        (click)="gotoUrlOther('start-learning')"
+                                        >Learn</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrlOther('review')"
+                                        >Review</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrlOther('progress')"
+                                        >Progress</a
+                                    >
+                                </li>
+                                <li *ngIf="canAccessLeaderboard()">
+                                    <a
+                                        href="javascript:void(0)"
+                                        (click)="gotoUrlOther('leader-board')"
+                                        >Leaderboard</a
+                                    >
+                                </li>
+                                <li *ngIf="features?.feature_village === '1' && canAccessVillage()">
+                                    <a href="javascript:void(0)" (click)="goToVillage()">Village</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <h4>About {{ environment.SITE_NAME }}</h4>
+                        <div class="footer_link">
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrl('project')"
+                                        >About the Project</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrl('press')"
+                                        >Press</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrl('download')"
+                                        >Download the App</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrl('dictionary')"
+                                        >{{ environment.LANGUAGE }} Dictionary</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrl('bookstore')"
+                                        >Bookstore</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="{{ environment.ROOT }}info/privacy.php"
+                                        >Privacy Policy</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrl('terms')"
+                                        >Terms & Conditions</a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <h4>{{ environment.SITE_OWNER }}</h4>
+                        <div class="footer_link">
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrl('about')"
+                                        >About Us</a
+                                    >
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" (click)="gotoUrl('press')"
+                                        >Press</a
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <a href="javascript:void(0)" class="help_link" (click)="gotoUrl('help')"
+                            >Help</a
+                        >
+                        <a href="javascript:void(0)" class="help_link" routerLink="/contact-us"
+                            >Contact Us</a
+                        >
+                    </div>
+                </div>
+            </div>
+            <!-- Removing these empty links for now. Need to confirm links -->
+            <!-- 			<div class="col-2">
+				<div class="footer_socialbtn">
+					<ul>
+						<li>
+							<a href="javascript:void(0)">
+								<img src="./assets/images/twitter.png" />
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">
+								<img src="./assets/images/facebook.png" />
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div> -->
+        </div>
+        <div class="copy_right">Copyright © {{ environment.SITE_OWNER }}, {{ copyrightDate }}</div>
+    </div>
+</div>

@@ -1,0 +1,163 @@
+<div *ngIf="showPopup">
+    <!--popup overlay starts-->
+    <div class="popup-overlay" (click)="closePopup()"></div>
+    <!--popup overlay ends-->
+
+    <!--exercise popup starts-->
+    <div
+        class="result-box position-fixed"
+        *ngIf="popupType === 'exercise'"
+        [ngClass]="{ 'result-box-success': popupStatus, 'result-box-fail': !popupStatus }"
+        (click)="audioService.playPauseAudio(activeCard.FullAudioUrl)"
+        [@fadeScaleBounceAnimation]="'initial'"
+    >
+        <div class="result-box-feather" *ngIf="popupStatus">
+            <img class="filter-dropshadow-img" src="./assets/images/result-box-feather.png" />
+        </div>
+        <h1 class="font-language font-bold" *ngIf="popupStatus">{{ getCorrectAnswerHeader(popupData.total) }}</h1>
+        <h1 class="font-language font-bold" *ngIf="!popupStatus">{{ wrongAnswerHeader }}</h1>
+        <div class="result-rewards">
+            <h6 class="custom-font" *ngIf="popupStatus && popupData.total > 0">+{{ popupData.total }} XP</h6>
+            <a
+                href="javascript:void(0)"
+                *ngIf="!popupStatus && review && !previousDisable"
+                (click)="previous()"
+                [ngClass]="{ 'disabled-arrow': previousDisable }"
+                class="review-arrow review-arrow-left"
+            ></a>
+            <div class="review-incorrect-wrapper" *ngIf="!popupStatus && review">
+                <div class="review-incorrect-content">
+                    <h5 class="font-language font-bold">{{ OwoksapeUtils.stripHtml(activeCard.lakota) }}</h5>
+                    <h6 class="font-language font-bold">{{ OwoksapeUtils.stripHtml(activeCard.english) }}</h6>
+                </div>
+                <div class="speaker-incorrect-icon" *ngIf="activeCard.FullAudioUrl">
+                    <a href="javascript:void(0)">
+                        <img
+                            *ngIf="
+                                audioService.getAudioSrc() !== activeCard.FullAudioUrl || audioService.audioIsPaused()
+                            "
+                            src="./assets/images/sound-icon-mute-white-small.png"
+                        />
+                        <img
+                            *ngIf="
+                                audioService.getAudioSrc() === activeCard.FullAudioUrl && !audioService.audioIsPaused()
+                            "
+                            src="./assets/images/sound-icon-white-small.png"
+                        />
+                    </a>
+                </div>
+            </div>
+            <a
+                href="javascript:void(0)"
+                *ngIf="!popupStatus && review && !nextDisable"
+                (click)="next()"
+                [ngClass]="{ 'disabled-arrow': nextDisable }"
+                class="review-arrow review-arrow-right"
+            ></a>
+        </div>
+        <a *ngIf="!popupStatus" class="btn-reward" (click)="closePopup()">X</a>
+    </div>
+    <!--exercise popup ends-->
+
+    <!--review score popup starts-->
+    <div class="popup-wrapper popup-blue-bg" *ngIf="popupType === 'reviewScore'">
+        <!--popup title starts -->
+        <div class="popup-title popup-title-big">
+            <h3 class="title-small-feather">
+                <span class="feather-left">
+                    <img
+                        class="filter-dropshadow-img"
+                        src="./assets/images/feather-double-left.png"
+                        alt="feather-left"
+                    />
+                </span>
+                <span class="font-language font-bold">{{ getCorrectAnswerHeader(popupData.total) }}</span>
+                <span class="feather-right">
+                    <img
+                        class="filter-dropshadow-img"
+                        src="./assets/images/feather-double-right.png"
+                        alt="feather-right"
+                    />
+                </span>
+            </h3>
+        </div>
+        <!--popup title ends -->
+        <!--popup main content starts -->
+        <div class="popup-main-content content-width-medium">
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Listening</span>
+                        <span>
+                            <i class="fa-solid fa-ear-listen fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.listening_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Writing</span>
+                        <span>
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.writing_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Reading</span>
+                        <span>
+                            <i class="fa-solid fa-book-open-reader fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.reading_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250 box-btm-mrgn-10">
+                <div class="box-label">
+                    <h5>
+                        <span class="text-width custom-font">Speaking</span>
+                        <span>
+                            <i class="fa-solid fa-microphone fa-lg"></i>
+                        </span>
+                    </h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.speaking_score_total }}</h6>
+                </div>
+            </div>
+            <div class="blue-box-small box-width-250">
+                <div class="box-label">
+                    <h5 class="custom-font">Bonus Points</h5>
+                </div>
+                <div class="label-value">
+                    <h6 class="custom-font">{{ popupData.path_score_total }}</h6>
+                </div>
+            </div>
+            <div class="total-points-panel">
+                <div class="points-block">
+                    <h5 class="custom-font">Total</h5>
+                </div>
+                <div class="points-block">
+                    <h5 class="custom-font">{{ popupData.total }} XP</h5>
+                </div>
+                <div class="points-block">
+                    <h5 class="custom-font">Earned</h5>
+                </div>
+            </div>
+        </div>
+        <!--popup main content ends -->
+        <button type="button" class="btn btn-white pull-right custom-font" (click)="closePopupReview()">Next</button>
+    </div>
+    <!--review score popup ends-->
+</div>

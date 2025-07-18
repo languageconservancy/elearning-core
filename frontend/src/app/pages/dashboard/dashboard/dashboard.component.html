@@ -1,0 +1,109 @@
+<div class="d-flex flex-column h-100">
+    <div class="text-center">
+        <p *ngIf="!fireData.haveReviewExercise" class="col-12 sub-heading font-language">{{ pathMessage }}</p>
+        <p *ngIf="fireData.haveReviewExercise" class="col-12 sub-heading font-language">
+            You are Learning on the
+            <a id="path-link" class="dash-path" (click)="goToPage('learning-settings')">{{
+                user.learningpath.label
+            }}</a>
+            Path!
+        </p>
+        <p *ngIf="fireData.haveReviewExercise" class="col-12 path-message font-language">{{ pathMessage }}</p>
+    </div>
+    <div class="d-flex flex-column flex-md-row justify-content-md-center align-items-center h-100">
+        <!-- Learning button and text -->
+        <div class="text-center mt-5 mx-md-10" *ngIf="showImages">
+            <div class="mt-2 mt-sm-4 dashboard-img">
+                <img
+                    *ngIf="user.learningpath?.FullImageUrl"
+                    id="learn-img"
+                    class="small-img"
+                    [src]="user.learningpath.FullImageUrl"
+                    alt=""
+                    (click)="goToPage('start-learning')"
+                />
+                <img
+                    *ngIf="!user.learningpath || !user.learningpath.FullImageUrl"
+                    id="learn-img"
+                    class="small-img"
+                    src="./assets/images/owoks-img.png"
+                    alt=""
+                    (click)="goToPage('start-learning')"
+                />
+            </div>
+            <div class="text-center mt-1 dashboard-text">
+                <button
+                    *ngIf="!fireData.haveReviewExercise"
+                    type="submit"
+                    id="start-learning-btn"
+                    class="btn btn-white"
+                    (click)="goToPage('start-learning')"
+                >
+                    Start Learning
+                </button>
+                <button
+                    *ngIf="fireData.haveReviewExercise"
+                    type="submit"
+                    id="learn-btn"
+                    class="btn btn-white"
+                    (click)="goToPage('start-learning')"
+                >
+                    Learn
+                </button>
+            </div>
+        </div>
+        <!-- Review buttons and text -->
+        <div class="text-center mt-5 mx-md-10 pt-0" *ngIf="fireData.haveReviewExercise && showImages">
+            <div class="mt-4 dashboard-img">
+                <img
+                    *ngIf="fireImage === 'dead'"
+                    class="small-img"
+                    src="./assets/images/fire_dead.png"
+                    alt=""
+                    (click)="goToPage('review')"
+                />
+                <img
+                    *ngIf="fireImage === 'low'"
+                    class="small-img"
+                    src="./assets/images/fire_low.png"
+                    alt=""
+                    (click)="goToPage('review')"
+                />
+                <img
+                    *ngIf="fireImage === 'medium'"
+                    class="small-img"
+                    src="./assets/images/fire_med.png"
+                    alt=""
+                    (click)="goToPage('review')"
+                />
+                <img
+                    *ngIf="fireImage === 'high'"
+                    class="small-img"
+                    src="./assets/images/fire_high.png"
+                    alt=""
+                    (click)="goToPage('review')"
+                />
+                <img
+                    *ngIf="fireImage === 'ultra'"
+                    class="small-img"
+                    src="./assets/images/fire_ultra.png"
+                    alt=""
+                    (click)="goToPage('review')"
+                />
+            </div>
+            <div class="text-center mt-1 dashboard-text">
+                <button type="submit" id="review-btn" class="btn btn-white" (click)="goToPage('review')">Review</button>
+            </div>
+        </div>
+        <!-- 				<div class="row">
+					<div class="col-2" *ngIf="showImages">
+						<div class="text-center cursor-pointer" (click)="goToVillage()">
+							<img src="./assets/images/partner-logo.png" alt="" />
+							<span class="partner-name">Village</span>
+						</div>
+					</div>
+				</div> -->
+    </div>
+</div>
+
+<app-event-promo></app-event-promo>

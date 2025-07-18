@@ -1,0 +1,46 @@
+<div class="profile-main-block pb-1">
+    <div class="pro-img-wrap">
+        <img *ngIf="user?.usersetting.FullProfileImageUrl" [src]="user?.usersetting.FullProfileImageUrl" alt="" />
+        <img *ngIf="!user?.usersetting.FullProfileImageUrl" src="./assets/images/user_img.png" alt="" />
+        <!-- Commented out temporarily until we can better control the photos users upload -->
+        <!-- 						<input type="file" name="profile_image" id="profile_image" class="inputfile" (change)="profilePicUpload($event)" />
+						<div class="edit">
+							<label for="profile_image"><i class="fa fa-pencil"></i></label>
+						</div> -->
+    </div>
+    <h4 class="text-primary font-weight-bold">{{ user?.name }}</h4>
+</div>
+<div class="text-center">
+    <div class="sub-logo-link">
+        <a href="javascript:void(0)">
+            <img
+                *ngIf="user?.badge?.socialpoint && user?.badge?.socialpoint > 4"
+                [src]="imgfunc(user?.badge?.socialpoint, 'socialpoint')"
+            />
+        </a>
+        <a href="javascript:void(0)">
+            <img
+                *ngIf="user?.badge?.firebadges && user?.badge?.firebadges?.fire_days > 0"
+                [src]="imgfunc(user?.badge?.firebadges, 'firebadges')"
+            />
+        </a>
+        <a href="javascript:void(0)" *ngIf="user?.badge?.levelbadge">
+            <div *ngFor="let levelbadgeImg of user?.badge?.levelbadge | badgeImage">
+                <img [src]="levelbadgeImg.image" />
+            </div>
+        </a>
+    </div>
+</div>
+<div class="px-0 pb-0 pt-1 font-weight-bold">
+    <div class="text-center detail-profile-txt higlightbox my-4 mx-auto">
+        <textarea class="form-control" name="aboutMe" [(ngModel)]="profile.aboutMe" id="aboutMe" rows="5">{{
+            user?.usersetting.profile_desc
+        }}</textarea>
+        <span>
+            <a href="javascript:void(0)" class="save-arrow" (click)="setProfileDetail('about')">
+                <i class="fa fa-caret-right" aria-hidden="true"></i>
+            </a>
+        </span>
+    </div>
+    <!-- <app-gallery></app-gallery> -->
+</div>

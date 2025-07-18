@@ -1,0 +1,153 @@
+<div class="row sign-box mb-4 no-gutters">
+    <div class="col-lg-6 text-center d-flex flex-column align-items-center justify-content-center">
+        <div class="d-flex flex-column flex-nowrap align-content-center align-items-center">
+            <div
+                *ngIf="!deviceDetector.isMobile() && !deviceDetector.isTablet() && googleConfigValid"
+                #googleSigninBtn
+                id="google-signin-link"
+                class="d-flex justify-content-center mb-3"
+            ></div>
+            <a
+                *ngIf="(deviceDetector.isMobile() || deviceDetector.isTablet()) && googleConfigValid"
+                href="javascript:void(0)"
+                id="google-signin-link-custom"
+                (click)="handleGoogleLoginBtnMobileTap()"
+                class="input-default social-input py-1 mb-3 d-flex justify-content-between align-items-center"
+            >
+                <img src="./assets/images/goog-icon.png" alt="" class="pl-2" />
+                <span class="flex-grow-1">Sign in with Google</span>
+            </a>
+            <a
+                *ngIf="facebookConfigValid"
+                href="javascript:void(0)"
+                id="facebook-signin-link"
+                (click)="handleFacebookLoginBtnClickOrTap()"
+                class="input-default social-input py-1 mb-3 d-flex justify-content-between align-items-center"
+            >
+                <img src="./assets/images/face-icon.png" alt="" class="pl-2" />
+                <span class="flex-grow-1">Sign in with Facebook</span>
+            </a>
+            <a
+                *ngIf="!(isAndroid && isNativePlatform) && appleConfigValid"
+                href="javascript:void(0)"
+                id="apple-signin-link"
+                (click)="handleAppleLoginBtnTap()"
+                class="input-default social-input py-1 mb-3 d-flex justify-content-between align-items-center"
+            >
+                <img src="./assets/images/apple-logo.png" alt="" class="pl-2 rounded-circle" />
+                <span class="flex-grow-1">Sign in with Apple</span>
+            </a>
+            <a
+                *ngIf="cleverConfigValid && !deviceDetector.isMobile() && !deviceDetector.isTablet()"
+                href="javascript:void(0)"
+                (click)="handleCleverLoginBtnClick()"
+                id="clever-signin-link"
+                class="input-default social-input py-1 mb-3 d-flex justify-content-between align-items-center"
+            >
+                <img src="./assets/images/clever-icon.png" alt="" class="pl-2 rounded-circle" />
+                <span class="flex-grow-1">Sign in with Clever</span>
+            </a>
+            <p
+                *ngIf="googleConfigValid || facebookConfigValid || appleConfigValid || cleverConfigValid"
+                id="signin-with-email"
+            >
+                Or Sign in with your Email Address
+            </p>
+        </div>
+        <form
+            name="loginForm"
+            class="form-group form-width"
+            [formGroup]="loginForm"
+            (submit)="logInWithEmailAndPassword(loginForm)"
+        >
+            <input
+                id="signin-email"
+                class="form-control input-default"
+                formControlName="email"
+                name="email"
+                [ngClass]="{
+                    'has-error':
+                        loginForm.value.email && loginForm.controls.email.invalid && loginForm.controls.email.touched,
+                }"
+                type="email"
+                placeholder="Email"
+                autocomplete="username"
+                inputmode="email"
+            />
+            <input
+                id="signin-password"
+                class="form-control input-default"
+                formControlName="password"
+                name="password"
+                [ngClass]="{
+                    'has-error':
+                        loginForm.value.password &&
+                        loginForm.controls.password.invalid &&
+                        loginForm.controls.password.touched,
+                }"
+                type="password"
+                placeholder="Password"
+                autocomplete="current-password"
+            />
+
+            <div class="form-group d-flex flex-row justify-content-between mx-auto align-items-center">
+                <a
+                    id="forgot-pwd-btn"
+                    href="javascript:void(0)"
+                    [routerLink]="['/forgot-password']"
+                    class="text-blue-hover text-left font-weight-bold mr-1"
+                    >Forgot Password?</a
+                >
+                <button type="submit" id="login-submit-btn" class="btn btn-white ml-1">Submit</button>
+            </div>
+        </form>
+        <p><a href="javascript:void(0)" class="text-blue-hover" (click)="openTrialModal()">Try it out</a></p>
+        <button type="submit" class="btn btn-light d-lg-none rounded-pill ml-1 py-1 text-dark" (click)="goToSignup()">
+            Sign up
+        </button>
+    </div>
+    <div class="col-lg-6 text-center sl-box d-none d-lg-block">
+        <img src="/assets/images/elearning_home_family.png" class="" style="max-height: 300px" />
+    </div>
+</div>
+<app-event-promo></app-event-promo>
+
+<div class="modal fade modal-n" id="trial-message" tabindex="-1" role="dialog" aria-labelledby="TrialMessage">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title">Trial Session</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body modal-n-table">
+                <h5 class="text-center">
+                    If you want to keep your progress across browsers and devices, and unlock age-restricted features, create an account. This trial will
+                    only maintain your data temporariliy.
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="goToSignup()">
+                    Sign Up
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="tryApp()">
+                    Try anyway
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-n" id="signup-suggestion" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="SignupSuggestion">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <app-signup-suggestion
+                (continueWithTrial)="signupSuggestionModalClosed($event)">
+            </app-signup-suggestion>
+        </div>
+    </div>
+</div>
+
+<app-age-prompt></app-age-prompt>
+

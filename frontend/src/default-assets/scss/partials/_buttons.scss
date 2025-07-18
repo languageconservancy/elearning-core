@@ -1,0 +1,352 @@
+@use "../modules/theme";
+@use "../modules/variables";
+@use "../modules/mixins";
+@use "../modules/bootstrap-helpers";
+
+.btn-primary {
+    background-color: theme.$primary-color;
+    border-color: theme.$primary-color;
+    &:hover {
+        background-color: theme.$primary-color-light;
+        border-color: theme.$primary-color-light;
+    }
+}
+
+.btn-blue {
+    @include mixins.buttonDefault(theme.$primary-color, theme.$text-primary-contrast);
+    margin: 3px 5px;
+    border: 0.2rem solid theme.$primary-color;
+    &:hover {
+        background: rgba(theme.$primary-color-light, 0.2);
+        color: theme.$text-primary;
+        border: 0.2rem solid theme.$primary-color;
+        outline: 0.05rem solid theme.$primary-color-light;
+    }
+}
+
+/* Next/Previous buttons */
+.btn-white {
+    @include mixins.buttonDefault(theme.$ui-panel-light, theme.$text-primary);
+    &:hover {
+        background: theme.$primary-color;
+        color: theme.$text-primary-contrast;
+    }
+}
+.btn-social-login {
+    @include mixins.buttonDefault(theme.$ui-panel-light, theme.$text-ui-panel-light-contrast);
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 25rem;
+    img {
+        max-height: 3rem;
+    }
+}
+.btn-blue-real {
+    background: theme.$primary-color;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    margin: 0.2rem 0.3rem;
+    border-radius: 1.5rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0.3rem 0.3rem 0.3rem #00000026;
+    font-weight: bold;
+    @include mixins.transition(0.3s, linear);
+    &:hover {
+        background: #fff;
+        border: 0.1rem solid theme.$primary-color;
+        color: theme.$primary-color;
+    }
+}
+
+/* Next/Previous buttons */
+.btn-text-hover {
+    &:hover {
+        color: theme.$ui-panel-medium;
+    }
+}
+
+/* Learn -> Continue, Village, Review */
+.ft-action-btn {
+    position: relative;
+    margin: 0;
+}
+.ft-action-btn span {
+    position: absolute;
+    left: 0;
+    top: -20px;
+}
+.ft-action-btn a {
+    background: theme.$primary-color;
+    border-radius: 0 25px 25px 0;
+    padding: 10px 20px 10px 35px;
+    text-decoration: none;
+    color: theme.$text-primary-contrast;
+    font-size: 20px;
+    font-weight: 500;
+    margin-left: 30px;
+    &:hover {
+        background: theme.$ui-panel-light;
+        color: theme.$text-primary;
+    }
+}
+
+/* Settings buttons */
+a.btn-action {
+    border: 0.1rem solid theme.$primary-color;
+    font-weight: 600;
+    color: theme.$text-primary;
+    text-align: center;
+    border-radius: 1.5rem;
+    padding: 0.6rem 1rem;
+    box-shadow: 0.3rem 0.3rem 0.3rem #00000026;
+    text-decoration: none;
+    vertical-align: text-top;
+    line-height: 2rem;
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        background: theme.$primary-color;
+        color: theme.$text-primary-contrast;
+    }
+    &:active {
+        background: theme.$primary-color-dark;
+        color: theme.$text-primary-contrast;
+    }
+}
+.landscape-leftpannel {
+    @include bootstrap-helpers.media-breakpoint-up(md) {
+        max-height: 520px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-color: theme.$primary-color #ffffff14;
+        scrollbar-width: thin;
+    }
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        li {
+            list-style: none;
+            position: relative;
+            margin-bottom: 30px;
+            @include bootstrap-helpers.media-breakpoint-down(md) {
+                // display: inline-block;
+                // width: calc(90%/3);
+            }
+
+            span {
+                position: absolute;
+                top: 50%;
+                right: -20px;
+                z-index: 2;
+                @include mixins.transformTranslate(0, -50%);
+            }
+        }
+    }
+}
+
+.level-btn {
+    // This comes from ".level-img" width of 80px and
+    // ".landscape-leftpannel ul li span" right of -20px
+    padding-right: 60px !important;
+}
+
+/* Level buttons */
+.landscape-leftpannel ul li a {
+    display: block;
+    border-radius: 0.8rem 0.8rem 0.8rem 0.8rem;
+    box-shadow: 0 0px 7px rgba(0, 0, 0, 0.3);
+    padding: 1.3rem;
+    margin-top: 1.7rem;
+    text-decoration: none;
+    background: variables.$white;
+    color: theme.$text-ui-panel-light-contrast-light;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: left;
+    &:hover,
+    &.active-level {
+        background: theme.$primary-color;
+        color: theme.$text-primary-contrast;
+    }
+    @include bootstrap-helpers.media-breakpoint-down(md) {
+        margin-right: 30px;
+    }
+}
+
+.profile-leftpannel {
+    ul {
+        margin-right: 1rem;
+        padding: 0;
+    }
+    ul li {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+.profile-leftpannel ul li a {
+    background: variables.$white;
+    border-radius: 50px;
+    padding: 15px;
+    display: block;
+    text-align: left;
+    text-decoration: none;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    color: theme.$text-ui-panel-light-contrast-light;
+    &:hover,
+    &.active {
+        background: theme.$primary-color;
+        color: theme.$text-primary-contrast;
+    }
+}
+
+.btn-key:hover {
+    background: theme.$primary-color-light;
+}
+/* Submit Button */
+.submit-btn {
+    margin-top: 25px;
+}
+
+/* MCQ Options Key buttons */
+.key-buttons span {
+    display: inline-block;
+    width: auto;
+    margin-bottom: 20px;
+}
+.key-buttons:last-child span {
+    margin-bottom: 0;
+}
+
+/* Upload Image button on Profile Settings  */
+.btn-upload-file {
+    background: theme.$primary-color;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    &:hover {
+        background: theme.$primary-color;
+    }
+}
+
+/* Profile Photo button */
+.edit label {
+    cursor: pointer;
+    font-size: 14px;
+    color: theme.$text-ui-panel-light-contrast;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block !important;
+    padding-top: 10px;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+/* True/False buttons */
+.btn-option {
+    padding: 0.6rem 1.2rem;
+    width: 90%;
+    display: inline-block;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+button.input-default.btn {
+    background: theme.$primary-color;
+    color: theme.$text-primary-contrast;
+    margin: 0;
+    padding: 6px 15px;
+}
+
+.btn p {
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+.match-res {
+    // margin-bottom: 45px;
+    cursor: pointer;
+}
+.match-res a {
+    color: theme.$text-primary-contrast;
+    text-decoration: none;
+    @include mixins.transition(0ms, ease);
+}
+.match-res:hover a {
+    color: theme.$text-primary;
+}
+.match-res p {
+    margin-bottom: 0;
+}
+
+.active-answer,
+.match-res:hover {
+    background: variables.$white;
+    color: theme.$text-primary;
+}
+.active-answer a {
+    color: theme.$text-primary;
+}
+.matched {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    height: 90%;
+    width: 89%;
+    border-radius: 0.7rem;
+    top: 10px;
+    z-index: 1;
+    pointer-events: none;
+}
+.match-res .matched {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+.match-res.matched-ans-wrap {
+    border: 5px solid rgba(0, 0, 0, 0.6);
+}
+.match-res.matched-ans-wrap:hover a {
+    color: theme.$text-ui-panel-dark-contrast !important;
+}
+
+.btn-audio-select {
+    margin-bottom: 0;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 0 0 0.4rem 0.4rem;
+    width: 100%;
+    font-size: 1.7rem;
+}
+
+.exercise-block-audio {
+    width: 7rem;
+}
+
+#lesson-btm-btns {
+    // background: theme.$primary-color;
+    // Disable hover for mobile since it stays in hover mode
+    @include bootstrap-helpers.media-breakpoint-down(md) {
+        button:hover {
+            background-color: theme.$ui-panel-light;
+            color: theme.$primary-color;
+        }
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            padding-bottom: max(calc(env(safe-area-inset-bottom) - 1rem), 1rem) !important;
+        }
+    }
+}
+
+.search-btn {
+    height: calc(1.5em + 0.75rem + 2px);
+}
+
+.unit-action-btn {
+    max-width: 100px;
+    @include bootstrap-helpers.media-breakpoint-up(md) {
+        max-width: 120px;
+    }
+}

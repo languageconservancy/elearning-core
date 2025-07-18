@@ -1,0 +1,357 @@
+<app-friend-sidebar></app-friend-sidebar>
+<app-page-title [pageTitle]="'Village'"></app-page-title>
+
+<div *ngIf="canAccessVillage()">
+    <!-- Smaller screens dropdown menu -->
+    <div class="d-flex justify-content-center">
+        <div class="dropdown d-lg-none village-dropdown bg-transparent mb-2 mt-0">
+            <button
+                class="dropdown-toggle d-flex flex-nowrap text-wrap justify-content-between align-items-center mx-auto px-4 py-2"
+                type="button"
+                data-toggle="dropdown"
+                aria-expanded="false"
+                data-display="static"
+            >
+                {{ activeForumName }}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a
+                    *ngFor="let forum of forums"
+                    class="dropdown-item"
+                    (click)="setActiveForum(forum)"
+                    href="javascript:void(0)"
+                >
+                    {{ forum.title }}
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row my-2 align-items-center" *ngIf="!noForums">
+        <div class="col-8 col-lg-4 offset-lg-4 pr-1">
+            <div class="d-flex short-by-fld">
+                <div class="input-group search-area align-items-center">
+                    <input
+                        id="search_id"
+                        type="text"
+                        name="searchTxt"
+                        [(ngModel)]="searchTxt"
+                        class="form-control input-default mx-0 font-language"
+                        (focus)="setActiveInput($event)"
+                        [(ngModel)]="inputs.search_id"
+                        placeholder="Search here"
+                        aria-label="Search here"
+                        aria-describedby="basic-addon2"
+                        inputmode="none"
+                    />
+                    <span [hidden]="searchTxt === ''" class="icon-close" (click)="clear()">
+                        <i class="fa fa-times-circle"></i>
+                    </span>
+                    <div class="input-group-append">
+                        <button
+                            class="input-default btn search-btn d-flex align-items-center"
+                            type="button"
+                            (click)="search()"
+                        >
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="text-center text-white">
+                <div class="text-right">
+                    <button
+                        class="btn btn-white px-3"
+                        (click)="openModal('newPost', 'add', '')"
+                        [hidden]="activeForum === null || hideNewPostBtn"
+                    >
+                        New Topic
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center text-center mt-3" *ngIf="!noForums">
+        <div class="col-12 col-lg-4 units-container d-none d-lg-block">
+            <div class="profile-leftpannel">
+                <ul>
+                    <li *ngFor="let forum of forums" (click)="setActiveForum(forum)">
+                        <a
+                            href="javascript:void(0)"
+                            [ngClass]="{ active: activeForum === forum.id }"
+                            ><h5 class="mb-0">{{ forum.title }}</h5></a
+                        >
+                    </li>
+                </ul>
+            </div>
+            <div class="align-bottom">
+                <app-social-share></app-social-share>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 l-speed">
+            <div
+                class="row no-gutters justify-content-start units-container mt-lg-1"
+                *ngIf="!noPosts"
+                infiniteScroll
+                [infiniteScrollDistance]="2"
+                [infiniteScrollUpDistance]="1.5"
+                [infiniteScrollThrottle]="50"
+                (scrolled)="onScroll()"
+                [scrollWindow]="false"
+            >
+                <div class="logo-container-box forum-box col-12" *ngFor="let post of posts">
+                    <div class="row mx-1 flex-nowrap">
+                        <div class="col-3 col-lg-2 px-0">
+                            <div class="profile-pic-section">
+                                <div class="forum-profile-pic" (click)="goToProfile(post.user)">
+                                    <img
+                                        *ngIf="!post.user.usersetting.FullProfileImageUrl"
+                                        src="./assets/images/user_img.png"
+                                    />
+                                    <img
+                                        *ngIf="post.user.usersetting.FullProfileImageUrl"
+                                        [src]="post.user.usersetting.FullProfileImageUrl"
+                                    />
+                                </div>
+                                <h4
+                                    *ngIf="post.user_id === user.id"
+                                    (click)="goToProfile(post.user)"
+                                >
+                                    You
+                                </h4>
+                                <h4
+                                    *ngIf="post.user_id !== user.id"
+                                    (click)="goToProfile(post.user)"
+                                    class="text-break"
+                                >
+                                    {{ post.user.name }}
+                                </h4>
+                                <div class="forum-profile-logos">
+                                    <a href="javascript:void(0)"
+                                        ><img
+                                            *ngIf="post?.user?.badge?.socialpoint > 4"
+                                            [src]="
+                                                imgfunc(post.user.badge.socialpoint, 'socialpoint')
+                                            "
+                                    /></a>
+                                    <a href="javascript:void(0)"
+                                        ><img
+                                            *ngIf="post?.user?.badge?.firebadges?.fire_days > 0"
+                                            [src]="
+                                                imgfunc(post.user.badge.firebadges, 'firebadges')
+                                            "
+                                    /></a>
+                                    <a href="javascript:void(0)" *ngIf="post.user.badge.levelbadge">
+                                        <span
+                                            *ngFor="
+                                                let levelbadgeImg of post.user.badge.levelbadge
+                                                    | badgeImage
+                                            "
+                                        >
+                                            <img [src]="levelbadgeImg.image" />
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-9 col-lg-10">
+                            <div class="forum-content">
+                                <h4 class="cursor-pointer" (click)="goToDetails(post)">
+                                    {{ post.title }}
+                                </h4>
+                                <h6>
+                                    {{ post.entry_time }} - {{ post.viewer_count }} views
+                                    <a
+                                        href="javascript:void(0);"
+                                        *ngIf="
+                                            post.user_id === user.id ||
+                                            user.role_id === 4 ||
+                                            user.role_id === 1
+                                        "
+                                        (click)="openModal('newPost', 'edit', post)"
+                                    >
+                                        - Edit</a
+                                    >
+                                    <a
+                                        href="javascript:void(0);"
+                                        *ngIf="
+                                            post.user_id === user.id ||
+                                            user.role_id === 4 ||
+                                            user.role_id === 1
+                                        "
+                                        (click)="deletePost(post)"
+                                    >
+                                        - Delete</a
+                                    >
+                                </h6>
+                                <a
+                                    *ngIf="post.audio"
+                                    class="audio-icon"
+                                    href="javascript:void(0)"
+                                    (click)="audioService.playPauseAudio(post.audio_detail.link)"
+                                >
+                                    <img
+                                        *ngIf="
+                                            audioService.getAudioSrc() !== post.audio_detail.link ||
+                                            audioService.audioIsPaused()
+                                        "
+                                        src="./assets/images/sound-mute-blue-btn.png"
+                                    />
+                                    <img
+                                        *ngIf="
+                                            audioService.getAudioSrc() === post.audio_detail.link &&
+                                            !audioService.audioIsPaused()
+                                        "
+                                        src="./assets/images/sound-blue-btn.png"
+                                    />
+                                </a>
+                                <p class="prewrap font-language">{{ post.content }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottom-replies-panel">
+                        <!-- <div class="row flex-nowrap"> -->
+                        <div class="col-3 col-lg-2">
+                            <a
+                                href="javascript:void(0)"
+                                *ngIf="
+                                    activeForumName !== 'Reported Posts' && user.id !== post.user.id
+                                "
+                                class="report-post"
+                                (click)="openReportPostModal(post)"
+                            >
+                                <img
+                                    src="./assets/images/report.png"
+                                    alt=""
+                                    title="Report this post"
+                                />
+                            </a>
+                            <a
+                                href="javascript:void(0)"
+                                (click)="approvePost(post)"
+                                *ngIf="
+                                    (user.role_id === 4 || user.role_id === 1) &&
+                                    activeForum === null
+                                "
+                                >Approve</a
+                            >
+                        </div>
+                        <div class="col-9 col-lg-10" align="center">
+                            <a
+                                href="javascript:void(0)"
+                                class="relpy-link pull-right"
+                                (click)="goToDetails(post)"
+                                >{{ post.child_forum_posts.length }} Replies</a
+                            >
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-start" *ngIf="noPosts">
+                <div class="col-12 text-center">
+                    <h3 class="text-white no-units">No posts to show.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center text-center" *ngIf="noForums">
+        <div class="col-12 text-center">
+            <h3 class="text-white no-units">No forums to show.</h3>
+        </div>
+    </div>
+
+    <div
+        appAdjustModalForKeyboard
+        class="modal fade modal-n"
+        id="newPost"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="New Post"
+    >
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h3 class="modal-title" id="reset-progress-data">New Topic</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="switch-box">
+                    <h4>{{ environment.LANGUAGE }} Keyboard</h4>
+                    <label class="switch">
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="keyboardFlag"
+                            (change)="toggleVirtualKeyboard()"
+                        />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <form name="postForm" [formGroup]="postForm" (submit)="createPost(postForm)">
+                    <div class="modal-body modal-n-table">
+                        <input
+                            type="text"
+                            id="input_id"
+                            (click)="toggleVirtualKeyboard()"
+                            placeholder="Title"
+                            formControlName="title"
+                            name="title"
+                            class="form-control input-default seoc-btn-width font-language"
+                            (focus)="setActiveInput($event)"
+                            [(ngModel)]="inputs.input_id"
+                            inputmode="none"
+                            appAutoScrollModalInput
+                        />
+                        <textarea
+                            name="content"
+                            id="textarea_id"
+                            (click)="toggleVirtualKeyboard()"
+                            placeholder="Description"
+                            formControlName="content"
+                            class="form-control input-default seoc-btn-width font-language"
+                            (focus)="setActiveInput($event)"
+                            [(ngModel)]="inputs.textarea_id"
+                            inputmode="none"
+                            appAutoScrollModalInput
+                        ></textarea>
+                        <select
+                            *ngIf="
+                                (user.role_id === 4 || user.role_id === 1) && activeForum === null
+                            "
+                            formControlName="postStatus"
+                            class="form-control input-default seoc-btn-width"
+                        >
+                            <option value="R" selected>Reject</option>
+                            <option value="A">Approve</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+                <p id="typing-area-2"></p>
+            </div>
+        </div>
+    </div>
+
+    <app-report-post-modal></app-report-post-modal>
+
+    <app-virtual-keyboard
+        #virtualKeyboard
+        [inputs]="inputs"
+        [debug]="!environment.production"
+        [customClass]="'forumListKeyboard'"
+        class="fixed-bottom"
+        style="z-index: 1050 !important"
+    ></app-virtual-keyboard>
+</div>
+
+<div class="col-8 text-center mx-auto mt-10" *ngIf="!canAccessVillage()">
+    <h3>The Village is not accessible, in order to comply with COPPA and CIPA laws</h3>
+</div>

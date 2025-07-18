@@ -1,0 +1,116 @@
+<div class="d-flex align-items-center flex-row text-center position-relative mt-lg-2 flex-lg-column flex-row">
+    <div *ngIf="unit?.activities?.length" class="mb-1">
+        <app-timer></app-timer>
+    </div>
+
+    <!-- Small screens Progress Nav Bar-->
+    <div
+        #progressNavContainerHoriz
+        class="d-lg-none steps-holder px-4 justify-content-start position-relative my-auto overflow-auto d-flex flex-row align-items-center"
+    >
+        <div
+            class="completion-bar-horiz position-absolute"
+            [style.width.rem]="getNumUnitAttemptableActivities() * 6"
+        ></div>
+        <div class="incompletion-bar-horiz position-absolute" [style.width.rem]="activities.length * 6"></div>
+        <div
+            class="stepNo-horiz d-flex"
+            *ngFor="let activity of activities; let i = index"
+            [attr.data-index]="i"
+            [ngClass]="{
+                'disabled-link, disabledIcon':
+                    activity.state === ActivityState.NotAttempted && i !== currentActivityIdx,
+                'ml-0': i === 0,
+            }"
+            (click)="
+                activity.state !== ActivityState.NotAttempted &&
+                    i !== currentActivityIdx &&
+                    activityPressed(activity.type, i)
+            "
+            [attr.data-current-horiz-activity]="i === currentActivityIdx ? 'true' : 'false'"
+        >
+            <img
+                [src]="getProgressIconUrl(activity, i)"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ getProgressIconTooltip(activity) }}"
+            />
+        </div>
+        <div
+            *ngIf="unit?.activities.length"
+            class="stepNo-horiz lastStep"
+            [ngClass]="unitCompleteOrPreviouslyCompleted ? 'activeIcon' : 'disabledIcon'"
+        >
+            <img
+                *ngIf="!unitCompleteOrPreviouslyCompleted"
+                src="./assets/images/fire-dead-progress-icon.png"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Complete the Unit to Start Review"
+            />
+            <img
+                *ngIf="unitCompleteOrPreviouslyCompleted"
+                src="./assets/images/fire-progress-icon.png"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Start Review"
+                (click)="activityPressed('review', -1)"
+            />
+        </div>
+    </div>
+
+    <!-- Large screens Progress Nav Bar-->
+    <div
+        #progressNavContainerVert
+        class="d-none steps-holder vh-75 justify-content-start position-relative mx-auto overflow-auto d-lg-flex flex-column align-items-center"
+    >
+        <div
+            class="completion-bar-vert position-absolute"
+            [style.height.rem]="getNumUnitAttemptableActivities() * 6"
+        ></div>
+        <div class="incompletion-bar-vert position-absolute" [style.height.rem]="activities.length * 6"></div>
+        <div
+            class="stepNo-vert d-flex"
+            *ngFor="let activity of activities; let i = index"
+            [attr.data-index]="i"
+            [ngClass]="{
+                'disabled-link, disabledIcon':
+                    activity.state === ActivityState.NotAttempted && i !== currentActivityIdx,
+            }"
+            (click)="
+                activity.state !== ActivityState.NotAttempted &&
+                    i !== currentActivityIdx &&
+                    activityPressed(activity.type, i)
+            "
+            [attr.data-current-vert-activity]="i === currentActivityIdx ? 'true' : 'false'"
+        >
+            <img
+                [src]="getProgressIconUrl(activity, i)"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ getProgressIconTooltip(activity) }}"
+            />
+        </div>
+        <div
+            *ngIf="activities?.length"
+            class="stepNo-vert lastStep"
+            [ngClass]="unitCompleteOrPreviouslyCompleted ? 'activeIcon' : 'disabledIcon'"
+        >
+            <img
+                *ngIf="!unitCompleteOrPreviouslyCompleted"
+                src="./assets/images/fire-dead-progress-icon.png"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Complete the Unit to Start Review"
+            />
+            <img
+                *ngIf="unitCompleteOrPreviouslyCompleted"
+                src="./assets/images/fire-progress-icon.png"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Start Review"
+                (click)="activityPressed('review', -1)"
+            />
+        </div>
+    </div>
+</div>

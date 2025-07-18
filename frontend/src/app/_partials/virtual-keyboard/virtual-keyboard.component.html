@@ -1,0 +1,8 @@
+<div #keyboard [ngClass]="!showKeyboard ? 'd-none' : ''">
+    <div class="position-relative">
+        <button #closeButton class="position-absolute border-0 text-black rounded-top-left-1 rounded-top-right-1 p-1 mr-1 top-n-1p5 right-0" type="button" (click)="hide()">
+            Close <i class="fa fa-close"></i>
+        </button>
+    </div>
+    <div class="{{ customClass }}"></div>
+</div>

@@ -1,0 +1,172 @@
+<app-page-title [pageTitle]="'Sign Up'"></app-page-title>
+<div class="row justify-content-center text-center mx-auto no-gutters">
+    <div class="col col-md-8 col-lg-6 sign-up-box success">
+        <p>Enter Your Details Below</p>
+        <form name="registrationForm" [formGroup]="registrationForm">
+            <!-- Age -->
+            <span
+                [ngClass]="{
+                    tick:
+                        registrationForm.value.age &&
+                        !registrationForm.controls.age.invalid &&
+                        registrationForm.controls.age.touched,
+                }"
+            >
+                <input
+                    formControlName="age"
+                    class="form-control input-default"
+                    (blur)="ageChanged(registrationForm.value.age)"
+                    [ngClass]="{
+                        'has-error':
+                            registrationForm.value.age &&
+                            registrationForm.controls.age.invalid &&
+                            registrationForm.controls.age.touched,
+                    }"
+                    type="age"
+                    placeholder="Age"
+                    name="age"
+                    autocomplete="age"
+                    inputmode="age"
+                />
+            </span>
+            <!-- Username -->
+            <span
+                [ngClass]="{
+                    tick:
+                        registrationForm.value.name &&
+                        !registrationForm.controls.name.invalid &&
+                        registrationForm.controls.name.touched,
+                }"
+            >
+                <input
+                    formControlName="name"
+                    [ngClass]="{
+                        'has-error':
+                            registrationForm.value.name &&
+                            registrationForm.controls.name.invalid &&
+                            registrationForm.controls.name.touched,
+                    }"
+                    class="form-control input-default"
+                    type="text "
+                    [placeholder]="usernamePlaceholder"
+                    name="name"
+                />
+            </span>
+            <!-- Email -->
+            <span
+                [ngClass]="{
+                    tick:
+                        registrationForm.value.email &&
+                        !registrationForm.controls.email.invalid &&
+                        registrationForm.controls.email.touched,
+                }"
+            >
+                <input
+                    formControlName="email"
+                    class="form-control input-default"
+                    (blur)="emailChanged(registrationForm.value.email)"
+                    [ngClass]="{
+                        'has-error':
+                            registrationForm.value.email &&
+                            registrationForm.controls.email.invalid &&
+                            registrationForm.controls.email.touched,
+                    }"
+                    type="email"
+                    [placeholder]="emailPlaceholder"
+                    name="email"
+                    autocomplete="email"
+                    inputmode="email"
+                />
+            </span>
+            <div
+                class="text-left mx-4 mt-n4 mb-1"
+                *ngIf="
+                    registrationForm.get('email').value !== '' &&
+                    registrationForm.get('email').invalid &&
+                    registrationForm.get('email').errors &&
+                    (registrationForm.get('email').dirty || registrationForm.get('email').touched)
+                "
+            >
+                <small
+                    class="text-danger input-error-shadow"
+                    *ngIf="registrationForm.get('email').hasError('nonUniqueEmail')"
+                    >Email is already taken, or maybe you already signed up.</small
+                >
+                <small class="text-danger input-error-shadow" *ngIf="registrationForm.get('email').hasError('pattern')"
+                    >Invalid email.</small
+                >
+            </div>
+            <span
+                [ngClass]="{
+                    tick:
+                        registrationForm.value.password &&
+                        !registrationForm.controls.password.invalid &&
+                        registrationForm.controls.password.touched,
+                }"
+            >
+                <input
+                    formControlName="password"
+                    class="form-control input-default"
+                    [ngClass]="{
+                        'has-error':
+                            registrationForm.value.password &&
+                            registrationForm.controls.password.invalid &&
+                            registrationForm.controls.password.touched,
+                    }"
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    autocomplete="new-password"
+                />
+            </span>
+            <span
+                [ngClass]="{
+                    tick:
+                        registrationForm.value.confirmpassword &&
+                        !registrationForm.controls.confirmpassword.invalid &&
+                        registrationForm.controls.confirmpassword.touched,
+                }"
+            >
+                <input
+                    formControlName="confirmpassword"
+                    class="form-control input-default"
+                    [ngClass]="{
+                        'has-error':
+                            registrationForm.value.confirmpassword &&
+                            registrationForm.controls.confirmpassword.invalid &&
+                            registrationForm.controls.confirmpassword.touched,
+                    }"
+                    type="password"
+                    name="confirmpassword"
+                    placeholder="Confirm"
+                    autocomplete="new-password"
+                />
+            </span>
+            <div
+                class="text-left mx-4 mt-n3"
+                *ngIf="
+                    registrationForm.get('confirmpassword').value !== '' &&
+                    registrationForm.get('confirmpassword').invalid &&
+                    !registrationForm.get('confirmpassword').active &&
+                    registrationForm.get('confirmpassword').errors &&
+                    (registrationForm.get('confirmpassword').dirty || registrationForm.get('confirmpassword').touched)
+                "
+            >
+                <small
+                    class="text-danger input-error-shadow"
+                    *ngIf="registrationForm.get('confirmpassword').hasError('notSame')"
+                    >Passwords don't match.</small
+                >
+            </div>
+        </form>
+        <div class="d-flex flex-wrap flex-row justify-content-between align-items-center">
+            <re-captcha
+                *ngIf="!this.runningOnLocalhost()"
+                class="mr-auto"
+                (resolved)="captchaResolved($event)"
+                siteKey="{{ captchaSiteKey }}"
+            ></re-captcha>
+            <button type="submit" class="btn btn-white ml-auto" (click)="register(registrationForm)">Next</button>
+        </div>
+    </div>
+</div>

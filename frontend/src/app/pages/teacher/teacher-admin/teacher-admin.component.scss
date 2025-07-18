@@ -1,0 +1,104 @@
+@use "./assets/scss/modules/_theme";
+
+.col-lg-3,
+.col-lg-12 {
+    padding-right: 0;
+}
+
+#class-overview {
+    margin-top: 0;
+}
+#teacher-info {
+    height: 100%;
+    padding: 10px;
+}
+
+.panel-body {
+    min-height: 65px;
+}
+.label-w-100 {
+    width: 100px;
+}
+.label-w-200 {
+    width: 200px;
+}
+.label-w-155 {
+    width: 155px;
+}
+.overview-levels ul {
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+    margin-bottom: 3px;
+    padding-bottom: 0;
+    overflow-x: auto;
+    scrollbar-color: theme.$primary-color #ffffff14;
+    scrollbar-width: thin;
+}
+
+.level-container li {
+    display: inline;
+}
+
+.active-level a {
+    background: theme.$primary-color !important;
+    color: white !important;
+}
+
+.level-container li a {
+    color: black;
+    background: white;
+    display: inline-block;
+    height: 110px;
+    width: 160px;
+    border: 2px solid theme.$primary-color;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+    text-decoration: none;
+    margin: 5px;
+    padding-top: 10px;
+    display: inline-block;
+}
+
+.level-container li a:hover {
+    background: theme.$primary-color;
+    color: white;
+    & > i {
+        color: white;
+    }
+}
+.level-container li a i:hover {
+    color: white;
+}
+
+.level-container img {
+    height: 42px;
+    margin-top: 10px;
+}
+.level-container a i {
+    font-size: 25px;
+    color: theme.$primary-color;
+    margin-top: 10px;
+    margin-left: 0;
+    padding-bottom: 5px;
+    padding-left: 0;
+}
+
+.link-btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px;
+}
+
+.user-array-form {
+    max-height: 360px;
+    overflow: auto;
+}
+.modal-lg {
+    max-width: 1000px;
+}
+
+.seoc-btn-thin {
+    display: inline;
+}

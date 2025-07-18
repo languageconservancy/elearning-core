@@ -1,0 +1,7 @@
+<img [class]="clazz" [src]="src" alt="" (click)="togglePopup()" />
+
+<div class="overlay" [ngClass]="popup ? 'show-overlay' : ''" (click)="togglePopup()">
+    <div class="image-zoom-popup">
+        <img [src]="src" [alt]="alt" [id]="id" />
+    </div>
+</div>

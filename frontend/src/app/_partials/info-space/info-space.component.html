@@ -1,0 +1,24 @@
+<div class="top_footerpart">
+    <div class="container">
+        <div class="row">
+            <div class="col-4 cursor-pointer" (click)="gotoUrl('help')">
+                <div class="footer_icon">
+                    <img src="./assets/images/icon_01.png" />
+                </div>
+                <h3>FAQ</h3>
+            </div>
+            <div class="col-4 cursor-pointer" (click)="gotoUrl('project')">
+                <div class="footer_icon">
+                    <img src="./assets/images/icon_02.png" />
+                </div>
+                <h3>About {{ environment.SITE_NAME }}</h3>
+            </div>
+            <div class="col-4 cursor-pointer" (click)="gotoUrl('download')">
+                <div class="footer_icon">
+                    <img src="./assets/images/icon_03.png" />
+                </div>
+                <h3>Download the App</h3>
+            </div>
+        </div>
+    </div>
+</div>

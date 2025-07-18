@@ -1,0 +1,53 @@
+@use "../modules/bootstrap-helpers";
+@use "../modules/variables";
+
+html,
+body {
+    font-size: 16px;
+    @include bootstrap-helpers.media-breakpoint-up(lg) {
+        font-size: 18px;
+    }
+}
+
+.header-font-size {
+    font-size: 1.5rem !important;
+}
+.header-line-height {
+    line-height: 1.5 !important;
+}
+
+.prompt-font-size {
+    font-size: 1.2rem !important;
+}
+.prompt-line-height {
+    line-height: 1.2 !important;
+}
+
+.default-font-size {
+    font-size: 1rem !important;
+}
+.default-line-height {
+    line-height: 1rem !important;
+}
+
+.secondary-font-size {
+    font-size: 0.8rem !important;
+}
+
+.font-bold {
+    font-weight: bold !important;
+}
+
+@each $size, $length in variables.$integer-sizes {
+    .font-size-#{$size} {
+        font-size: #{$length} !important;
+    }
+    .font-size-#{$size}p5 {
+        font-size: calc(#{$length} + 0.5rem) !important;
+    }
+}
+
+.font-helvetica {
+    font-family: HelveticaNeue-Light, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande",
+    sans-serif !important;
+}

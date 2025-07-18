@@ -1,0 +1,210 @@
+.table td,
+.table th {
+    padding: 0.15rem !important;
+    vertical-align: center !important;
+    border-top: 1px solid #dee2e6;
+}
+
+#student-activity table {
+    width: 100%;
+}
+
+.justify-content-start {
+    width: 960px;
+}
+
+th.mat-sort-header-sorted {
+    color: black;
+}
+
+.col-lg-4,
+.col-lg-12 {
+    padding-right: 0;
+}
+#class-overview {
+    margin-top: 0;
+}
+#class-overview tbody {
+    max-height: 275px;
+}
+#teacher-info {
+    height: 100%;
+    padding: 10px;
+}
+#student-progress {
+    padding-bottom: 10px;
+}
+#student-activity {
+    padding-bottom: 10px;
+}
+#student-overview {
+    padding-bottom: 10px;
+}
+#student-overview img {
+    border-radius: 50%;
+    height: 30px;
+}
+#student-progress img {
+    border-radius: 50%;
+    height: 30px;
+}
+#student-activity img {
+    border-radius: 50%;
+    height: 30px;
+}
+.overview-table {
+    height: 360px;
+    overflow: auto;
+    margin-bottom: 10px;
+}
+i.fa-download {
+    padding-left: 10px;
+}
+i.fa-save {
+    padding-left: 10px;
+}
+i.fa-circle {
+    text-align: center;
+    min-width: 30px;
+}
+
+.attempted i {
+    color: orange;
+}
+.complete i {
+    color: green;
+}
+.incomplete i {
+    display: none;
+}
+
+.data-table-row.row-odd.clickable.selected,
+.data-table-row.row-even.clickable.selected {
+    background-color: #e4edf9 !important;
+}
+.row-header {
+    min-width: 200px;
+}
+
+.table-header-rotated th.rotate-45 {
+    height: 80px;
+    width: 45px;
+    min-width: 30px;
+    max-width: 30px;
+    position: relative;
+    vertical-align: bottom;
+    padding: 0;
+    font-size: 12px;
+    line-height: 0.8;
+}
+.table-header-rotated td {
+    height: 32px;
+}
+
+.table-header-rotated th.rotate-45 > div {
+    position: relative;
+    top: 0px;
+    left: -40px; /* 80 * tan(45) / 2 = 40 where 80 is the height on the cell and 45 is the transform angle*/
+    height: 100%;
+    -ms-transform: skew(45deg, 0deg);
+    -moz-transform: skew(45deg, 0deg);
+    -webkit-transform: skew(45deg, 0deg);
+    -o-transform: skew(45deg, 0deg);
+    transform: skew(45deg, 0deg);
+    overflow: hidden;
+}
+
+.table-header-rotated th.rotate-45 span {
+    -ms-transform: skew(-45deg, 0deg) rotate(45deg);
+    -moz-transform: skew(-45deg, 0deg) rotate(45deg);
+    -webkit-transform: skew(-45deg, 0deg) rotate(45deg);
+    -o-transform: skew(-45deg, 0deg) rotate(45deg);
+    transform: skew(-45deg, 0deg) rotate(45deg);
+    position: absolute;
+    bottom: 40px; /* 40 cos(45) = 28 with an additional 2px margin*/
+    left: -10px; /*Because it looked good, but there is probably a mathematical link here as well*/
+    display: inline-block;
+    width: 100%;
+    width: 45px; /* 80 / cos(45) - 40 cos (45) = 85 where 80 is the height of the cell, 40 the width of the cell and 45 the transform angle*/
+    text-align: right;
+    white-space: nowrap; /*whether to display in one line or not*/
+}
+
+.table-striped-column > thead > tr th:nth-of-type(even) div {
+    background-color: #eee;
+}
+
+.table-striped-column > tbody > tr td:nth-of-type(even) {
+    background-color: #eee;
+}
+.teacher-dash-check dl {
+    text-align: left;
+}
+.teacher-dash-check dt {
+    font-size: 14px;
+    margin-bottom: 0px;
+}
+.teacher-dash-check dd {
+    font-size: 14px;
+    margin-left: 15px;
+    color: #2392d0;
+}
+.teacher-dash-check {
+    padding: 0% 0%;
+}
+.teacher-dash-check .custom-radio .custom-control-indicator {
+    border-radius: 42%;
+}
+.teacher-dash-check .custom-control-indicator {
+    position: absolute;
+    top: 0.25rem;
+    left: 0;
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 40% 40%;
+    border: 1px solid #2392d0;
+    box-shadow: 5px 5px 5px #00000026;
+}
+.teacher-dash-check .custom-control {
+    position: relative;
+    display: inline-flex;
+    min-height: 2rem;
+    padding-left: 1rem;
+    margin-right: 0rem;
+}
+.teacher-dash-check .custom-radio .custom-control-input:checked ~ .custom-control-indicator {
+    background-image: none;
+}
+.teacher-dash-check .custom-control-input:checked ~ .custom-control-indicator {
+    color: #fff;
+    background-color: #2392d0;
+}
+.td-img-left img {
+    position: relative;
+    left: -10px;
+    margin-top: 0px;
+}
+.mat-table {
+    text-align: left;
+}
+
+.hidden {
+    display: none;
+}
+
+.progress-scroll {
+    overflow: auto;
+    scrollbar-color: #2392d0 #ffffff14;
+    scrollbar-width: thin;
+    margin: 5px;
+    max-height: 270px;
+}

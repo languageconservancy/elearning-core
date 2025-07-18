@@ -1,0 +1,41 @@
+<div class="d-grid grid-cols-2-6-1 align-items-center column-gap-1 mb-2" *ngIf="reviewCompletionDataFetched && reviewCompletionPercentage > 0">
+    <div class="text-center">
+        <h6 *ngIf="reviewCompletionPercentage < 100" class="my-auto text-primary">Unlocks next unit :</h6>
+        <h6 *ngIf="reviewCompletionPercentage >= 100" class="my-auto text-primary">Next unit unlocked!</h6>
+    </div>
+    <div class="">
+        <div class="progress" title="{{reviewCompletionPercentage}}%">
+            <div
+                aria-valuemax="100"
+                aria-valuemin="0"
+                aria-valuenow=""
+                class="progress-bar"
+                role="progressbar"
+                [style.width.%]="reviewCompletionPercentage"
+            ></div>
+        </div>
+    </div>
+    <div class="text-center">
+        <!-- Right-facing arrow button -->
+        <button
+            aria-label="Go to units"
+            title="Go to units"
+            *ngIf="reviewCompletionPercentage >= 100"
+            class="text-primary bg-transparent border-0 header-font-size"
+            [disabled]="reviewCompletionPercentage < 100"
+        >
+            <a routerLink="/start-learning">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </button>
+    </div>
+</div>
+
+<!-- <app-review-mcq *ngIf="exercise.exercise_type == 'multiple-choice'"></app-review-mcq> -->
+<app-mcq *ngIf="exercise.exercise_type === 'multiple-choice'" [sessionType]="'review'"></app-mcq>
+<app-true-false *ngIf="exercise.exercise_type === 'truefalse'" [sessionType]="'review'"></app-true-false>
+<app-match-pair *ngIf="exercise.exercise_type === 'match-the-pair'" [sessionType]="'review'"></app-match-pair>
+<app-anagram *ngIf="exercise.exercise_type === 'anagram'" [sessionType]="'review'"></app-anagram>
+<app-fillin *ngIf="exercise.exercise_type === 'fill_in_the_blanks'" [sessionType]="'review'"></app-fillin>
+<app-recording *ngIf="exercise.exercise_type === 'recording'" [sessionType]="'review'"></app-recording>
+<app-keyboard-shortcuts *ngIf="!this.isMobile && !this.isTablet"></app-keyboard-shortcuts>

@@ -1,0 +1,281 @@
+@use "./theme";
+
+$white: #ffffff;
+$gray: #cccccc;
+$gray-dark: #8e8e8e;
+$black: #000000;
+$light-black: #4a4a4a;
+$dark-red: #9f0b10;
+$yellow: #e9e73e;
+
+$twitter-blue: #55acee;
+$facebook-blue: #3b5998;
+$linkedin-blue: #007bb5;
+$reddit-red: #ff5700;
+
+$font-main: TLC-ArialRoundedMTBoldRegular;
+$font-language: Trebuchet MS, sans-serif;
+$font-brand: MPLUSRounded1c;
+$font-secondary: ArialRoundedMTBold;
+
+$enable-responsive-font-sizes: true;
+
+$generic-size: 1rem;
+$generic-sizes: ();
+$generic-sizes: map-merge(
+    (
+        0: 0,
+        1: (
+            $generic-size * 0.25,
+        ),
+        2: (
+            $generic-size * 0.5,
+        ),
+        3: (
+            $generic-size * 0.75,
+        ),
+        4: $generic-size,
+        5: (
+            $generic-size * 1.25,
+        ),
+        6: (
+            $generic-size * 1.5,
+        ),
+        7: (
+            $generic-size * 1.75,
+        ),
+        8: (
+            $generic-size * 2,
+        ),
+        9: (
+            $generic-size * 2.5,
+        ),
+        10: (
+            $generic-size * 3,
+        ),
+        11: (
+            $generic-size * 3.5,
+        ),
+        12: (
+            $generic-size * 4,
+        ),
+        13: (
+            $generic-size * 4.5,
+        ),
+        14: (
+            $generic-size * 5,
+        ),
+    ),
+    $generic-sizes
+);
+
+$decimal-size: 1rem;
+$decimal-sizes: ();
+$decimal-sizes: map-merge(
+    (
+        0: 0,
+        1: (
+            $decimal-size * 0.1,
+        ),
+        2: (
+            $decimal-size * 0.2,
+        ),
+        3: (
+            $decimal-size * 0.3,
+        ),
+        4: $decimal-size * 0.4,
+        5: (
+            $decimal-size * 0.5,
+        ),
+        6: (
+            $decimal-size * 0.6,
+        ),
+        7: (
+            $decimal-size * 0.7,
+        ),
+        8: (
+            $decimal-size * 0.8,
+        ),
+        9: (
+            $decimal-size * 0.9,
+        ),
+        10: (
+            $decimal-size * 1,
+        ),
+        11: (
+            $decimal-size * 1.1,
+        ),
+        12: (
+            $decimal-size * 1.2,
+        ),
+        13: (
+            $decimal-size * 1.3,
+        ),
+        14: (
+            $decimal-size * 1.4,
+        ),
+        15: (
+            $decimal-size * 1.5,
+        ),
+    ),
+    $decimal-sizes
+);
+
+$integer-size: 1rem;
+$integer-sizes: ();
+$integer-sizes: map-merge(
+    (
+        0: 0,
+        1: (
+            $integer-size * 1,
+        ),
+        2: (
+            $integer-size * 2,
+        ),
+        3: (
+            $integer-size * 3,
+        ),
+        4: $integer-size * 4,
+        5: (
+            $integer-size * 5,
+        ),
+        6: (
+            $integer-size * 6,
+        ),
+        7: (
+            $integer-size * 7,
+        ),
+        8: (
+            $integer-size * 8,
+        ),
+        9: (
+            $integer-size * 9,
+        ),
+        10: (
+            $integer-size * 10,
+        ),
+        11: (
+            $integer-size * 11,
+        ),
+        12: (
+            $integer-size * 12,
+        ),
+        13: (
+            $integer-size * 13,
+        ),
+        14: (
+            $integer-size * 14,
+        ),
+        15: (
+            $integer-size * 15,
+        ),
+        16: (
+            $integer-size * 16,
+        ),
+        17: (
+            $integer-size * 17,
+        ),
+        18: (
+            $integer-size * 18,
+        ),
+        19: (
+            $integer-size * 19,
+        ),
+        20: (
+            $integer-size * 20,
+        ),
+    ),
+    $integer-sizes
+);
+
+// Bootstrap OVERRIDE
+// Spacer levels
+$spacer: 1rem;
+$spacers: ();
+$spacers: map-merge(
+    (
+        0: 0,
+        1: (
+            $spacer * 0.25,
+        ),
+        2: (
+            $spacer * 0.5,
+        ),
+        3: (
+            $spacer * 0.75,
+        ),
+        4: $spacer,
+        5: (
+            $spacer * 1.25,
+        ),
+        6: (
+            $spacer * 1.5,
+        ),
+        7: (
+            $spacer * 1.75,
+        ),
+        8: (
+            $spacer * 2,
+        ),
+        9: (
+            $spacer * 2.5,
+        ),
+        10: (
+            $spacer * 3,
+        ),
+        11: (
+            $spacer * 3.5,
+        ),
+        12: (
+            $spacer * 4,
+        ),
+        13: (
+            $spacer * 4.5,
+        ),
+        14: (
+            $spacer * 5,
+        ),
+    ),
+    $spacers
+);
+
+// Bootstrap OVERRIDE
+// This variable affects the `.h-*` and `.w-*` classes.
+$sizes: () !default;
+$sizes: map-merge(
+    (
+        10: 10%,
+        15: 15%,
+        20: 20%,
+        25: 25%,
+        30: 30%,
+        35: 35%,
+        40: 40%,
+        45: 45%,
+        50: 50%,
+        55: 55%,
+        60: 60%,
+        65: 65%,
+        70: 70%,
+        75: 75%,
+        80: 80%,
+        85: 85%,
+        90: 90%,
+        95: 95%,
+        100: 100%,
+        auto: auto,
+    ),
+    $sizes
+);
+
+// Orientations
+$app-orientations: (
+    "port": "portrait",
+    "land": "landscape",
+);
+
+$primary: theme.$primary-color;
+$success: theme.$correct-color;
+$danger: theme.$incorrect-color;
+
+// $enable-responsive-font-sizes: true;

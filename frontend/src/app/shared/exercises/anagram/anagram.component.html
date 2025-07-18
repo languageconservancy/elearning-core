@@ -1,0 +1,61 @@
+<div class="row" *ngIf="exerciseService.question">
+    <div class="col-12">
+        <div class="mar-bot-15 text-center font-language prompt-font-size">{{ exerciseService.exercise?.instruction }}</div>
+    </div>
+
+    <!-- PROMPT -->
+    <div class="col-12 col-lg-6 hide-borders">
+        <app-non-selectable-card
+            [card]="exerciseService.question"
+            [enabledDataTypes]="exerciseService.promptTypes"
+            [optionType]="'prompt'"
+        ></app-non-selectable-card>
+    </div>
+
+    <!-- RESPONSE -->
+    <div class="col-12 col-lg-6 text-center">
+        <div class="input-field-area prompt-font-size spacer-top-20 text-center">
+            <ng-container *ngFor="let box of inputCountArray; let i = index">
+                <input
+                    type="text"
+                    id="input-{{ i }}"
+                    autofocus="i==activeInputIndex"
+                    [(ngModel)]="answer[i]"
+                    maxlength="{{ box.length }}"
+                    readonly
+                    (keydown)="(false)"
+                    (click)="setActiveInput(i)"
+                    [ngClass]="{
+                        'active-input': i === activeInputIndex && answerSubmitted === false,
+                        'border-option-correct border-bottom-2 bg-option-correct': answerIsCorrect[i] === AnswerType.CORRECT,
+                        'border-option-incorrect border-bottom-2 bg-option-incorrect': answerIsCorrect[i] === AnswerType.INCORRECT,
+                    }"
+                    class="w-{{getMaxBlankLength() + 1}} text-center w-50 font-language"
+                />
+                <!-- Display punctuation next to input -->
+                <b class="ml-1" *ngIf="punctuationArray[i]">{{ punctuationArray[i] }}</b>
+                <span *ngIf="i < inputCountArray.length - 1" class="mx-1">&nbsp;</span>
+            </ng-container>
+            <b class="ml-2" *ngIf="punctuationArray[inputCountArray.length]">{{ punctuationArray[inputCountArray.length] }}</b>
+        </div>
+        <div class="key-btn-area">
+            <a
+                class="mx-1 my-2 btn btn-lg btn-blue font-language prompt-font-size"
+                *ngFor="let key of jumbledKeys"
+                href="javascript:void(0)"
+                (click)="jumbledLetterPressed(key)"
+                [ngClass]="{
+                    'border-option-matched bg-option-matched text-black disabled-link': key.disabled
+                }"
+                >{{ key.key }}</a
+            >
+        </div>
+
+        <!-- Submit Button -->
+        <div class="submit-btn">
+            <button type="button" class="btn btn-blue" [disabled]="answerSubmitted" (click)="submitAnswer()">Submit</button>
+            <button type="button" id="backspace" class="btn btn-blue" (click)="backspace()">&#9003;
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+@use "../modules/theme";
+@use "../modules/variables";
+
+.total-point-txt {
+    width: 100%;
+    font: normal 30px / normal variables.$font-main;
+    color: variables.$light-black;
+    text-align: center;
+    margin: 0 auto 45px;
+}
+.total-point-txt span {
+    display: block;
+    font-size: 26px;
+    color: theme.$text-primary;
+}
+
+h3.top-heading {
+    margin: 25px auto 35px;
+}
+
+h3.top-heading span {
+    background: theme.$primary-color;
+    color: theme.$text_primary_contrast;
+    padding: 6px 25px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 35px;
+}

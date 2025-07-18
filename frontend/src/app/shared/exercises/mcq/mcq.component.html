@@ -1,0 +1,52 @@
+<div class="" *ngIf="exerciseService.question">
+    <div class="row" *ngIf="exerciseService.exercise?.instruction">
+        <div class="mb-7 text-center mw-90 mx-auto font-language prompt-font-size">{{ exerciseService.exercise?.instruction }}</div>
+    </div>
+    <!-- PROMPT -->
+    <app-non-selectable-card
+        [card]="exerciseService.question"
+        [enabledDataTypes]="exerciseService.promptTypes"
+        [optionType]="'prompt'"
+    ></app-non-selectable-card>
+
+    <hr />
+
+    <!-- RESPONSE -->
+    <div class="row row-cols-2 justify-content-center"
+        [ngClass]="{
+            'mt-9': exerciseService.responseTypes.indexOf('a') > -1,
+        }"
+    >
+        <div
+            class="col d-flex justify-content-center text-center mb-7"
+            *ngFor="let choice of exerciseService.choices; let i = index"
+        >
+            <app-selectable-card
+                [card]="choice"
+                [index]="i"
+                [highlightedCardIndex]="keyboardHighlightedResponseCardIndex"
+                [userAnswer]="userResponseAnswers[i]"
+                [correctAnswerId]="exerciseService.ansId"
+                [enabledDataTypes]="exerciseService.responseTypes"
+                [optionType]="'response'"
+                (cardSelectedEvent)="answer($event)"
+                class="flex-fill"
+            ></app-selectable-card>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="text-right btmBtn">
+            <button
+                class="btn btn-white custom-next"
+                type="button"
+                [ngClass]="{ 'd-none': !exerciseService.nextButtonShouldBeClickable }"
+                (click)="goToNext()"
+            >
+                Next
+            </button>
+        </div>
+    </div>
+</div>

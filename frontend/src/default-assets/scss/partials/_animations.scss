@@ -1,0 +1,65 @@
+/* fade in */
+@-webkit-keyframes fadein {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+    to {
+        top: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        top: 0;
+        opacity: 0;
+    }
+    to {
+        top: 30px;
+        opacity: 1;
+    }
+}
+
+/* fade out */
+@-webkit-keyframes fadeout {
+    from {
+        top: 30px;
+        opacity: 1;
+    }
+    to {
+        top: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        top: 30px;
+        opacity: 1;
+    }
+    to {
+        top: 0;
+        opacity: 0;
+    }
+}
+
+/* pop-up */
+@-webkit-keyframes pop-up {
+    from {
+        top: 130%;
+    }
+    to {
+        top: 30%;
+    }
+}
+
+/* Standard syntax */
+@keyframes pop-up {
+    from {
+        top: 130%;
+    }
+    to {
+        top: 30%;
+    }
+}

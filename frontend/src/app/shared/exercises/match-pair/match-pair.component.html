@@ -1,0 +1,144 @@
+<div class="row text-center justify-content-center" *ngIf="exerciseService.exercise?.instruction">
+    <div class="mb-2 mx-3 font-language prompt-font-size">{{ exerciseService.exercise?.instruction }}</div>
+</div>
+<!-- <div class="row justify-space"> -->
+<!-- PROMPT -->
+<ng-container>
+    <div class="row justify-content-center align-items-stretch">
+        <div *ngIf="questions.length" class="col-6 my-3 d-flex flex-fill justify-content-center"
+            [ngClass]="{
+                'my-5': questions[0].promptArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container *ngTemplateOutlet="prompt; context: { ques: questions[0], idx: 0 }"></ng-container>
+        </div>
+        <div *ngIf="questions.length > 1" class="col-6 my-3 d-flex flex-fill justify-content-center"
+            [ngClass]="{
+                'my-5': questions[1].promptArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container *ngTemplateOutlet="prompt; context: { ques: questions[1], idx: 1 }"></ng-container>
+        </div>
+    </div>
+    <div *ngIf="questions.length > 2" class="row justify-content-center align-items-stretch">
+        <div *ngIf="questions.length > 2" class="col-6 my-3 d-flex flex-fill justify-content-center"
+            [ngClass]="{
+                'my-5': questions[2].promptArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container *ngTemplateOutlet="prompt; context: { ques: questions[2], idx: 2 }"></ng-container>
+        </div>
+        <div *ngIf="questions.length > 3" class="col-6 my-3 d-flex flex-fill justify-content-center"
+            [ngClass]="{
+                'my-5': questions[3].promptArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container *ngTemplateOutlet="prompt; context: { ques: questions[3], idx: 3 }"></ng-container>
+        </div>
+    </div>
+    <div *ngIf="questions.length > 4" class="row justify-content-center align-items-stretch">
+        <div *ngIf="questions.length > 4" class="col-6 my-3 d-flex flex-fill justify-content-center"
+            [ngClass]="{
+                'my-5': questions[4].promptArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container *ngTemplateOutlet="prompt; context: { ques: questions[4], idx: 4 }"></ng-container>
+        </div>
+        <div *ngIf="questions.length > 5" class="col-6 my-3 d-flex flex-fill justify-content-center"
+            [ngClass]="{
+                'my-5': questions[5].promptArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container *ngTemplateOutlet="prompt; context: { ques: questions[5], idx: 5 }"></ng-container>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #prompt let-ques="ques" let-idx="idx">
+    <app-selectable-card
+        [card]="ques.question"
+        [index]="idx"
+        [highlightedCardIndex]="highlightedPromptIndex"
+        [selectedCardId]="selectedQuestionId"
+        [userAnswer]="userPromptAnswers[idx]"
+        [correctAnswerId]="exerciseService.ansId"
+        [enabledDataTypes]="ques.promptArray"
+        [optionType]="'prompt'"
+        (cardSelectedEvent)="selectQuest($event)"
+        class="flex-fill h-100"
+    ></app-selectable-card>
+
+</ng-template>
+
+<hr />
+
+<!-- RESPONSE -->
+<ng-container>
+    <div class="row justify-content-center">
+        <div *ngIf="exerciseService.choices.length" class="col-6 my-3 d-flex justify-content-center">
+            <ng-container
+                *ngTemplateOutlet="response; context: { choice: exerciseService.choices[0], idx: 0 }"
+            ></ng-container>
+        </div>
+        <div *ngIf="exerciseService.choices.length > 1" class="col-6 my-3 d-flex justify-content-center">
+            <ng-container
+                *ngTemplateOutlet="response; context: { choice: exerciseService.choices[1], idx: 1 }"
+            ></ng-container>
+        </div>
+    </div>
+    <div *ngIf="exerciseService.choices.length > 2" class="row justify-content-center"
+    >
+        <div *ngIf="exerciseService.choices.length > 2" class="col-6 my-3 d-flex justify-content-center"
+            [ngClass]="{
+                'my-5': exerciseService.choices[2].respArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container
+                *ngTemplateOutlet="response; context: { choice: exerciseService.choices[2], idx: 2 }"
+            ></ng-container>
+        </div>
+        <div *ngIf="exerciseService.choices.length > 3" class="col-6 my-3 d-flex justify-content-center"
+            [ngClass]="{
+                'my-5': exerciseService.choices[3].respArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container
+                *ngTemplateOutlet="response; context: { choice: exerciseService.choices[3], idx: 3 }"
+            ></ng-container>
+        </div>
+    </div>
+    <div *ngIf="exerciseService.choices.length > 4" class="row justify-content-center">
+        <div *ngIf="exerciseService.choices.length > 4" class="col-6 my-3 d-flex justify-content-center"
+            [ngClass]="{
+                'my-4': exerciseService.choices[4].respArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container
+                *ngTemplateOutlet="response; context: { choice: exerciseService.choices[4], idx: 4 }"
+            ></ng-container>
+        </div>
+        <div *ngIf="exerciseService.choices.length > 5" class="col-6 my-3 d-flex justify-content-center"
+            [ngClass]="{
+                'my-4': exerciseService.choices[5].respArray.indexOf('a') > -1,
+            }"
+        >
+            <ng-container
+                *ngTemplateOutlet="response; context: { choice: exerciseService.choices[5], idx: 5 }"
+            ></ng-container>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #response let-choice="choice" let-idx="idx">
+    <app-selectable-card
+        [card]="choice"
+        [index]="idx"
+        [highlightedCardIndex]="highlightedChoiceIndex"
+        [userAnswer]="userResponseAnswers[idx]"
+        [correctAnswerId]="exerciseService.ansId"
+        [enabledDataTypes]="choice.respArray"
+        [optionType]="'response'"
+        (cardSelectedEvent)="selectAns($event)"
+        class="flex-fill h-100"
+    ></app-selectable-card>
+</ng-template>

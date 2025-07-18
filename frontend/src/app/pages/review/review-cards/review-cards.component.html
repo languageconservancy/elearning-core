@@ -1,0 +1,18 @@
+<app-keyboard></app-keyboard>
+<app-review-reward-popup></app-review-reward-popup>
+<app-review-next-popup *ngIf="reviewnextpopup" (abcd)="functionCallOutput($event)"></app-review-next-popup>
+<div class="welcome-content-panel">
+    <app-breadcrumb></app-breadcrumb>
+
+    <div class="row text-left m-0 position-relative">
+        <div class="col-lg-2 martop-10">
+            <app-review-timer></app-review-timer>
+        </div>
+        <div class="col-lg-10 bg-white path-box l-speed" *ngIf="reviewDetails.length > 0">
+            <app-review-exercise></app-review-exercise>
+        </div>
+        <div class="col-10 text-center" *ngIf="noExercises">
+            <h3 class="text-white no-units">No exercises to review currently.</h3>
+        </div>
+    </div>
+</div>

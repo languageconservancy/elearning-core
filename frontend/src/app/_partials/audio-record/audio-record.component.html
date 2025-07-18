@@ -1,0 +1,29 @@
+<div class="response-audio">
+    <!-- Safari hack -->
+    <span id="btn-release-microphone" class="position-absolute invisible" (click)="releaseMic()"></span>
+    <div class="col-12 resp-aud-wave">
+        <div id="record-audio"></div>
+    </div>
+    <div class="play-icon">
+        <img
+            *ngIf="showRecord && !isRecording"
+            src="./assets/images/microphoneIcon.png"
+            alt=""
+            id="btn-start-recording"
+            (click)="startRecording()"
+        />
+        <img
+            *ngIf="showRecord && isRecording"
+            src="./assets/images/record_process.png"
+            alt=""
+            id="btn-stop-recording"
+            (click)="stopRecording()"
+        />
+        <img *ngIf="!showRecord && !isPlaying" src="./assets/images/playIcon.png" alt="" (click)="togglePlay()" />
+        <img *ngIf="!showRecord && isPlaying" src="./assets/images/stopIcon.png" alt="" (click)="togglePlay()" />
+
+        <div class="reset-recording">
+            <a href="javascript:void(0)" (click)="resetRecording(true)">Try Again</a>
+        </div>
+    </div>
+</div>

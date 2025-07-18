@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="{{#if language}}{{language}}{{else}}en{{/if}}">
+  <head>
+    {{#if googleAnalyticsTagId}}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{googleAnalyticsTagId}}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "{{googleAnalyticsTagId}}");
+    </script>
+    {{/if}}
+
+    <base href="/" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover, maximum-scale=1"
+    />
+
+    <!-- SEO Meta Tags -->
+    {{#if description}}
+    <meta name="description" content="{{description}}" />
+    {{/if}} {{#if appOwner}}
+    <meta name="author" content="{{appOwner}}" />
+    {{/if}} {{#if keywords}}
+    <meta name="keywords" content="{{keywords}}" />
+    {{/if}}
+
+    <!-- Open Graph Meta Tags -->
+    {{#if ogImage}}
+    <meta property="og:image" content="{{ogImage}}" />
+    {{/if}} {{#if appName}}
+    <meta property="og:title" content="{{appName}}" />
+    {{/if}} {{#if ogDescription}}
+    <meta property="og:description" content="{{ogDescription}}" />
+    {{/if}}
+
+    <meta property="og:type" content="website" />
+
+    {{#if webUrl}}
+    <meta property="og:url" content="{{webUrl}}" />
+    {{/if}}
+    <meta property="og:site_name" content="{{appName}}" />
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://connect.facebook.net" />
+    <link rel="preconnect" href="https://accounts.google.com" />
+    <link rel="preconnect" href="https://www.google.com" />
+
+    <title>{{appName}}</title>
+  </head>
+
+  <body>
+    <!-- Angular app will be injected here -->
+    <app-root></app-root>
+
+    <!-- Social Media SDKs -->
+    {{#if enableFacebookSdk}}
+    <script src="https://connect.facebook.net/en_US/sdk.js" async defer crossorigin="anonymous"></script>
+    {{/if}} {{#if enableGoogleSdk}}
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    {{/if}}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </body>
+</html>

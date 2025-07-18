@@ -1,0 +1,229 @@
+<nav #mainDiv class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <!-- Site name -->
+        <a class="navbar-brand header-font-size icon-logo" href="javascript:void(0)" [routerLink]="Routes.StartLearning">{{
+            environment.SITE_NAME.toLowerCase()
+        }}</a>
+        <!-- Hamburger button -->
+        <button
+            class="navbar-toggler navbar-toggler-right"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarResponsive, #profileDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Navbar menu -->
+        <div
+            class="collapse navbar-collapse dont-collapse-lg"
+            id="navbarResponsive"
+            #navbarResponsive
+            data-toggle="collapse"
+            data-target=".collapse"
+        >
+            <ul class="navbar-nav ml-auto align-items-center" *ngIf="loggedIn && user.agreements_accepted">
+                <li class="nav-item left-menu">
+                    <a
+                        id="nav-learn-btn"
+                        class="nav-link mr-1"
+                        [ngClass]="{ active: currentRoute === Routes.StartLearning }"
+                        href="javascript:void(0)"
+                        [routerLink]="Routes.StartLearning"
+                        >Learn</a
+                    >
+                </li>
+                <li class="nav-item left-menu" *ngIf="showReview">
+                    <a
+                        id="nav-review-btn"
+                        class="nav-link mr-1"
+                        [ngClass]="{ active: currentRoute === Routes.Review }"
+                        href="javascript:void(0)"
+                        (click)="gotoUrlOther('review')"
+                        >Review</a
+                    >
+                </li>
+                <li class="nav-item left-menu">
+                    <a
+                        id="nav-progress-btn"
+                        class="nav-link mr-1"
+                        [ngClass]="{ active: currentRoute === Routes.Progress }"
+                        href="javascript:void(0)"
+                        [routerLink]="Routes.Progress"
+                        >Progress</a
+                    >
+                </li>
+                <li class="nav-item left-menu"
+                    *ngIf="canAccessLeaderboard()">
+                    <a
+                        id="nav-leaderboard-btn"
+                        class="nav-link mr-1"
+                        [ngClass]="{ active: currentRoute === Routes.Leaderboard }"
+                        href="javascript:void(0)"
+                        [routerLink]="Routes.Leaderboard"
+                        >Leaderboard</a
+                    >
+                </li>
+                <li class="nav-item left-menu"
+                    *ngIf="features?.feature_village === '1' && canAccessVillage()">
+                    <a
+                        id="nav-village-btn"
+                        class="nav-link mr-1"
+                        href="javascript:void(0)"
+                        [ngClass]="{ active: currentRoute === Routes.Village }"
+                        (click)="goToVillage()"
+                        >Village</a
+                    >
+                </li>
+                <li class="nav-item left-menu d-none d-lg-block" *ngIf="user.role_id === platformRolesService.getRoleId('Teacher') || user.role_id === platformRolesService.getRoleId('Admin')">
+                    <a
+                        id="nav-teachers-btn"
+                        class="nav-link mr-1"
+                        href="javascript:void(0)"
+                        [ngClass]="{
+                            active:
+                                currentRoute === Routes.TeacherDashboard ||
+                                currentRoute === Routes.TeacherLessons ||
+                                currentRoute === Routes.TeacherClassrooms
+                        }"
+                        [routerLink]="Routes.TeacherDashboard"
+                        >Teachers</a
+                    >
+                </li>
+                <li class="nav-item left-menu" *ngIf="user.classroom_count > 0">
+                    <a
+                        id="nav-classroom-btn"
+                        class="nav-link mr-1"
+                        href="javascript:void(0)"
+                        [ngClass]="{ active: currentRoute === Routes.Classroom }"
+                        [routerLink]="Routes.Classroom"
+                        >Classroom</a
+                    >
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto align-items-center">
+                <li class="nav-item d-none d-lg-block">
+                    <a *ngIf="!loggedIn && showSignUpBtns" class="nav-link right-menu mr-4" [routerLink]="Routes.Register"
+                    >Sign up</a>
+                </li>
+                <li class="nav-item d-none d-lg-block">
+                    <a *ngIf="!loggedIn && showSignIn" class="nav-link right-menu mr-4" [routerLink]="Routes.Login"
+                    >Sign in</a>
+                </li>
+                <li class="nav-item dropdown bg-transparent mt-0 pt-0">
+                    <div *ngIf="loggedIn" class="h-divider d-block d-lg-none bg-white mt-2"></div>
+
+                    <a
+                        class="text-decoration-none d-none d-lg-block"
+                        href="javascript:void(0)"
+                        id="navbardropdown"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        role="button"
+                        aria-expanded="false"
+                    >
+                        <span
+                            class="welcometext2 d-flex align-items-center right-menu user-pic"
+                            [ngClass]="{ 'mr-2': user?.name }"
+                        >
+                            <img
+                                *ngIf="user?.usersetting?.FullProfileImageUrl"
+                                [src]="user?.usersetting?.FullProfileImageUrl"
+                                alt=""
+                            />
+                            <img
+                                *ngIf="!user?.usersetting?.FullProfileImageUrl"
+                                src="./assets/images/user_img.png"
+                                alt=""
+                            />
+                            <span *ngIf="!!user && loggedIn" id="username-text">{{
+                                createFname(user?.name || "")
+                            }}</span>
+                        </span>
+                    </a>
+                    <div class="">
+                        <div
+                            id="profileDropdown"
+                            class="dropdown-menu dropdown-menu-right user-menu"
+                            aria-labelledby="dropdownMenuButton"
+                        >
+                            <a
+                                *ngIf="showSignUpBtns && !loggedIn"
+                                id="nav-signup-btn"
+                                class="dropdown-item profile-dropdown d-block d-lg-none"
+                                href="javascript:void(0)"
+                                [routerLink]="Routes.Register"
+                                >Sign up</a
+                            >
+                            <a
+                                *ngIf="showSignIn && !loggedIn"
+                                id="nav-signin-btn"
+                                class="dropdown-item profile-dropdown d-block d-lg-none"
+                                href="javascript:void(0)"
+                                [routerLink]="Routes.Login"
+                                >Sign in</a
+                            >
+                            <a
+                                *ngIf="loggedIn && user.agreements_accepted"
+                                id="nav-settings-btn"
+                                class="dropdown-item profile-dropdown"
+                                href="javascript:void(0)"
+                                [routerLink]="Routes.LearningSettings"
+                                >Settings</a
+                            >
+                            <a
+                                *ngIf="loggedIn && user.agreements_accepted"
+                                id="nav-profile-btn"
+                                class="dropdown-item profile-dropdown"
+                                href="javascript:void(0)"
+                                [routerLink]="Routes.ProfileSettings"
+                                >Your Profile</a
+                            >
+                            <a
+                                id="nav-about-btn"
+                                class="dropdown-item profile-dropdown"
+                                href="javascript:void(0)"
+                                [routerLink]="Routes.About"
+                                >About</a
+                            >
+                            <a
+                                id="nav-contact-us-btn"
+                                class="dropdown-item profile-dropdown"
+                                href="javascript:void(0)"
+                                [routerLink]="Routes.ContactUs"
+                                >Feedback</a
+                            >
+                            <a
+                                id="nav-privacy-btn"
+                                class="dropdown-item profile-dropdown d-lg-none"
+                                href="javascript:void(0)"
+                                (click)="goToPrivacyPolicy()"
+                                >Privacy Policy</a
+                            >
+                            <a
+                                id="nav-terms-btn"
+                                class="dropdown-item profile-dropdown d-lg-none"
+                                href="javascript:void(0)"
+                                (click)="goToTerms()"
+                                >Terms</a
+                            >
+                            <a
+                                *ngIf="loggedIn"
+                                id="nav-logout-btn"
+                                class="dropdown-item profile-dropdown"
+                                href="javascript:void(0)"
+                                (click)="baseService.logout()"
+                                >Logout</a
+                            >
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div *ngIf="expiredToken" class="popup-msg">
+    <h3 id="expired-token-msg">Your session expired. Please log back in.</h3>
+</div>

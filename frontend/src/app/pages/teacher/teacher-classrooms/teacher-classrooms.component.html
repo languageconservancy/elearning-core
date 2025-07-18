@@ -1,0 +1,254 @@
+<div class="col-xs-5 col-sm-8 col-lg-12 l-speed">
+    <div class="row justify-content-start">
+        <div class="col-xs-3 col-sm-4 col-lg-4">
+            <div id="teacher-info" class="logo-container-box col-lg-12">
+                <h5>Classroom Administration</h5>
+                <app-classroom-select></app-classroom-select>
+                <!--<input type="date" id="start" name="trip-start" [(ngModel)]="classroom.start_date" value="classroom.start_date" min="2020-01-01" max="2020-12-31">
+						 -
+						<input type="date" id="end" name="trip-start" [(ngModel)]="classroom.end_date" value="classroom.end_date" min="2020-01-01" max="2020-12-31">
+						-->
+                <div *ngIf="!!classroom">
+                    <a
+                        >{{ classroom.start_date | date: "MM-dd-yyyy" }} -
+                        {{ classroom.end_date | date: "MM-dd-yyyy" }}</a
+                    >
+                </div>
+                <br /><br />
+                <p>
+                    From this page, you can add and edit your classes, create new students or add existing students to
+                    your classes, and reset passwords.
+                </p>
+                <h5>
+                    <a href="/contact-us"
+                        ><i
+                            class="fa fa-question-circle"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="Ask a question"
+                        ></i
+                    ></a>
+                </h5>
+            </div>
+        </div>
+        <div *ngIf="!classroom.level" id="class-overview" class="logo-container-box col-8">
+            <br /><br /><br />
+            <h5>
+                Welcome to Classoom administration. Once you have created your first Lesson Plan, you may create a new
+                class, add students to the class, and schedule the release of units from this menu.
+            </h5>
+        </div>
+        <div *ngIf="!!classroom.level" id="class-overview" class="logo-container-box col-8">
+            <h5>Lesson Plan ({{ classroom.level.name }})</h5>
+            <div class="teacher-check teacher-check-all">
+                <div class="form-row">
+                    <div class="col-xs-12 col-sm-9 col-lg-6">
+                        <dl>
+                            <dt>Bulk Change (all units)</dt>
+                            <!--<dd>release on: <input type="date" (change)="updateAllClassroomUnits('release_date')" [(ngModel)]="releaseDateAll" id="start" name="trip-start" value=""></dd>-->
+                        </dl>
+                    </div>
+                    <div class="col-xs-12 col-sm-3 col-lg-2">
+                        <span>is active</span>
+                        <label class="teacher-switch">
+                            <button
+                                class="button2no round"
+                                type="button"
+                                (click)="updateAllClassroomUnits('active', false)"
+                            >
+                                No
+                            </button>
+                            <button
+                                class="button2yes round"
+                                type="button"
+                                (click)="updateAllClassroomUnits('active', true)"
+                            >
+                                Yes
+                            </button>
+                        </label>
+                    </div>
+                    <!--<div class="col-xs-12 col-sm-3 col-lg-2">
+								<span>exam mode</span>
+								<label class="teacher-switch">
+									<input type="checkbox" (change)="updateAllClassroomUnits('no_repeat')" [(ngModel)]="noRepeatAll" id="test-all">
+									<span class="slider2 round"></span>
+								</label>
+							</div>-->
+                    <div class="col-xs-12 col-sm-3 col-lg-2">
+                        <span>optional</span>
+                        <label class="teacher-switch">
+                            <button
+                                class="button2no round"
+                                type="button"
+                                (click)="updateAllClassroomUnits('optional', false)"
+                            >
+                                No
+                            </button>
+                            <button
+                                class="button2yes round"
+                                type="button"
+                                (click)="updateAllClassroomUnits('optional', true)"
+                            >
+                                Yes
+                            </button>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="teacher-check teacher-check-alternating"
+                *ngFor="let classroomUnit of classroomUnits; let i = index"
+            >
+                <div class="form-row">
+                    <div class="col-xs-12 col-sm-9 col-lg-6">
+                        <dl>
+                            <dt>
+                                {{ classroomUnit.level_unit.unit.name }} -
+                                {{ classroomUnit.level_unit.unit.description }}
+                            </dt>
+                            <dd>
+                                release on:
+                                <input
+                                    type="date"
+                                    (change)="checkDateAndUpdateClassroomUnit(classroomUnit)"
+                                    [(ngModel)]="classroomUnit.release_date"
+                                    id="start"
+                                    name="trip-start"
+                                    value=""
+                                />
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="col-xs-12 col-sm-3 col-lg-2">
+                        <span>is active</span>
+                        <label class="teacher-switch">
+                            <input
+                                type="checkbox"
+                                (change)="updateClassroomUnit(classroomUnit)"
+                                [(ngModel)]="classroomUnit.active"
+                                id="active-{{ classroomUnit.level_unit.unit.id }}"
+                            />
+                            <span class="slider2 round"></span>
+                        </label>
+                    </div>
+                    <!--<div class="col-xs-12 col-sm-3 col-lg-2">
+								<span>exam mode</span>
+								<label class="teacher-switch">
+									<input type="checkbox" (change)="updateClassroomUnit(classroomUnit)" [(ngModel)]="classroomUnit.no_repeat" id="test-{{classroomUnit.level_unit.unit.id}}">
+									<span class="slider2 round"></span>
+								</label>
+							</div>-->
+                    <div class="col-xs-12 col-sm-3 col-lg-2">
+                        <span>optional</span>
+                        <label class="teacher-switch">
+                            <input
+                                type="checkbox"
+                                (change)="updateClassroomUnit(classroomUnit)"
+                                [(ngModel)]="classroomUnit.optional"
+                                id="optional-{{ classroomUnit.level_unit.unit.id }}"
+                            />
+                            <span class="slider2 round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!!classroom?.id" class="row">
+        <div class="col-xs-3 col-sm-4 col-lg-12">
+            <div id="student-overview" class="logo-container-box">
+                <div class="unsaved" *ngIf="unsavedStudentChanges">
+                    <h5>
+                        <button class="btn teacher-save" (click)="updateClassroomStudents()">
+                            <i class="fa fa-save" data-toggle="tooltip" data-placement="top" title="Save Roster"></i>
+                            Save Changes
+                        </button>
+                    </h5>
+                </div>
+                <div cdkDropListGroup class="row">
+                    <div class="col-xs-2 col-sm-2 col-lg-6">
+                        <h5>{{ school.school.name }} Students</h5>
+                        <div class="teacher-dnd teacher-dnd-left">
+                            <div
+                                cdkDropList
+                                #schoolStudentsList="cdkDropList"
+                                [cdkDropListData]="schoolStudents"
+                                class="teacher-dnd-list"
+                                (cdkDropListDropped)="drop($event)"
+                            >
+                                <div
+                                    class="list-group-item"
+                                    *ngFor="let student of schoolStudents; let i = index"
+                                    cdkDrag
+                                >
+                                    <img src="{{ student.user.usersetting.FullProfileImageUrl }}" />{{
+                                        student.user.name
+                                    }}
+                                    - {{ student.user.email
+                                    }}<i
+                                        class="fa fa-arrow-right"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Click or Drag to Move"
+                                        (click)="moveStudentToClassroom(i)"
+                                    ></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel panel-warning teacher-dnd">
+									<div class="panel-body" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="schoolStudents">
+										<ul class="list-group" >
+											<li *ngFor="let student of schoolStudents; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i">
+												<img src="{{student.user.usersetting.FullProfileImageUrl}}">{{student.user.name}} - {{student.user.email}}
+												<div *ngIf="activeEditUser == i">
+													reset password
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>-->
+                    </div>
+                    <div *ngIf="!!classroom" class="col-xs-2 col-sm-2 col-lg-6">
+                        <h5>{{ classroom.name }} Students</h5>
+                        <div class="teacher-dnd teacher-dnd-right">
+                            <div
+                                cdkDropList
+                                #classroomStudentsList="cdkDropList"
+                                [cdkDropListData]="classroomStudents"
+                                class="teacher-dnd-list"
+                                (cdkDropListDropped)="drop($event)"
+                            >
+                                <div
+                                    class="list-group-item"
+                                    *ngFor="let student of classroomStudents; let i = index"
+                                    cdkDrag
+                                >
+                                    <i
+                                        class="fa fa-arrow-left"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Click or Drag to Move"
+                                        (click)="moveStudentToSchool(i)"
+                                    ></i
+                                    ><img src="{{ student.user.usersetting.FullProfileImageUrl }}" />{{
+                                        student.user.name
+                                    }}
+                                    - {{ student.user.email }}
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="panel panel-success teacher-dnd">
+									<div class="panel-body" dnd-sortable-container (onDropSuccess)="markStudentsUnsaved($event)" [dropZones]="['boxers-zone']" [sortableData]="classroomStudents" >
+										<ul class="list-group" >
+											<li *ngFor="let student of classroomStudents; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i">
+												<img src="{{student.user.usersetting.FullProfileImageUrl}}">{{student.user.name}} - {{student.user.email}}
+											</li>
+										</ul>
+									</div>
+								</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

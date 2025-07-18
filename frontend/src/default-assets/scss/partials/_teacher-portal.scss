@@ -1,0 +1,216 @@
+.data-table-row.selected {
+    background-color: #e4edf9 !important;
+}
+.teacher-check dl {
+    text-align: left;
+}
+.teacher-check dt {
+    font-size: 14px;
+    margin-bottom: 0px;
+}
+.teacher-check dd {
+    font-size: 10px;
+    margin-left: 15px;
+    color: #2392d0;
+}
+.teacher-check {
+    padding: 1% 3%;
+}
+.teacher-check .custom-radio .custom-control-indicator {
+    border-radius: 42%;
+}
+.teacher-check .custom-control-indicator {
+    position: absolute;
+    top: 0.25rem;
+    left: 0;
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 40% 40%;
+    border: 1px solid #2392d0;
+    box-shadow: 5px 5px 5px #00000026;
+}
+.teacher-check .custom-control {
+    position: relative;
+    display: inline-flex;
+    min-height: 2rem;
+    padding-left: 1rem;
+    margin-right: 0rem;
+}
+.teacher-check .custom-radio .custom-control-input:checked ~ .custom-control-indicator {
+    background-image: none;
+}
+.teacher-check .custom-control-input:checked ~ .custom-control-indicator {
+    color: #fff;
+    background-color: #2392d0;
+}
+.teacher-check img {
+    border-radius: 50%;
+    height: 40px;
+}
+#class-overview .nw-editor {
+    display: block;
+    position: relative;
+    height: 80px !important;
+    background: #fff;
+    cursor: text;
+    width: 100%;
+    overflow-y: auto;
+}
+.teacher-dnd-list {
+    border: solid 1px #ccc;
+    min-height: 60px;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.teacher-dnd-box {
+    min-height: 45px;
+    border-bottom: solid 1px #ccc;
+    color: rgba(0, 0, 0, 0.87);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: move;
+    background: white;
+    font-size: 14px;
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow:
+        0 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+    min-height: 45px;
+    border-bottom: solid 1px #ccc;
+    color: rgba(0, 0, 0, 0.87);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: move;
+    background: white;
+    font-size: 14px;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.teacher-dnd-box:last-child {
+    border: none;
+}
+
+.teacher-dnd-list.cdk-drop-list-dragging .teacher-dnd-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.teacher-dnd-box img {
+    border-radius: 50%;
+    height: 40px;
+    position: relative !important;
+}
+.teacher-dnd-left img {
+    border-radius: 50%;
+    height: 40px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+}
+.teacher-dnd-right img {
+    border-radius: 50%;
+    height: 40px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+}
+.teacher-dnd-left i {
+    border-radius: 50%;
+    height: 40px;
+    position: absolute;
+    right: 8px;
+    top: 13px;
+    color: #2392d0;
+    font-size: 1.5em;
+}
+.teacher-dnd-right i {
+    border-radius: 50%;
+    height: 40px;
+    position: absolute;
+    left: 0px;
+    top: 13px;
+    color: #2392d0;
+    font-size: 1.5em;
+}
+.teacher-dnd-right i:hover {
+    font-size: 1.8em;
+    left: -2px;
+    top: 11px;
+}
+.teacher-dnd-left i:hover {
+    right: 6px;
+    top: 11px;
+    font-size: 1.8em;
+}
+
+.list-group-item {
+    padding: 0.75rem 2.55rem !important;
+}
+.teacher-dnd {
+    max-height: 500px;
+    overflow: auto;
+    scrollbar-color: #2392d0 #ffffff14;
+    scrollbar-width: thin;
+    margin-right: 10px;
+}
+.teacher-save {
+    border: #2392d0 2px solid;
+    border-radius: 15px;
+    color: #2392d0;
+}
+.teacher-drop {
+    background: #fff;
+    border-radius: 20px;
+    border: 2px solid #2392d0;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2392d0;
+    outline: 0 !important;
+}
+.teacherportal-drop .dropdown {
+    margin-top: 0;
+    padding: 0;
+    margin-bottom: 0rem;
+    border-radius: 20px;
+}
+.teacherportal-drop .dropdown-menu {
+    border: 2px solid #2392d0;
+    border-radius: 20px;
+    padding: 5px;
+    transform: none !important;
+    top: 45px !important;
+    min-width: 280px;
+}
+.teacherportal-drop .dropdown-menu-wrap {
+    max-height: 400px;
+    overflow-y: auto;
+}

@@ -1,0 +1,112 @@
+<?php
+
+namespace App\Model\Table;
+
+use Cake\ORM\RulesChecker;
+use Cake\ORM\Table;
+use Cake\Validation\Validator;
+use App\Lib\UtilLibrary;
+
+class SchoolRolesTable extends Table
+{
+    /**
+     * Initialize method
+     *
+     * @param array $config The configuration for the Table.
+     * @return void
+     */
+    public function initialize(array $config): void
+    {
+        parent::initialize($config);
+        $this->setTable('school_roles');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
+
+        $this->hasMany('SchoolUsers', [
+            'foreignKey' => 'role_id'
+        ]);
+    }
+
+    /**
+     * Default validation rules.
+     *
+     * @param Validator $validator Validator instance.
+     * @return Validator
+     */
+    public function validationDefault(Validator $validator): Validator
+    {
+        $validator
+            ->integer('id')
+            ->allowEmptyString('id', 'create');
+        $validator
+            ->allowEmptyString('name');
+
+        return $validator;
+    }
+
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->add($rules->isUnique(['name'], 'The role name already exists.'));
+        return $rules;
+    }
+
+    public function getRoleId(string $roleName): int
+    {
+        if (empty($roleName)) {
+            throw new \Exception('Role name is required');
+        }
+        $role = $this->find()->where(['name' => $roleName])->first();
+        if (empty($role) || empty($role->id)) {
+            throw new \Exception('School role with name ' . $roleName . ' not found');
+        }
+        return $role->id;
+    }
+
+    public function getRoleIds(array $roleNames): array
+    {
+        if (empty($roleNames)) {
+            throw new \Exception('Role names is required');
+        }
+        $role = $this->find()
+            ->where(['name IN' => $roleNames])
+            ->toArray();
+
+        // Map roles to an associative array for easy lookup
+        $roleIdMap = [];
+        foreach ($role as $role) {
+            $roleIdMap[$role->name] = $role->id;
+        }
+
+        $roleIds = [];
+        foreach ($roleNames as $roleName) {
+            if (empty($roleIdMap[$roleName])) {
+                throw new \Exception('Role with name ' . $roleName . ' not found');
+            }
+            $roleIds[] = $roleIdMap[$roleName];
+        }
+
+        return $roleIds;
+    }
+
+    public function getRoleName(int $roleId): string
+    {
+        if (empty($roleId)) {
+            throw new \Exception('Role id is required');
+        }
+        $role = $this->find()->where(['id' => $roleId])->first();
+        if (empty($role) || empty($role->name)) {
+            throw new \Exception('School role with id ' . $roleId . ' not found');
+        }
+        return $role->name;
+    }
+
+    public function getIdNameMap(): array
+    {
+        $roles = $this->find()->all();
+        $roleMap = [];
+        foreach ($roles as $role) {
+            $roleMap[$role->id] = $role->name;
+        }
+        return $roleMap;
+    }
+}

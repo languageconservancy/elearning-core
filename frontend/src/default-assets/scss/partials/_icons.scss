@@ -1,0 +1,43 @@
+@use "../modules/variables";
+
+/* Style all font awesome icons */
+.fa-social {
+    padding: 10px;
+    font-size: 25px;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50%;
+    margin: 9px;
+    cursor: pointer;
+}
+
+/* Add a hover effect if you want */
+.fa-social:hover {
+    opacity: 0.7;
+}
+
+/* Set a specific color for each brand */
+
+/* Facebook */
+.fa-facebook {
+    background: variables.$white;
+    color: variables.$facebook-blue;
+}
+
+/* Twitter */
+.fa-twitter {
+    background: variables.$white;
+    color: variables.$twitter-blue;
+}
+
+.fa-reddit {
+    background: variables.$white;
+    color: variables.$reddit-red;
+}
+
+.fa-linkedin {
+    background: variables.$white;
+    color: variables.$linkedin-blue;
+}

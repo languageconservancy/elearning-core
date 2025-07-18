@@ -1,0 +1,25 @@
+<div id="update-modal" class="modal d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.7);">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content text-center">
+            <div class="modal-body p-4">
+                <h2 class="h5 font-weight-bold mb-3">
+                    {{ forceUpdate ? "Update Required" : "Update Available" }}
+                </h2>
+                <p class="mb-4">
+                    {{ forceUpdate
+                        ? "You must update to continue using this app. This version is no longer supported."
+                        : "A new version is available. Please consider updating."
+                    }}
+                </p>
+                <div class="d-flex justify-content-center">
+                    <button (click)="goToAppStore()" class="btn btn-primary mr-2">
+                        Update Now
+                    </button>
+                    <button *ngIf="!forceUpdate" (click)="dismiss()" class="btn btn-outline-secondary">
+                        Later
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

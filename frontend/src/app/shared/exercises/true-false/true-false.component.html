@@ -1,0 +1,62 @@
+<div class="row" *ngIf="exerciseService.exercise?.instruction">
+    <div class="col-12">
+        <div class="mar-bot-15 text-center font-language prompt-font-size">{{ exerciseService.exercise?.instruction }}</div>
+    </div>
+</div>
+
+<div class="d-flex flex-wrap align-items-center justify-content-center">
+    <!-- PROMPT 1 -->
+    <div class="flex-1-1-50 minwrem-10">
+        <app-non-selectable-card
+            [card]="exerciseService.question"
+            [enabledDataTypes]="exerciseService.promptTypes"
+            [optionType]="'prompt'"
+        ></app-non-selectable-card>
+    </div>
+
+    <!-- PROMPT 2 -->
+    <div class="flex-1-1-50 minwrem-10 px-2">
+        <app-non-selectable-card
+            [card]="exerciseService.response"
+            [enabledDataTypes]="exerciseService.responseTypes"
+            [optionType]="'response'"
+        ></app-non-selectable-card>
+    </div>
+</div>
+
+<hr/>
+
+<!-- RESPONSE -->
+<div class="row py-4 justify-content-evenly" id="true-false-ans-btns">
+    <div class="col text-center">
+        <a
+            href="javascript:void(0)"
+            tabindex="0"
+            class="btn-option bg-option-default border-option-default"
+            [ngClass]="{
+                'border-option-correct bg-option-correct': exerciseService.userAnswer === AnswerType.CORRECT && exerciseService.question.exerciseOptions.response_true_false === 'Y' && !exerciseService.firstTime,
+                'border-option-incorrect bg-option-incorrect': exerciseService.userAnswer === AnswerType.INCORRECT && exerciseService.question.exerciseOptions.response_true_false === 'N' && !exerciseService.firstTime,
+                'bg-option-hover border-option-hover': !isMobile && !isTablet && keyboardHighlightedAnswer === 'Y',
+            }"
+            (click)="checkAnswer('Y')"
+        >
+            <img src="./assets/images/green-tick.png" alt="" />
+        </a>
+    </div>
+
+    <div class="col text-center">
+        <a
+            href="javascript:void(0)"
+            tabindex="0"
+            class="btn-option bg-option-default border-option-default"
+            [ngClass]="{
+                'border-option-correct bg-option-correct': exerciseService.userAnswer === AnswerType.CORRECT && exerciseService.question.exerciseOptions.response_true_false === 'N' && !exerciseService.firstTime,
+                'border-option-incorrect bg-option-incorrect': exerciseService.userAnswer === AnswerType.INCORRECT && exerciseService.question.exerciseOptions.response_true_false === 'Y' && !exerciseService.firstTime,
+                'bg-option-hover border-option-hover': !isMobile && !isTablet && keyboardHighlightedAnswer === 'N',
+            }"
+            (click)="checkAnswer('N')"
+        >
+            <img src="./assets/images/red-x.png" alt="" />
+        </a>
+    </div>
+</div>

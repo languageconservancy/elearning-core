@@ -1,0 +1,65 @@
+
+    Exercise:
+        choices: [
+            [0]: {
+                // Audio
+                FullAudioUrl, (mtp-card, mtp-custom-html|card)
+                FullAudioUrlArray, (mtp-card, mtp-custom-card)
+                audio.FullUrl (mtp-custom-html)
+                // Image
+                image.FullUrl, (mtp-card, mtp-custom-html|card)
+                // Video
+                video.FullUrl, (mtp-card, mtp-custom-card)
+                // Prompt Types
+                exerciseOptions.prompt_preview_option: "e, i" (mtp-card, mtp-custom-card)
+                // Response Types
+                exerciseOptions.responce_preview_option: "e, i" (mtp-card, mtp-custom-card)
+                respArray: ['e', 'i'] (mtp-custom-card)
+            }
+        ]
+        questions: [
+            [0]: {
+                promptArray: ['e', 'i'], (mtp-card, mtp-custom-html|card)
+                question: (mcq, mtp, anagram, tf, fillin-typing-card)
+                    PromptType: "html|card" (mcq-custom-html|card, tf-custom-html)
+                    // Audio
+                    audio.FullUrl|FullAudioUrl, (mcq-custom-html, mtp-custom-html, tf-custom-html, fillin-typing-custom-html)
+                    FullAudioUrl, (mcq-custom-card, mcq-card, mtp-card, mtp-custom-html|card, anagram-card|group, tf-card, tf-custom-card, fillin-typing-card, fillin-typing|mcq-custom-card)
+                    FullAudioUrlArray, (mcq-custom-card, mcq-card, mtp-card, mtp-custom-card, anagram-card|group, tf-card, tf-custom-card, fillin-typing-card, fillin-typing|mcq-custom-card)
+                    // Image
+                    image.FullUrl, (mcq-custom-card|custom, mcq-card, mtp-card, mtp-custom-html|card, anagram-card|group, tf-card, tf-custom-html, fillin-typing|mcq-card, fillin-typing-custom-card, fillin-typing-custom-html)
+                    // Video
+                    video.FullUrl, (mcq-custom-card, mcq-card, mtp-card, mtp-custom-card, anagram-card|group, tf-card, tf-custom-card, fillin-typing|mcq-card, fillin-typing-custom-card)
+                    // Prompt Types
+                    exerciseOptions.prompt_preview_option, (mcq-custom-card, mtp-card, mtp-custom-card, anagram-card|group, tf-card, tf-custom-card, fillin-typing|mcq-card, fillin-typing-custom-card)
+                    // Response Types
+                    exerciseOptions.responce_preview_option, (mtp-custom-card, anagram-card|group, tf-card, tf-custom-card, fillin-typing-card, fillin-typing|mcq-custom-card)
+
+                choices: (mcq)
+                    ResponseType: "html"
+                    // Audio
+                    FullAudioUrl, (mcq-custom-card, mcq-card)
+                    FullAudiourlArray, (mcq-card)
+                    audio.FullUrl, (mcq-custom-html)
+                    // Image
+                    image.FullUrl, (mcq-custom-card|custom, mcq-card)
+                    // Video
+                    video.FullUrl, (mcq-custom-card, mcq-card)
+                    // Response Types
+                    exerciseOptions.responce_preview_option: "a,l", (mcq-custom-card)
+
+                response: (mtp)
+                    // Audio
+                    FullAudioUrl, (mtp-card, mtp-custom-card, tf-card, tf-custom-card)
+                    FullAudioUrlArray, (mtp-card, mtp-custom-card, tf-card, tf-custom-card)
+                    audio.FullUrl, (mtp-custom-html, tf-custom-html)
+                    // Image
+                    image.FullUrl, (mtp-card, mtp-custom-html|card, tf-card, tf-custom-card)
+                    // Video
+                    video.FullUrl, (mtp-card, mtp-custom-card, tf-card, tf-custom-card)
+                    // Prompt Types
+                    exerciseOptions.prompt_preview_option: "e, i" (mtp-card, mtp-custom-card, tf-card, tf-custom-card)
+                    // Response Types
+                    exerciseOptions.responce_preview_option: "e, i" (mtp-card, mtp-custom-card, tf-card, tf-custom-card)
+        ]
+

@@ -1,0 +1,35 @@
+@use "../modules/variables";
+
+@each $size, $length in variables.$generic-sizes {
+    .rounded-#{$size} {
+        border-radius: #{$length} !important;
+    }
+}
+@each $size, $length in variables.$generic-sizes {
+    .rounded-top-left-#{$size} {
+        border-top-left-radius: #{$length} !important;
+    }
+}
+@each $size, $length in variables.$generic-sizes {
+    .rounded-top-right-#{$size} {
+        border-top-right-radius: #{$length} !important;
+    }
+}
+@each $size, $length in variables.$generic-sizes {
+    .rounded-bottom-left-#{$size} {
+        border-bottom-left-radius: #{$length} !important;
+    }
+}
+@each $size, $length in variables.$generic-sizes {
+    .rounded-bottom-right-#{$size} {
+        border-bottom-right-radius: #{$length} !important;
+    }
+}
+@each $size, $length in variables.$decimal-sizes {
+    .border-primary-#{$size} {
+        border: solid variables.$primary #{$length} !important;
+    }
+    .border-white-#{$size} {
+        border: solid white #{$length} !important;
+    }
+}

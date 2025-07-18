@@ -1,0 +1,104 @@
+<app-page-title [pageTitle]="'Leaderboard'"></app-page-title>
+<div class="row justify-content-center text-center flex-lg-nowrap mt-3" *ngIf="canAccessLeaderboard()">
+    <div class="col-12 col-lg-4">
+        <app-progress-left-panel [canAccessLeaderboard]="canAccessLeaderboard()"></app-progress-left-panel>
+    </div>
+    <div class="col-12 col-lg-8 l-speed units-container">
+        <div class="row justify-content-start mx-0">
+            <div class="logo-container-box col">
+                <div *ngIf="leaderboard_flag === '1'; else leaderboard_else_block">
+                    <h3 class="top-heading">
+                        <span>Top Learners</span>
+                    </h3>
+                    <div *ngIf="top_users.length > 0">
+                        <ul class="list-one">
+                            <li *ngFor="let leaderBoard of top_users; let i = index" class="learner-row">
+                                <div class="row flex-nowrap">
+                                    <div class="col-1 d-flex justify-content-end">
+                                        <span class="number-txt">{{ i + 1 }}</span>
+                                    </div>
+                                    <div class="col-2 d-flex flex-column align-items-center">
+                                        <span class="learner-img">
+                                            <img
+                                                *ngIf="leaderBoard.user.usersetting.FullProfileImageUrl"
+                                                class="ng-star-inserted"
+                                                [src]="leaderBoard.user.usersetting.FullProfileImageUrl ?? './assets/images/user_img.png'"
+                                            />
+                                        </span>
+                                    </div>
+                                    <div class="col-5">{{ leaderBoard.user.name }}</div>
+                                    <div class="col-4">{{ leaderBoard.totalpoint | number }} Pts</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="row justify-content-center text-center" *ngIf="top_users.length < 1">
+                        <div class="col-12 text-center">
+                            <h3 class="text-white no-units">No records to show</h3>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #leaderboard_else_block>
+                    <h3 class="top-heading">
+                        <span>Top Learners</span>
+                    </h3>
+                    <div class="justify-content-center text-center">
+                        <div class="text-center">
+                            <p class="settings-msg">
+                                To see the public leaderboard, set your
+                                <a href="javascript:void(0)" (click)="goToPage('privacy-settings')"
+                                    >Public Leaderboard setting</a
+                                >
+                                to 'on'.
+                            </p>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <div>
+                    <h3 class="top-heading">
+                        <span>My Friends</span>
+                    </h3>
+                    <div *ngIf="top_friends.length > 0">
+                        <ul class="list-one">
+                            <li *ngFor="let leaderBoard of top_friends; let i = index" class="learner-row">
+                                <div class="row flex-nowrap">
+                                    <div class="col-1 d-flex justify-content-end">
+                                        <span class="number-txt">{{ i + 1 }}</span>
+                                    </div>
+                                    <div class="col-2 d-flex flex-column align-items-center">
+                                        <span class="learner-img">
+                                            <img
+                                                *ngIf="!leaderBoard.user.usersetting.FullProfileImageUrl"
+                                                class="ng-star-inserted"
+                                                src="./assets/images/user_img.png"
+                                            />
+                                            <img
+                                                *ngIf="leaderBoard.user.usersetting.FullProfileImageUrl"
+                                                class="ng-star-inserted"
+                                                [src]="leaderBoard.user.usersetting.FullProfileImageUrl"
+                                            />
+                                        </span>
+                                    </div>
+                                    <div class="col-5">{{ leaderBoard.user.name }}</div>
+                                    <div class="col-4">{{ leaderBoard.totalpoint | number }} Pts</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="row justify-content-center text-center" *ngIf="top_friends.length < 1">
+                        <div class="col-12 text-center">
+                            <h3 class="text-white no-units">No friends to show</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-8 text-center mx-auto mt-10" *ngIf="!canAccessLeaderboard()">
+    <h3>The Leaderboard is not accessible, in order to comply with COPPA and CIPA laws</h3>
+</div>

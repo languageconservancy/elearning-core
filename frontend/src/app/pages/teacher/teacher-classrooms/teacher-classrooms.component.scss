@@ -1,0 +1,172 @@
+@use "./assets/scss/modules/_theme";
+
+.table td,
+.table th {
+    padding: 0.15rem;
+    vertical-align: center !important;
+    border-top: 1px solid #dee2e6;
+}
+.col-lg-4,
+.col-lg-12 {
+    padding-right: 0;
+}
+#class-overview {
+    margin-top: 0;
+    max-height: 300px;
+    overflow: auto;
+    scrollbar-color: theme.$primary-color #ffffff14;
+    scrollbar-width: thin;
+}
+#class-overview tbody {
+    max-height: 275px;
+}
+#teacher-info {
+    height: 100%;
+    padding: 10px;
+}
+.overview-table {
+    height: 200px;
+    overflow: auto;
+    margin-bottom: 10px;
+}
+i {
+    padding-left: 10px;
+}
+
+.teacher-switch {
+    position: relative;
+    display: inline-block;
+    width: 47px;
+    height: 22px;
+    margin-bottom: 0;
+}
+
+.teacher-switch input {
+    display: none;
+}
+
+.slider2 {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border: 2px solid theme.$primary-color;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 44px;
+    color: #1f7ec6;
+    box-shadow: 5px 5px 5px #00000026;
+}
+
+.slider2:before {
+    position: absolute;
+    content: "No";
+    height: 21px;
+    width: 27px;
+    left: -2px;
+    bottom: -1px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border: 2px solid theme.$primary-color;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+input:checked + .slider2 {
+    background-color: #fff;
+}
+
+input:focus + .slider2 {
+    box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider2:before {
+    content: "Yes";
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+    background-color: theme.$primary-color;
+    color: #fff;
+}
+
+/* Rounded slider2s */
+.slider2.round {
+    border-radius: 20px;
+}
+
+.slider2.round:before {
+    border-radius: 20px;
+}
+.teacher-check-alternating:nth-child(even) {
+    background: rgba(0, 0, 0, 0.05);
+}
+.teacher-check-all {
+    background: rgba(3, 105, 154, 0.05);
+    border: 1px solid #03699a;
+}
+.teacher-check-all label {
+    white-space: nowrap;
+}
+.button2yes.round {
+    border-radius: 20px;
+    border: 2px solid theme.$primary-color;
+    line-height: 20px;
+    background-color: theme.$primary-color;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 5px 5px 5px #00000026;
+    width: 32px;
+}
+.button2no.round {
+    border-radius: 20px;
+    border: 2px solid theme.$primary-color;
+    line-height: 20px;
+    background-color: white;
+    color: theme.$primary-color;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 5px 5px 5px #00000026;
+    width: 32px;
+}
+.teacher-check-all {
+    background: rgba(3, 105, 154, 0.05);
+    border: 1px solid #03699a;
+}
+.teacher-check-all label {
+    white-space: nowrap;
+}
+.button2yes.round {
+    border-radius: 20px;
+    border: 2px solid #2392d0;
+    line-height: 20px;
+    background-color: #2392d0;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 5px 5px 5px #00000026;
+    width: 32px;
+}
+.button2no.round {
+    border-radius: 20px;
+    border: 2px solid #2392d0;
+    line-height: 20px;
+    background-color: white;
+    color: #2392d0;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 5px 5px 5px #00000026;
+    width: 32px;
+}
+.list-group {
+    min-height: 100px;
+}
+.list-group-item:nth-child(even) {
+    background: rgba(0, 0, 0, 0.05);
+}

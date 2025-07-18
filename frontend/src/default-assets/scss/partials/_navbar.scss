@@ -1,0 +1,98 @@
+@use "../modules/theme";
+@use "../modules/variables";
+@use "../modules/mixins";
+@use "../modules/bootstrap-helpers";
+
+.navbar-dark .navbar-nav .left-menu .nav-link {
+    background: transparent;
+    font-size: 1rem;
+    font-weight: bold;
+    color: theme.$text-primary-contrast;
+    padding: 4px 10px;
+}
+.navbar-dark .navbar-nav .left-menu .nav-link:hover,
+.navbar-dark .navbar-nav .left-menu .nav-link.active {
+    background: theme.$primary-color-dark;
+    border-radius: 2rem;
+}
+.navbar-dark .navbar-nav .nav-link.right-menu {
+    background: theme.$ui-panel-light;
+    font-size: 1rem;
+    font-weight: bold;
+    color: theme.$primary-color;
+    border-radius: 0.8rem 0.8rem;
+    padding: 0.7rem 1rem;
+    &:hover {
+        background: theme.$primary-color;
+        color: theme.$text-primary-contrast;
+    }
+}
+
+.dropdown-item:hover {
+    background: theme.$primary-color;
+    color: theme.$text-primary-contrast;
+}
+.navbar {
+    padding: 0.5rem 1rem;
+    position: absolute;
+    @include bootstrap-helpers.media-breakpoint-down(md) {
+        background: theme.$primary-color;
+        padding: 0.8rem;
+        position: fixed;
+        @supports (padding-top: env(safe-area-inset-top)) {
+            padding-top: max(calc(env(safe-area-inset-top, 0) - 0.5rem), 0.8rem) !important;
+        }
+    }
+}
+.navbar-brand {
+    font-family: variables.$font-main;
+}
+
+@include bootstrap-helpers.media-breakpoint-up(lg) {
+    .dont-collapse-lg {
+        display: block;
+        height: auto !important;
+        visibility: visible;
+    }
+}
+
+.popup-msg {
+    position: absolute;
+    padding-top: 100px;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    margin: auto;
+}
+#expired-token-msg {
+    position: relative;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    top: 10%;
+    color: white;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    border-radius: 0.2rem;
+    text-align: center;
+    margin: auto;
+    width: 80%;
+}
+
+.user-menu {
+    background: theme.$primary-color;
+    text-align: center;
+    border: none;
+    a {
+        color: white;
+    }
+    @include bootstrap-helpers.media-breakpoint-up(lg) {
+        background: white;
+        color: theme.$text-primary;
+        text-align: left;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        a {
+            color: theme.$text-ui-panel-light-contrast;
+        }
+    }
+}

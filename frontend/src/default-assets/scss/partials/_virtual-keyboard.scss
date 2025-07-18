@@ -1,0 +1,29 @@
+@use "../modules/theme";
+@use "../modules/variables";
+
+.hg-theme-default.elearning-theme {
+    font-family: variables.$font-language !important;
+}
+
+.hg-button.hg-standardBtn.btn-bg-primary {
+    background: theme.$primary-color;
+    color: theme.$text-primary-contrast;
+}
+
+.hg-button.hg-functionBtn.lang-switch-key {
+    max-width: 15rem;
+}
+
+.hg-button.hg-functionBtn.lang-switch-key-cowlitz {
+    background-image: url("../../images/lang-switch-icon-cowlitz.png");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.hg-button.hg-functionBtn.hg-activeBtn.lang-switch-key-cowlitz {
+    background-image: url("../../images/lang-switch-icon-cowlitz.png") !important;
+    background-position: center !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-color: gray !important;
+}

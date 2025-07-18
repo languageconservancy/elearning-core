@@ -1,0 +1,91 @@
+<div class="notify-detail">
+    <div class="text-left">
+        <p>
+            We’d like to send you words of encouragement, news about new features and content, and notices of upcoming
+            {{ environment.LANGUAGE }} Learning Events.
+        </p>
+    </div>
+    <div class="scroll-y">
+        <div class="path-check">
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-9 col-lg-9">
+                    <dl>
+                        <dt>Push Notifications</dt>
+                    </dl>
+                </div>
+                <div class="col-xs-12 col-sm-3 col-lg-3">
+                    <label class="switch">
+                        <input type="checkbox" [(ngModel)]="notif.pushNotif" (change)="setNotif('push')" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="path-check">
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-9 col-lg-9">
+                    <dl>
+                        <dt>Email Notifications</dt>
+                    </dl>
+                </div>
+                <div class="col-xs-12 col-sm-3 col-lg-3">
+                    <label class="switch">
+                        <input type="checkbox" [(ngModel)]="notif.email" (change)="setNotif('email')" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="path-check">
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-9 col-lg-9">
+                    <dl>
+                        <dt>News and Events</dt>
+                    </dl>
+                </div>
+                <div class="col-xs-12 col-sm-3 col-lg-3">
+                    <label class="switch">
+                        <input type="checkbox" [(ngModel)]="notif.news" (change)="setNotif('news')" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="path-check">
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-9 col-lg-9">
+                    <dl>
+                        <dt>Motivation</dt>
+                    </dl>
+                </div>
+                <div class="col-xs-12 col-sm-3 col-lg-3">
+                    <label class="switch">
+                        <input type="checkbox" [(ngModel)]="notif.motivation" (change)="setNotif('motivation')" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="path-check" *ngIf="notif.motivation">
+            <div class="form-row">
+                <div class="col-xs-12 col-sm-9 col-lg-9">
+                    <dl>
+                        <dt>Motivation Time</dt>
+                    </dl>
+                </div>
+                <div class="col-xs-12 col-sm-3 col-lg-3">
+                    <owl-date-time
+                        dateFormat="hh:mm a"
+                        hideClearButton="true"
+                        type="timer"
+                        hourFormat="12"
+                        placeHolder="hh:mm a"
+                        [(ngModel)]="notif.motivation_time_obj"
+                        (onClose)="motifTime()"
+                        ngDefaultControl
+                    ></owl-date-time>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,129 @@
+<div class="timer" *ngIf="showTimer">
+    <span>
+        {{ minutesDisplay && minutesDisplay <= 59 ? minutesDisplay : "00" }} :
+        {{ secondsDisplay && secondsDisplay <= 59 ? secondsDisplay : "00" }}
+    </span>
+</div>
+<div class="fire-image d-none d-lg-block" *ngIf="showFire">
+    <span>
+        <img *ngIf="fireImage === 'dead'" src="./assets/images/fire_dead_nobg.png" alt="" />
+        <img *ngIf="fireImage === 'low'" src="./assets/images/fire_low_nobg.png" alt="" />
+        <img *ngIf="fireImage === 'medium'" src="./assets/images/fire_med_nobg.png" alt="" />
+        <img *ngIf="fireImage === 'high'" src="./assets/images/fire_high_nobg.png" alt="" />
+        <img *ngIf="fireImage === 'ultra'" src="./assets/images/fire_ultra_nobg.png" alt="" />
+    </span>
+</div>
+
+<!-- Two minute warning modal -->
+<div
+    class="modal fade modal-n timer-modal"
+    id="idleModal"
+    data-backdrop="static"
+    data-keyboard="false"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ResponseCheck"
+>
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="myModalLabel">Attention!</h3>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="closeTimeOutModal()"
+                    aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <i class="fa fa-exclamation-circle warning"></i>
+                        <h4 class="martop-10">You have been idle for 2 minutes.</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-text-hover" (click)="closeTimeOutModal()">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Two minute warning modal -->
+<!-- Time up modal -->
+<!-- <div class="modal fade modal-n" id="timeUpModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+	aria-labelledby="ResponseCheck">
+	<div class="modal-dialog modal-md" role="document">
+		<div class="modal-content">
+			<div class="modal-header text-center">
+				<h3 class="modal-title" id="myModalLabel">Attention!</h3>
+				<button type="button" class="close" (click)="closeTimeUpModal()" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12 text-center">
+						<i class="fa fa-exclamation-circle warning"></i>
+						<h4 class="martop-10">You have completed your allocated time for today.</h4>
+						<p class="big-txt">Please click OK to continue.</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-text-hover" (click)="closeTimeUpModal()">OK</button>
+			</div>
+		</div>
+	</div>
+</div> -->
+<!-- Time up modal -->
+
+<div
+    class="modal fade modal-n"
+    id="timeUpModal"
+    data-backdrop="static"
+    data-keyboard="false"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ResponseCheck"
+>
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="popup-wrapper popup-blue-bg popup-padd-top-bottom">
+                <div class="unit-complete-title" *ngIf="unitPercentageFlag">
+                    <h3 class="custom-font">You have completed your time goal for the day.</h3>
+                    <!-- and completed {{review_counter}} reviews. Please complete {{review_remain_counter}} more reviews to unlock the next Unit </h3> -->
+                    <h3 class="custom-font">
+                        You have completed {{ numCorrectlyAnsweredReviewQuestions }} Review
+                        questions. Please complete
+                        {{ numRemainingReviewQuestionsToAnswerCorrectly }} more to unlock the next
+                        unit.
+                    </h3>
+                    <h3 class="custom-font">+{{ totaldata }}XP</h3>
+                    <!-- <h5 class="custom-font">You've been focusing on review. its time to go for some new learning.</h5> -->
+                </div>
+                <div class="unit-complete-title" *ngIf="!unitPercentageFlag">
+                    <h3 class="custom-font">You have completed your time goal for the day.</h3>
+                    <h3 class="custom-font">+{{ totaldata }}XP</h3>
+                    <!-- <h5 class="custom-font">You've been focusing on review. its time to go for some new learning.</h5> -->
+                </div>
+                <div class="popup-main-content">
+                    <div class="unit-screen-content text-center">
+                        <div class="unit-block unit-review-block" (click)="closeTimeUpModal()">
+                            <a class="block-img" href="javascript:void(0)">
+                                <img src="./assets/images/fire_ultra.png" alt="" />
+                            </a>
+                            <h5>
+                                <a href="javascript:void(0)" class="custom-font">Review</a>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

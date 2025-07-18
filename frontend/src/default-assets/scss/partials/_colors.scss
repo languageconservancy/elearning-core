@@ -1,0 +1,142 @@
+@use "../modules/theme";
+
+.bg-primary {
+    background: theme.$primary-color;
+}
+.bg-primary-light {
+    background: theme.$primary-color-light;
+}
+.bg-primary-dark {
+    background: theme.$primary-color-dark;
+}
+
+.border-primary {
+    border-color: theme.$primary-color;
+    border-radius: 1.2rem;
+    border-width: 0.35rem;
+    border-style: solid;
+    box-sizing: border-box;
+}
+
+.text-primary {
+    color: theme.$text-primary !important;
+}
+.text-primary-contrast {
+    color: theme.$text-primary-contrast !important;
+}
+.text-ui-panel-light-contast {
+    color: theme.$text-ui-panel-light-contrast !important;
+}
+.text-white-to-primary {
+    color: theme.$text-primary-contrast;
+    &:hover {
+        color: theme.$primary-color;
+    }
+}
+.text-disabled {
+    color: theme.$text-ui-panel-light-placeholder !important;
+}
+
+.color-primary-hover {
+    color: theme.$primary-color-dark !important;
+}
+
+// Background colors
+.bg-option-default {
+    background-color: theme.$ui-panel-light;
+    &:hover {
+        background-color: rgba(theme.$primary-color-light, 0.2);
+    }
+}
+.bg-option-hover {
+    background-color: rgba(theme.$primary-color-light, 0.2) !important;
+}
+.bg-option-primary {
+    background-color: theme.$primary-color;
+    &:hover {
+        background-color: rgba(theme.$primary-color-light, 0.2);
+    }
+}
+.bg-default-opaque {
+    background-color: theme.$ui-panel-light;
+    // Hover and Active effects for devices that support hover (e.g., desktops)
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: #d1ecf9;
+        }
+
+        &:active {
+            background-color: #d1ecf9;
+        }
+    }
+
+    // Disable hover and modify active for touch devices
+    @media (hover: none) and (pointer: coarse) {
+        &:hover {
+            background-color: theme.$ui-panel-light; // No hover effect on touch devices
+        }
+
+        &:active {
+            background-color: #d1ecf9; // Still apply the active state when tapped
+            transition: background-color 0.3s ease; // Optional: smooth transition on tap
+        }
+    }
+}
+.bg-option-correct {
+    background-color: rgba(theme.$correct-color, 0.2) !important;
+}
+.bg-option-incorrect {
+    background-color: rgba(theme.$incorrect-color, 0.2) !important;
+}
+.bg-option-matched {
+    background-color: rgba(#000000, 0.3) !important;
+}
+
+// Border colors
+.border-option-default {
+    border-color: theme.$primary-color;
+    border-radius: 1.2rem;
+    border-width: 0.35rem;
+    border-style: solid;
+    box-sizing: border-box;
+    &:hover {
+        border-color: theme.$primary-color-light;
+        outline: 0.05rem solid theme.$primary-color-light;
+    }
+    // &:focus {
+        // outline: 3px solid theme.$primary-color-light;
+    // }
+}
+.border-option-default-no-hover {
+    border-color: theme.$primary-color;
+    border-radius: 1.2rem;
+    border-width: 0.35rem;
+    border-style: solid;
+    box-sizing: border-box;
+}
+.border-option-default-no-hover-top {
+    border-top-color: solid theme.$primary-color 0.35rem !important;
+    box-sizing: border-box;
+}
+.border-option-hover {
+    border-color: theme.$primary-color-light !important;
+    outline: 0.05rem solid theme.$primary-color-light !important;
+}
+.border-option-correct {
+    border-color: theme.$correct-color !important;
+}
+.border-option-incorrect {
+    border-color: theme.$incorrect-color !important;
+}
+.border-option-matched {
+    border-color: rgba(#000000, 0.6) !important;
+}
+.border-width-1 {
+    border-width: 0.1rem;
+}
+.border-width-2 {
+    border-width: 0.2rem;
+}
+.border-width-3 {
+    border-width: 0.3rem;
+}

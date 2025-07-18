@@ -1,0 +1,212 @@
+<div class="p-lg-4 pb-4">
+    <div class="text-left">
+        <p>
+            The {{ environment.SITE_NAME }} community is here to support you in your {{ environment.LANGUAGE }} learning
+            path. If age or privacy is a concern though, please select the appropriate options below.
+        </p>
+    </div>
+    <div class="scroll-y">
+        <div class="path-check">
+            <div class="form-row">
+                <div class="col-6">
+                    <dl>
+                        <dt>Parental Lock</dt>
+                    </dl>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <div class="d-flex flex-column align-items-center">
+                        <label class="switch">
+                            <input
+                                type="checkbox"
+                                [(ngModel)]="privacy.parental_toggle"
+                                (change)="openParentalLockModal()"
+                            />
+                            <span class="slider round"></span>
+                        </label>
+                        <a
+                            href="javascript:void(0)"
+                            class="invite-frd edit-parental-lock rounded-pill"
+                            *ngIf="privacy.parental_toggle && user.usersetting.parental_lock"
+                            (click)="lockEditFlag = true"
+                            data-toggle="modal"
+                            data-target="#parentalLockModal"
+                        >
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="path-check">
+            <div class="form-row">
+                <div class="col-6">
+                    <dl>
+                        <dt>Public Profile</dt>
+                    </dl>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <label class="switch">
+                        <input
+                            type="checkbox"
+                            [disabled]="!privacy.adult"
+                            [(ngModel)]="privacy.public"
+                            (change)="setPrivacy('public')"
+                        />
+                        <span class="slider round" [ngClass]="{ 'greyed-out': !privacy.adult }"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="path-check">
+            <div class="form-row">
+                <div class="col-6">
+                    <dl>
+                        <dt>Public Leader Board</dt>
+                    </dl>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                    <label class="switch">
+                        <input
+                            type="checkbox"
+                            [disabled]="!privacy.adult"
+                            [(ngModel)]="privacy.leaderboard"
+                            (change)="setPrivacy('leaderboard')"
+                        />
+                        <span class="slider round" [ngClass]="{ 'greyed-out': !privacy.adult }"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="path-check">
+								<div class="form-row">
+									<div class="col-xs-12 col-sm-9 col-lg-9">
+										<dl>
+											<dt>Audio Archiving</dt>
+										</dl>
+									</div>
+									<div class="col-xs-12 col-sm-3 col-lg-3">
+										<label class="switch">
+											<input type="checkbox" [(ngModel)]="privacy.audioArchive" (change)="setPrivacy('audioArchive')">
+											<span class="slider round"></span>
+										</label>
+									</div>
+								</div>
+							</div> -->
+        <button id="view-privacy-btn" (click)="goToUrl('about/privacy')" class="btn btn-blue-real mt-3">
+            View Privacy Policy
+        </button>
+    </div>
+</div>
+
+<!-- Parental Lock Modal -->
+<div
+    class="modal fade modal-n"
+    id="parentalLockModal"
+    data-backdrop="static"
+    data-keyboard="false"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ParentalLock"
+>
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="myModalLabel">Parental Locks</h3>
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    (click)="cancelParentalLock()"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body modal-n-table">
+                <form
+                    *ngIf="!lockEditFlag"
+                    name="parentalForm"
+                    [formGroup]="parentalForm"
+                    (submit)="changeParentalLock(parentalForm)"
+                >
+                    <input
+                        class="form-control input-default seoc-btn-width"
+                        autocomplet="off"
+                        formControlName="parentalLock"
+                        name="parentalLock"
+                        [ngClass]="{
+                            'has-error':
+                                parentalForm.value.parentalLock &&
+                                parentalForm.controls.parentalLock.invalid &&
+                                parentalForm.controls.parentalLock.touched,
+                        }"
+                        type="password"
+                        placeholder="Parental Lock Code"
+                    />
+
+                    <div class="parental-lock-btn">
+                        <button
+                            type="button"
+                            class="btn btn-gray-text-hover"
+                            data-dismiss="modal"
+                            (click)="cancelParentalLock()"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" (click)="changeParentalLock(parentalForm)">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+                <form
+                    *ngIf="lockEditFlag"
+                    name="parentalEditForm"
+                    [formGroup]="parentalEditForm"
+                    (submit)="changeParentalLock(parentalEditForm)"
+                >
+                    <input
+                        class="form-control input-default seoc-btn-width"
+                        formControlName="parentalLockOld"
+                        name="parentalLockOld"
+                        [ngClass]="{
+                            'has-error':
+                                parentalEditForm.value.parentalLockOld &&
+                                parentalEditForm.controls.parentalLockOld.invalid &&
+                                parentalEditForm.controls.parentalLockOld.touched,
+                        }"
+                        type="password"
+                        placeholder="Current Parental Lock Code"
+                    />
+                    <input
+                        class="form-control input-default seoc-btn-width"
+                        formControlName="parentalLockNew"
+                        name="parentalLockNew"
+                        [ngClass]="{
+                            'has-error':
+                                parentalEditForm.value.parentalLockNew &&
+                                parentalEditForm.controls.parentalLockNew.invalid &&
+                                parentalEditForm.controls.parentalLockNew.touched,
+                        }"
+                        type="password"
+                        placeholder="New Parental Lock Code"
+                    />
+
+                    <div class="parental-lock-btn">
+                        <button
+                            type="button"
+                            class="btn btn-gray-text-hover"
+                            data-dismiss="modal"
+                            (click)="cancelParentalLock()"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary" (click)="changeParentalLock(parentalEditForm)">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Parental Lock Modal -->

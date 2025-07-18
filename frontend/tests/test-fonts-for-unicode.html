@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <base href="/" />
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, height=device-height, initial-scale=1, shrink-to-fit=no, viewport-fit=cover, maximum-scale=1"
+        />
+        <meta name="description" content="Test Diacritics with fonts." />
+
+        <title>Test Diacritics with Fonts</title>
+        <style>
+            @font-face {
+                font-family: "TLC-ArialRoundedMTBoldRegular";
+                src:
+                    url(../customFont1/tlcarialroundedmtboldregular.otf),
+                    url(../customFont1/tlcarialroundedmtboldregular.eot),
+                    url(../customFont1/tlcarialroundedmtboldregular.eot?#iefix) format("embedded-opentype"),
+                    url(../customFont1/tlcarialroundedmtboldregular.woff) format("woff"),
+                    url(../customFont1/tlcarialroundedmtboldregular.woff2) format("woff2"),
+                    url(../customFont1/tlcarialroundedmtboldregular.ttf) format("opentype"),
+                    url(../customFont1/tlcarialroundedmtboldregular.svg#tlcarialroundedmtboldregular) format("svg");
+            }
+            table {
+                border-collapse: collapse;
+                border: 2px solid rgb(140 140 140);
+                font-size: 1rem;
+            }
+
+            caption {
+                caption-side: bottom;
+                padding: 10px;
+                font-weight: bold;
+            }
+
+            thead,
+            tfoot {
+                background-color: rgb(228 240 245);
+            }
+
+            th,
+            td {
+                border: 1px solid rgb(160 160 160);
+                padding: 8px 10px;
+            }
+
+            tbody > tr:nth-of-type(even) {
+                background-color: rgb(237 238 242);
+            }
+
+            tfoot th {
+                text-align: right;
+            }
+
+            tfoot td {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+
+    <body>
+        <table>
+            <caption>
+                Font Tests for Diacritics and Unicode Characters
+            </caption>
+            <thead>
+                <tr>
+                    <th>Font Family</th>
+                    <th>Font Weight</th>
+                    <th>Cowlitz</th>
+                    <th>Crow</th>
+                    <th>Ho-Chunk</th>
+                    <th>Lakota</th>
+                    <th>Ute</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="font-family: TLC-ArialRoundedMTBoldRegular">
+                    <td>TLC-ArialRoundedMTBoldRegular</td>
+                    <td>n/a</td>
+                    <td>
+                        ƛ š ə ɬ ʔ x̣ č á é ó í ú č š čʼ kʼʷ qʼʷ x̣ʷ áa ée óo cʼ kʼ kʷ lʼ ƛʼ mʼ nʼ pʼ qʼ qʷ tʼ wʼ xʷ yʼ oo
+                        ee aa ə́
+                    </td>
+                    <td>á é ó í ú Á É Í Ó Ú</td>
+                    <td>ą į ų ąą įį ųų ǧ š ž š’ p’ x’ k’ ā ą̄ ē ī į̄ ō ū ų̄</td>
+                    <td>č ǧ ȟ š ž Ȟ</td>
+                    <td>ö ü Ö Ü</td>
+                </tr>
+                <tr style="font-family: Georgia; serif;">
+                    <td>Georgia, serif</td>
+                    <td>Regular</td>
+                    <td>
+                        ƛ š ə ɬ ʔ x̣ č á é ó í ú č š čʼ kʼʷ qʼʷ x̣ʷ áa ée óo cʼ kʼ kʷ lʼ ƛʼ mʼ nʼ pʼ qʼ qʷ tʼ wʼ xʷ yʼ oo
+                        ee aa ə́
+                    </td>
+                    <td>á é ó í ú Á É Í Ó Ú</td>
+                    <td>ą į ų ąą įį ųų ǧ š ž š’ p’ x’ k’ ā ą̄ ē ī į̄ ō ū ų̄</td>
+                    <td>č ǧ ȟ š ž Ȟ</td>
+                    <td>ö ü Ö Ü</td>
+                </tr>
+                <tr style="font-family: Georgia; serif; font-weight: bold;">
+                    <td>Georgia, serif</td>
+                    <td>Bold</td>
+                    <td>
+                        ƛ š ə ɬ ʔ x̣ č á é ó í ú č š čʼ kʼʷ qʼʷ x̣ʷ áa ée óo cʼ kʼ kʷ lʼ ƛʼ mʼ nʼ pʼ qʼ qʷ tʼ wʼ xʷ yʼ oo
+                        ee aa ə́
+                    </td>
+                    <td>á é ó í ú Á É Í Ó Ú</td>
+                    <td>ą į ų ąą įį ųų ǧ š ž š’ p’ x’ k’ ā ą̄ ē ī į̄ ō ū ų̄</td>
+                    <td>č ǧ ȟ š ž Ȟ</td>
+                    <td>ö ü Ö Ü</td>
+                </tr>
+                <tr style="font-family: Arial, Helvetica, sans-serif">
+                    <td>Arial, Helvetica, sans-serif</td>
+                    <td>Regular</td>
+                    <td>
+                        ƛ š ə ɬ ʔ x̣ č á é ó í ú č š čʼ kʼʷ qʼʷ x̣ʷ áa ée óo cʼ kʼ kʷ lʼ ƛʼ mʼ nʼ pʼ qʼ qʷ tʼ wʼ xʷ yʼ oo
+                        ee aa ə́
+                    </td>
+                    <td>á é ó í ú Á É Í Ó Ú</td>
+                    <td>ą į ų ąą įį ųų ǧ š ž š’ p’ x’ k’ ā ą̄ ē ī į̄ ō ū ų̄</td>
+                    <td>č ǧ ȟ š ž Ȟ</td>
+                    <td>ö ü Ö Ü</td>
+                </tr>
+                <tr style="font-family: Arial, Helvetica, sans-serif; font-weight: bold">
+                    <td>Arial, Helvetica, sans-serif</td>
+                    <td>Bold</td>
+                    <td>
+                        ƛ š ə ɬ ʔ x̣ č á é ó í ú č š čʼ kʼʷ qʼʷ x̣ʷ áa ée óo cʼ kʼ kʷ lʼ ƛʼ mʼ nʼ pʼ qʼ qʷ tʼ wʼ xʷ yʼ oo
+                        ee aa ə́
+                    </td>
+                    <td>á é ó í ú Á É Í Ó Ú</td>
+                    <td>ą į ų ąą įį ųų ǧ š ž š’ p’ x’ k’ ā ą̄ ē ī į̄ ō ū ų̄</td>
+                    <td>č ǧ ȟ š ž Ȟ</td>
+                    <td>ö ü Ö Ü</td>
+                </tr>
+                <tr
+                    style="
+                        font-family:
+                            Trebuchet MS,
+                            sans-serif;
+                    "
+                >
+                    <td>Trebuchet MS, sans-serif</td>
+                    <td>Regular</td>
+                    <td>
+                        ƛ š ə ɬ ʔ x̣ č á é ó í ú č š čʼ kʼʷ qʼʷ x̣ʷ áa ée óo cʼ kʼ kʷ lʼ ƛʼ mʼ nʼ pʼ qʼ qʷ tʼ wʼ xʷ yʼ oo
+                        ee aa ə́
+                    </td>
+                    <td>á é ó í ú Á É Í Ó Ú</td>
+                    <td>ą į ų ąą įį ųų ǧ š ž š’ p’ x’ k’ ā ą̄ ē ī į̄ ō ū ų̄</td>
+                    <td>č ǧ ȟ š ž Ȟ</td>
+                    <td>ö ü Ö Ü</td>
+                </tr>
+                <tr
+                    style="
+                        font-family:
+                            Trebuchet MS,
+                            sans-serif;
+                        font-weight: bold;
+                    "
+                >
+                    <td>Trebuchet MS, sans-serif</td>
+                    <td>Bold</td>
+                    <td>
+                        ƛ š ə ɬ ʔ x̣ č á é ó í ú č š čʼ kʼʷ qʼʷ x̣ʷ áa ée óo cʼ kʼ kʷ lʼ ƛʼ mʼ nʼ pʼ qʼ qʷ tʼ wʼ xʷ yʼ oo
+                        ee aa ə́
+                    </td>
+                    <td>á é ó í ú Á É Í Ó Ú</td>
+                    <td>ą į ų ąą įį ųų ǧ š ž š’ p’ x’ k’ ā ą̄ ē ī į̄ ō ū ų̄</td>
+                    <td>č ǧ ȟ š ž Ȟ</td>
+                    <td>ö ü Ö Ü</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>

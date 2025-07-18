@@ -1,0 +1,124 @@
+<app-page-title [pageTitle]="'About'"></app-page-title>
+<div class="row">
+    <div class="col">
+        <div class="abou_tabctrl d-flex align-items-start flex-nowrap flex-column flex-lg-row mb-5">
+            <!-- Small screens -->
+            <div class="dropdown settings-dropdown d-lg-none bg-transparent mx-auto mb-2 mt-0">
+                <button
+                    id="about-dropdown"
+                    class="dropdown-toggle default-font-size d-flex flex-nowrap text-wrap justify-content-between align-items-center mx-auto px-4 py-2"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                    data-display="static"
+                >
+                    {{ activeTab | capitalizeFirstLetter }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a
+                        *ngFor="let contentItem of content"
+                        class="dropdown-item"
+                        [ngClass]="{ active: activeTab === contentItem.Id }"
+                        (click)="gotoUrl(contentItem.Id)"
+                        href="javascript:void(0)"
+                    >
+                        {{ contentItem.tabTitle }}
+                    </a>
+                    <a
+                        class="dropdown-item"
+                        [ngClass]="{ active: activeTab === 'privacy' }"
+                        (click)="gotoUrl('privacy')"
+                        href="javascript:void(0)"
+                        >Privacy Policy</a
+                    >
+                    <a
+                        class="dropdown-item"
+                        [ngClass]="{ active: activeTab === 'terms' }"
+                        (click)="gotoUrl('terms')"
+                        href="javascript:void(0)"
+                        >Terms & Conditions</a
+                    >
+                </div>
+            </div>
+
+            <!-- Large screens -->
+            <ul class="d-none d-lg-block nav nav-tabs" id="myTab" role="tablist">
+                <li *ngFor="let contentItem of content" class="nav-item">
+                    <a
+                        class="nav-link"
+                        id="{{ contentItem.Id }}-tab"
+                        (click)="gotoUrl(contentItem.Id)"
+                        data-toggle="tab"
+                        href="#{{ contentItem.Id }}"
+                        role="tab"
+                        aria-controls="project"
+                        aria-selected="false"
+                        [ngClass]="{ active: 'project' === activeTab }"
+                        >{{ contentItem.tabTitle }}</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        id="privacy-tab"
+                        (click)="gotoUrl('privacy')"
+                        data-toggle="tab"
+                        href="#privacy"
+                        role="tab"
+                        aria-controls="privacy"
+                        aria-selected="false"
+                        [ngClass]="{ active: 'privacy' === activeTab }"
+                        >Privacy Policy</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        id="terms-tab"
+                        (click)="gotoUrl('terms')"
+                        data-toggle="tab"
+                        href="#terms"
+                        role="tab"
+                        aria-controls="terms"
+                        aria-selected="false"
+                        [ngClass]="{ active: 'terms' === activeTab }"
+                        >Terms & Conditions</a
+                    >
+                </li>
+            </ul>
+
+            <div
+                class="tab-content pl-6 py-5"
+                id="myTabContent"
+                [ngClass]="'privacy' === activeTab || 'terms' === activeTab ? 'pr-0' : 'pr-6'"
+            >
+                <div
+                    *ngFor="let item of content; let i = index"
+                    class="tab-pane fade"
+                    id="{{ item.Id }}"
+                    role="tabpanel"
+                    [ngClass]="{ 'show active': item.Id === activeTab }"
+                >
+                    <!--						<h2 *ngIf="item.Id != 'press' || item.Id != 'privacy'">{{item.tabTitle}}</h2>-->
+                    <h2 *ngIf="item.Id === 'press' || item.Id !== 'privacy' || item.Id !== 'terms'" class="pb-0">
+                        {{ item.tabTitle }}
+                    </h2>
+                    <div
+                        *ngIf="item.Id !== 'privacy' || item.Id !== 'terms'"
+                        [innerHtml]="item.content | safeHtml"
+                    ></div>
+                </div>
+                <iframe
+                    *ngIf="activeTab === 'privacy'"
+                    src="https://owoksape.com/info/privacy.php"
+                    style="width: 100%; border: none; height: 450px"
+                ></iframe>
+                <iframe
+                    *ngIf="activeTab === 'terms'"
+                    src="https://owoksape.com/info/terms_old.php"
+                    style="width: 100%; border: none; height: 450px"
+                ></iframe>
+            </div>
+        </div>
+    </div>
+</div>

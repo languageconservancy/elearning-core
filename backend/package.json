@@ -1,0 +1,12 @@
+{
+  "name": "elearning-backend",
+  "version": "1.0.0",
+  "description": "Backend for elearning platform",
+  "scripts": {
+    "copy-keyboard": "node scripts/copy-keyboard.js"
+  },
+  "devDependencies": {
+    "fs-extra": "^11.1.1"
+  },
+  "private": true
+}

@@ -1,0 +1,193 @@
+<!-- Instructions -->
+<div class="row">
+    <div class="col-12">
+        <div class="mar-bot-15 text-center font-language prompt-font-size prompt-line-height">
+            {{ exerciseService.exercise?.instruction }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Prompt -->
+    <div class="col col-lg-6">
+        <app-non-selectable-card
+            [card]="exerciseService.question"
+            [enabledDataTypes]="exerciseService.promptTypes"
+            [optionType]="'prompt'"
+        ></app-non-selectable-card>
+    </div>
+
+    <!-- MCQ Exercise items -->
+    <div class="col-12 col-lg-6" *ngIf="fillInType === 'mcq'">
+        <!-- MCQ Response -->
+        <div
+            class="mcq-fill-in-response spacer-top border-primary d-flex shadow position-relative flex-column justify-content-center align-items-center p-4"
+            [ngClass]="{
+                'border-option-correct bg-option-correct':
+                    answerSubmitted === true && exerciseService.userAnswer === AnswerType.CORRECT,
+                'border-option-incorrect bg-option-incorrect':
+                    answerSubmitted === true && exerciseService.userAnswer === AnswerType.INCORRECT,
+            }"
+        >
+            <div class="input-field-area text-center prompt-font-size header-line-height">
+                <div
+                    class="word-block"
+                    *ngFor="let group of uiGroupedTextArray; let groupIndex = index"
+                >
+                    <ng-container *ngFor="let part of group; let partIndex = index">
+                        <input
+                            *ngIf="part.type === 'blank'"
+                            type="text"
+                            id="input_{{ groupIndex }}_{{ partIndex }}"
+                            autofocus
+                            readonly
+                            [ngModel]="
+                                answer[groupIndex][partIndex]?.userMcqChoice?.optionName ?? ''
+                            "
+                            class="w-{{
+                                maxAnswerLength + 1
+                            }} text-center fillin-input no-virtual-keyboard font-language cursor-pointer"
+                            (click)="mcqResponseBlankClicked(groupIndex, partIndex)"
+                            [ngClass]="{
+                                'active-input':
+                                    !answerSubmitted &&
+                                    groupIndex === activeGroupIndex &&
+                                    partIndex === activePartIndex,
+                                'border-option-correct border-bottom-2 bg-option-correct':
+                                    answerSubmitted &&
+                                    answerIsCorrect[groupIndex][partIndex] === AnswerType.CORRECT,
+                                'border-option-incorrect border-bottom-2 bg-option-incorrect':
+                                    answerSubmitted &&
+                                    answerIsCorrect[groupIndex][partIndex] === AnswerType.INCORRECT,
+                            }"
+                            autocomplete="off"
+                            inputmode="none"
+                            spellcheck="false"
+                        />
+                        <span class="font-language" *ngIf="part.type === 'text'">{{
+                            part.value
+                        }}</span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <!-- MCQ Response Choices -->
+        <div class="my-4 d-flex flex-wrap flex-gap-p75 align-items-center justify-content-center">
+            <div class="" *ngFor="let choice of exerciseService.choices; let i = index">
+                <span
+                    class="btn bg-option-default border-option-default border-width-2 font-language prompt-font-size px-4"
+                    [ngClass]="{
+                        'border-option-matched bg-option-matched text-ui-panel-light-contast':
+                            choice.used,
+                        'bg-option-default border-option-default': !isMobileOrTablet,
+                        'border-primary': isMobileOrTablet,
+                        'bg-option-hover border-option-hover':
+                            !isMobileOrTablet && keyboardHighlightedMcqChoiceIndex === i,
+                    }"
+                    (mouseup)="mcqChoiceClicked(choice, i)"
+                    >{{ choice.optionName }}
+                </span>
+            </div>
+        </div>
+
+        <!-- MCQ Submit Button -->
+        <div class="mt-7 text-center">
+            <button
+                type="button"
+                [ngClass]="{
+                    'bg-option-hover border-option-hover text-primary':
+                        !isMobileOrTablet &&
+                        keyboardHighlightedMcqChoiceIndex === exerciseService.choices.length,
+                    'disabled-link': answerSubmitted,
+                }"
+                [disabled]="answerSubmitted"
+                class="btn btn-blue"
+                (click)="submitButtonClicked($event)"
+            >
+                Submit
+            </button>
+        </div>
+    </div>
+
+    <!-- Typing Exercise items -->
+    <div class="col-12 col-lg-6" *ngIf="fillInType === 'typing'">
+        <!-- Typing Response -->
+        <div id="typing-container">
+            <div
+                id="typing-area"
+                class="border-primary d-flex shadow position-relative flex-column justify-content-center align-items-center p-4 text-center m-0 mt-3 scroll-on-overflow"
+                [ngClass]="{
+                    'border-option-correct bg-option-correct':
+                        answerSubmitted && exerciseService.userAnswer === AnswerType.CORRECT,
+                    'border-option-incorrect bg-option-incorrect':
+                        answerSubmitted && exerciseService.userAnswer === AnswerType.INCORRECT,
+                }"
+            >
+                <div class="input-field-area overflow-wrap-anywhere">
+                    <div
+                        class="word-block"
+                        *ngFor="let group of uiGroupedTextArray; let groupIndex = index"
+                    >
+                        <ng-container *ngFor="let part of group; let partIndex = index">
+                            <input
+                                *ngIf="part.type === 'blank'"
+                                type="text"
+                                id="input_{{ groupIndex }}_{{ partIndex }}"
+                                autofocus
+                                appScrollIntoView
+                                autocomplete="off"
+                                class="w-{{
+                                    maxAnswerLength + 1
+                                }} text-center fillin-input font-language bg-transparent"
+                                (focus)="typingResponseBlankClicked(groupIndex, partIndex, $event)"
+                                [(ngModel)]="inputs['input_' + groupIndex + '_' + partIndex]"
+                                [ngClass]="{
+                                    'active-input':
+                                        !answerSubmitted &&
+                                        groupIndex === activeGroupIndex &&
+                                        partIndex === activePartIndex,
+                                    'border-option-correct border-bottom-2 bg-option-correct':
+                                        answerSubmitted &&
+                                        answerIsCorrect[groupIndex][partIndex] ===
+                                            AnswerType.CORRECT,
+                                    'border-option-incorrect border-bottom-2 bg-option-incorrect':
+                                        answerSubmitted &&
+                                        answerIsCorrect[groupIndex][partIndex] ===
+                                            AnswerType.INCORRECT,
+                                }"
+                                inputmode="none"
+                                spellcheck="false"
+                            />
+                            <span class="font-language" *ngIf="part.type === 'text'">{{
+                                part.value
+                            }}</span>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-7 text-center">
+                <button
+                    type="submit"
+                    id="typing-submit"
+                    [disabled]="answerSubmitted"
+                    class="btn btn-blue"
+                    (click)="submitButtonClicked($event)"
+                >
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-virtual-keyboard
+    #virtualKeyboard
+    [inputs]="inputs"
+    [debug]="!environment.production"
+    [customClass]="'fillinKeyboard'"
+    (newVirtualKeyPress)="virtualKeyPressed($event)"
+    (newPhysicalKeyPress)="physicalKeyPressed($event)"
+    (keyboardReady)="keyboardReady()"
+    class="fixed-bottom"
+></app-virtual-keyboard>

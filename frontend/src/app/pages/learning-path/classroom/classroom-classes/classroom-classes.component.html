@@ -1,0 +1,165 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+    <div *ngIf="!!currentLevel" class="col-4 teachers-list pt-2">
+        <h5>Teachers</h5>
+        <div class="text-center d-none d-md-block"><a>Click to Ask a Question</a></div>
+        <br class="d-none d-mg-block" />
+        <div class="text-center">
+            <span *ngFor="let teacher of currentLevel.teachers">
+                <img src="{{ teacher.user.usersetting.FullProfileImageUrl || './assets/images/user_img.png' }}" />
+                <br />
+                <a target="_blank" href="mailto:{{ teacher.user.email }}">{{ teacher.user.name }}</a>
+            </span>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row teacher-message justify-content-center">
+            <h5>
+                <div class="pt-3" [innerHTML]="currentLevel.description"></div>
+            </h5>
+        </div>
+    </div>
+</div>
+
+<!-- Continue, Village, Review buttons with text (Large screens) -->
+<div class="row d-none d-md-flex">
+    <div class="col-8 offset-4">
+        <div class="action-btn-area mr-3">
+            <div class="d-flex justify-content-between">
+                <div class="ft-action-btn">
+                    <a id="continue-btn" href="javascript:void(0)" (click)="goToWhereverUserLeftOff()">
+                        <span>
+                            <img height="57" src="./assets/images/continue-icon.png" />
+                        </span>
+                        Continue
+                    </a>
+                </div>
+                <div class="ft-action-btn">
+                    <a href="javascript:void(0)" (click)="goToVillage()">
+                        <span>
+                            <img height="57" src="./assets/images/partner-logo.png" />
+                        </span>
+                        Village
+                    </a>
+                </div>
+                <div class="ft-action-btn">
+                    <a href="javascript:void(0)" [ngClass]="{ 'no-reviews': noReviews }" routerLink="/review">
+                        <span>
+                            <span *ngIf="noReviews" class="img-overlay"></span>
+                            <img
+                                height="58"
+                                *ngIf="noReviews || fireImage === 'dead'"
+                                src="./assets/images/fire_dead.png"
+                                alt=""
+                            />
+                            <img height="58" *ngIf="fireImage === 'low'" src="./assets/images/fire_low.png" alt="" />
+                            <img height="58" *ngIf="fireImage === 'medium'" src="./assets/images/fire_med.png" alt="" />
+                            <img height="58" *ngIf="fireImage === 'high'" src="./assets/images/fire_high.png" alt="" />
+                            <img
+                                height="58"
+                                *ngIf="fireImage === 'ultra'"
+                                src="./assets/images/fire_ultra.png"
+                                alt=""
+                            />
+                        </span>
+                        Review
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Continue, Village, Review buttons without text (Tablets and smaller) -->
+<div class="row d-md-none d-flex mt-3 justify-content-around">
+    <div class="ft-action-btn">
+        <img height="50rem" src="./assets/images/continue-icon.png" (click)="goToWhereverUserLeftOff()" />
+    </div>
+    <div class="ft-action-btn">
+        <img height="50rem" src="./assets/images/partner-logo.png" (click)="goToVillage()" />
+    </div>
+    <div class="ft-action-btn">
+        <span *ngIf="noReviews" class="img-overlay"></span>
+        <img height="50rem" src="{{ getReviewImageUrl(fireImage, noReviews) }}" alt="" />
+    </div>
+</div>
+
+<div class="justify-content-center text-center mt-md-3" *ngIf="!noLevel && !noPath">
+    <div class="row mx-n4 mx-md-0">
+        <div class="col-12 col-md-4 d-flex justify-content-center pt-3">
+            <!-- Level selection dropdown (smaller screens) -->
+            <div class="dropdown d-md-none level-dropdown bg-transparent">
+                <button
+                    class="dropdown-toggle d-flex flex-nowrap text-wrap justify-content-between align-items-center mx-auto"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                    data-display="static"
+                >
+                    <img class="" [src]="currentLevel.image?.ResizeImageUrl" />
+                    <p class="mb-0">{{ currentLevel.name }}</p>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a
+                        *ngFor="let level of allLevels; let i = index"
+                        class="dropdown-item"
+                        [ngClass]="{ 'last-dropdown-level': i === allLevels.length - 1 }"
+                        href="javascript:void(0)"
+                        (click)="setActiveLevel(level)"
+                    >
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <img
+                                    *ngIf="level.image"
+                                    class="w-75"
+                                    [src]="level.image?.ResizeImageUrl"
+                                    alt=""
+                                    (error)="updateLevelImageUrl($event, level.id)"
+                                />
+                                <img *ngIf="!level.image" class="w-75" src="./assets/images/menu-3.png" alt="" />
+                            </div>
+                            <div class="col-8 text-wrap">
+                                <span>{{ level.name }}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- Level buttons on left side (larger screens) -->
+            <div class="landscape-leftpannel flex-md-grow-1 d-none d-md-block">
+                <ul>
+                    <li *ngFor="let level of allLevels; let i = index">
+                        <div [ngClass]="{ notclickable: !level.enable }">
+                            <a
+                                id="level-{{ i }}-btn"
+                                [ngClass]="{ 'active-level': selectedLevel === level.id, 'mt-0': i === 0 }"
+                                href="javascript:void(0)"
+                                (click)="setActiveLevel(level)"
+                                >{{ level.name }}</a
+                            >
+                            <span>
+                                <img
+                                    *ngIf="level.image"
+                                    class="level-img"
+                                    [src]="level.image?.ResizeImageUrl"
+                                    alt=""
+                                    (error)="updateLevelImageUrl($event, level.id)"
+                                />
+                                <img *ngIf="!level.image" src="./assets/images/menu-3.png" alt="" />
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-md-8">
+            <app-classroom-units></app-classroom-units>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="noLevel || noPath">
+    <div class="col-12 text-center">
+        <h3 class="text-white no-units" *ngIf="noPath">Please select a learning path from settings.</h3>
+        <h3 class="text-white no-units" *ngIf="noLevel && !noPath">This path has no levels.</h3>
+    </div>
+</div>

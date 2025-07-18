@@ -1,0 +1,18 @@
+{
+    "extends": "../tsconfig.json",
+    "include": [
+        "../node_modules/cypress",
+        "support/component.ts",
+        "support/commands.ts",
+        "support/index.ts",
+        "support/index.d.ts",
+        "**/*.ts",
+        "**/*.d.ts",
+        "../cypress.config.ts"
+    ],
+    "compilerOptions": {
+        "isolatedModules": false,
+        "sourceMap": false,
+        "types": ["node"]
+    }
+}

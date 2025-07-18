@@ -1,0 +1,264 @@
+<div *ngIf="noClassrooms" class="d-flex justify-content-center logo-container-box row">
+    <div class="col-xs-6 col-sm-7 col-lg-12 mb-3 mt-3 d-flex justify-content-center">
+        <h2 class="blue-bg">Welcome to the {{ environment.SITE_NAME }} Teacher Portal</h2>
+        <br />
+    </div>
+    <div class="row">
+        <h5>
+            To get started, please proceed to the Lessons or Admin Tab. The dashboard will show student progress,
+            activities, and statistics once you have setup your classroom and lesson plans. <br /><br />
+            Thank you from the {{ environment.SITE_NAME }} Team!
+        </h5>
+        <br />
+    </div>
+    <div class="card col-xs-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+        <img
+            class="card-img-top"
+            src="https://owoksape.s3.us-west-2.amazonaws.com/Dashboard.jpg"
+            alt="Card image cap"
+        />
+        <div class="card-body">
+            <h5 class="card-title">Track Student Progress</h5>
+            <ul>
+                <li>Instant Feedback on Student Activities</li>
+                <li>Live header message to inform students or provide zoom links</li>
+                <li>Advanced Reports</li>
+            </ul>
+        </div>
+    </div>
+    <div class="card col-xs-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+        <img
+            class="card-img-top"
+            src="https://owoksape.s3.us-west-2.amazonaws.com/Classrooms.jpg"
+            alt="Card image cap"
+        />
+        <div class="card-body">
+            <h5 class="card-title">Manage Your Students and Classrooms</h5>
+            <ul>
+                <li>Reset Student Passwords</li>
+                <li>Schedule Release of Curriculum</li>
+                <li>Apply modes for creating scored tests or bonus assignments</li>
+            </ul>
+        </div>
+    </div>
+    <div class="card col-xs-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+        <img class="card-img-top" src="https://owoksape.s3.us-west-2.amazonaws.com/Lessons.jpg" alt="Card image cap" />
+        <div class="card-body">
+            <h5 class="card-title">Design Your Own Curriculum</h5>
+            <ul>
+                <li>Arrange The Units of {{ environment.SITE_NAME }} for your specific students</li>
+                <li>Copy and edit curriculum for a new class</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-xs-6 col-sm-7 col-lg-12 mb-3 d-flex justify-content-center">
+        <span
+            >Have more general questions? Find
+            <a href="javascript:void()" [routerLink]="['about/help']">help</a> here</span
+        >
+    </div>
+    <app-classroom-select></app-classroom-select>
+</div>
+
+<div *ngIf="!noClassrooms" class="col-xs-5 col-sm-8 col-lg-12 l-speed">
+    <div class="row justify-content-start">
+        <div class="col-xs-3 col-sm-4 col-lg-4">
+            <div id="teacher-info" class="logo-container-box col-lg-12">
+                <h5>Welcome</h5>
+                <h6>{{ teacher.name }}</h6>
+                <app-classroom-select></app-classroom-select>
+                <h5>
+                    <a href="/contact-us"
+                        ><i
+                            class="fa fa-question-circle"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="Ask a question"
+                        ></i
+                    ></a>
+                </h5>
+            </div>
+        </div>
+        <div *ngIf="!!classroom" id="class-overview" class="logo-container-box col-8">
+            <h5>
+                Classroom Message<a *ngIf="messageIsDirty" href="javascript:void(0)"
+                    ><i
+                        class="fa fa-save"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        (click)="updateClassroomMessage(classroom)"
+                        title="Save Message"
+                    ></i
+                ></a>
+            </h5>
+            <div class="row">
+                <div class="col-12">
+                    <div class="higlightbox">
+                        <ngx-wig (contentChange)="markMessageDirty()" [(ngModel)]="classroom.teacher_message"></ngx-wig>
+                        <!--<textarea class="form-control" [(ngModel)]="classroom.teacher_message" rows="1">{{classroom.teacher_message}}</textarea>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-start">
+        <div class="col-xs-3 col-sm-4 col-lg-12">
+            <div *ngIf="!!!classroom" id="student-overview" class="logo-container-box col-12">
+                <h5>Please Create a Classroom</h5>
+            </div>
+            <div *ngIf="!!classroom" id="student-progress" class="logo-container-box col-12 container-fluid">
+                <h5>
+                    Student Progress Overview
+                    <a href="javascript:void(0)"
+                        ><i
+                            class="fa fa-refresh"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            (click)="updateStudentActivities(teacher.id, classroom.id, null)"
+                            title="Update Activities Table"
+                        ></i></a
+                    ><a href="javascript:void(0)"
+                        ><i
+                            class="fa fa-download"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            (click)="exportProgressToExcel()"
+                            title="Download All Class Data"
+                        ></i
+                    ></a>
+                </h5>
+                <div class="row progress-scroll">
+                    <table #progresstable class="table-header-rotated table-striped table-hover table-striped-column">
+                        <thead>
+                            <tr>
+                                <th class="row-header"></th>
+                                <!-- Following headers are rotated -->
+                                <th *ngFor="let classroomUnit of classroomUnits; let i = index" class="rotate-45">
+                                    <div>
+                                        <span
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="{{ classroomUnit.level_unit.unit.description }}"
+                                            >{{ classroomUnit.level_unit.unit.name }}</span
+                                        >
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let studentProgress of studentProgresses; let i = index">
+                                <td>
+                                    <div class="td-img-left">
+                                        <img src="{{ studentProgress.usersetting.aws_profile_link }}" />{{
+                                            studentProgress.name
+                                        }}
+                                    </div>
+                                </td>
+                                <td *ngFor="let percent of studentProgress.percents; let j = index">
+                                    <span
+                                        [ngClass]="{
+                                            'label complete': percent === 100,
+                                            'label attempted': percent > 0 && percent < 100,
+                                            'label incomplete': percent === 0,
+                                        }"
+                                        ><i
+                                            class="fa fa-circle"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="{{ percent }}%"
+                                        ></i>
+                                    </span>
+                                    <div class="hidden">{{ percent }}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-start">
+        <div class="col-xs-3 col-sm-4 col-lg-12">
+            <div id="student-activity" class="logo-container-box col-lg-12">
+                <h5>
+                    Student Activity
+                    <a href="javascript:void(0)"
+                        ><i
+                            class="fa fa-refresh"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            (click)="updateStudentActivities(teacher.id, classroom.id, null)"
+                            title="Update Activities Table"
+                        ></i></a
+                    ><a href="javascript:void(0)"
+                        ><i
+                            class="fa fa-download"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            (click)="exportActivitiesToExcel()"
+                            title="Download All Student Data"
+                        ></i
+                    ></a>
+                </h5>
+                <select
+                    id="studentSelect"
+                    name="studentSelect"
+                    [(ngModel)]="currentStudentActivityIndex"
+                    (change)="repopulateStudentActivities()"
+                >
+                    <option
+                        *ngFor="let studentActivity of studentActivities; let i = index"
+                        [value]="i"
+                        [attr.selected]="currentStudentActivityIndex === i ? true : null"
+                    >
+                        {{ studentActivity.name }}
+                    </option>
+                </select>
+                <br />
+                <input matInput (keyup)="applyFilter($event)" placeholder="Filter" />
+
+                <div class="overview-table">
+                    <table mat-table #table [dataSource]="studentActivitiesItems" matSort class="mat-elevation-z8">
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="student">
+                            <th mat-header-cell *matHeaderCellDef>Student</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="td-img-left">
+                                    <img src="{{ element.studentImg }}" />{{ element.student }}
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="card">
+                            <th mat-header-cell *matHeaderCellDef>Card</th>
+                            <td mat-cell *matCellDef="let element">{{ element.card }}</td>
+                        </ng-container>
+
+                        <!-- Weight Column -->
+                        <ng-container matColumnDef="response">
+                            <th mat-header-cell *matHeaderCellDef>Response</th>
+                            <td mat-cell *matCellDef="let element">{{ element.response }}</td>
+                        </ng-container>
+
+                        <!-- Symbol Column -->
+                        <ng-container matColumnDef="exercise">
+                            <th mat-header-cell *matHeaderCellDef>Exercise</th>
+                            <td mat-cell *matCellDef="let element">{{ element.exercise }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="time">
+                            <th mat-header-cell *matHeaderCellDef>Time</th>
+                            <td mat-cell *matCellDef="let element">{{ element.time | date: "MM-dd-yyyy HH:MM:ss" }}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

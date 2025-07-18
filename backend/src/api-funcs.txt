@@ -1,0 +1,342 @@
+Controller/HomeController.php:    public function beforeFilter(\Cake\Event\EventInterface $event): void
+Controller/HomeController.php:    public function index(): void
+Controller/HomeController.php:    public function resetPassword(string $token = null): void
+Controller/SocialController.php:    public function index(): void
+Controller/SocialController.php:    public function ogMeta(): string
+Controller/ErrorController.php:    public function initialize(): void
+Controller/ErrorController.php:    public function beforeFilter(EventInterface $event): void
+Controller/ErrorController.php:    public function beforeRender(EventInterface $event): void
+Controller/ErrorController.php:    public function afterFilter(EventInterface $event): void
+Controller/Admin/CardsController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/CardsController.php:    public function getCardList()
+Controller/Admin/CardsController.php:    public function getCardListForSelect2() {
+Controller/Admin/CardsController.php:    public function getSelectedCardsForSelect2()
+Controller/Admin/CardsController.php:    public function cardsList()
+Controller/Admin/CardsController.php:    public function addCards()
+Controller/Admin/CardsController.php:    public function uploadCards()
+Controller/Admin/CardsController.php:    public function cardsVerify()
+Controller/Admin/CardsController.php:    public function edit($id = null)
+Controller/Admin/CardsController.php:    public function bulkAction()
+Controller/Admin/CardsController.php:    public function delete($id = null)
+Controller/Admin/CardsController.php:    public function cardDeleteWarning()
+Controller/Admin/LessonsController.php:    public function beforeFilter(\Cake\Event\EventInterface $event)
+Controller/Admin/LessonsController.php:    public function index(): Response
+Controller/Admin/LessonsController.php:    public function manageLesson($lessonId = null, $frameid = null)
+Controller/Admin/LessonsController.php:    public function processAndValidateBlockData($data, $lesson_frame_id = null)
+Controller/Admin/LessonsController.php:    public function saveFrameBlockData($data, $lesson_frame_id)
+Controller/Admin/LessonsController.php:    public function uploadLessons()
+Controller/Admin/LessonsController.php:    public function batchVerifyOrSave($data = false)
+Controller/Admin/LessonsController.php:    public function sorting($frameid = null, $status = null, $currentSort = null)
+Controller/Admin/LessonsController.php:    public function renameFrames($lessonId)
+Controller/Admin/LessonsController.php:    public function reorderAndRenameFrames()
+Controller/Admin/LessonsController.php:    public function deletelesson($lessonid = null)
+Controller/Admin/LessonsController.php:    public function deleteframe($frameid = null)
+Controller/Admin/LessonsController.php:    public function resorting($lessonId)
+Controller/Admin/LessonsController.php:    public function previewBlock()
+Controller/Admin/LessonsController.php:    public function lessonDeleteWarning()
+Controller/Admin/CardGroupsController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/CardGroupsController.php:    public function index()
+Controller/Admin/CardGroupsController.php:    public function addCardGroup()
+Controller/Admin/CardGroupsController.php:    public function edit($id = null)
+Controller/Admin/CardGroupsController.php:    public function delete($id = null)
+Controller/Admin/CardGroupsController.php:    public function getCard()
+Controller/Admin/ErrorController.php:    public function initialize(): void
+Controller/Admin/ErrorController.php:    public function beforeFilter(EventInterface $event): void
+Controller/Admin/ErrorController.php:    public function beforeRender(EventInterface $event): void
+Controller/Admin/ErrorController.php:    public function afterFilter(EventInterface $event)
+Controller/Admin/UsersController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/UsersController.php:    public function userList()
+Controller/Admin/UsersController.php:    public function addUsers()
+Controller/Admin/UsersController.php:    public function edit($id = null)
+Controller/Admin/UsersController.php:    public function addSchoolUser(string $globalUserId): Response
+Controller/Admin/UsersController.php:    public function editSchoolUser($globalId, $schoolUserId): Response
+Controller/Admin/UsersController.php:    public function deleteSchoolUser(string $schoolUserId): Response
+Controller/Admin/UsersController.php:    public function delete($id = null)
+Controller/Admin/UsersController.php:    public function status($id = null, $status = 0)
+Controller/Admin/UsersController.php:    public function dashboard()
+Controller/Admin/UsersController.php:    public function logout()
+Controller/Admin/UsersController.php:    public function login()
+Controller/Admin/UsersController.php:    public function updateUserData($userId, $data)
+Controller/Admin/UsersController.php:    public function forgotPassword($email = null)
+Controller/Admin/UsersController.php:    public function bulkAction()
+Controller/Admin/SitesettingController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/SitesettingController.php:    public function index()
+Controller/Admin/SitesettingController.php:    public function uploadLoginImage()
+Controller/Admin/SitesettingController.php:    public function underConstructionSetting()
+Controller/Admin/SitesettingController.php:    public function fetchLink()
+Controller/Admin/SitesettingController.php:    public function uploadFileProgress()
+Controller/Admin/SitesettingController.php:    public function ajaxUploadFileProgress()
+Controller/Admin/SitesettingController.php:    public function importPoint()
+Controller/Admin/SitesettingController.php:    public function clearActivity($UserId)
+Controller/Admin/SitesettingController.php:    public function testMail($mailTo)
+Controller/Admin/SitesettingController.php:    public function forumEntry()
+Controller/Admin/SitesettingController.php:    public function checkFfmpeg()
+Controller/Admin/LearningPathController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/LearningPathController.php:    public function index()
+Controller/Admin/LearningPathController.php:    public function managePaths($path_id = null, $level_id = null, $unit_id = null)
+Controller/Admin/LearningPathController.php:    public function getLevelsInPath($pathId)
+Controller/Admin/LearningPathController.php:    public function addPath($data, $path)
+Controller/Admin/LearningPathController.php:    public function addLevel($data, $path, $level)
+Controller/Admin/LearningPathController.php:    public function addUnit($data, $path, $level, $unit)
+Controller/Admin/LearningPathController.php:    public function deletePath($path_id = null)
+Controller/Admin/LearningPathController.php:    public function deleteLevel(int $pathId = null, int $levelId = null)
+Controller/Admin/LearningPathController.php:    public function makeOptional($unit_id = null, $status = null)
+Controller/Admin/LearningPathController.php:    public function moveLevel(
+Controller/Admin/LearningPathController.php:    public function moveUnit(
+Controller/Admin/LearningPathController.php:    public function deleteUnit($pathId = null, $levelId = null, $unitId = null)
+Controller/Admin/LearningPathController.php:    public function getUnitDetailsData($type)
+Controller/Admin/LearningPathController.php:    public function getUnitDetailSingle()
+Controller/Admin/LearningPathController.php:    public function saveUnitDetailsData()
+Controller/Admin/LearningPathController.php:    public function uploadUnitContents()
+Controller/Admin/LearningPathController.php:    public function batchVerifyOrSave($data = false)
+Controller/Admin/DictionaryController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/DictionaryController.php:    public function referenceList()
+Controller/Admin/DictionaryController.php:    public function addReference()
+Controller/Admin/DictionaryController.php:    public function edit($id = null)
+Controller/Admin/DictionaryController.php:    public function bulkAction()
+Controller/Admin/DictionaryController.php:    public function delete($id = null)
+Controller/Admin/DictionaryController.php:    public function autoCompleteList()
+Controller/Admin/DictionaryController.php:    public function getRef($id = null)
+Controller/Admin/DictionaryController.php:    public function getDetails()
+Controller/Admin/DictionaryController.php:    public function importCsvExcel()
+Controller/Admin/ForumController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/ForumController.php:    public function index()
+Controller/Admin/ForumController.php:    public function getPost()
+Controller/Admin/ForumController.php:    public function isHide($id = null, $status = 'Y')
+Controller/Admin/ForumController.php:    public function isSticky($id = null, $status = 'Y')
+Controller/Admin/ForumController.php:    public function editPost($id = null)
+Controller/Admin/ForumController.php:    public function deletePost($id = null)
+Controller/Admin/ForumController.php:    public function delete($id = null)
+Controller/Admin/ForumController.php:    public function add()
+Controller/Admin/ForumController.php:    public function edit($id = null)
+Controller/Admin/ForumController.php:    public function getLevelsForPath()
+Controller/Admin/ForumController.php:    public function getUnitForLevel()
+Controller/Admin/FilesController.php:    public function initialize(): void
+Controller/Admin/FilesController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/FilesController.php:    public function index()
+Controller/Admin/FilesController.php:    public function editFile($id = null)
+Controller/Admin/FilesController.php:    public function deleteFile($id = null)
+Controller/Admin/FilesController.php:    public function uploadFiles()
+Controller/Admin/FilesController.php:    public function getFiles()
+Controller/Admin/FilesController.php:    public function getFile($id = null)
+Controller/Admin/FilesController.php:    public function uploadNewFile()
+Controller/Admin/FilesController.php:    public function uploadNewFrameFile()
+Controller/Admin/FilesController.php:    public function checkSelectedFiles()
+Controller/Admin/FilesController.php:    public function convertArrayFormat($arrayIn)
+Controller/Admin/InflectionController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/InflectionController.php:    public function index()
+Controller/Admin/InflectionController.php:    public function addInflection()
+Controller/Admin/InflectionController.php:    public function edit($id = null)
+Controller/Admin/InflectionController.php:    public function inflectionList()
+Controller/Admin/InflectionController.php:    public function bulkAction()
+Controller/Admin/InflectionController.php:    public function delete($id = null)
+Controller/Admin/InflectionController.php:    public function importCsvExcel()
+Controller/Admin/AppController.php:    public function initialize(): void
+Controller/Admin/AppController.php:    public function beforeRender(EventInterface $event): void
+Controller/Admin/AppController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/SchoolsController.php:    public function beforeFilter(\Cake\Event\EventInterface $event): void
+Controller/Admin/SchoolsController.php:    public function schoolList(): void
+Controller/Admin/SchoolsController.php:    public function schoolUserList()
+Controller/Admin/SchoolsController.php:    public function addSchools()
+Controller/Admin/SchoolsController.php:    public function edit($id = null)
+Controller/Admin/SchoolsController.php:    public function bulkAction()
+Controller/Admin/SchoolsController.php:    public function delete($id = null)
+Controller/Admin/ExercisesController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/ExercisesController.php:    public function getExerciseList()
+Controller/Admin/ExercisesController.php:    public function manageExercises($exerciseId = null)
+Controller/Admin/ExercisesController.php:    public function updateCardUnitsAccordingToExercise($exercise)
+Controller/Admin/ExercisesController.php:    public function deleteExercises($exerciseId = null)
+Controller/Admin/ExercisesController.php:    public function previewBlock()
+Controller/Admin/ExercisesController.php:    public function getCard()
+Controller/Admin/ExercisesController.php:    public function getCardByGroupIds()
+Controller/Admin/ExercisesController.php:    public function getCardLabelPreview()
+Controller/Admin/ExercisesController.php:    public function getMatchThePairHtml()
+Controller/Admin/ExercisesController.php:    public function getTrueFalseCardPickerHtml()
+Controller/Admin/ExercisesController.php:    public function getCardPickerHtml()
+Controller/Admin/ExercisesController.php:    public function exerciseDeleteWarning()
+Controller/Admin/ContentController.php:    public function beforeFilter(EventInterface $event)
+Controller/Admin/ContentController.php:    public function index()
+Controller/Admin/ContentController.php:    public function add()
+Controller/Admin/ContentController.php:    public function edit($id = null)
+Controller/Admin/ContentController.php:    /* public function Delete($id = null) {
+Controller/Component/MailComponent.php:    public function createMailTemplate($mailKey = null, $params = array()): array
+Controller/Component/FilesCommonComponent.php:    public function initialize(array $config): void
+Controller/Component/FilesCommonComponent.php:    public function uploadFile($file, $param, $FileType, $newFilename = "")
+Controller/Component/FilesCommonComponent.php:    public function reSizeImage($file, $height, $width, $FileName, $extention, $path)
+Controller/Component/FilesCommonComponent.php:    public function uploadFileToAws($UploadFile, $filename, $Type = 'FILES')
+Controller/Component/FilesCommonComponent.php:    public function deleteFileFromAws($filename, $Type = 'FILES')
+Controller/Component/ImageComponent.php:    public function uploadImage($file, $param, $imageType)
+Controller/Social/SocialController.php:    public function index(): void
+Controller/Social/SocialController.php:    public function ogMeta(): string
+Controller/AppController.php:    public function initialize(): void
+Controller/AppController.php:    public function extractObjErrorMsgs(\Cake\Datasource\EntityInterface $entity): string
+Controller/Api/CardsController.php:    public function initialize(): void
+Controller/Api/CardsController.php:    public function fetchlist()
+Controller/Api/CardsController.php:    public function fetchsingle($id = null)
+Controller/Api/LessonsController.php:    public function initialize(): void
+Controller/Api/LessonsController.php:    public function getLessons()
+Controller/Api/LessonsController.php:    public function getSingleLesson($data)
+Controller/Api/LearningSpeedController.php:    public function initialize(): void
+Controller/Api/LearningSpeedController.php:    public function getSpeed($id = null)
+Controller/Api/ReviewController.php:    public function initialize(): void
+Controller/Api/ReviewController.php:    public function getReviewHaveOrNot()
+Controller/Api/ReviewController.php:    public function getReviewExercise()
+Controller/Api/ReviewController.php:    public function getReviewExerciseObsolete()
+Controller/Api/CardgroupsController.php:    public function initialize(): void
+Controller/Api/CardgroupsController.php:    public function fetchcardgroup($id = null)
+Controller/Api/UsersController.php:    public function initialize(): void
+Controller/Api/UsersController.php:    public function getUser(string $id = null)
+Controller/Api/UsersController.php:    public function getPublicUser(string $id = null)
+Controller/Api/UsersController.php:    public function updateUser()
+Controller/Api/UsersController.php:    public function updateUserSetting()
+Controller/Api/UsersController.php:    public function updateuserSettings($userId, $data)
+Controller/Api/UsersController.php:    public function signup(): void
+Controller/Api/UsersController.php:    public function captchaResponse()
+Controller/Api/UsersController.php:    public function login()
+Controller/Api/UsersController.php:    public function forgotPassword()
+Controller/Api/UsersController.php:    public function generatePasswordToken($user)
+Controller/Api/UsersController.php:    public function resetPassword()
+Controller/Api/UsersController.php:    public function resetPasswordToken()
+Controller/Api/UsersController.php:    public function validToken($token_created_at)
+Controller/Api/UsersController.php:    public function teacherChangePassword()
+Controller/Api/UsersController.php:    public function checkEmail()
+Controller/Api/UsersController.php:    public function token()
+Controller/Api/UsersController.php:    public function checkFriend()
+Controller/Api/UsersController.php:    public function getFriends($userId)
+Controller/Api/UsersController.php:    public function getLeaderBoardData()
+Controller/Api/UsersController.php:    public function getUsersForFriends()
+Controller/Api/UsersController.php:    public function findFriends($userId, $friendQuery): Query
+Controller/Api/UsersController.php:    public function getUsersFriends()
+Controller/Api/UsersController.php:    public function inviteFriend()
+Controller/Api/UsersController.php:    public function emailInviteFriend()
+Controller/Api/UsersController.php:    public function uploadGalleryImage()
+Controller/Api/UsersController.php:    public function deleteGalleryImage()
+Controller/Api/UsersController.php:    public function addOrRemoveFriend()
+Controller/Api/UsersController.php:    public function deactivateAccount()
+Controller/Api/UsersController.php:    public function deleteAccount()
+Controller/Api/UsersController.php:    public function contactUs()
+Controller/Api/UsersController.php:    public function haveFbId($friend)
+Controller/Api/UsersController.php:    public function isSiteSocialUser($friend)
+Controller/Api/UsersController.php:    public function isSiteNonGoogleUser($friend)
+Controller/Api/UsersController.php:    public function haveGoogleId($friend)
+Controller/Api/UsersController.php:    public function saveAgreementsAcceptance()
+Controller/Api/UsersController.php:    public function notifyParent()
+Controller/Api/UsersController.php:    public function getRegionPolicy()
+Controller/Api/SitesettingController.php:    public function initialize(): void
+Controller/Api/SitesettingController.php:    public function fetchLink(): void
+Controller/Api/SitesettingController.php:    public function fetchConstruction(): void
+Controller/Api/SitesettingController.php:    public function fetchCmsContent(): void
+Controller/Api/SitesettingController.php:    public function fetchSiteSettingsSettings(): void
+Controller/Api/SitesettingController.php:    public function fetchSiteSettingsFeatures(): void
+Controller/Api/SitesettingController.php:    public function fetchContentByKeyword(): void
+Controller/Api/SitesettingController.php:    public function fetchPlatformRoles(): void
+Controller/Api/SitesettingController.php:    public function fetchVersionInfo(): void
+Controller/Api/LearningPathController.php:    public function initialize(): void
+Controller/Api/LearningPathController.php:    public function getPath()
+Controller/Api/LearningPathController.php:    public function getPathDetails()
+Controller/Api/LearningPathController.php:    public function getUnitDetails()
+Controller/Api/ForumController.php:    public function initialize(): void
+Controller/Api/ForumController.php:    public function getForum()
+Controller/Api/ForumController.php:    public function createPost()
+Controller/Api/ForumController.php:    public function shareRecordingAudioInForum()
+Controller/Api/ForumController.php:    public function editPost()
+Controller/Api/ForumController.php:    public function deletePost()
+Controller/Api/ForumController.php:    public function getPostList()
+Controller/Api/ForumController.php:    public function getReplyPostList()
+Controller/Api/ForumController.php:    public function getFlagPostList()
+Controller/Api/ForumController.php:    public function getPost()
+Controller/Api/ForumController.php:    public function flagAPost()
+Controller/Api/ForumController.php:    public function getFlagReasons()
+Controller/Api/FilesController.php:    public function initialize(): void
+Controller/Api/FilesController.php:    public function getfIle($id = null)
+Controller/Api/FilesController.php:    public function deleteFile()
+Controller/Api/UserPointsController.php:    public function initialize(): void
+Controller/Api/UserPointsController.php:    public function getGlobalFire()
+Controller/Api/UserPointsController.php:    public function addUserActivity()
+Controller/Api/UserPointsController.php:    public function getScorePerSet()
+Controller/Api/UserPointsController.php:    public function getUnitCompleteScore()
+Controller/Api/UserPointsController.php:    public function getReviewScoreByUserId()
+Controller/Api/UserPointsController.php:    public function addProgressTimer()
+Controller/Api/UserPointsController.php:    public function getProgressTimer()
+Controller/Api/UserPointsController.php:    public function resetProgressData()
+Controller/Api/UserPointsController.php:    public function getProgressData()
+Controller/Api/UserPointsController.php:    public function getUserTimeDate()
+Controller/Api/TemplatesController.php:    public function beforeFilter(EventInterface $event)
+Controller/Api/TemplatesController.php:    public function download($filename): Response
+Controller/Api/AppController.php:    public function initialize(): void
+Controller/Api/AppController.php:    public function viewClasses(): array
+Controller/Api/AppController.php:    public function validateRequest(array $payload, array $keys): bool
+Controller/Api/AppController.php:    public function validateUserIsInteractingWithTheirOwnData($requestUserId) {
+Controller/Api/AppController.php:    public function sendApiData($status, $message, $result = array(), int $statusCode = HttpStatusCode::OK)
+Controller/Api/AppController.php:    public function getUnitProgressPercentage($unitId, $userId)
+Controller/Api/AppController.php:    public function calculateUnitProgressPercentage($unitId, $userId)
+Controller/Api/AppController.php:    public function getUnitAttemptIdAndIsCompleted($levelId, $unitId, $userId): array
+Controller/Api/AppController.php:    public function isCompleted($activityParams)
+Controller/Api/AppController.php:    public function processExerciseOption($option, $exerciseType, $cardType, &$questions, &$responses, &$choices)
+Controller/Api/AppController.php:    public function getForumIdAccessByUserId($userId)
+Controller/Api/AppController.php:    public function getUserById(int $id)
+Controller/Api/AppController.php:    public function getBonusPointByKey($key)
+Controller/Api/AppController.php:    public function getBadgeByUser($userId)
+Controller/Api/AppController.php:    public function updatePointByUserId($userId)
+Controller/Api/AppController.php:    public function getCardDetails($ids)
+Controller/Api/AppController.php:    public function getFileDetails($ids)
+Controller/Api/AppController.php:    public function getAssetUrls($array = null)
+Controller/Api/AppController.php:    public function getUrls($array = null)
+Controller/Api/AppController.php:    public function setUserDefaults($data)
+Controller/Api/AppController.php:    public function setUserSettingsDefaults($id): bool
+Controller/Api/AppController.php:    public function updateUserData($userId, $data)
+Controller/Api/ClassroomsController.php:    public function initialize(): void
+Controller/Api/ClassroomsController.php:    public function getSchoolsAndRoles()
+Controller/Api/ClassroomsController.php:    public function getTeacherClassroomUnitsAndStudents()
+Controller/Api/ClassroomsController.php:    public function getStudentActivities()
+Controller/Api/ClassroomsController.php:    public function updateTeacherMessage()
+Controller/Api/ClassroomsController.php:    public function getTeacherClassrooms()
+Controller/Api/ClassroomsController.php:    public function getClassroomData()
+Controller/Api/ClassroomsController.php:    public function updateClassroomData()
+Controller/Api/ClassroomsController.php:    public function generateWordlink()
+Controller/Api/ClassroomsController.php:    public function deleteClassroom(): void
+Controller/Api/ClassroomsController.php:    public function archiveClassroom(): void
+Controller/Api/ClassroomsController.php:    public function getTeacherLevels()
+Controller/Api/ClassroomsController.php:    public function getTeacherLevelUnits()
+Controller/Api/ClassroomsController.php:    public function updateTeacherLevel()
+Controller/Api/ClassroomsController.php:    public function getUnitCards()
+Controller/Api/ClassroomsController.php:    public function getAvailablePaths()
+Controller/Api/ClassroomsController.php:    public function searchAvailableStudents()
+Controller/Api/ClassroomsController.php:    public function getSchoolStudents()
+Controller/Api/ClassroomsController.php:    public function addSchoolStudents()
+Controller/Api/ClassroomsController.php:    public function updateSchoolDetails()
+Controller/Api/DownloadController.php:    public function initialize(): void
+Controller/Api/DownloadController.php:    public function downloadUnitdata()
+Controller/Api/DownloadController.php:    public function syncActivityData()
+Controller/Api/Login/FacebookLoginService.php:    public function __construct(array $payload)
+Controller/Api/Login/FacebookLoginService.php:    public function login(): ?LoginServiceResponse
+Controller/Api/Login/FacebookLoginService.php:    public function signup(): ?LoginServiceResponse
+Controller/Api/Login/SiteLoginService.php:    public function __construct($user, ?ServerRequest $request = null)
+Controller/Api/Login/SiteLoginService.php:    public function login(): ?LoginServiceResponse
+Controller/Api/Login/SiteLoginService.php:    public function signup(): ?LoginServiceResponse
+Controller/Api/Login/GoogleLoginService.php:    public function __construct(array $data)
+Controller/Api/Login/GoogleLoginService.php:    public function login(): ?LoginServiceResponse
+Controller/Api/Login/GoogleLoginService.php:    public function signup(): ?LoginServiceResponse
+Controller/Api/Login/LoginService.php:    public function __construct(?ServerRequest $request = null)
+Controller/Api/Login/LoginService.php:    abstract public function login(): ?LoginServiceResponse;
+Controller/Api/Login/LoginService.php:    abstract public function signup(): ?LoginServiceResponse;
+Controller/Api/Login/LoginService.php:    public function getUserByDbField(string $field, string $value, string $registrationType): ?array
+Controller/Api/Login/LoginService.php:    public function setUpNewUser($userData, $idField, $loginType, $validation = 'default'): LoginServiceResponse
+Controller/Api/Login/CleverLoginService.php:    public function __construct(array $payload)
+Controller/Api/Login/CleverLoginService.php:    public function login(): ?LoginServiceResponse
+Controller/Api/Login/CleverLoginService.php:    public function signup(): ?LoginServiceResponse
+Controller/Api/Login/AppleLoginService.php:    public function __construct(array $payload)
+Controller/Api/Login/AppleLoginService.php:    public function login(): ?LoginServiceResponse
+Controller/Api/Login/AppleLoginService.php:    public function signup(): ?LoginServiceResponse
+Controller/Api/Login/InvalidLoginService.php:    public function __construct(array $payload)
+Controller/Api/Login/InvalidLoginService.php:    public function login(): ?LoginServiceResponse
+Controller/Api/Login/InvalidLoginService.php:    public function signup(): ?LoginServiceResponse
+Controller/Api/Login/LoginServiceResponse.php:    public function __construct(string $message, bool $status, $result, int $statusCode = null)
+Controller/Api/Login/LoginServiceResponse.php:    public function getMessage(): string
+Controller/Api/Login/LoginServiceResponse.php:    public function getStatus(): bool
+Controller/Api/Login/LoginServiceResponse.php:    public function getResult()
+Controller/Api/Login/LoginServiceResponse.php:    public function getStatusCode(): int
+Controller/Api/ExerciseController.php:    public function initialize(): void
+Controller/Api/ExerciseController.php:    public function getExercise()
+Controller/Api/ExerciseController.php:    public function shareRecordingAudioFileByEmail()
+Controller/Api/ExerciseController.php:    public function saveRecordingAudioFile()

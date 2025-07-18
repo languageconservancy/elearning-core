@@ -1,0 +1,263 @@
+<div class="justify-content-start units-container mt-3 mt-lg-0" *ngIf="level.units?.length > 0">
+    <ng-container *ngFor="let unit of level.units; let i = index">
+        <div *ngIf="!unitInactive(unit)" id="unit-{{ i }}-container" class="logo-container-box col-12 pb-2">
+            <div
+                class=""
+                [ngClass]="{
+                    notclickable: unitDisabled(unit) || unitScheduled(unit),
+                    'ng-unlocked-unit': unitEnabled(unit),
+                }"
+            >
+                <!-- Small screens -->
+                <div class="row d-flex d-sm-none justify-content-center">
+                    <!-- Unit progress bar -->
+                    <div class="col-8 px-1">
+                        <div class="progress-bar-area">
+                            <span id="unit-{{ i }}-name">{{ unit.name }}</span>
+                            <div class="progress">
+                                <div
+                                    class="progress-bar"
+                                    role="progressbar"
+                                    [style.width.%]="unit.unitPercentage"
+                                    aria-valuenow=""
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                ></div>
+                            </div>
+                        </div>
+                        <div id="unit-{{ i }}-description" class="txt-detail font-language">{{ unit.description }}</div>
+                    </div>
+
+                    <!-- Slot 3 (default is Reading, Writing, Listening, Speaking icons) -->
+                    <div *ngIf="!unitScheduled(unit)" class="col-3 align-self-center">
+                        <div class="row d-flex flex-nowrap justify-content-center">
+                            <div class="pad-2">
+                                <a href="javascript:void(0)" tooltip title="Reading">
+                                    <img
+                                        src="./assets/images/reading-blue.png"
+                                        alt="Reading"
+                                        [style.opacity]="0.1 + unit.unitFire.reding_percentage / 100"
+                                    />
+                                </a>
+                            </div>
+                            <div class="pad-2">
+                                <a href="javascript:void(0)" tooltip title="Writing">
+                                    <img
+                                        src="./assets/images/writing-blue.png"
+                                        alt="Writing"
+                                        [style.opacity]="0.1 + unit.unitFire.writing_percentage / 100"
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row d-flex flex-nowrap justify-content-center">
+                            <div class="pad-2">
+                                <a href="javascript:void(0)" tooltip title="Listening">
+                                    <img
+                                        src="./assets/images/listening-blue.png"
+                                        alt="Listening"
+                                        [style.opacity]="0.1 + unit.unitFire.listening_percentage / 100"
+                                    />
+                                </a>
+                            </div>
+                            <div class="pad-2">
+                                <a href="javascript:void(0)" tooltip title="Speaking">
+                                    <img
+                                        src="./assets/images/speaking-blue.png"
+                                        alt="Speaking"
+                                        [style.opacity]="0.1 + unit.unitFire.speaking_percentage / 100"
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row d-flex d-sm-none">
+                    <!-- Continue button -->
+                    <div class="col-4 align-self-center px-1">
+                        <div class="">
+                            <a
+                                id="unit-{{ i }}-start-btn"
+                                href="javascript:void(0)"
+                                (click)="continueClicked(unit)"
+                                tooltip
+                                [title]="getContinueIconTooltip(unit)"
+                            >
+                                <img class="w-75 unit-action-btn" [src]="getContinueUnitIcon(unit)" alt="" />
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Slot four (default is Village icon) -->
+                    <div *ngIf="!unitScheduled(unit)" class="col-4 align-self-center px-1">
+                        <div class="">
+                            <a
+                                href="javascript:void(0)"
+                                [ngClass]="{ 'disabled-link': unit.unitPercentage === 0 }"
+                                [ngClass]="{ 'filter-gray-faded-disabled': unit.unitPercentage < 100 }"
+                                (click)="setForumParams(unit)"
+                            >
+                                <img class="w-75 unit-action-btn" src="./assets/images/list-village.png" alt="" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div *ngIf="unitScheduled(unit)" class="col-4">
+                        <div class="forum-icon-area btn-icon-area">
+                            <h5>
+                                Available on:<br />
+                                {{ trimDate(unit.classroomLevelUnits.release_date) }}
+                            </h5>
+                        </div>
+                    </div>
+
+                    <!-- Review icon -->
+                    <div class="col-4 align-self-center px-1">
+                        <div class="" [ngClass]="{ 'needs-review': unit.flagNeedsReview }">
+                            <a
+                                href="javascript:void(0)"
+                                [ngClass]="{ 'disabled-link': unitNotCompleted(unit) }"
+                                [ngClass]="{ 'filter-gray-faded-disabled': unit.unitPercentage < 100 }"
+                                tooltip
+                                title="Review"
+                                (click)="review(unit)"
+                            >
+                                <img
+                                    class="w-75 unit-action-btn"
+                                    [src]="getReviewImageUrl(unit.unitFire.all_percentage)"
+                                    alt=""
+                                />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Small screens (END) -->
+
+                <!-- Large screens -->
+                <div class="row d-none d-sm-flex">
+                    <!-- Continue button -->
+                    <div class="col-2 align-self-center px-1">
+                        <div class="">
+                            <a
+                                id="unit-{{ i }}-start-btn"
+                                href="javascript:void(0)"
+                                (click)="continueClicked(unit)"
+                                tooltip
+                                [title]="getContinueIconTooltip(unit)"
+                            >
+                                <img class="w-75" [src]="getContinueUnitIcon(unit)" alt="" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Unit progress bar -->
+                    <div class="col-4 px-1">
+                        <div class="progress-bar-area">
+                            <span id="unit-{{ i }}-name">{{ unit.name }}</span>
+                            <div class="progress">
+                                <div
+                                    class="progress-bar"
+                                    role="progressbar"
+                                    [style.width.%]="unit.unitPercentage"
+                                    aria-valuenow=""
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                ></div>
+                            </div>
+                        </div>
+                        <div id="unit-{{ i }}-description" class="txt-detail font-language">{{ unit.description }}</div>
+                    </div>
+
+                    <!-- Slot 3 (default is Reading, Writing, Listening, Speaking icons) -->
+                    <div *ngIf="!unitScheduled(unit)" class="col-2 align-self-center">
+                        <div class="row d-flex flex-nowrap">
+                            <div class="pad-2">
+                                <a href="javascript:void(0)" tooltip title="Reading">
+                                    <img
+                                        src="./assets/images/reading-blue.png"
+                                        alt="Reading"
+                                        [style.opacity]="0.1 + unit.unitFire.reding_percentage / 100"
+                                    />
+                                </a>
+                            </div>
+                            <div class="pad-2">
+                                <a href="javascript:void(0)" tooltip title="Writing">
+                                    <img
+                                        src="./assets/images/writing-blue.png"
+                                        alt="Writing"
+                                        [style.opacity]="0.1 + unit.unitFire.writing_percentage / 100"
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row d-flex flex-nowrap">
+                            <div class="pad-2">
+                                <a href="javascript:void(0)" tooltip title="Listening">
+                                    <img
+                                        src="./assets/images/listening-blue.png"
+                                        alt="Listening"
+                                        [style.opacity]="0.1 + unit.unitFire.listening_percentage / 100"
+                                    />
+                                </a>
+                            </div>
+                            <div class="pad-2">
+                                <a href="javascript:void(0)" tooltip title="Speaking">
+                                    <img
+                                        src="./assets/images/speaking-blue.png"
+                                        alt="Speaking"
+                                        [style.opacity]="0.1 + unit.unitFire.speaking_percentage / 100"
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slot four (default is Village icon) -->
+                    <div *ngIf="!unitScheduled(unit)" class="col-2 align-self-center px-1">
+                        <div class="">
+                            <a
+                                href="javascript:void(0)"
+                                [ngClass]="{ 'disabled-link': unit.unitPercentage === 0 }"
+                                [ngClass]="{ 'filter-gray-faded-disabled': unit.unitPercentage < 100 }"
+                                (click)="setForumParams(unit)"
+                            >
+                                <img class="w-75" src="./assets/images/list-village.png" alt="" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div *ngIf="unitScheduled(unit)" class="col-4">
+                        <div class="forum-icon-area btn-icon-area">
+                            <h5>
+                                Available on:<br />
+                                {{ trimDate(unit.classroomLevelUnits.release_date) }}
+                            </h5>
+                        </div>
+                    </div>
+
+                    <!-- Review icon -->
+                    <div class="col-2 align-self-center px-1">
+                        <div class="" [ngClass]="{ 'needs-review': unit.flagNeedsReview }">
+                            <a
+                                href="javascript:void(0)"
+                                [ngClass]="{ 'disabled-link': unitNotCompleted(unit) }"
+                                [ngClass]="{ 'filter-gray-faded-disabled': unit.unitPercentage < 100 }"
+                                tooltip
+                                title="Review"
+                                (click)="review(unit)"
+                            >
+                                <img class="w-75" [src]="getReviewImageUrl(unit.unitFire.all_percentage)" alt="" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Large screens (END) -->
+            </div>
+        </div>
+    </ng-container>
+</div>
+<!-- No units in level message -->
+<div class="row units-container" *ngIf="level.units?.length === 0">
+    <div class="col-12 text-center">
+        <h3 id="no-units-header" class="text-white no-units">This level has no units.</h3>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div #promoModal *ngIf="eventPromo !== undefined" class="modal fade">
+    <div class="modal-dialog show">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ eventPromo.tabTitle }}</h5>
+                <button type="button" class="close" (click)="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" [innerHTML]="eventPromo.content | youtube"></div>
+        </div>
+    </div>
+</div>

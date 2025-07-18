@@ -1,0 +1,34 @@
+@use "../modules/theme";
+
+.breadcumb {
+    width: 100%;
+    display: flex;
+    white-space: nowrap;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.breadcumb a {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: theme.$text_primary;
+    margin: 0 5px;
+}
+.breadcumb a:hover {
+    text-decoration: underline;
+}
+.breadcumb .breadcumb-link:last-child span {
+    display: none;
+}
+.breadcumb .breadcumb-link span {
+    color: theme.$text_primary_contrast;
+    position: relative;
+    left: -2px;
+}
+
+.breadcumb .breadcumb-link a.active {
+    color: theme.$text_primary;
+}

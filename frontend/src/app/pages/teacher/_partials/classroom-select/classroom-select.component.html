@@ -1,0 +1,188 @@
+<div *ngIf="currentClassroomIndex === -1 && listTeacherLevels.length > 0">
+    <h5><a href="javascript:void(0);" (click)="openModal('new')">Add New Classroom</a></h5>
+</div>
+<div *ngIf="currentClassroomIndex >= 0" class="teacherportal-drop">
+    <div class="dropdown" *ngIf="!!currentClassroom">
+        <button
+            class="teacher-drop dropdown-toggle"
+            type="button"
+            id="classroomDropdownBtn"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+        >
+            {{ currentClassroom.name }}
+            <!--<span *ngIf="!currentClassroomIndex">Select Classroom</span>-->
+        </button>
+        <div class="dropdown-menu" aria-labelledby="classroomDropdownBtn">
+            <div class="dropdown-menu-wrap">
+                <div class="teacher-check" *ngFor="let classroom of classrooms; let i = index">
+                    <div class="form-row" (click)="setCurrentClassroom(i)">
+                        <div class="col-xs-12 col-sm-9 col-lg-10">
+                            <dl>
+                                <dt>{{ classroom.name }}</dt>
+                            </dl>
+                        </div>
+                        <div class="col-xs-12 col-sm-3 col-lg-2">
+                            <label class="custom-control custom-radio">
+                                <input
+                                    id="classroom-{{ i }}"
+                                    name="radio-stacked-classroom"
+                                    type="radio"
+                                    [value]="classroom.id"
+                                    class="custom-control-input"
+                                    required=""
+                                    [checked]="currentClassroomIndex === i"
+                                />
+                                <span class="custom-control-indicator"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <hr class="mt-0 mb-0" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <a href="javascript:;" (click)="openModal('update')">Edit Classroom</a>
+        /
+        <a href="javascript:;" (click)="openModal('new')">Add New Classroom</a>
+    </div>
+</div>
+<div #formModal class="modal fade">
+    <div class="modal-dialog show">
+        <div *ngIf="modalType === 'new'" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Classroom</h5>
+                <button type="button" class="close" (click)="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="ClassroomForm" [formGroup]="ClassroomForm" (submit)="createNewClassroom(ClassroomForm)">
+                    <div class="modal-body modal-n-table seoc-btn-row">
+                        <span><label for="name">Name</label></span>
+                        <span
+                            ><input
+                                type="text"
+                                placeholder="Name"
+                                formControlName="name"
+                                name="name"
+                                class="form-control seoc-btn-thin seoc-btn-width"
+                                [ngClass]="{
+                                    'has-error':
+                                        ClassroomForm.value.name &&
+                                        ClassroomForm.controls.name.invalid &&
+                                        ClassroomForm.controls.name.touched,
+                                }"
+                            /> </span
+                        ><br /><span><label for="name">Start Date</label></span>
+                        <span
+                            ><input
+                                type="date"
+                                formControlName="startDate"
+                                name="startDate"
+                                class="form-control seoc-btn-thin seoc-btn-width"
+                                [ngClass]="{
+                                    'has-error':
+                                        ClassroomForm.value.startDate &&
+                                        ClassroomForm.controls.startDate.invalid &&
+                                        ClassroomForm.controls.startDate.touched,
+                                }"
+                            /> </span
+                        ><br /><span><label for="name">End Date</label></span>
+                        <span
+                            ><input
+                                type="date"
+                                formControlName="endDate"
+                                name="endDate"
+                                class="form-control seoc-btn-thin seoc-btn-width"
+                                [ngClass]="{
+                                    'has-error':
+                                        ClassroomForm.value.endDate &&
+                                        ClassroomForm.controls.endDate.invalid &&
+                                        ClassroomForm.controls.endDate.touched,
+                                }"
+                            /> </span
+                        ><br /><span><label for="name">Select Lesson</label></span>
+                        <span
+                            ><select formControlName="level" class="form-control seoc-btn-thin seoc-btn-width">
+                                <option *ngFor="let level of listTeacherLevels; let i = index" value="{{ i }}">
+                                    {{ level.level.name }}
+                                </option>
+                            </select>
+                        </span>
+                        <p>Note: classrooms are automatically archived after their end date.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-text-hover" (click)="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div *ngIf="modalType === 'update'" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Classroom</h5>
+                <button type="button" class="close" (click)="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form
+                    name="ClassroomEditForm"
+                    [formGroup]="ClassroomEditForm"
+                    (submit)="updateClassroom(ClassroomEditForm)"
+                >
+                    <div class="modal-body modal-n-table seoc-btn-row">
+                        <span><label for="name">Name</label></span>
+                        <span
+                            ><input
+                                type="text"
+                                placeholder="Name"
+                                formControlName="name"
+                                name="name"
+                                class="form-control seoc-btn-thin seoc-btn-width"
+                                [ngClass]="{
+                                    'has-error':
+                                        ClassroomForm.controls.name.invalid && ClassroomForm.controls.name.touched,
+                                }"
+                            /> </span
+                        ><br /><span><label for="start_date">Start Date</label></span>
+                        <span
+                            ><input
+                                type="date"
+                                formControlName="startDate"
+                                name="startDate"
+                                class="form-control seoc-btn-thin seoc-btn-width"
+                                [ngClass]="{
+                                    'has-error':
+                                        ClassroomForm.controls.startDate.invalid &&
+                                        ClassroomForm.controls.startDate.touched,
+                                }"
+                            /> </span
+                        ><br /><span><label for="end_date">End Date</label></span>
+                        <span
+                            ><input
+                                type="date"
+                                formControlName="endDate"
+                                name="endDate"
+                                class="form-control seoc-btn-thin seoc-btn-width"
+                                [ngClass]="{
+                                    'has-error':
+                                        ClassroomForm.controls.endDate.invalid &&
+                                        ClassroomForm.controls.endDate.touched,
+                                }"
+                            />
+                        </span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-text-hover" (click)="archiveClassroom()">Archive</button>
+                        <button type="button" class="btn btn-text-hover" (click)="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

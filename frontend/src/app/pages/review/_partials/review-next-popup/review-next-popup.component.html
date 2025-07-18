@@ -1,0 +1,117 @@
+<div class="popup-overlay"></div>
+<!-- <div class="popup-wrapper popup-blue-bg popup-padd-top-bottom" >
+		<div class="popup-main-content">
+			<div class="unit-screen-content">
+				<div class="unit-block unit-review-block" (click)="closeUnitPopup('review')">
+					<a class="block-img big-img" href="javascript:void(0)" [ngClass]="{'big-img': fireData.progressData?.pathTimeMinute > fireData.progressData?.reviewTimeMinute}">
+						<img *ngIf="fireImage == 'dead'" src="./assets/images/fire_dead.png" alt="">
+						<img *ngIf="fireImage == 'low'" src="./assets/images/fire_low.png" alt="">
+						<img *ngIf="fireImage == 'medium'" src="./assets/images/fire_med.png" alt="">
+						<img *ngIf="fireImage == 'high'" src="./assets/images/fire_high.png" alt="">
+						<img *ngIf="fireImage == 'ultra'" src="./assets/images/fire_ultra.png" alt="">
+					</a>
+					<h5>
+						<a href="javascript:void(0)" class="custom-font">Start Review</a>
+					</h5>
+				</div>
+				<div class="unit-block next-unit-block" (click)="closeUnitPopup('start-learning')">
+					<a class="block-img" href="javascript:void(0)">
+						<img *ngIf="user.learningpath?.FullImageUrl" [src]="user.learningpath.FullImageUrl">
+						<img *ngIf="!user.learningpath || !user.learningpath.FullImageUrl" src="./assets/images/owoks-img.png">
+					</a>
+					<h5>
+						<a href="javascript:void(0)" class="custom-font">Next Unit</a>
+					</h5>
+				</div>
+			</div>
+		</div>
+	</div> -->
+<!--popup starts-->
+<div class="popup-wrapper popup-blue-bg popup-padd-top-bottom">
+    <!--popup title starts -->
+    <div class="unit-complete-title">
+        <h3 class="custom-font">You have completed your required review to unlock the next unit.</h3>
+        <!-- <h5 class="custom-font">You can continue to review or you can goto the the next unit for learning
+		</h5> -->
+    </div>
+    <!--popup title ends -->
+    <!--popup main content starts -->
+    <div class="popup-main-content text-center">
+        <div class="unit-screen-content">
+            <div class="unit-block unit-review-block text-center" (click)="gotoContinue('Continue')">
+                <a class="block-img big-img" href="javascript:void(0)">
+                    <!-- <a class="block-img big-img" href="javascript:void(0)" [ngClass]="{'big-img': fireData.progressData?.pathTimeMinute > fireData.progressData?.reviewTimeMinute}"> -->
+                    <img *ngIf="fireImage === 'dead'" src="./assets/images/fire_dead.png" alt="" />
+                    <img *ngIf="fireImage === 'low'" src="./assets/images/fire_low.png" alt="" />
+                    <img *ngIf="fireImage === 'medium'" src="./assets/images/fire_med.png" alt="" />
+                    <img *ngIf="fireImage === 'high'" src="./assets/images/fire_high.png" alt="" />
+                    <img *ngIf="fireImage === 'ultra'" src="./assets/images/fire_ultra.png" alt="" />
+                </a>
+                <h5>
+                    <a
+                        [ngClass]="
+                            activeButtonIndex === 1 ? 'option-white-underline' : 'option-white-underline-invisible'
+                        "
+                        href="javascript:void(0)"
+                        >Continue Review</a
+                    >
+                </h5>
+            </div>
+            <div *ngIf="!isClassroom" class="unit-block next-unit-block text-center" (click)="gotoContinue('Next')">
+                <a
+                    class="block-img"
+                    href="javascript:void(0)"
+                    [ngClass]="{
+                        'big-img': fireData.progressData?.pathTimeMinute < fireData.progressData?.reviewTimeMinute,
+                    }"
+                >
+                    <img *ngIf="user.learningpath?.FullImageUrl" [src]="user.learningpath.FullImageUrl" />
+                    <img
+                        *ngIf="!user.learningpath || !user.learningpath.FullImageUrl"
+                        src="./assets/images/owoks-img.png"
+                    />
+                </a>
+                <h5>
+                    <a
+                        [ngClass]="
+                            activeButtonIndex === 0 ? 'option-white-underline' : 'option-white-underline-invisible'
+                        "
+                        href="javascript:void(0)"
+                        class="custom-font"
+                        >Next Unit</a
+                    >
+                </h5>
+            </div>
+            <div *ngIf="isClassroom" class="unit-block next-unit-block text-center" (click)="gotoContinue('Classroom')">
+                <a
+                    class="block-img"
+                    href="javascript:void(0)"
+                    [ngClass]="{
+                        'big-img': fireData.progressData?.pathTimeMinute < fireData.progressData?.reviewTimeMinute,
+                    }"
+                >
+                    <img *ngIf="user.learningpath?.FullImageUrl" [src]="user.learningpath.FullImageUrl" />
+                    <img
+                        *ngIf="!user.learningpath || !user.learningpath.FullImageUrl"
+                        src="./assets/images/owoks-img.png"
+                    />
+                </a>
+                <h5>
+                    <a
+                        [ngClass]="
+                            activeButtonIndex === 0 ? 'option-white-underline' : 'option-white-underline-invisible'
+                        "
+                        href="javascript:void(0)"
+                        class="custom-font"
+                        >Back to Classroom</a
+                    >
+                </h5>
+            </div>
+        </div>
+        <div class="social-block">
+            <app-social-share></app-social-share>
+        </div>
+    </div>
+    <!--popup main content ends -->
+</div>
+<!--popup ends-->

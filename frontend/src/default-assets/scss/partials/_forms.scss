@@ -1,0 +1,70 @@
+@use "../modules/theme";
+@use "../modules/variables";
+@use "../modules/mixins";
+@use "../modules/bootstrap-helpers";
+
+.mw20r {
+    max-width: 20rem;
+}
+.mw25r {
+    max-width: 25rem;
+}
+.mw30r {
+    max-width: 30rem;
+}
+.mw35r {
+    max-width: 35rem;
+}
+.mw40r {
+    max-width: 40rem;
+}
+
+/* Social Login buttons */
+.input-default {
+    @include mixins.inputDefault(1rem, 1rem);
+    img {
+        max-height: 30px;
+    }
+}
+a.input-default {
+    text-decoration: none;
+    &:hover {
+        color: theme.$primary-color;
+    }
+}
+.social-input {
+    width: 100%;
+    max-width: 250px;
+}
+
+.seoc-btn-thin {
+    @include mixins.inputDefault(1rem, 9px);
+}
+/* Select issue drop-down */
+.seoc-btn-contact-us {
+    @include mixins.inputDefault(1rem, 15px);
+    height: auto !important;
+    max-width: 100%;
+    padding-left: 15px;
+}
+.seoc-btn-width {
+    max-width: 40rem;
+    // padding: 1.7rem 1.5rem;
+    textarea {
+        color: black;
+    }
+}
+
+/* Registration Date of Birth input */
+.seoc-btn-padd {
+    padding: 16px 20px;
+}
+
+.form-width {
+    max-width: 400px;
+    width: 100%;
+}
+
+.input-error-shadow {
+    text-shadow: 0px 0px 10px white;
+}

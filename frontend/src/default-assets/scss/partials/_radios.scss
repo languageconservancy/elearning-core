@@ -1,0 +1,7 @@
+/* Learning Settings */
+.path-check .custom-radio .custom-control-indicator {
+    border-radius: 42%;
+}
+.path-check .custom-radio .custom-control-input:checked ~ .custom-control-indicator {
+    background-image: none;
+}

@@ -1,0 +1,220 @@
+<app-page-title [pageTitle]="'Progress'"></app-page-title>
+<div class="row justify-content-center text-center flex-lg-nowrap mt-3">
+    <div class="col-12 col-lg-4" *ngIf="canAccessLeaderboard()">
+        <app-progress-left-panel [canAccessLeaderboard]="canAccessLeaderboard()"></app-progress-left-panel>
+    </div>
+    <div class="l-speed mx-2 col-12 col-lg-8" [ngClass]="{'col': canAccessLeaderboard()}">
+        <div class="row justify-content-start no-gutters">
+            <div class="logo-container-box col mb-3">
+                <h3 class="top-heading">
+                    <span>Point Summary</span>
+                </h3>
+                <div class="inside-point-info">
+                    <div class="row">
+                        <div class="summary-img-box cursor-pointer">
+                            <!-- <img src="./assets/images/fire_med.png" class="ng-star-inserted"> -->
+                            <img
+                                *ngIf="fireImage === 'dead'"
+                                [ngClass]="{
+                                    'small-img':
+                                        getprogress.progressData?.reviewTimeMinute >
+                                        getprogress.progressData?.pathTimeMinute,
+                                }"
+                                src="./assets/images/fire_dead.png"
+                                alt=""
+                                (click)="goToPage('review')"
+                            />
+                            <img
+                                *ngIf="fireImage === 'low'"
+                                [ngClass]="{
+                                    'small-img':
+                                        getprogress.progressData?.reviewTimeMinute >
+                                        getprogress.progressData?.pathTimeMinute,
+                                }"
+                                src="./assets/images/fire_low.png"
+                                alt=""
+                                (click)="goToPage('review')"
+                            />
+                            <img
+                                *ngIf="fireImage === 'medium'"
+                                [ngClass]="{
+                                    'small-img':
+                                        getprogress.progressData?.reviewTimeMinute >
+                                        getprogress.progressData?.pathTimeMinute,
+                                }"
+                                src="./assets/images/fire_med.png"
+                                alt=""
+                                (click)="goToPage('review')"
+                            />
+                            <img
+                                *ngIf="fireImage === 'high'"
+                                [ngClass]="{
+                                    'small-img':
+                                        getprogress.progressData?.reviewTimeMinute >
+                                        getprogress.progressData?.pathTimeMinute,
+                                }"
+                                src="./assets/images/fire_high.png"
+                                alt=""
+                                (click)="goToPage('review')"
+                            />
+                            <img
+                                *ngIf="fireImage === 'ultra'"
+                                [ngClass]="{
+                                    'small-img':
+                                        getprogress.progressData?.reviewTimeMinute >
+                                        getprogress.progressData?.pathTimeMinute,
+                                }"
+                                src="./assets/images/fire_ultra.png"
+                                alt=""
+                                (click)="goToPage('review')"
+                            />
+
+                            <span class="txt-label" *ngIf="getprogress.review_total_score">{{
+                                getprogress.review_total_score
+                            }}</span>
+                            <span class="txt-label" *ngIf="!getprogress.review_total_score">0</span>
+                        </div>
+                        <div class="summary-img-box">
+                            <img
+                                *ngIf="user.learningpath?.FullImageUrl"
+                                [src]="user.learningpath?.FullImageUrl"
+                                class="ng-star-inserted"
+                                (click)="goToPage('start-learning')"
+                            />
+                            <img
+                                *ngIf="!user.learningpath?.FullImageUrl"
+                                src="./assets/images/menu_1.png"
+                                class="ng-star-inserted"
+                            />
+                            <span class="txt-label" *ngIf="getprogress.path_total_score">{{
+                                getprogress.path_total_score
+                            }}</span>
+                            <span class="txt-label" *ngIf="!getprogress.path_total_score">0</span>
+                        </div>
+                        <div class="summary-img-box">
+                            <img src="./assets/images/partner-logo.png" class="ng-star-inserted" />
+                            <span class="txt-label" *ngIf="getprogress.social_score">{{
+                                getprogress.social_score
+                            }}</span>
+                            <span class="txt-label" *ngIf="!getprogress.social_score">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="inside-summary-info">
+                    <div class="row">
+                        <div class="summary-icon-box">
+                            <img src="./assets/images/reading-blue.png" />
+                            <span class="txt-label">{{ getprogress.reading_score }}</span>
+                        </div>
+                        <div class="summary-icon-box">
+                            <img src="./assets/images/edit-icon.png" />
+                            <span class="txt-label">{{ getprogress.writing_score }}</span>
+                        </div>
+                        <div class="summary-icon-box">
+                            <img src="./assets/images/wi-fi.png" />
+                            <span class="txt-label">{{ getprogress.listening_score }}</span>
+                        </div>
+                        <div class="summary-icon-box">
+                            <img src="./assets/images/chat.png" />
+                            <span class="txt-label">{{ getprogress.speaking_score }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="total-point-txt">
+                    <span>Total Points</span>
+                    {{ getprogress.total_score }}
+                </div>
+                <h3 class="top-heading">
+                    <span>Badges</span>
+                </h3>
+                <div class="inside-point-info badgesImg">
+                    <div class="row">
+                        <!-- Review badge -->
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{
+                                badgesOpacity: !(
+                                    getprogress?.badge?.firebadges?.fire_days > 0 &&
+                                    getprogress?.badge?.firebadges?.fire_days < 3
+                                ),
+                            }"
+                        >
+                            <img src="./assets/images/fire_low.png" alt="" />
+                        </div>
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{
+                                badgesOpacity: !(
+                                    getprogress?.badge?.firebadges?.fire_days > 3 &&
+                                    getprogress?.badge?.firebadges?.fire_days < 7
+                                ),
+                            }"
+                        >
+                            <img src="./assets/images/fire_med.png" alt="" />
+                        </div>
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{
+                                badgesOpacity: !(
+                                    getprogress?.badge?.firebadges?.fire_days > 7 &&
+                                    getprogress?.badge?.firebadges?.fire_days < 14
+                                ),
+                            }"
+                        >
+                            <img src="./assets/images/fire_high.png" alt="" />
+                        </div>
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.firebadges?.fire_days >= 14) }"
+                        >
+                            <img src="./assets/images/fire_ultra.png" alt="" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Social points badge -->
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint > 4) }"
+                        >
+                            <img src="./assets/images/teepee_01.png" alt="" />
+                        </div>
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 100) }"
+                        >
+                            <img src="./assets/images/teepee_02.png" alt="" />
+                        </div>
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 250) }"
+                        >
+                            <img src="./assets/images/teepee_03.png" alt="" />
+                        </div>
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 1000) }"
+                        >
+                            <img src="./assets/images/teepee_04.png" alt="" />
+                        </div>
+                        <div
+                            class="summary-img-box"
+                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 5000) }"
+                        >
+                            <img src="./assets/images/teepee_05.png" alt="" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Progress badge -->
+                        <div *ngIf="getprogress?.badge?.levelbadge">
+                            <div *ngFor="let levelbadgeImg of getprogress?.badge?.levelbadge">
+                                <div class="summary-img-box" [ngClass]="{ badgesOpacity: !levelbadgeImg.status }">
+                                    <img [src]="levelbadgeImg.image" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

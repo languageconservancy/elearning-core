@@ -1,0 +1,159 @@
+<app-keyboard></app-keyboard>
+<app-reward-popups></app-reward-popups>
+<div
+    id="cards-main-div"
+    class="mx-2"
+    [ngClass]="{
+        nolevel:
+            !unit?.activities.length ||
+            (unit?.activities[currentActivityIdx]?.flowType === 'exercise' && !currentExercise?.questions?.length) ||
+            (unit.activities[currentActivityIdx]?.flowType === 'lesson' && !currentLesson()?.lessonframes?.length),
+    }"
+>
+    <app-breadcrumb></app-breadcrumb>
+
+    <!-- Debugging information -->
+    <div *ngIf="debug" class="d-none d-lg-block">
+        <div>
+            State: <b>{{ this.machine.state }}</b>
+        </div>
+        <div>
+            Last Event: <b>{{ this.lastEvent }}</b>
+        </div>
+        <div>
+            Activity: <b>{{ currentActivityIdx }}</b>
+        </div>
+        <div *ngIf="currentActivityType() === 'exercise'">
+            Question: <b>{{ currentExerciseQuestionIdx }}</b>
+        </div>
+        <div *ngIf="currentActivityType() === 'lesson'">
+            Frame: <b>{{ currentLessonFrameIdx }}</b>
+        </div>
+        <div *ngIf="!!this.unitProgressNav && machine.state !== 'Start'">
+            Unit complete: <b>{{ this.unitProgressNav.unitCompleteOrPreviouslyCompleted ? "true" : "false" }}</b>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="row row-cols-1 row-cols-lg-2 justify-content-center">
+        <!-- Progress navigation bar -->
+        <app-unit-progress-nav
+            class="col-lg-2"
+            [unit]="unit"
+            [currentActivityIdx]="currentActivityIdx"
+            [currentExerciseQuestionIdx]="currentExerciseQuestionIdx"
+            [currentLessonFrameIdx]="currentLessonFrameIdx"
+            (activityPressedEvent)="activityPressed($event)"
+        ></app-unit-progress-nav>
+
+        <!-- Message: No questions in exercise -->
+        <div
+            class="col-10 d-none d-lg-block text-center"
+            *ngIf="
+                unitFetched &&
+                exerciseFetched &&
+                currentActivityType() === 'exercise' &&
+                !currentExercise?.questions?.length
+            "
+        >
+            <h3 class="text-white no-units">This exercise has no questions</h3>
+        </div>
+
+        <!-- Message: No frames in lesson -->
+        <div
+            class="col-10 d-none d-lg-block text-center"
+            *ngIf="unitFetched && currentActivityType() === 'lesson' && !currentLesson()?.lessonframes?.length"
+        >
+            <h3 class="text-white no-units">This lesson has no frames</h3>
+        </div>
+
+        <!-- Message: No activities in unit -->
+        <div class="col-10 d-none d-lg-block text-center" *ngIf="unitFetched && !unit.activities.length">
+            <h3 class="text-white no-units">This unit has no activities</h3>
+        </div>
+
+        <!-- Message: Fetching unit -->
+        <div class="col-10 d-none d-lg-block text-center" *ngIf="!unitFetched">
+            <h3 class="text-white no-units">Fetching unit...</h3>
+        </div>
+
+        <!-- Message: Lesson or Exercise content -->
+        <div
+            class="col-lg-10 mt-2"
+            [ngClass]="{ 'p-3': unitFetchedAndHasContent() }"
+            *ngIf="unitFetchedAndHasContent()"
+        >
+            <div class="rounded-3 bg-white l-speed py-4 px-4">
+                <app-single-card></app-single-card>
+            </div>
+
+            <!-- Lesson buttons -->
+            <div
+                *ngIf="unit?.activities[currentActivityIdx]?.flowType === 'lesson'"
+                id="lesson-btm-btns"
+                class="row flex-nowrap justify-content-lg-end py-3"
+            >
+                <div class="col col-lg-10 offset-lg-2 px-0 px-3 d-flex justify-content-end">
+                    <button
+                        type="button"
+                        id="previousBtn"
+                        class="btn btn-white manual-invert py-3 px-8 mr-5"
+                        *ngIf="showPreviousLessonFrameBtn()"
+                        (click)="goToPreviousLessonFrameBtnPressed()"
+                    >
+                        Previous
+                    </button>
+                    <button
+                        type="button"
+                        id="nextBtn"
+                        class="btn btn-white manual-invert py-3 px-8"
+                        *ngIf="showNextLessonFrameBtn()"
+                        (click)="goToNextLessonFrameBtnPressed()"
+                    >
+                        Next
+                    </button>
+                    <button
+                        type="button"
+                        id="nextLessonBtn"
+                        class="btn btn-white manual-invert py-3 px-8"
+                        *ngIf="showNextLessonBtn()"
+                        (click)="goToNextLessonBtnPressed()"
+                    >
+                        Next Lesson
+                    </button>
+                    <button
+                        type="button"
+                        id="nextExerciseBtn"
+                        class="btn btn-white manual-invert py-3 px-8"
+                        *ngIf="showNextExerciseBtn()"
+                        (click)="goToNextExerciseBtnPressed()"
+                    >
+                        Next Exercise
+                    </button>
+                    <button
+                        type="button"
+                        id="startReviewBtn"
+                        class="btn btn-white manual-invert py-3 px-8"
+                        *ngIf="showStartReviewBtn()"
+                        (click)="startReviewBtnPressed()"
+                    >
+                        Start Review
+                    </button>
+
+                    <!-- This button is needed in the event that a lesson in the last activity
+                        and there are incomplete exercises in the unit.
+                    -->
+                    <button
+                        type="button"
+                        id="completeIncompleteExercisesBtn"
+                        class="btn btn-white manual-invert py-3 px-8"
+                        *ngIf="showUnitEndNextBtn()"
+                        (click)="unitEndNextBtnPressed()"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

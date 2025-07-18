@@ -1,0 +1,84 @@
+<div>
+    <!-- Small audio icon in corner above all other data -->
+    <div class="w-100 ml-3 mb-3" *ngIf="isActive(DataType.Audio) && card.FullAudioUrl && enabledDataTypes.length > 1">
+        <a
+            href="javascript:void(0)"
+            (click)="audioService.playPauseAudio(card.FullAudioUrl, optionType)"
+        >
+            <i
+                *ngIf="enabledDataTypes.length > 1"
+                class="fa-solid fa-2xl"
+                [ngClass]="
+                    audioIsPlaying() ? 'fa-volume-high' : 'fa-volume-off'
+                "
+            ></i>
+        </a>
+    </div>
+
+    <!-- Lakota prompt -->
+    <div class="text-center my-4 font-language" *ngIf="isActive(DataType.Language)">
+        <div class="prompt-font-size prompt-line-height w-100 d-block" [innerHTML]="card.lakota | safeHtml"></div>
+    </div>
+
+    <!-- Custom HTML prompt -->
+    <div
+        class="text-center my-4 font-language prompt-font-size prompt-line-height"
+        *ngIf="optionType === 'prompt' && card.PromptType === 'html' || optionType === 'response' && card.ResponseType === 'html'"
+        [innerHTML]="(optionType === 'prompt' ? card.prompt_html : card.response_html) | safeHtml"
+    ></div>
+
+    <!-- Image prompt -->
+    <div
+        class="text-center"
+        *ngIf="isActive(DataType.Image) && card.image && card.image.FullUrl"
+    >
+        <a class="mb-2 d-block w-100" href="javascript:void(0)">
+            <app-image-zoom [src]="card.image.FullUrl"></app-image-zoom>
+        </a>
+    </div>
+
+    <!-- Card Video -->
+    <div
+        *ngIf="
+            isActive(DataType.Video) &&
+            card.video && card.video.FullUrl
+        "
+        class="text-center mx-auto w-100 my-2"
+    >
+        <video
+            controls
+            controlslist="nodownload"
+            preload="auto"
+            class="w-100"
+        >
+            <source [src]="card.video.FullUrl" />
+        </video>
+    </div>
+
+    <!-- Audio prompt (for sole audio card) -->
+    <div
+        class="text-center my-2"
+        *ngIf="
+            isActive(DataType.Audio) &&
+            card.FullAudioUrl &&
+            enabledDataTypes.length === 1
+        "
+    >
+        <a
+            class="audio-prompt d-block w-100"
+            href="javascript:void(0)"
+            (click)="audioService.playPauseAudio(card.FullAudioUrl, optionType)"
+        >
+            <i
+                class="fa-solid font-size-3p5"
+                [ngClass]="audioIsPlaying() ? 'fa-volume-high' : 'fa-volume-off'"
+            ></i>
+            <!-- <img [src]="getAudioIconUrl()" class="" /> -->
+        </a>
+    </div>
+
+    <!-- English prompt -->
+    <div class="text-center my-4 font-language" *ngIf="isActive(DataType.English)">
+        <div class="prompt-font-size prompt-line-height d-block w-100" [innerHTML]="card.english | safeHtml"></div>
+    </div>
+</div>

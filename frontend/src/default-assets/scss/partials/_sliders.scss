@@ -1,0 +1,67 @@
+@use "../modules/variables";
+@use "../modules/theme";
+@use "../modules/mixins";
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 6rem;
+    height: 2.7rem;
+    margin-bottom: 0;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border: 2px solid theme.$primary-color;
+    color: theme.$text-primary;
+    box-shadow: 5px 5px 5px #00000026;
+}
+
+.slider:before {
+    position: absolute;
+    content: "off";
+    left: -0.1rem;
+    bottom: -0.1rem;
+    background-color: theme.$ui-panel-light;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border: 2px solid theme.$primary-color;
+    padding: 0.6rem 1rem;
+}
+
+input:checked + .slider {
+    background-color: #fff;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px theme.$primary-color-light;
+}
+
+input:checked + .slider:before {
+    content: "on";
+    left: -0.7rem;
+    @include mixins.transformTranslate(3rem, 0);
+    background-color: theme.$primary-color;
+    color: theme.$text-primary-contrast;
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 1.5rem;
+}
+
+.slider.round:before {
+    border-radius: 1.5rem;
+}

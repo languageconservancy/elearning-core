@@ -1,0 +1,107 @@
+<div class="timer mr-3 ml-lg-3 shadow-sm" *ngIf="showAllocatedDailyTimeCountdownTimer">
+    <span>
+        {{ minutesDisplay && minutesDisplay <= 59 ? minutesDisplay : "00" }}:{{
+            secondsDisplay && secondsDisplay <= 59 ? secondsDisplay : "00"
+        }}
+    </span>
+</div>
+<div class="fire-image" *ngIf="showFire">
+    <span>
+        <img *ngIf="fireImage === 'dead'" src="./assets/images/fire_dead_nobg.png" alt="" />
+        <img *ngIf="fireImage === 'low'" src="./assets/images/fire_low_nobg.png" alt="" />
+        <img *ngIf="fireImage === 'medium'" src="./assets/images/fire_med_nobg.png" alt="" />
+        <img *ngIf="fireImage === 'high'" src="./assets/images/fire_high_nobg.png" alt="" />
+        <img *ngIf="fireImage === 'ultra'" src="./assets/images/fire_ultra_nobg.png" alt="" />
+    </span>
+</div>
+
+<!-- Two minute warning modal -->
+<div
+    class="modal fade modal-n timer-modal"
+    id="idleTimeoutModal"
+    data-backdrop="static"
+    data-keyboard="false"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ResponseCheck"
+>
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="myModalLabel">Attention!</h3>
+                <button type="button" class="close" (click)="closeIdleTimeoutModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <i class="fa fa-exclamation-circle warning"></i>
+                        <h4 class="martop-10">You have been idle for 2 minutes.</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="submit"
+                    id="enterButtonId"
+                    autofocus
+                    class="btn btn-text-hover"
+                    (click)="closeIdleTimeoutModal()"
+                >
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Two minute warning modal -->
+<!-- Time up modal -->
+<div
+    class="modal fade modal-n"
+    id="allocatedDailyTimeReachedModal"
+    data-backdrop="static"
+    data-keyboard="false"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ResponseCheck"
+>
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title" id="myModalLabel">Attention!</h3>
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    (click)="closeAllocatedDailyTimeReachedModal()"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <i class="fa fa-exclamation-circle warning"></i>
+                        <h4 class="martop-10">You have completed your allocated time for today.</h4>
+                        <p class="big-txt">Please click OK to continue.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-text-hover"
+                    autofocus
+                    data-dismiss="modal"
+                    autofocus
+                    (click)="closeAllocatedDailyTimeReachedModal()"
+                >
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Time up modal -->

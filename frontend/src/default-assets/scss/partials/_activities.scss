@@ -1,0 +1,233 @@
+@use "../modules/theme";
+@use "../modules/variables";
+@use "../modules/mixins";
+@use "../modules/bootstrap-helpers";
+
+/*----------------------------------------------------------------------------*/
+/* Timer above progress navbar                                                */
+/*----------------------------------------------------------------------------*/
+.timer {
+    background: variables.$white;
+    display: inline-block;
+    padding: 0.7rem;
+    border-radius: 20px;
+    span {
+        color: theme.$text-primary;
+        font-size: 1.5rem;
+        font-weight: bold;
+        vertical-align: middle;
+    }
+}
+
+.fire-image {
+    width: 6rem;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+/*----------------------------------------------------------------------------*/
+/* Progress Navbar                                                            */
+/*----------------------------------------------------------------------------*/
+.progressBar {
+    width: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    &,
+    .stepNo {
+        background-color: white;
+    }
+}
+
+.completion-bar-horiz {
+    left: 3rem;
+    background: theme.$primary-color;
+    height: 20px;
+    z-index: 1;
+}
+@include bootstrap-helpers.media-breakpoint-up(lg) {
+    .completion-bar-vert {
+        position: absolute;
+        top: 3rem;
+        background: theme.$primary-color;
+        width: 20px;
+        z-index: 1;
+    }
+}
+
+.incompletion-bar-horiz {
+    left: 3rem;
+    background: theme.$ui-panel-light;
+    height: 20px;
+}
+@include bootstrap-helpers.media-breakpoint-up(lg) {
+    .incompletion-bar-vert {
+        background: theme.$ui-panel-light;
+        width: 20px;
+        top: 3rem;
+    }
+}
+
+.stepNo-horiz {
+    position: relative;
+    background-color: variables.$white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    cursor: pointer;
+    margin: 1rem;
+    img {
+        max-width: 4rem;
+    }
+    &.disabledIcon {
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+        cursor: auto;
+    }
+    &.disabledIcon img {
+        opacity: 0.8;
+    }
+    &.lastStep {
+        margin-right: -10px;
+    }
+}
+@include bootstrap-helpers.media-breakpoint-up(lg) {
+    .stepNo-vert {
+        position: relative;
+        background-color: variables.$white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        cursor: pointer;
+        margin: 1rem;
+        img {
+            width: 4rem;
+        }
+        width: 4rem;
+        height: 4rem;
+        &.disabledIcon {
+            -webkit-filter: grayscale(100%);
+            filter: grayscale(100%);
+            cursor: auto;
+        }
+        &.disabledIcon img {
+            opacity: 0.8;
+        }
+        &.lastStep {
+            margin-bottom: -10px;
+        }
+    }
+}
+
+.steps-holder {
+    @include bootstrap-helpers.media-breakpoint-up(lg) {
+        overflow-y: auto;
+    }
+    &::-webkit-scrollbar {
+        @include bootstrap-helpers.media-breakpoint-down(md) {
+            display: none;
+        }
+    }
+    // FIXME add arrow to indicate scroll affordance
+}
+
+/*----------------------------------------------------------------------------*/
+/* Lessons                                                                    */
+/*----------------------------------------------------------------------------*/
+.block-container-box {
+    background: variables.$white;
+    border-radius: 10px;
+    padding: 0;
+}
+.blue-border-ex {
+    border: 5px solid theme.$primary-color;
+}
+.single-frame {
+    display: block;
+    .audio-icon {
+        top: -15px;
+        right: 0;
+    }
+}
+.custom-html-lesson {
+    line-height: 1.5;
+    font-size: 1.4rem;
+}
+
+/*----------------------------------------------------------------------------*/
+/* True/False Exercises                                                       */
+/*----------------------------------------------------------------------------*/
+.correct {
+    background: green !important;
+}
+.wrong {
+    background: firebrick !important;
+}
+.custom-next {
+    background-color: #2a92d0;
+    color: #fff;
+}
+.custom-next:hover {
+    background-color: #ffffff;
+    color: #000;
+}
+.true-false-div-left {
+    display: inline-block;
+    width: 150px;
+    float: right;
+    position: relative;
+    margin: 30px auto 0;
+}
+.true-false-div-right {
+    display: inline-block;
+    width: 150px;
+    float: left;
+    position: relative;
+    margin: 30px auto 0;
+}
+.number-text {
+    float: left;
+    position: absolute;
+    top: -2.5px;
+    left: -2.5px;
+}
+
+.custom-html-text {
+    font-size: 2.3rem;
+}
+
+#true-false-ans-btns {
+    @include bootstrap-helpers.media-breakpoint-up(lg) {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: 100%;
+    }
+}
+
+.line-height-fix-custom div {
+    line-height: 22px !important;
+}
+.correct.btn-example-block {
+    background: theme.$correct-color;
+}
+.wrong.btn-example-block {
+    background: theme.$incorrect-color;
+}
+
+.correct.blue-border {
+    border: 5px solid theme.$correct-color !important;
+}
+
+.wrong.blue-border {
+    border: 5px solid theme.$incorrect-color !important;
+}
+
+.button-hover-manual {
+    background: #0069d9;
+}

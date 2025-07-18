@@ -1,0 +1,45 @@
+@use "../modules/variables";
+
+@each $prop, $abbrev in (width: vw, height: vh) {
+    @each $size, $length in variables.$sizes {
+        .#{$abbrev}-#{$size} {
+            #{$prop}: #{$size}vh !important;
+        }
+    }
+}
+
+@each $size, $length in variables.$integer-sizes {
+    .w-#{$size} {
+        width: #{$length} !important;
+    }
+    .minwrem-#{$size} {
+        min-width: #{$length} !important;
+    }
+    .maxwrem-#{$size} {
+        max-width: #{$length} !important;
+    }
+    .h-#{$size} {
+        height: #{$length} !important;
+    }
+    .maxhrem-#{$size} {
+        max-height: #{$length} !important;
+    }
+    .minhrem-#{$size} {
+        min-height: #{$length} !important;
+    }
+}
+
+@each $size, $percent in variables.$sizes {
+    .mw-#{$size} {
+        max-width: #{$percent} !important;
+    }
+    .mh-#{$size} {
+        max-height: #{$percent} !important;
+    }
+    .minw-#{$size} {
+        min-width: #{$percent} !important;
+    }
+    .minh-#{$size} {
+        min-height: #{$percent} !important;
+    }
+}

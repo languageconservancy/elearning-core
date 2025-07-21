@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com-petevieiratlc:petevieiratlc/elearning-core-backup.git"
+    "url": "git@github.com-petevieiratlc:languageconservancy/elearning-core.git"
   },
   "license": "MIT",
   "author": "The Language Conservancy",
@@ -38,6 +38,7 @@
     "serve:local": "npm run copy-assets:local && npm run generate-config-based-files:local && cd frontend && npm run serve",
     "cap:sync": "cd ./frontend && npx cap sync",
     "sync-local-backend": "cd ./backend && ./scripts/sync_local_backend.sh",
+    "copy-demo-assets": "mkdir -p ./backend/webroot/img/UploadedFile && cp -r ./demo/webroot/img/UploadedFile/* ./backend/webroot/img/UploadedFile/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

@@ -76,7 +76,11 @@ let setCopyPaths = function () {
       to: Consts.FRONTEND_SRC_DIR + "/favicon.ico",
     },
     {
-      from: Consts.PLATFORM_CONFIG_DIR + "/" + buildType + "/env-backend",
+      from: Consts.PLATFORM_CONFIG_DIR + "/" + buildType + "/app_local.php",
+      to: Consts.BACKEND_CONFIG_DIR + "/app_local.php",
+    },
+    {
+      from: Consts.PLATFORM_CONFIG_DIR + "/" + buildType + "/.env",
       to: Consts.BACKEND_CONFIG_DIR + "/.env",
     },
   ];

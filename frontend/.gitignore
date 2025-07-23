@@ -63,5 +63,5 @@ android/app/src/main/res/mipmap*
 ios/App/Podfile.lock
 ios/App/Podfile
 ios/App/Info.plist
-ios/App/App/AppIcon.appiconset
-ios/App/App/launch-image.imageset
+ios/App/App/Assets.xcassets/AppIcon.appiconset
+ios/App/App/Assets.xcassets/launch-image.imageset

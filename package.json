@@ -17,7 +17,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "install-dependencies": "npm install && cd ./frontend && npm install && cd ../backend && npm install && composer install",
+    "install-dependencies": "npm install && cd ./frontend && npm install && npx cap add android&& cd ../backend && npm install && composer install",
     "prepare-platform:demo": "npm run copy-assets:demo && npm run generate-config-based-files:demo",
     "prepare-platform:local": "npm run copy-assets:local && npm run generate-config-based-files:local",
     "prepare-platform:staging": "npm run copy-assets:staging && npm run generate-config-based-files:staging",
@@ -39,6 +39,10 @@
     "cap:sync": "cd ./frontend && npx cap sync",
     "sync-local-backend": "cd ./backend && ./scripts/sync_local_backend.sh",
     "copy-demo-assets": "mkdir -p ./backend/webroot/img/UploadedFile && cp -r ./demo/webroot/img/UploadedFile/* ./backend/webroot/img/UploadedFile/",
+    "copy-ios-to-core": "mkdir -p ./frontend/ios && rsync -a --delete ../platform/ios/ ./frontend/ios/",
+    "copy-android-to-core": "mkdir -p ./frontend/android && rsync -a --delete ../platform/android/ ./frontend/android/",
+    "copy-core-ios-to-platform": "mkdir -p ../platform/ios && rsync -a --delete ./frontend/ios/ ../platform/ios/",
+    "copy-core-android-to-platform": "mkdir -p ../platform/android && rsync -a --delete ./frontend/android/ ../platform/android/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

@@ -86,74 +86,6 @@ let setCopyPaths = function () {
   ];
 };
 
-// Copy Android drawable assets
-function copyAndroidAssets() {
-  const platformAssetsDir = path.resolve(__dirname + `/../../platform/assets/android/${buildType}/`);
-  const androidResDir = path.resolve(__dirname, "../frontend/android/app/src/main/res/");
-
-  console.log(CYAN + "📱 Copying Android assets..." + RESET);
-
-  if (!existsSync(platformAssetsDir)) {
-    console.log(YELLOW + "⚠️  No Android assets found at: " + platformAssetsDir + RESET);
-    return;
-  }
-
-  try {
-    // Copy all drawable folders
-    const drawableFolders = [
-      "drawable",
-      "drawable-hdpi",
-      "drawable-mdpi",
-      "drawable-xhdpi",
-      "drawable-xxhdpi",
-      "drawable-xxxhdpi",
-      "drawable-land",
-      "drawable-port",
-      "mipmap-hdpi",
-      "mipmap-mdpi",
-      "mipmap-xhdpi",
-      "mipmap-xxhdpi",
-      "mipmap-xxxhdpi",
-    ];
-
-    drawableFolders.forEach((folder) => {
-      const sourcePath = path.join(platformAssetsDir, folder);
-      const destPath = path.join(androidResDir, folder);
-
-      if (existsSync(sourcePath)) {
-        ensureDirSync(path.dirname(destPath));
-        copySync(sourcePath, destPath, { overwrite: true });
-        console.log(GREEN + "✅ Copied: " + folder + RESET);
-      }
-    });
-
-    console.log(GREEN + "✅ Android assets copied successfully" + RESET);
-  } catch (error) {
-    console.log(RED + "❌ Error copying Android assets: " + error.message + RESET);
-  }
-}
-
-// Copy iOS Assets.xcassets
-function copyIosAssets() {
-  const platformAssetsDir = path.resolve(__dirname + `/../../platform/assets/ios/${buildType}/Assets.xcassets/`);
-  const iosAssetsDir = path.resolve(__dirname, "../frontend/ios/App/App/Assets.xcassets/");
-
-  console.log(CYAN + " Copying iOS assets..." + RESET);
-
-  if (!existsSync(platformAssetsDir)) {
-    console.log(YELLOW + "⚠️  No iOS assets found at: " + platformAssetsDir + RESET);
-    return;
-  }
-
-  try {
-    ensureDirSync(path.dirname(iosAssetsDir));
-    copySync(platformAssetsDir, iosAssetsDir, { overwrite: true });
-    console.log(GREEN + "✅ iOS assets copied successfully" + RESET);
-  } catch (error) {
-    console.log(RED + "❌ Error copying iOS assets: " + error.message + RESET);
-  }
-}
-
 /**
  * Copies chosen platform directory to root and names it current-platform
  * @param watching boolean Whether the script is being run in watch mode
@@ -179,10 +111,6 @@ let copyAssets = function () {
       process.exit(1);
     }
   });
-
-  // Copy mobile assets
-  copyAndroidAssets();
-  copyIosAssets();
 };
 
 let watchSrcFiles = function () {
@@ -310,8 +238,7 @@ let showUsage = function () {
       "Notes" +
       RESET +
       ":" +
-      "\n  -w watches for changes in the default-assets and platform config directories and copies them to the core" +
-      "\n  Also copies Android and iOS mobile assets to their respective platform directories"
+      "\n  -w watches for changes in the default-assets and platform config directories and copies them to the core"
   );
   process.exit(0);
 };

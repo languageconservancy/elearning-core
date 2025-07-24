@@ -20,5 +20,6 @@ export const environment = {
     ITUNES_STORE_URL: "{{itunesStoreUrl}}",
     IOS_APP_ID_NUMBER: "{{iosAppIdNumber}}",
     APP_ID: "{{appId}}",
+    ENABLE_SOCIAL_LOGINS: "{{enableCapacitorSocialLogins}}",
     production: {{production}},
 };

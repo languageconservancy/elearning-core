@@ -49,19 +49,6 @@ src/favicon.ico
 src/assets
 src/environments/environment.ts
 
-# Ignore AGP output metadata
-android/app/**/release/output-metadata.json
-android/app/**/output-metadata.json
-# Prevent accidental tracking of release builds under source dirs
-android/app/src/**/release/
-# Ignore auto-generated capacitor file
-android/app/capacitor.build.gradle
-android/app/src/main/res/drawable*
-android/app/src/main/res/mipmap*
-
-# Ignore iOS Podfiles that change based on the configuration
-ios/App/Podfile.lock
-ios/App/Podfile
-ios/App/Info.plist
-ios/App/App/Assets.xcassets/AppIcon.appiconset
-ios/App/App/Assets.xcassets/launch-image.imageset
+# Ignore iOS and Android directories, they are copied from the platform directory
+ios/
+android/

@@ -21,11 +21,9 @@ const config: CapacitorConfig =
                   GoogleAuth: {},
               },
               android: {
-                  flavor: environment.ANDROID_FLAVOR_IOS_SCHEME,
                   includePlugins: ["@capacitor/app", "@capacitor/device", "@capacitor/preferences"],
               },
               ios: {
-                  scheme: environment.ANDROID_FLAVOR_IOS_SCHEME,
                   includePlugins: ["@capacitor/app", "@capacitor/device", "@capacitor/preferences"],
               },
           }
@@ -52,7 +50,6 @@ const config: CapacitorConfig =
                   },
               },
               android: {
-                  flavor: environment.ANDROID_FLAVOR_IOS_SCHEME,
                   includePlugins: [
                       "@capacitor/app",
                       "@capacitor/device",
@@ -63,7 +60,6 @@ const config: CapacitorConfig =
                   ],
               },
               ios: {
-                  scheme: environment.ANDROID_FLAVOR_IOS_SCHEME,
                   includePlugins: [
                       "@capacitor/app",
                       "@capacitor/device",

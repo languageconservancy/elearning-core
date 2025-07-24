@@ -29,52 +29,9 @@ let generateEnvironmentTs = function (config) {
   generateFileFromTemplate(templatePath, outputPath, config, "environment.ts", buildType);
 };
 
-let generateInfoPlist = function (config) {
-  const templatePath = path.resolve(__dirname, "templates/Info.plist");
-  const outputPath = path.resolve(__dirname, "../frontend/ios/App/Info.plist");
-
-  generateFileFromTemplate(templatePath, outputPath, config, "Info.plist", buildType);
-};
-
-let generateMainActivity = function (config) {
-  const templatePath = path.resolve(__dirname, "templates/MainActivity.java");
-  const outputPath = path.resolve(
-    __dirname,
-    "../frontend/android/app/src/main/java/org/tlc/elearning/MainActivity.java"
-  );
-
-  generateFileFromTemplate(templatePath, outputPath, config, "MainActivity.java", buildType);
-};
-
-let generateAndroidStrings = function (config) {
-  const templatePath = path.resolve(__dirname, "templates/strings.xml");
-  const outputPath = path.resolve(__dirname, "../frontend/android/app/src/main/res/values/strings.xml");
-
-  generateFileFromTemplate(templatePath, outputPath, config, "strings.xml", buildType);
-};
-
-let generateBuildGradle = function (config) {
-  const templatePath = path.resolve(__dirname, "templates/build.gradle");
-  const outputPath = path.resolve(__dirname, "../frontend/android/app/build.gradle");
-
-  generateFileFromTemplate(templatePath, outputPath, config, "build.gradle", buildType);
-};
-
-let generatePodfile = function (config) {
-  const templatePath = path.resolve(__dirname, "templates/Podfile");
-  const outputPath = path.resolve(__dirname, "../frontend/ios/App/Podfile");
-
-  generateFileFromTemplate(templatePath, outputPath, config, "Podfile", buildType);
-};
-
 let generateFiles = function (config) {
   generateIndexHtml(config);
   generateEnvironmentTs(config);
-  generateInfoPlist(config);
-  generateMainActivity(config);
-  generateAndroidStrings(config);
-  generateBuildGradle(config);
-  generatePodfile(config);
 };
 
 let showUsage = function () {
@@ -121,9 +78,6 @@ let showUsage = function () {
       ":" +
       "\n  - index.html (web)" +
       "\n  - environment.ts (Angular)" +
-      "\n  - Info.plist (iOS)" +
-      "\n  - MainActivity.java (Android)" +
-      "\n  - strings.xml (Android)" +
       "\n" +
       YELLOW +
       "Handlebars Features" +

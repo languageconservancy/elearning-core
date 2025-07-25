@@ -10,7 +10,63 @@ Platform repos, which add the `elearning-core` repo as a submodule, provide the 
 
 ## Getting Started
 
-1. See [Quick Start][https://github.com/languageconservancy/elearning-template]
+## Quick Start
+
+1. **Fork this template** to your organization and name it the name of your platform/app.
+
+1. **Clone your fork**:
+
+   ```bash
+   git clone git@github.com:your-org/your-platform.git
+   cd your-platform
+   ```
+
+1. **Initialize the core submodules**:
+
+   ```bash
+   npm run init
+   # or
+   git submodule update --init --recursive
+   ```
+
+1. **Install dependencies**:
+
+   ```bash
+   npm run core install-dependencies
+   ```
+
+1. **Customize your platform**:
+
+   - Edit `platform/assets/` with your content
+   - Update `platform/config/` with your settings
+
+1. **Upload demo database to phpMyAdmin**:
+
+   - Import core/demo/elearning_demo_db.sql to phpMyAdmin
+
+1. **Copy demo assets to core/backend/webroot**:
+
+   ```bash
+   npm run core copy-demo-assets
+   ```
+
+1. **Set the environment variable for your local web server root directory**:
+   This example points to where MAMP places its web server root.
+
+   ```bash
+   echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.bash_profile
+   ```
+
+1. **Copy backend to your local web server root directory**:
+
+   ```bash
+   npm run core update-local-backend
+   ```
+
+1. **Build and Serve your platform**:
+   ```bash
+   npm run serve:demo
+   ```
 
 ## Structure
 
@@ -22,7 +78,7 @@ Platform repos, which add the `elearning-core` repo as a submodule, provide the 
     - `/admin/*`: used by the Admin panel web interface used by curriculum developers and admins.
 
 - `frontend/`
-  Contains the Angular frontend application source code and assets, as well as Android and iOS projects.
+  Contains the Angular frontend application source code and assets. This is where the ios and android projects are placed by Capacitor.
 
 - `scripts/`
   Includes build scripts, template generators, and utilities for managing the frontend and deployment.
@@ -67,24 +123,9 @@ platform/
 platform/
 ├── core/ # elearning-core submodule
 ├── assets/
-│   ├── android/
-│   │   ├── production/
-│   │   │   ├── drawable*/ # splash screen
-│   │   │   └── mipmap-*/  # app icon
-│   │   ├── staging/
-│   │   │   ├── drawable*/
-│   │   │   └── mipmap-*/
 │   ├── fonts/
 │   ├── images/ # UI image overrides
-│   ├── ios/
-│   │   ├── production/
-│   │   │   └── Assets.xcassets/
-│   │   │   │   ├── AppIcon.appiconset/ # app icon
-│   │   │   │   └── launch-image.imageset/ # launch screen
-│   │   ├── staging/
-│   │   │   └── Assets.xcassets/
-│   │   │   │   ├── AppIcon.appiconset/
-│   │   │   │   └── launch-image.imageset/
+
 │   ├── keyboard/
 │   │   └── keyboard.json # keyboard/chars config
 │   ├── scss/
@@ -148,6 +189,32 @@ To run the code locally, for testing in a web browser, you can use the serve com
 ```bash
 npm run core serve:<demo|local>
 ```
+
+## Android & iOS Apps
+
+Android and iOS apps are created by you (with CapacitorJS commands) and stored in your project repo.
+NPM scripts exist to copy from the core/frontend/ios|android directories to platform/ios|android and the reverse.
+
+The core/frontend/ios|android directories are where you open the projects in Xcode and Android Studio.
+Then use the commands below to copy the projects from the core repo to the platform repo where you should version control them. `.gitignore` already exists in these mobile projects, so you can add all the files with `git add platform/ios` and `git add platform/android`.
+
+```bash
+npm run core copy-core-ios-to-platform
+npm run core copy-core-android-to-platform
+```
+
+### Creating the Android & iOS Projects
+
+- Android & iOS apps should be created per CapacitorJS instructions:
+
+From the project directory:
+
+```bash
+npm run core cap:add-android
+npm run core cap:add-ios
+```
+
+These will we create `core/frontend/ios` and `core/frontend/android`.
 
 ## License
 

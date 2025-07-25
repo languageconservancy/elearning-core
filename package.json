@@ -36,6 +36,8 @@
     "build:production": "npm run prepare-platform:production && node scripts/build-with-type.js -p && npm run cap:sync",
     "serve:demo": "npm run copy-assets:demo && npm run generate-config-based-files:demo && cd frontend && npm run serve",
     "serve:local": "npm run copy-assets:local && npm run generate-config-based-files:local && cd frontend && npm run serve",
+    "cap:add-ios": "cd ./frontend && npx cap add ios",
+    "cap:add-android": "cd ./frontend && npx cap add android",
     "cap:sync": "cd ./frontend && npx cap sync",
     "sync-local-backend": "cd ./backend && ./scripts/sync_local_backend.sh",
     "copy-demo-assets": "mkdir -p ./backend/webroot/img/UploadedFile && cp -r ./demo/webroot/img/UploadedFile/* ./backend/webroot/img/UploadedFile/",

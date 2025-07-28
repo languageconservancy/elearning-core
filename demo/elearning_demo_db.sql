@@ -2352,7 +2352,7 @@ CREATE TABLE `learningpaths` (
 --
 
 INSERT INTO `learningpaths` (`id`, `label`, `description`, `admin_access`, `user_access`, `image_id`, `owner_id`, `created`, `modified`) VALUES
-(1, 'Mock Path', 'Path with all types of lessons and exercises', '1', '1', NULL, 1, '2024-09-14 21:43:39', '2024-09-14 21:43:39');
+(1, 'Demo Path', 'Path with all types of lessons and exercises', '1', '1', NULL, 1, '2024-09-14 21:43:39', '2024-09-14 21:43:39');
 
 -- --------------------------------------------------------
 
@@ -4524,9 +4524,9 @@ CREATE TABLE `user_settings` (
 --
 
 INSERT INTO `user_settings` (`id`, `user_id`, `display_name`, `profile_picture`, `aws_profile_link`, `location`, `profile_desc`, `push_notification`, `email_notification`, `news_event`, `motivation`, `motivation_time`, `age_over_adult`, `parental_lock`, `parental_lock_on`, `badges`, `public_profile`, `public_leaderboard`, `audio_archive`, `hearing`, `lastupdated`) VALUES
-(1, 1, '', '', NULL, '', 'Hi, I am mock-admin. I am interested in learning Lakota.', '0', '0', '0', '0', NULL, '1', '', '0', NULL, '1', '1', '0', '0', '2024-11-09 16:48:19'),
-(2, 2, '', '', NULL, '', 'Hi, I am user@gmail.com. I am interested in learning Lakota.', '0', '0', '0', '0', NULL, '1', '', '0', NULL, '1', '1', '0', '0', '2024-10-09 16:56:18'),
-(3, 3, '', '', NULL, '', 'Hi, I am teacher. I am interested in learning Lakota.', '0', '0', '0', '0', NULL, '0', '', '0', NULL, '0', '0', '0', '0', '2025-07-08 17:53:33');
+(1, 1, '', '', NULL, '', 'Hi, I am admin. I am interested in learning languages.', '0', '0', '0', '0', NULL, '1', '', '0', NULL, '1', '1', '0', '0', '2024-11-09 16:48:19'),
+(2, 2, '', '', NULL, '', 'Hi, I am user. I am interested in learning languages.', '0', '0', '0', '0', NULL, '1', '', '0', NULL, '1', '1', '0', '0', '2024-10-09 16:56:18'),
+(3, 3, '', '', NULL, '', 'Hi, I am teacher. I am interested in learning languages.', '0', '0', '0', '0', NULL, '0', '', '0', NULL, '0', '0', '0', '0', '2025-07-08 17:53:33');
 
 -- --------------------------------------------------------
 

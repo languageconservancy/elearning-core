@@ -12,70 +12,107 @@ Platform repos, which add the `elearning-core` repo as a submodule, provide the 
 
 ## Quick Start
 
-1. **Fork this template** to your organization and name it the name of your platform/app.
+1.  **Fork this template** to your organization and name it the name of your platform/app.
 
-1. **Clone your fork**:
+1.  **Clone your fork**:
 
-   ```bash
-   git clone git@github.com:your-org/your-platform.git
-   cd your-platform
-   ```
+    ```bash
+    git clone git@github.com:your-org/your-platform.git
+    cd your-platform
+    ```
 
-1. **Initialize the core submodules**:
+1.  **Initialize the core submodules**:
 
-   ```bash
-   npm run init
-   # or
-   git submodule update --init --recursive
-   ```
+    ```bash
+    npm run init
+    # or
+    git submodule update --init --recursive
+    ```
 
-1. **Install dependencies**:
+1.  **Install dependencies**:
 
-   ```bash
-   npm run core install-dependencies
-   ```
+    ```bash
+    npm run core install-dependencies
+    ```
 
-1. **Add Android & iOS Projects**:
+1.  **Prepare Platform (local) to Avoid Errors**:
 
-   If you need to build Android and iOS apps, add the projects using CapacitorJS:
+    Run this command so that `environment.ts` is built, which the next step requires.
 
-   ```bash
-   npm run core cap:add-android
-   npm run core cap:add-ios
-   ```
+    ```bash
+    npm run core prepare-platform:local
+    ```
 
-1. **Customize your platform**:
+1.  **Add Android & iOS Projects**:
 
-   - Edit `platform/assets/` with your content
-   - Update `platform/config/` with your settings
+    If you need to build Android and iOS apps, add the projects using CapacitorJS.
+    These command need to be run after preparing the platform, so that `environment.ts` is already generated (See previous step).
 
-1. **Upload demo database to phpMyAdmin**:
+    ```bash
+    npm run core cap:add-android
+    npm run core cap:add-ios
+    ```
 
-   - Import core/demo/elearning_demo_db.sql to phpMyAdmin
+1.  **Customize your platform**:
 
-1. **Copy demo assets to core/backend/webroot**:
+    **Web-app**:
 
-   ```bash
-   npm run core copy-demo-assets
-   ```
+    - Edit `platform/assets/` with your content
+    - Update `platform/config/` with your settings
 
-1. **Set the environment variable for your local web server root directory**:
-   This example points to where MAMP places its web server root.
+    **Android & iOS**:
 
-   ```bash
-   echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.bash_profile
-   ```
+    Updating Android and iOS projects should be done in `core/frontend/android` and `core/frontend/ios`, then when you want to save those updates to your project copy the projects to the platform directory with the following commands:
 
-1. **Copy backend to your local web server root directory**:
+         ```bash
+         npm run core copy-core-android-to-platform
+         npm run core copy-core-ios-to-platform
+         ```
 
-   ```bash
-   npm run core update-local-backend
-   ```
+1.  **Set the environment variable for your local web server root directory**:
+    This example points to where MAMP places its web server root.
 
-1. **Build and Serve your platform**:
-   ```bash
-   npm run serve:demo
-   ```
+    ```bash
+    echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.bash_profile
+    ```
+
+1.  **Build the platform**
+
+    ```bash
+    npm run core build:demo
+    ```
+
+1.  **Copy backend to your local web server root directory**:
+
+    ```bash
+    npm run core sync-local-backend
+    ```
+
+1.  **Copy demo assets to core/backend/webroot**:
+
+    ```bash
+    npm run core copy-demo-assets
+    ```
+
+1.  **Upload demo database to phpMyAdmin**:
+
+    - Import core/demo/elearning_demo_db.sql to phpMyAdmin
+
+    In phpMyAdmin do the following to avoid SQL errors.
+
+    1.  click on the `Server:localhost:<port>` text at the very top.
+    1.  Go to the `Variables` tab
+    1.  Search for `sql mode`
+    1.  Click `Edit` next the `sql mode` and remove the `ONLY_FULL_GROUP_BY` and hit Enter or click `save`.
+
+1.  **Build and Serve the Demo Platform**:
+
+    ```bash
+    npm run core serve:demo
+    ```
+
+1.  **Test The App**
+    In your browser, navigate to `http://localhost:4200`. The app should load.
 
 ## Structure
 
@@ -134,7 +171,6 @@ platform/
 ├── assets/
 │   ├── fonts/
 │   ├── images/ # UI image overrides
-
 │   ├── keyboard/
 │   │   └── keyboard.json # keyboard/chars config
 │   ├── scss/
@@ -156,6 +192,8 @@ platform/
 │   └── staging
 │   │   ├── app_local.php
 │   │   └── app-config.json
+├── android/ # Android project
+├── ios/ # iOS project
 ├── package.json # project manifest file
 └── README.md
 ```
@@ -178,7 +216,7 @@ Files used for both the `frontend` & `backend`:
 To prepare a specific environment you run the high-level NPM script below from your platform repo root directory, where `<local|staging|...` are the options that you choose from depending on which environment want to prepare, such as `local`, `staging`, `production`, or `demo`.
 
 ```bash
-npm run core prepare-platform:<local|staging|production|demo>
+npm run core prepare-platform:<demo|local|staging|production>
 ```
 
 This will both copy assets and generate files from templates and your config values.
@@ -188,7 +226,7 @@ This will both copy assets and generate files from templates and your config val
 To prepare and build for a specific environment you run a similar NPM script, as below. This prepare the platform, compiles the code, and syncs capacitor files to the Android and iOS projects.
 
 ```bash
-npm run core build:<local|staging|production|demo>
+npm run core build:<demo|local|staging|production>
 ```
 
 ## Serving for local testing

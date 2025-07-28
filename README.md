@@ -35,6 +35,15 @@ Platform repos, which add the `elearning-core` repo as a submodule, provide the 
    npm run core install-dependencies
    ```
 
+1. **Add Android & iOS Projects**:
+
+   If you need to build Android and iOS apps, add the projects using CapacitorJS:
+
+   ```bash
+   npm run core cap:add-android
+   npm run core cap:add-ios
+   ```
+
 1. **Customize your platform**:
 
    - Edit `platform/assets/` with your content

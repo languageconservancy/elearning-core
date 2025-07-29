@@ -1093,7 +1093,13 @@ class CardsController extends AppController
         if (!isset($requestData['cards'])) {
             return $this->redirect(['action' => 'uploadCards']);
         }
-        $previewedCards = json_decode(htmlspecialchars_decode($this->request->getData()['cards']), true);
+
+        $previewedCards = json_decode(htmlspecialchars_decode($requestData['cards']), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->Flash->error(__('Error: Invalid JSON format in cards data.'));
+            return $this->redirect(['action' => 'uploadCards']);
+        }
 
         $isUpdatedFields = $this->populateFields($requestData, "IsUpdated");
         $isAddedFields = $this->populateFields($requestData, "IsAdded");

@@ -27,7 +27,7 @@
     "cakephp/authentication": "^2.4",
     "firebase/php-jwt": "^6.4",
     "cakephp/authorization": "^2.0",
-    "ozee31/cakephp-cors": "v2.0.1",
+    "ozee31/cakephp-cors": "^v2.0.1",
     "gumlet/php-image-resize": "^2.0"
   },
   "require-dev": {

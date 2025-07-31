@@ -342,7 +342,7 @@
                                     <?php endif; ?>
                                 </table>
                             </div>
-                            <input type="hidden" name="cards" value='<?= json_encode($cards) ?>' />
+                            <input type="hidden" name="cards" value='<?= htmlspecialchars(json_encode($cards), ENT_QUOTES, 'UTF-8') ?>' />
                             <?php if ($errorsExist): ?>
                                 <div>
                                     <!-- Back button -->

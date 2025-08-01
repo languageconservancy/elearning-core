@@ -1,7 +1,19 @@
 # eLearning Core
+[![GitHub Release](https://img.shields.io/github/v/release/languageconservancy/elearning-core?style=flat-square)](https://github.com/languageconservancy/elearning-core/releases)
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MPL-2.0)
+![GitHub contributors](https://img.shields.io/github/contributors/languageconservancy/elearning-core?style=flat-square)
 
 This repo contains the core backend, frontend (web, Android, iOS), and build logic for the eLearning platform main code. It is designed as a submodule to be used by each specific eLearning platform, in order to keep those platforms separate.
 This enables easy transfer of ownership of platform-specific code, database, etc., while keep the main code available for everyone to use.
+
+## Technologies
+See [package.json](https://github.com/languageconservancy/elearning-core/blob/main/frontend/package.json) and [composer.json](https://github.com/languageconservancy/elearning-core/blob/main/backend/composer.json) for current versions.
+
+- **Frontend**: Angular (TypeScript)
+- **Backend**: CakePHP (PHP)
+- **Mobile Wrapper**: CapacitorJS
+- **Styling**: Bootstrap
+- **Tooling**: Node.js, npm, Composer, Prettier
 
 ## Overview
 

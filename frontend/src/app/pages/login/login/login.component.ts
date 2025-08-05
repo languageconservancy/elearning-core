@@ -439,7 +439,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     async handleAppleLoginBtnTap(): Promise<void> {
         try {
-            const authData = this.signInWithApple();
+            const authData = await this.signInWithApple();
             await this.handleAsyncLogin(authData);
         } catch (err) {
             this.snackbarService.handleError(err, "Sign in with Apple failed.");

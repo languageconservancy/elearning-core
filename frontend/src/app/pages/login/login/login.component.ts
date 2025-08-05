@@ -236,9 +236,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      * Creates Sign In With Google for Web button.
      * Initializes and renders the button.
+     * Includes FedCM compliance workaround for iframe permissions.
      * References:
      *   - https://developers.google.com/identity/gsi/web/reference/js-reference
      *   - https://stackoverflow.com/questions/65439066/using-google-one-tap-in-angular
+     *   - https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API
      */
     setUpGoogleSignInWebBtn(): void {
         if (
@@ -264,11 +266,116 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             logo_alignment: "left",
         });
 
+        // FedCM compliance workaround - add required permission to Google's iframe
+        this.addFedCMPermissionToGoogleIframes();
+
         google.accounts.id.prompt((/*notification: any*/) => {
             // console.info("notification: ", notification);
         });
+    }
 
-        this.googleSigninButton.nativeElement;
+    /**
+     * FedCM Compliance Workaround
+     * Monitors for Google Sign-in iframes and adds the required
+     * allow="identity-credentials-get" attribute for FedCM compliance.
+     * This is necessary because Google's SDK doesn't currently include
+     * this attribute when creating iframes.
+     */
+    private addFedCMPermissionToGoogleIframes(): void {
+        // Check for existing iframes first
+        this.updateExistingGoogleIframes();
+
+        // Monitor for new iframes being added
+        if (typeof MutationObserver !== "undefined") {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === "childList") {
+                        mutation.addedNodes.forEach((node) => {
+                            if (node.nodeType === Node.ELEMENT_NODE) {
+                                const element = node as Element;
+                                this.processElementForGoogleIframes(element);
+                            }
+                        });
+                    }
+                });
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
+
+            // Clean up observer after a reasonable time
+            setTimeout(() => observer.disconnect(), 10000);
+        }
+    }
+
+    /**
+     * Updates existing Google Sign-in iframes with FedCM permissions
+     */
+    private updateExistingGoogleIframes(): void {
+        // Wait a bit for Google's SDK to create the iframe
+        setTimeout(() => {
+            this.processElementForGoogleIframes(document.body);
+        }, 100);
+    }
+
+    /**
+     * Recursively processes an element and its children to find and update Google iframes
+     */
+    private processElementForGoogleIframes(element: Element): void {
+        // Check if this element is a Google iframe
+        if (element.tagName === "IFRAME") {
+            const iframe = element as HTMLIFrameElement;
+            if (this.isGoogleSignInIframe(iframe)) {
+                this.addFedCMPermissionToIframe(iframe);
+            }
+        }
+
+        // Check all child elements
+        element.querySelectorAll("iframe").forEach((iframe) => {
+            if (this.isGoogleSignInIframe(iframe)) {
+                this.addFedCMPermissionToIframe(iframe);
+            }
+        });
+    }
+
+    /**
+     * Determines if an iframe is a Google Sign-in iframe
+     */
+    private isGoogleSignInIframe(iframe: HTMLIFrameElement): boolean {
+        const src = iframe.src || "";
+        const id = iframe.id || "";
+
+        // Check for Google Sign-in iframe indicators
+        return (
+            src.includes("accounts.google.com") ||
+            src.includes("gstatic.com") ||
+            id.includes("gsi") ||
+            iframe.getAttribute("data-gs-iframe") !== null ||
+            iframe.closest("[data-gs-iframe]") !== null
+        );
+    }
+
+    /**
+     * Adds FedCM permission to a Google iframe
+     */
+    private addFedCMPermissionToIframe(iframe: HTMLIFrameElement): void {
+        try {
+            const currentAllow = iframe.getAttribute("allow") || "";
+
+            // Check if identity-credentials-get is already present
+            if (!currentAllow.includes("identity-credentials-get")) {
+                const newAllow = currentAllow
+                    ? `${currentAllow}; identity-credentials-get`
+                    : "identity-credentials-get";
+
+                iframe.setAttribute("allow", newAllow);
+                console.log("Added FedCM permission to Google Sign-in iframe");
+            }
+        } catch (error) {
+            console.warn("Failed to add FedCM permission to iframe:", error);
+        }
     }
 
     /**

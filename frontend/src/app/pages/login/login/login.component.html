@@ -2,13 +2,18 @@
     <div class="col-lg-6 text-center d-flex flex-column align-items-center justify-content-center">
         <div class="d-flex flex-column flex-nowrap align-content-center align-items-center">
             <div
-                *ngIf="!deviceDetector.isMobile() && !deviceDetector.isTablet() && googleConfigValid"
+                *ngIf="
+                    !deviceDetector.isMobile() && !deviceDetector.isTablet() && googleConfigValid
+                "
                 #googleSigninBtn
                 id="google-signin-link"
                 class="d-flex justify-content-center mb-3"
+                [attr.allow]="'identity-credentials-get'"
             ></div>
             <a
-                *ngIf="(deviceDetector.isMobile() || deviceDetector.isTablet()) && googleConfigValid"
+                *ngIf="
+                    (deviceDetector.isMobile() || deviceDetector.isTablet()) && googleConfigValid
+                "
                 href="javascript:void(0)"
                 id="google-signin-link-custom"
                 (click)="handleGoogleLoginBtnMobileTap()"
@@ -38,7 +43,9 @@
                 <span class="flex-grow-1">Sign in with Apple</span>
             </a>
             <a
-                *ngIf="cleverConfigValid && !deviceDetector.isMobile() && !deviceDetector.isTablet()"
+                *ngIf="
+                    cleverConfigValid && !deviceDetector.isMobile() && !deviceDetector.isTablet()
+                "
                 href="javascript:void(0)"
                 (click)="handleCleverLoginBtnClick()"
                 id="clever-signin-link"
@@ -48,7 +55,12 @@
                 <span class="flex-grow-1">Sign in with Clever</span>
             </a>
             <p
-                *ngIf="googleConfigValid || facebookConfigValid || appleConfigValid || cleverConfigValid"
+                *ngIf="
+                    googleConfigValid ||
+                    facebookConfigValid ||
+                    appleConfigValid ||
+                    cleverConfigValid
+                "
                 id="signin-with-email"
             >
                 Or Sign in with your Email Address
@@ -67,7 +79,9 @@
                 name="email"
                 [ngClass]="{
                     'has-error':
-                        loginForm.value.email && loginForm.controls.email.invalid && loginForm.controls.email.touched,
+                        loginForm.value.email &&
+                        loginForm.controls.email.invalid &&
+                        loginForm.controls.email.touched,
                 }"
                 type="email"
                 placeholder="Email"
@@ -90,7 +104,9 @@
                 autocomplete="current-password"
             />
 
-            <div class="form-group d-flex flex-row justify-content-between mx-auto align-items-center">
+            <div
+                class="form-group d-flex flex-row justify-content-between mx-auto align-items-center"
+            >
                 <a
                     id="forgot-pwd-btn"
                     href="javascript:void(0)"
@@ -98,11 +114,21 @@
                     class="text-blue-hover text-left font-weight-bold mr-1"
                     >Forgot Password?</a
                 >
-                <button type="submit" id="login-submit-btn" class="btn btn-white ml-1">Submit</button>
+                <button type="submit" id="login-submit-btn" class="btn btn-white ml-1">
+                    Submit
+                </button>
             </div>
         </form>
-        <p><a href="javascript:void(0)" class="text-blue-hover" (click)="openTrialModal()">Try it out</a></p>
-        <button type="submit" class="btn btn-light d-lg-none rounded-pill ml-1 py-1 text-dark" (click)="goToSignup()">
+        <p>
+            <a href="javascript:void(0)" class="text-blue-hover" (click)="openTrialModal()"
+                >Try it out</a
+            >
+        </p>
+        <button
+            type="submit"
+            class="btn btn-light d-lg-none rounded-pill ml-1 py-1 text-dark"
+            (click)="goToSignup()"
+        >
             Sign up
         </button>
     </div>
@@ -112,7 +138,13 @@
 </div>
 <app-event-promo></app-event-promo>
 
-<div class="modal fade modal-n" id="trial-message" tabindex="-1" role="dialog" aria-labelledby="TrialMessage">
+<div
+    class="modal fade modal-n"
+    id="trial-message"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="TrialMessage"
+>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -123,12 +155,18 @@
             </div>
             <div class="modal-body modal-n-table">
                 <h5 class="text-center">
-                    If you want to keep your progress across browsers and devices, and unlock age-restricted features, create an account. This trial will
-                    only maintain your data temporariliy.
+                    If you want to keep your progress across browsers and devices, and unlock
+                    age-restricted features, create an account. This trial will only maintain your
+                    data temporariliy.
                 </h5>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="goToSignup()">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                    (click)="goToSignup()"
+                >
                     Sign Up
                 </button>
                 <button type="button" class="btn btn-secondary" (click)="tryApp()">
@@ -139,15 +177,20 @@
     </div>
 </div>
 
-<div class="modal fade modal-n" id="signup-suggestion" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="SignupSuggestion">
+<div
+    class="modal fade modal-n"
+    id="signup-suggestion"
+    data-backdrop="static"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="SignupSuggestion"
+>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
-            <app-signup-suggestion
-                (continueWithTrial)="signupSuggestionModalClosed($event)">
+            <app-signup-suggestion (continueWithTrial)="signupSuggestionModalClosed($event)">
             </app-signup-suggestion>
         </div>
     </div>
 </div>
 
 <app-age-prompt></app-age-prompt>
-

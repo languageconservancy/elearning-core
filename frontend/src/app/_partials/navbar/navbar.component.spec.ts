@@ -1,3 +1,4 @@
+/// <reference types="jasmine" />
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from "@angular/router";
@@ -20,7 +21,7 @@ import { ForumService } from "app/_services/forum.service";
 import { NavbarComponent } from "./navbar.component";
 import { ColorThemeRgb } from "../../../../e2e/lib/color-theme";
 
-fdescribe("NavbarComponent", () => {
+describe("NavbarComponent", () => {
     let component: NavbarComponent;
     let fixture: ComponentFixture<NavbarComponent>;
     let router: Router;
@@ -69,9 +70,11 @@ fdescribe("NavbarComponent", () => {
         spyOn<any>(component, "getUserSettings").and.returnValue(true);
         component.loggedIn = true;
         component.showReview = true;
-        component.user = {};
-        component.user.role_id = 2;
-        component.user.classroom_count = 1;
+        component.user = {
+            role_id: 2,
+            classroom_count: 1,
+            agreements_accepted: true, // This is required for the nav menu to show
+        };
         fixture.detectChanges();
     });
 
@@ -91,6 +94,7 @@ fdescribe("NavbarComponent", () => {
     it("should have buttons displayed correctly", () => {
         const element: HTMLElement = fixture.nativeElement;
         let el = element.querySelector("#nav-learn-btn");
+        expect(el).toBeTruthy(); // Check element exists first
         expect(el.textContent).toBeTruthy();
         expect(el.textContent).toEqual("Learn");
         expect(window.getComputedStyle(el, null).getPropertyValue("color")).toBe(
@@ -101,6 +105,7 @@ fdescribe("NavbarComponent", () => {
         );
 
         el = element.querySelector("#nav-review-btn");
+        expect(el).toBeTruthy(); // Check element exists first
         expect(el.textContent).toBeTruthy();
         expect(el.textContent).toEqual("Review");
         expect(window.getComputedStyle(el, null).getPropertyValue("color")).toBe(
@@ -108,6 +113,7 @@ fdescribe("NavbarComponent", () => {
         );
 
         el = element.querySelector("#nav-progress-btn");
+        expect(el).toBeTruthy(); // Check element exists first
         expect(el.textContent).toBeTruthy();
         expect(el.textContent).toEqual("Progress");
         expect(window.getComputedStyle(el, null).getPropertyValue("color")).toBe(
@@ -115,6 +121,7 @@ fdescribe("NavbarComponent", () => {
         );
 
         el = element.querySelector("#nav-leaderboard-btn");
+        expect(el).toBeTruthy(); // Check element exists first
         expect(el.textContent).toBeTruthy();
         expect(el.textContent).toEqual("Leaderboard");
         expect(window.getComputedStyle(el, null).getPropertyValue("color")).toBe(
@@ -122,6 +129,7 @@ fdescribe("NavbarComponent", () => {
         );
 
         el = element.querySelector("#nav-village-btn");
+        expect(el).toBeTruthy(); // Check element exists first
         expect(el.textContent).toBeTruthy();
         expect(el.textContent).toEqual("Village");
         expect(window.getComputedStyle(el, null).getPropertyValue("color")).toBe(
@@ -129,6 +137,7 @@ fdescribe("NavbarComponent", () => {
         );
 
         el = element.querySelector("#nav-teachers-btn");
+        expect(el).toBeTruthy(); // Check element exists first
         expect(el.textContent).toBeTruthy();
         expect(el.textContent).toEqual("Teachers");
         expect(window.getComputedStyle(el, null).getPropertyValue("color")).toBe(
@@ -136,6 +145,7 @@ fdescribe("NavbarComponent", () => {
         );
 
         el = element.querySelector("#nav-classroom-btn");
+        expect(el).toBeTruthy(); // Check element exists first
         expect(el.textContent).toBeTruthy();
         expect(el.textContent).toEqual("Classroom");
         expect(window.getComputedStyle(el, null).getPropertyValue("color")).toBe(

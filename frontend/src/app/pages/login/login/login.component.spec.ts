@@ -27,11 +27,16 @@ import { ColorThemeRgb } from "../../../../../e2e/lib/color-theme";
 import { BaseService } from "app/_services/base.service";
 import { ForumService } from "app/_services/forum.service";
 
-fdescribe("LoginComponent", () => {
+describe("LoginComponent", () => {
     let component: LoginComponent;
     let fixture: ComponentFixture<LoginComponent>;
-    const loginService: LoginService = new LoginService(null, null, null, null);
-    const registrationService: RegistrationService = new RegistrationService(null, null, null, null);
+    const loginService: LoginService = new LoginService(null, null, null, null, null);
+    const registrationService: RegistrationService = new RegistrationService(
+        null,
+        null,
+        null,
+        null,
+    );
     const socialWebService: SocialWebService = new SocialWebService(null, null);
 
     beforeEach(waitForAsync(() => {
@@ -71,7 +76,13 @@ fdescribe("LoginComponent", () => {
                     } as SocialAuthServiceConfig,
                 },
             ],
-            imports: [RouterTestingModule, HttpClientModule, SocialLoginModule, PartialsModule, ReactiveFormsModule],
+            imports: [
+                RouterTestingModule,
+                HttpClientModule,
+                SocialLoginModule,
+                PartialsModule,
+                ReactiveFormsModule,
+            ],
         }).compileComponents();
     }));
 
@@ -84,7 +95,7 @@ fdescribe("LoginComponent", () => {
         localStorage.clear();
         fixture = TestBed.createComponent(LoginComponent);
         component = fixture.componentInstance;
-        spyOn(component, "getToken");
+        spyOn(component as any, "getToken");
         fixture.detectChanges();
     });
 
@@ -102,10 +113,12 @@ fdescribe("LoginComponent", () => {
         const element: HTMLElement = fixture.nativeElement;
         const submitBtn = element.querySelector("button[type='submit']");
         expect(submitBtn.textContent).toEqual("Submit");
-        expect(window.getComputedStyle(submitBtn, null).getPropertyValue("background-color")).toEqual(
-            ColorThemeRgb.UI_PANEL_LIGHT,
+        expect(
+            window.getComputedStyle(submitBtn, null).getPropertyValue("background-color"),
+        ).toEqual(ColorThemeRgb.UI_PANEL_LIGHT);
+        expect(window.getComputedStyle(submitBtn, null).getPropertyValue("color")).toEqual(
+            ColorThemeRgb.TEXT_PRIMARY,
         );
-        expect(window.getComputedStyle(submitBtn, null).getPropertyValue("color")).toEqual(ColorThemeRgb.TEXT_PRIMARY);
     });
 
     it("should have facebook button", () => {
@@ -159,11 +172,8 @@ fdescribe("LoginComponent", () => {
                 resolve({ data: response });
             }),
         );
-        spyOn(loginService, "authenticate").and.returnValue(
-            new Promise((resolve) => {
-                resolve("token");
-            }),
-        );
+        // @ts-ignore
+        spyOn(loginService as any, "authenticate").and.returnValue(Promise.resolve("token"));
         spyOn(registrationService, "setUser");
         // component.logInWithClever({ params: { code: "df", scope: "gh" } });
         tick(500);
@@ -186,11 +196,8 @@ fdescribe("LoginComponent", () => {
                 resolve({ data: response });
             }),
         );
-        spyOn(loginService, "authenticate").and.returnValue(
-            new Promise((resolve) => {
-                resolve("token");
-            }),
-        );
+        // @ts-ignore
+        spyOn(loginService as any, "authenticate").and.returnValue(Promise.resolve("token"));
         spyOn(registrationService, "setUser");
         // component.logInWithClever({ code: "df", scope: "gh" });
         tick(500);

@@ -18,14 +18,15 @@ import { LocalStorageService } from "app/_services/local-storage.service";
 import { KeyboardService } from "app/shared/keyboard/keyboard.service";
 import { AudioService } from "app/_services/audio.service";
 import { AnagramComponent } from "./anagram.component";
+import { NonSelectableCardComponent } from "app/shared/non-selectable-card/non-selectable-card.component";
 
-fdescribe("AnagramComponent", () => {
+describe("AnagramComponent", () => {
     let component: AnagramComponent;
     let fixture: ComponentFixture<AnagramComponent>;
 
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
-            declarations: [AnagramComponent],
+            declarations: [AnagramComponent, NonSelectableCardComponent],
             providers: [
                 CookieService,
                 LessonsService,

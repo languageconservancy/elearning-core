@@ -27,6 +27,7 @@ export interface KeyboardConfig {
     charCombosTreatedAsOneChar: string[];
     characterReplacements?: { [key: string]: string };
     settings: KeyboardSettings;
+    allWordCharsRegex: string;
 }
 
 @Injectable({
@@ -53,6 +54,7 @@ export class KeyboardConfigService {
             map((config) => {
                 this.config = this.validateAndMergeConfig(config);
                 this.configLoadedSubject.next(true);
+                console.log("loadConfig config:", JSON.stringify(this.config, null, "  "));
                 return this.config;
             }),
             catchError((error) => {
@@ -63,33 +65,6 @@ export class KeyboardConfigService {
                 return of(this.config);
             }),
         );
-    }
-
-    /**
-     * Get a specific keyboard layout by name
-     * @param {string} layoutName - Name of the layout to retrieve
-     * @returns KeyboardLayout or null if not found
-     */
-    // getLayout(layoutName: string): KeyboardLayoutObject | null {
-    //     if (!this.config) {
-    //         return null;
-    //     }
-    //     return (
-    //         this.config.defaultLayoutObject[layoutName] ||
-    //         this.config.defaultLayoutObject[this.config.settings.defaultLayoutObject] ||
-    //         null
-    //     );
-    // }
-
-    /**
-     * Get all available layout names
-     * @returns Array of layout names
-     */
-    getLayoutNames(): string[] {
-        if (!this.config) {
-            return [];
-        }
-        return Object.keys(this.config.defaultLayoutObject);
     }
 
     /**
@@ -219,6 +194,7 @@ export class KeyboardConfigService {
             charCombosTreatedAsOneChar:
                 config.charCombosTreatedAsOneChar || defaultConfig.charCombosTreatedAsOneChar,
             settings: { ...defaultConfig.settings, ...config.settings },
+            allWordCharsRegex: config.allWordCharsRegex || defaultConfig.allWordCharsRegex,
         };
 
         // Validate layouts. If the config is missing a layout, use the default layout.
@@ -272,6 +248,7 @@ export class KeyboardConfigService {
             buttonThemes: [],
             keyCodesConversions: {},
             charCombosTreatedAsOneChar: [],
+            characterReplacements: {},
             settings: {
                 languageSwitchKeys: {
                     left: "{metaleft}",
@@ -281,6 +258,7 @@ export class KeyboardConfigService {
                 enableCharacterConversion: true,
                 autoCapitalize: false,
             },
+            allWordCharsRegex: "a-zA-Z,;-'\"",
         };
     }
 }

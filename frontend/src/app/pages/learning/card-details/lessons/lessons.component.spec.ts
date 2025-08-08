@@ -19,7 +19,7 @@ import { KeyboardService } from "app/shared/keyboard/keyboard.service";
 import { PipesModule } from "app/_pipes/pipes.module";
 import { LessonsComponent } from "./lessons.component";
 
-fdescribe("LessonsComponent", () => {
+describe("LessonsComponent", () => {
     let component: LessonsComponent;
     let fixture: ComponentFixture<LessonsComponent>;
     // const ValidImageSrc = "https://owoksape.com/assets/images/icon_01.png";

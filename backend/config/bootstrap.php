@@ -52,12 +52,12 @@ use Cake\Routing\Router;
  * You can remove this block if you do not want to use environment
  * variables for configuration when deploying.
  */
-if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
+if (file_exists(CONFIG . '.env')) {
     $dotenv = new Loader([CONFIG . '.env']);
     $dotenv->parse()
-        ->putenv()
-        ->toEnv()
-        ->toServer();
+        ->putenv(true)
+        ->toEnv(true)
+        ->toServer(true);
 }
 
 header('Access-Control-Allow-Origin: *');

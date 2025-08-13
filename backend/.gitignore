@@ -3,6 +3,7 @@
 /config/.env
 /config/keyboard.json
 /config/app_local.php
+/config/Migrations/schema-dump-*.lock
 /tmp/*
 /logs/*
 /tmp/*

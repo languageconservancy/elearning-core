@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1](https://github.com/languageconservancy/elearning-core/compare/v1.0.0...v1.0.1) (2025-08-13)
+
+
+### Bug Fixes
+
+* add attr to google one-tap element to comply with FedCM ([#11](https://github.com/languageconservancy/elearning-core/issues/11)) ([ba799e5](https://github.com/languageconservancy/elearning-core/commit/ba799e5227cb4747b4af5697d3bd608c714c9ff8))
+* add missing await to  apple sign-in function ([#9](https://github.com/languageconservancy/elearning-core/issues/9)) ([7ef70b6](https://github.com/languageconservancy/elearning-core/commit/7ef70b67fbc00c2111d3cc4b3d07f7680f4ec7c3))
+* always overwrite env variables with .env version. default app to debug false. ([#14](https://github.com/languageconservancy/elearning-core/issues/14)) ([2749efd](https://github.com/languageconservancy/elearning-core/commit/2749efd89e4beb236aa90681f425e3bb1d2df2bc))
+
 ## 1.0.0 (2025-08-01)
 
 

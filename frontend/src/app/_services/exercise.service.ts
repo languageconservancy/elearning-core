@@ -30,7 +30,9 @@ export class ExerciseService {
 
     setCloseWindowSubscription(turnOn: boolean, keyboardService: KeyboardService) {
         if (turnOn) {
-            this.keyboardCloseWindowSubscription = keyboardService.submitOrCloseEvent.subscribe(() => {});
+            this.keyboardCloseWindowSubscription = keyboardService.submitOrCloseEvent.subscribe(
+                () => {},
+            );
         } else {
             this.keyboardCloseWindowSubscription.unsubscribe();
         }
@@ -42,7 +44,9 @@ export class ExerciseService {
     setPromptResponseTypes() {
         this.promptTypes = [];
         this.responseTypes = [];
-        this.responseType = this.exercise.promteresponsetype ? this.exercise.promteresponsetype.split("-")[1] : "";
+        this.responseType = this.exercise.promteresponsetype
+            ? this.exercise.promteresponsetype.split("-")[1]
+            : "";
 
         if (this.isCustomExercise()) {
             if (this.isPromptTypeCard()) {
@@ -80,7 +84,7 @@ export class ExerciseService {
     }
 
     private setResponseTypesFromExerciseOptions() {
-        if (!this.response.exerciseOptions?.response_preview_option) {
+        if (!this.response.exerciseOptions?.responce_preview_option) {
             return;
         }
         this.responseTypes = this.response.exerciseOptions.responce_preview_option
@@ -171,13 +175,19 @@ export class ExerciseService {
                 }
             }
         } else {
-            if (this.question.exerciseOptions.type == "card" || this.question.exerciseOptions.type == "group") {
+            if (
+                this.question.exerciseOptions.type == "card" ||
+                this.question.exerciseOptions.type == "group"
+            ) {
                 if (this.cardIdArray.indexOf(this.question.id) == -1) {
                     this.cardIdArray.push(this.question.id);
                 }
             }
 
-            if (!!this.response && ["card", "group"].indexOf(this.response.exerciseOptions.type) >= 0) {
+            if (
+                !!this.response &&
+                ["card", "group"].indexOf(this.response.exerciseOptions.type) >= 0
+            ) {
                 if (this.cardIdArray.indexOf(this.response.id) == -1) {
                     this.cardIdArray.push(this.response.id);
                 }

@@ -2,7 +2,14 @@
     "name": "elearning-core-frontend",
     "version": "2.0.4",
     "license": "MIT",
+    "engines": {
+        "node": ">=22.0.0 <23.0.0"
+    },
     "scripts": {
+        "build:demo": "ng build --configuration=demo",
+        "build:local": "ng build --configuration=local",
+        "build:staging": "ng build --aot --build-optimizer --configuration=staging",
+        "build:production": "ng build --aot --build-optimizer --configuration=production",
         "serve": "ng serve --port=4200 --configuration=local",
         "test": "ng test",
         "test:headless": "ng test --watch=false--browsers=ChromeHeadless",

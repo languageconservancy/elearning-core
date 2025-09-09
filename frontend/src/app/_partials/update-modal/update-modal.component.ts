@@ -59,22 +59,27 @@ export class UpdateModalComponent {
             return;
         }
         // Use the iTunes URL scheme to open the app in the App Store
-        const iosUrl = `itms-apps://itunes.apple.com/app/id${iosAppId}`;
-        if (this.debug) console.debug("Opening iOS App Store URL: ", iosUrl);
-        window.open(iosUrl, "_system");
+        const deepLink = `itms-apps://apps.apple.com/app/id${iosAppId}`;
+        const webLink = `https://apps.apple.com/app/id${iosAppId}`;
+        if (this.debug) console.debug("Opening iOS App Store URL: ", deepLink);
+        try {
+            window.open(deepLink, "_system");
+        } catch (error) {
+            console.warn("Deep link failed, falling back to web:", error);
+            window.open(webLink, "_system");
+        }
     }
 
     /**
      * Closes the modal.
      * This method is called when the user clicks the "Close" button.
-     * If forceUpdate is true, the modal will not be closed.
+     * If forceUpdate is true, let them close anyway to avoid confusion and the case when the
+     * update link is not working.
      * Otherwise, it will remove the modal from the DOM and remove the "update-block" class from the body.
      */
     dismiss() {
-        if (!this.forceUpdate) {
-            document.body.classList.remove("update-block");
-            const modal = document.getElementById("update-modal");
-            modal?.remove();
-        }
+        document.body.classList.remove("update-block");
+        const modal = document.getElementById("update-modal");
+        modal?.remove();
     }
 }

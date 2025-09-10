@@ -44,9 +44,15 @@ export class UpdateModalComponent {
             return;
         }
         // Use the APP_ID from the environment to construct the Play Store URL
-        const androidUrl = `market://details?id=${reverseDomainName}`;
-        if (this.debug) console.debug("Opening Android Play Store URL: ", androidUrl);
-        window.open(androidUrl, "_system");
+        const deepLink = `market://details?id=${reverseDomainName}`;
+        const webLink = `https://play.google.com/store/apps/details?id=${reverseDomainName}`;
+        if (this.debug) console.debug("Opening Android Play Store URL: ", deepLink);
+        try {
+            window.open(deepLink, "_system");
+        } catch (error) {
+            console.warn("Deep link failed, falling back to web:", error);
+            window.open(webLink, "_system");
+        }
     }
 
     /**

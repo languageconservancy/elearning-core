@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/languageconservancy/elearning-core/compare/v1.0.1...v1.0.2) (2025-09-10)
+
+
+### Bug Fixes
+
+* update-modal to always allow dismissal and fallback to web link ([#17](https://github.com/languageconservancy/elearning-core/issues/17)) ([8c44702](https://github.com/languageconservancy/elearning-core/commit/8c44702b40de0c0e8b9727a0d4d669f4cb8ad6cb))
+
 ## [1.0.1](https://github.com/languageconservancy/elearning-core/compare/v1.0.0...v1.0.1) (2025-09-02)
 
 

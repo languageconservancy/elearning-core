@@ -57,30 +57,32 @@ export class KeyboardShortcutsComponent implements OnDestroy {
         });
 
         // Exercise activity was just loaded
-        this.exerciseActivitySubscription = this.lessonsService.currentExercise.subscribe((data) => {
-            if (!!data && Object.keys(data).length) {
-                // Clear shortcuts and set to true only those that apply to the current exercise type
-                this.clearShortcuts();
-                switch (data.exercise_type) {
-                    case "multiple-choice":
-                    case "match-the-pair":
-                    case "truefalse":
-                    case "fill_in_the_blanks":
-                    case "anagram":
-                        this.showSelectNext = true;
-                        this.showSelectPrevious = true;
-                        this.showSubmit = true;
-                        this.showPlayAudio = this.activityHasAudio(data);
-                        this.showTyping = this.activityHasTyping(data);
-                        break;
-                    case "recording":
-                        break;
-                    default:
-                        console.warn("Oops! Got unhandled exercise type");
-                        break;
+        this.exerciseActivitySubscription = this.lessonsService.currentExercise.subscribe(
+            (data) => {
+                if (!!data && Object.keys(data).length) {
+                    // Clear shortcuts and set to true only those that apply to the current exercise type
+                    this.clearShortcuts();
+                    switch (data.exercise_type) {
+                        case "multiple-choice":
+                        case "match-the-pair":
+                        case "truefalse":
+                        case "fill_in_the_blanks":
+                        case "anagram":
+                            this.showSelectNext = true;
+                            this.showSelectPrevious = true;
+                            this.showSubmit = true;
+                            this.showPlayAudio = this.activityHasAudio(data);
+                            this.showTyping = this.activityHasTyping(data);
+                            break;
+                        case "recording":
+                            break;
+                        default:
+                            console.warn("Oops! Got unhandled exercise type");
+                            break;
+                    }
                 }
-            }
-        });
+            },
+        );
 
         // Review activity was just loaded
         this.reviewActivitySubscription = this.reviewService.currentExercise.subscribe((data) => {
@@ -178,7 +180,7 @@ export class KeyboardShortcutsComponent implements OnDestroy {
         } else if (data.exercise_type == "fill_in_the_blanks") {
             if (!!data.questions && data.questions.length > 0) {
                 if (
-                    data.questions[0]?.question.exerciseOptions.fill_in_the_blank_type == "typing"
+                    data.questions[0]?.question.exerciseOptions?.fill_in_the_blank_type == "typing"
                 ) {
                     hasTyping = true;
                 }

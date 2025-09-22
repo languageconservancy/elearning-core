@@ -145,74 +145,86 @@ export class MatchPairComponent implements OnInit, OnDestroy {
             }
 
             // Submit the choice as a match, or change toggling between prompt cards and option cards
-            this.keyboardSubmitSwitchSubscription = this.keyboardService.submitOrCloseEvent.subscribe((event) => {
-                if (event.shiftKey) {
-                    // Switch between toggling prompt and option cards
-                    this.togglingPrompt = !this.togglingPrompt;
-                    return true;
-                }
-                if (this.togglingPrompt && this.questions[this.highlightedPromptIndex]) {
-                    this.togglingPrompt = false;
-                    return true;
-                }
-                if (!this.exerciseService.choices[this.highlightedChoiceIndex]) {
-                    return false;
-                }
-                if (
-                    this.highlightedChoiceIndex >= 0 &&
-                    this.highlightedChoiceIndex < this.exerciseService.choices.length &&
-                    this.matched.answers.indexOf(this.exerciseService.choices[this.highlightedChoiceIndex]?.id) < 0
-                ) {
-                    // Submit the selected choice as a match
-                    this.selectAns(this.exerciseService.choices[this.highlightedChoiceIndex]);
-                    this.highlightedChoiceIndex = -1;
-                }
-            });
-            // Toggle hightlighted prompt or option card
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                this.toggleIndex(this.togglingPrompt, event.shiftKey);
-
-                if (this.togglingPrompt) {
-                    if (this.highlightedPromptIndex >= 0 && this.highlightedPromptIndex < this.questions.length) {
-                        // Select the highlighted prompt card
-                        this.selectQuest(this.questions[this.highlightedPromptIndex].question);
+            this.keyboardSubmitSwitchSubscription =
+                this.keyboardService.submitOrCloseEvent.subscribe((event) => {
+                    if (event.shiftKey) {
+                        // Switch between toggling prompt and option cards
+                        this.togglingPrompt = !this.togglingPrompt;
+                        return true;
                     }
-                }
-            });
-            // Toggle audio playback
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (
-                    this.togglingPrompt ||
-                    (this.exerciseService.promptType == "a" && this.exerciseService.responseType != "a")
-                ) {
-                    if (this.exerciseService.promptType == "a") {
-                        // Play/pause the audio for the highlighted prompt card
-                        this.audioService.playPauseAudio(
-                            this.questions[this.highlightedPromptIndex].question.FullAudioUrl,
-                            "question",
-                        );
+                    if (this.togglingPrompt && this.questions[this.highlightedPromptIndex]) {
+                        this.togglingPrompt = false;
+                        return true;
                     }
-                }
-                if (
-                    !this.togglingPrompt ||
-                    (this.exerciseService.responseType == "a" && this.exerciseService.promptType != "a")
-                ) {
+                    if (!this.exerciseService.choices[this.highlightedChoiceIndex]) {
+                        return false;
+                    }
                     if (
                         this.highlightedChoiceIndex >= 0 &&
                         this.highlightedChoiceIndex < this.exerciseService.choices.length &&
-                        (this.exerciseService.responseType == "a" ||
-                            this.exerciseService.responseTypes.indexOf("a") > -1) &&
-                        !!this.exerciseService.choices[this.highlightedChoiceIndex] &&
-                        this.exerciseService.choices[this.highlightedChoiceIndex].FullAudioUrl
+                        this.matched.answers.indexOf(
+                            this.exerciseService.choices[this.highlightedChoiceIndex]?.id,
+                        ) < 0
                     ) {
-                        // Play/pause the audio for the highlighted option card
-                        this.audioService.playPauseAudio(
-                            this.exerciseService.choices[this.highlightedChoiceIndex].FullAudioUrl,
-                            "response",
-                        );
+                        // Submit the selected choice as a match
+                        this.selectAns(this.exerciseService.choices[this.highlightedChoiceIndex]);
+                        this.highlightedChoiceIndex = -1;
                     }
-                }
-            });
+                });
+            // Toggle hightlighted prompt or option card
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    this.toggleIndex(this.togglingPrompt, event.shiftKey);
+
+                    if (this.togglingPrompt) {
+                        if (
+                            this.highlightedPromptIndex >= 0 &&
+                            this.highlightedPromptIndex < this.questions.length
+                        ) {
+                            // Select the highlighted prompt card
+                            this.selectQuest(this.questions[this.highlightedPromptIndex].question);
+                        }
+                    }
+                });
+            // Toggle audio playback
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (
+                        this.togglingPrompt ||
+                        (this.exerciseService.promptType == "a" &&
+                            this.exerciseService.responseType != "a")
+                    ) {
+                        if (this.exerciseService.promptType == "a") {
+                            // Play/pause the audio for the highlighted prompt card
+                            this.audioService.playPauseAudio(
+                                this.questions[this.highlightedPromptIndex].question.FullAudioUrl,
+                                "question",
+                            );
+                        }
+                    }
+                    if (
+                        !this.togglingPrompt ||
+                        (this.exerciseService.responseType == "a" &&
+                            this.exerciseService.promptType != "a")
+                    ) {
+                        if (
+                            this.highlightedChoiceIndex >= 0 &&
+                            this.highlightedChoiceIndex < this.exerciseService.choices.length &&
+                            (this.exerciseService.responseType == "a" ||
+                                this.exerciseService.responseTypes.indexOf("a") > -1) &&
+                            !!this.exerciseService.choices[this.highlightedChoiceIndex] &&
+                            this.exerciseService.choices[this.highlightedChoiceIndex].FullAudioUrl
+                        ) {
+                            // Play/pause the audio for the highlighted option card
+                            this.audioService.playPauseAudio(
+                                this.exerciseService.choices[this.highlightedChoiceIndex]
+                                    .FullAudioUrl,
+                                "response",
+                            );
+                        }
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitSwitchSubscription) {
                 this.keyboardSubmitSwitchSubscription.unsubscribe();
@@ -237,7 +249,9 @@ export class MatchPairComponent implements OnInit, OnDestroy {
                     );
                 } while (
                     this.highlightedPromptIndex >= 0 &&
-                    this.matched.questions.indexOf(this.questions[this.highlightedPromptIndex]?.id) > -1
+                    this.matched.questions.indexOf(
+                        this.questions[this.highlightedPromptIndex]?.id,
+                    ) > -1
                 );
             } else {
                 do {
@@ -248,7 +262,9 @@ export class MatchPairComponent implements OnInit, OnDestroy {
                     );
                 } while (
                     this.highlightedChoiceIndex >= 0 &&
-                    this.matched.answers.indexOf(this.exerciseService.choices[this.highlightedChoiceIndex]?.id) > -1
+                    this.matched.answers.indexOf(
+                        this.exerciseService.choices[this.highlightedChoiceIndex]?.id,
+                    ) > -1
                 );
             }
         } else {
@@ -261,7 +277,9 @@ export class MatchPairComponent implements OnInit, OnDestroy {
                     );
                 } while (
                     this.highlightedPromptIndex >= 0 &&
-                    this.matched.questions.indexOf(this.questions[this.highlightedPromptIndex]?.id) > -1
+                    this.matched.questions.indexOf(
+                        this.questions[this.highlightedPromptIndex]?.id,
+                    ) > -1
                 );
             } else {
                 do {
@@ -272,7 +290,9 @@ export class MatchPairComponent implements OnInit, OnDestroy {
                     );
                 } while (
                     this.highlightedChoiceIndex >= 0 &&
-                    this.matched.answers.indexOf(this.exerciseService.choices[this.highlightedChoiceIndex]?.id) > -1
+                    this.matched.answers.indexOf(
+                        this.exerciseService.choices[this.highlightedChoiceIndex]?.id,
+                    ) > -1
                 );
             }
         }
@@ -290,7 +310,10 @@ export class MatchPairComponent implements OnInit, OnDestroy {
                 if (ques.question.id == this.selectedQuestionId) {
                     if (this.exerciseService.promptType.indexOf("a") > -1) {
                         setTimeout(() => {
-                            this.audioService.playPauseAudio(ques.question.FullAudioUrl, "question");
+                            this.audioService.playPauseAudio(
+                                ques.question.FullAudioUrl,
+                                "question",
+                            );
                         }, 200);
                     }
                 }
@@ -304,8 +327,10 @@ export class MatchPairComponent implements OnInit, OnDestroy {
         this.exerciseService.exercise.questions.forEach((ques) => {
             if (this.exerciseService.exercise.card_type == "custom") {
                 if (ques.question.PromptType == "card") {
-                    ques.promptArray = ques.question.exerciseOptions.prompt_preview_option
-                        ? ques.question.exerciseOptions.prompt_preview_option.split(",").map((el) => el.trim())
+                    ques.promptArray = ques.question.exerciseOptions?.prompt_preview_option
+                        ? ques.question.exerciseOptions?.prompt_preview_option
+                              .split(",")
+                              .map((el) => el.trim())
                         : [];
                 } else {
                     ques.promptArray = [];
@@ -320,8 +345,10 @@ export class MatchPairComponent implements OnInit, OnDestroy {
                 }
             } else {
                 if (this.sessionType == "exercise") {
-                    ques.promptArray = ques.question.exerciseOptions.prompt_preview_option
-                        ? ques.question.exerciseOptions.prompt_preview_option.split(",").map((el) => el.trim())
+                    ques.promptArray = ques.question.exerciseOptions?.prompt_preview_option
+                        ? ques.question.exerciseOptions?.prompt_preview_option
+                              .split(",")
+                              .map((el) => el.trim())
                         : [];
                 } else if (this.sessionType == "review") {
                     ques.promptArray = [this.exerciseService.promptType];
@@ -335,13 +362,17 @@ export class MatchPairComponent implements OnInit, OnDestroy {
     private setChoices() {
         if (this.exerciseService.choices.length) {
             this.exerciseService.choices.splice(0, this.exerciseService.choices.length);
-            this.userResponseAnswers = new Array(this.exerciseService.choices.length).fill(AnswerType.NONE);
+            this.userResponseAnswers = new Array(this.exerciseService.choices.length).fill(
+                AnswerType.NONE,
+            );
         }
         this.exerciseService.exercise.choices.forEach((choice) => {
             if (this.exerciseService.exercise.card_type == "custom") {
                 if (choice.ResponseType == "card") {
-                    choice.respArray = choice.exerciseOptions.responce_preview_option
-                        ? choice.exerciseOptions.responce_preview_option.split(",").map((el) => el.trim())
+                    choice.respArray = choice.exerciseOptions?.responce_preview_option
+                        ? choice.exerciseOptions?.responce_preview_option
+                              .split(",")
+                              .map((el) => el.trim())
                         : [];
                 } else {
                     choice.respArray = [];
@@ -356,8 +387,10 @@ export class MatchPairComponent implements OnInit, OnDestroy {
                 }
             } else {
                 if (this.sessionType == "exercise") {
-                    choice.respArray = choice.exerciseOptions.responce_preview_option
-                        ? choice.exerciseOptions.responce_preview_option.split(",").map((el) => el.trim())
+                    choice.respArray = choice.exerciseOptions?.responce_preview_option
+                        ? choice.exerciseOptions?.responce_preview_option
+                              .split(",")
+                              .map((el) => el.trim())
                         : [];
                 } else if (this.sessionType == "review") {
                     choice.respArray = [this.exerciseService.responseType];
@@ -408,7 +441,9 @@ export class MatchPairComponent implements OnInit, OnDestroy {
     // }
     checkAnswer() {
         // get the index of the selected question
-        const questionIdx = this.questions.findIndex((ques) => ques.question.id == this.selectedQuestionId);
+        const questionIdx = this.questions.findIndex(
+            (ques) => ques.question.id == this.selectedQuestionId,
+        );
         if (questionIdx < 0) {
             console.warn("Couldn't find question with id: ", this.selectedQuestionId);
             return;
@@ -468,13 +503,14 @@ export class MatchPairComponent implements OnInit, OnDestroy {
             if (!!ques.question.exerciseOptions) {
                 if (
                     !!ques.question.exerciseOptions &&
-                    (ques.question.exerciseOptions.type == "card" || ques.question.exerciseOptions.type == "group")
+                    (ques.question.exerciseOptions?.type == "card" ||
+                        ques.question.exerciseOptions?.type == "group")
                 ) {
                     wrongArray.push(ques.question);
                     cardIdArray.push(ques.question.id);
                 }
                 if (ques.response.id != ques.question.id) {
-                    if (ques.question.exerciseOptions.type == "card") {
+                    if (ques.question.exerciseOptions?.type == "card") {
                         wrongArray.push(ques.response);
                         cardIdArray.push(ques.response.id);
                     }
@@ -504,14 +540,15 @@ export class MatchPairComponent implements OnInit, OnDestroy {
         params.card_id = ques.question.PromptType == "html" ? null : ques.question.id;
         params.activity_type = this.sessionType;
         params.user_id = this.exerciseService.user.id;
-        params.answar_type = this.exerciseService.userAnswer == this.AnswerType.CORRECT ? "right" : "wrong";
+        params.answar_type =
+            this.exerciseService.userAnswer == this.AnswerType.CORRECT ? "right" : "wrong";
         params.matchnpair = true;
         params.experiencecard_ids = cardIdArray.join();
         params.popup_status = true;
         if (!!ques.response.exercise_option_id) {
             params.exercise_option_id = ques.response.exercise_option_id;
         } else if (!!ques.response.exerciseOptions) {
-            params.exercise_option_id = ques.response.exerciseOptions.id;
+            params.exercise_option_id = ques.response.exerciseOptions?.id;
         } else {
             console.warn("[match-pair] No exercise option id for response", ques.response);
         }
@@ -533,7 +570,10 @@ export class MatchPairComponent implements OnInit, OnDestroy {
         // Reset selected answer id
         this.selectedQuestionId = this.selectedAnswerId = -1;
         this.questions.forEach((ques) => {
-            if (this.matched.questions.indexOf(ques.question.id) < 0 && this.selectedQuestionId > -1) {
+            if (
+                this.matched.questions.indexOf(ques.question.id) < 0 &&
+                this.selectedQuestionId > -1
+            ) {
                 this.selectedQuestionId = ques.question.id;
             }
         });
@@ -562,13 +602,19 @@ export class MatchPairComponent implements OnInit, OnDestroy {
     }
 
     getPromptAudioIconUrl(audioService: AudioService, ques: any) {
-        if (audioService.getAudioSrc() != ques.question.FullAudioUrl || audioService.audioType != "question") {
+        if (
+            audioService.getAudioSrc() != ques.question.FullAudioUrl ||
+            audioService.audioType != "question"
+        ) {
             if (ques.promptArray.length == 1) {
                 return "./assets/images/audio-large-mute.png";
             } else {
                 return "./assets/images/sound-mute-blue-btn.png";
             }
-        } else if (audioService.getAudioSrc() == ques.question.FullAudioUrl || audioService.audioType == "question") {
+        } else if (
+            audioService.getAudioSrc() == ques.question.FullAudioUrl ||
+            audioService.audioType == "question"
+        ) {
             if (ques.promptArray.length == 1) {
                 return "./assets/images/audio-large.png";
             } else {
@@ -578,13 +624,19 @@ export class MatchPairComponent implements OnInit, OnDestroy {
     }
 
     getResponseAudioIconUrl(audioService: AudioService, choice: any) {
-        if (audioService.getAudioSrc() != choice.FullAudioUrl || audioService.audioType != "response") {
+        if (
+            audioService.getAudioSrc() != choice.FullAudioUrl ||
+            audioService.audioType != "response"
+        ) {
             if (choice.respArray.length == 1) {
                 return "./assets/images/audio-large-mute.png";
             } else {
                 return "./assets/images/sound-mute-blue-btn.png";
             }
-        } else if (audioService.getAudioSrc() == choice.FullAudioUrl || audioService.audioType == "response") {
+        } else if (
+            audioService.getAudioSrc() == choice.FullAudioUrl ||
+            audioService.audioType == "response"
+        ) {
             if (choice.respArray.length == 1) {
                 return "./assets/images/audio-large.png";
             } else {

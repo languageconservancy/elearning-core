@@ -87,16 +87,13 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
                     this.exerciseService.question = exercise.question;
                     this.exerciseService.response = exercise.response;
                     this.exerciseService.setPromptResponseTypes();
-                    // this.exerciseService.promptTypes = exercise.question.exerciseOptions.prompt_preview_option
-                    //     ? exercise.question.exerciseOptions.prompt_preview_option.split(",").map((el) => el.trim())
-                    //     : [];
-                    // this.exerciseService.responseTypes = exercise.question.exerciseOptions.responce_preview_option
-                    //     ? exercise.question.exerciseOptions.responce_preview_option.split(",").map((el) => el.trim())
-                    //     : [];
 
                     setTimeout(() => {
                         if (this.exerciseService.promptTypes.indexOf("a") > -1) {
-                            this.audioService.playPauseAudio(this.exerciseService.question.FullAudioUrl, "prompt");
+                            this.audioService.playPauseAudio(
+                                this.exerciseService.question.FullAudioUrl,
+                                "prompt",
+                            );
                         }
                     }, 100);
                 }
@@ -110,7 +107,10 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
                 this.exerciseService.question = {};
                 this.exerciseService.firstTime = true;
                 this.audioService.pauseAudio();
-                if (this.exerciseService.exercise.exercise_type == "truefalse" && Object.keys(ques).length > 0) {
+                if (
+                    this.exerciseService.exercise.exercise_type == "truefalse" &&
+                    Object.keys(ques).length > 0
+                ) {
                     this.exerciseService.question = ques.question;
                     this.exerciseService.response = ques.response;
                     this.exerciseService.userAnswer = this.AnswerType.NONE;
@@ -119,7 +119,10 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
                     this.exerciseService.setPromptResponseTypes();
                     setTimeout(() => {
                         if (this.exerciseService.promptTypes.indexOf("a") > -1) {
-                            this.audioService.playPauseAudio(this.exerciseService.question.FullAudioUrl, "prompt");
+                            this.audioService.playPauseAudio(
+                                this.exerciseService.question.FullAudioUrl,
+                                "prompt",
+                            );
                         }
                     }, 100);
                 }
@@ -161,49 +164,64 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
         }
         if (turnOn && !this.exerciseService.exerciseCompleted) {
             // Toggle selection subscriber
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (event.shiftKey) {
-                    this.keyboardHighlightedAnswerIndex = OwoksapeUtils.decrementWrap(
-                        this.keyboardHighlightedAnswerIndex,
-                        -1,
-                        this.answerTypes.length - 1,
-                    );
-                } else {
-                    this.keyboardHighlightedAnswerIndex = OwoksapeUtils.incrementWrap(
-                        this.keyboardHighlightedAnswerIndex,
-                        -1,
-                        this.answerTypes.length - 1,
-                    );
-                }
-                this.keyboardHighlightedAnswer = this.answerTypes[this.keyboardHighlightedAnswerIndex];
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (event.shiftKey) {
+                        this.keyboardHighlightedAnswerIndex = OwoksapeUtils.decrementWrap(
+                            this.keyboardHighlightedAnswerIndex,
+                            -1,
+                            this.answerTypes.length - 1,
+                        );
+                    } else {
+                        this.keyboardHighlightedAnswerIndex = OwoksapeUtils.incrementWrap(
+                            this.keyboardHighlightedAnswerIndex,
+                            -1,
+                            this.answerTypes.length - 1,
+                        );
+                    }
+                    this.keyboardHighlightedAnswer =
+                        this.answerTypes[this.keyboardHighlightedAnswerIndex];
+                });
             // Submit selection subscriber
-            this.keyboardSubmitSelectionSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                if (this.keyboardHighlightedAnswerIndex < 0) {
-                    return;
-                }
-                this.checkAnswer(this.answerTypes[this.keyboardHighlightedAnswerIndex]);
-            });
+            this.keyboardSubmitSelectionSubscription =
+                this.keyboardService.submitOrCloseEvent.subscribe(() => {
+                    if (this.keyboardHighlightedAnswerIndex < 0) {
+                        return;
+                    }
+                    this.checkAnswer(this.answerTypes[this.keyboardHighlightedAnswerIndex]);
+                });
             // Audio playback subscriber
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (this.exerciseService.promptTypes.indexOf("a") > -1) {
-                    this.audioService.playPauseAudio(this.exerciseService.question.FullAudioUrl, "prompt");
-                } else if (this.exerciseService.responseTypes.indexOf("a") > -1) {
-                    this.audioService.playPauseAudio(this.exerciseService.response.FullAudioUrl, "response");
-                }
-            });
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (this.exerciseService.promptTypes.indexOf("a") > -1) {
+                        this.audioService.playPauseAudio(
+                            this.exerciseService.question.FullAudioUrl,
+                            "prompt",
+                        );
+                    } else if (this.exerciseService.responseTypes.indexOf("a") > -1) {
+                        this.audioService.playPauseAudio(
+                            this.exerciseService.response.FullAudioUrl,
+                            "response",
+                        );
+                    }
+                },
+            );
         } else {
-            if (!this.keyboardToggleSelectionSubscription) this.keyboardToggleSelectionSubscription.unsubscribe();
-            if (!!this.keyboardSubmitSelectionSubscription) this.keyboardSubmitSelectionSubscription.unsubscribe();
-            if (!!this.keyboardToggleMediaSubscription) this.keyboardToggleMediaSubscription.unsubscribe();
+            if (!this.keyboardToggleSelectionSubscription)
+                this.keyboardToggleSelectionSubscription.unsubscribe();
+            if (!!this.keyboardSubmitSelectionSubscription)
+                this.keyboardSubmitSelectionSubscription.unsubscribe();
+            if (!!this.keyboardToggleMediaSubscription)
+                this.keyboardToggleMediaSubscription.unsubscribe();
         }
     }
 
     private setPromptResponseTypes() {
         if (this.exerciseService.exercise.card_type == "custom") {
             if (this.exerciseService.question.PromptType == "card") {
-                this.exerciseService.promptTypes = this.exerciseService.question.exerciseOptions.prompt_preview_option
-                    ? this.exerciseService.question.exerciseOptions.prompt_preview_option
+                this.exerciseService.promptTypes = this.exerciseService.question.exerciseOptions
+                    ?.prompt_preview_option
+                    ? this.exerciseService.question.exerciseOptions?.prompt_preview_option
                           .split(",")
                           .map((el) => el.trim())
                     : [];
@@ -211,7 +229,8 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
                 this.exerciseService.promptTypes = [];
                 if (this.exerciseService.question.prompt_audio_id !== null) {
                     this.exerciseService.promptTypes.push("a");
-                    this.exerciseService.question.FullAudioUrl = this.exerciseService.question.audio.FullUrl;
+                    this.exerciseService.question.FullAudioUrl =
+                        this.exerciseService.question.audio.FullUrl;
                 }
 
                 if (this.exerciseService.question.prompt_image_id !== null) {
@@ -226,7 +245,7 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
             if (this.exerciseService.response.ResponseType == "card") {
                 this.exerciseService.responseTypes = this.exerciseService.response.exerciseOptions
                     .responce_preview_option
-                    ? this.exerciseService.response.exerciseOptions.responce_preview_option
+                    ? this.exerciseService.response.exerciseOptions?.responce_preview_option
                           .split(",")
                           .map((el) => el.trim())
                     : [];
@@ -234,7 +253,8 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
                 this.exerciseService.responseTypes = [];
                 if (this.exerciseService.response.response_audio_id !== null) {
                     this.exerciseService.responseTypes.push("a");
-                    this.exerciseService.response.FullAudioUrl = this.exerciseService.response.audio.FullUrl;
+                    this.exerciseService.response.FullAudioUrl =
+                        this.exerciseService.response.audio.FullUrl;
                 }
 
                 if (this.exerciseService.response.response_image_id !== null) {
@@ -242,11 +262,15 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
                 }
             }
         } else {
-            this.exerciseService.promptTypes = this.exerciseService.question.exerciseOptions.prompt_preview_option
-                ? this.exerciseService.question.exerciseOptions.prompt_preview_option.split(",").map((el) => el.trim())
+            this.exerciseService.promptTypes = this.exerciseService.question.exerciseOptions
+                .prompt_preview_option
+                ? this.exerciseService.question.exerciseOptions?.prompt_preview_option
+                      .split(",")
+                      .map((el) => el.trim())
                 : [];
-            this.exerciseService.responseTypes = this.exerciseService.question.exerciseOptions.responce_preview_option
-                ? this.exerciseService.question.exerciseOptions.responce_preview_option
+            this.exerciseService.responseTypes = this.exerciseService.question.exerciseOptions
+                .responce_preview_option
+                ? this.exerciseService.question.exerciseOptions?.responce_preview_option
                       .split(",")
                       .map((el) => el.trim())
                 : [];
@@ -274,10 +298,16 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
         this.setKeyboardListeners(false);
         this.mychoice = choice;
         if (this.exerciseService.firstTime) {
-            this.setCorrectAnswer(this.exerciseService.question.exerciseOptions.response_true_false, choice);
+            this.setCorrectAnswer(
+                this.exerciseService.question.exerciseOptions?.response_true_false,
+                choice,
+            );
             if (this.exerciseService.userAnswer == this.AnswerType.CORRECT) {
                 if (this.exerciseService.responseTypes.indexOf("a") > -1) {
-                    this.audioService.playPauseAudio(this.exerciseService.response.FullAudioUrl, "response");
+                    this.audioService.playPauseAudio(
+                        this.exerciseService.response.FullAudioUrl,
+                        "response",
+                    );
                 }
             } else {
                 this.wrongAnswer();
@@ -293,14 +323,15 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
                     : this.exerciseService.question.id;
             params.activity_type = this.sessionType;
             params.user_id = this.exerciseService.user.id;
-            params.answar_type = this.exerciseService.userAnswer == this.AnswerType.CORRECT ? "right" : "wrong";
+            params.answar_type =
+                this.exerciseService.userAnswer == this.AnswerType.CORRECT ? "right" : "wrong";
             params.experiencecard_ids = this.exerciseService.cardIdArray.join();
             params.popup_status = true;
 
             if (this.sessionType == "exercise") {
                 params.exercise_id = this.exerciseService.exercise.id;
                 if (!!this.exerciseService.question.exerciseOptions?.id) {
-                    params.exercise_option_id = this.exerciseService.question.exerciseOptions.id;
+                    params.exercise_option_id = this.exerciseService.question.exerciseOptions?.id;
                 } else if (!!this.exerciseService.question.exercise_option_id) {
                     params.exercise_option_id = this.exerciseService.question.exercise_option_id;
                 } else {
@@ -333,13 +364,13 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
 
         if (this.exerciseService.exercise.card_type !== "custom") {
             if (
-                this.exerciseService.question.exerciseOptions.type == "card" ||
-                this.exerciseService.question.exerciseOptions.type == "group"
+                this.exerciseService.question.exerciseOptions?.type == "card" ||
+                this.exerciseService.question.exerciseOptions?.type == "group"
             ) {
                 wrongArray.push(this.exerciseService.question);
             }
             if (this.exerciseService.response.id != this.exerciseService.question.id) {
-                if (this.exerciseService.response.exerciseOptions.type == "card") {
+                if (this.exerciseService.response.exerciseOptions?.type == "card") {
                     wrongArray.push(this.exerciseService.response);
                 }
             }
@@ -362,7 +393,8 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
     }
 
     private setCorrectAnswer(response, choice) {
-        this.exerciseService.userAnswer = response == choice ? this.AnswerType.CORRECT : this.AnswerType.INCORRECT;
+        this.exerciseService.userAnswer =
+            response == choice ? this.AnswerType.CORRECT : this.AnswerType.INCORRECT;
     }
 
     goToNext() {
@@ -374,16 +406,22 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
         }
     }
 
-    getAudioIconUrl(audioService: AudioService, exerciseService: ExerciseService, audioUrl: string) {
+    getAudioIconUrl(
+        audioService: AudioService,
+        exerciseService: ExerciseService,
+        audioUrl: string,
+    ) {
         if (
             (audioService.getAudioSrc() != audioUrl || audioService.audioIsPaused()) &&
-            (exerciseService.promptTypes.length == 1 || exerciseService.promptTypes.indexOf("i") < 0)
+            (exerciseService.promptTypes.length == 1 ||
+                exerciseService.promptTypes.indexOf("i") < 0)
         ) {
             return "./assets/images/audio-large-mute.png";
         } else if (
             audioService.getAudioSrc() == audioUrl &&
             !audioService.audioIsPaused() &&
-            (exerciseService.promptTypes.length == 1 || exerciseService.promptTypes.indexOf("i") < 0)
+            (exerciseService.promptTypes.length == 1 ||
+                exerciseService.promptTypes.indexOf("i") < 0)
         ) {
             return "./assets/images/audio-large.png";
         } else if (

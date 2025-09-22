@@ -395,7 +395,7 @@ export class FillinComponent implements OnInit, OnDestroy {
         // Get raw text (e.g. "[Šúŋka] kiŋ [sá pa] s[h]e?")
         const textWithBrackets =
             this.sessionType == "exercise"
-                ? this.exerciseService.question.exerciseOptions.text_option
+                ? this.exerciseService.question.exerciseOptions?.text_option
                 : this.exerciseService.exercise.question.question;
 
         // Split at spaces, excluding spaces inside brackets,

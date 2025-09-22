@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, Input } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Input,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import * as WaveSurfer from "wavesurfer.js";
 import Microphone from "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js";
@@ -161,7 +168,10 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
 
     setUpQuestionSubscription(ques) {
         this.audioService.pauseAudio();
-        if (this.exerciseService.exercise.exercise_type == "recording" && Object.keys(ques).length > 0) {
+        if (
+            this.exerciseService.exercise.exercise_type == "recording" &&
+            Object.keys(ques).length > 0
+        ) {
             this.exerciseService.question = {};
             this.exerciseService.question = ques.question;
             this.exerciseService.response = ques.response;
@@ -194,11 +204,14 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
 
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                this.togglePlay();
-            });
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    this.togglePlay();
+                },
+            );
         } else {
-            if (!!this.keyboardToggleMediaSubscription) this.keyboardToggleMediaSubscription.unsubscribe();
+            if (!!this.keyboardToggleMediaSubscription)
+                this.keyboardToggleMediaSubscription.unsubscribe();
         }
     }
 
@@ -230,14 +243,15 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
     private setPromptResponseTypes() {
         if (this.exerciseService.exercise.card_type == "custom") {
             if (this.exerciseService.question.PromptType == "card") {
-                this.exerciseService.promptTypes = this.exerciseService.question.exerciseOptions.prompt_preview_option
-                    ? this.exerciseService.question.exerciseOptions.prompt_preview_option
+                this.exerciseService.promptTypes = this.exerciseService.question.exerciseOptions
+                    ?.prompt_preview_option
+                    ? this.exerciseService.question.exerciseOptions?.prompt_preview_option
                           .split(",")
                           .map((el) => el.trim())
                     : [];
                 this.exerciseService.responseTypes = this.exerciseService.question.exerciseOptions
-                    .responce_preview_option
-                    ? this.exerciseService.question.exerciseOptions.responce_preview_option
+                    ?.responce_preview_option
+                    ? this.exerciseService.question.exerciseOptions?.responce_preview_option
                           .split(",")
                           .map((el) => el.trim())
                     : [];
@@ -245,7 +259,8 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.exerciseService.promptTypes = [];
                 if (this.exerciseService.question.prompt_audio_id !== null) {
                     this.exerciseService.promptTypes.push("a");
-                    this.exerciseService.question.FullAudioUrl = this.exerciseService.question.audio.FullUrl;
+                    this.exerciseService.question.FullAudioUrl =
+                        this.exerciseService.question.audio.FullUrl;
                 }
 
                 if (this.exerciseService.question.prompt_image_id !== null) {
@@ -253,11 +268,15 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
         } else {
-            this.exerciseService.promptTypes = this.exerciseService.question.exerciseOptions.prompt_preview_option
-                ? this.exerciseService.question.exerciseOptions.prompt_preview_option.split(",").map((el) => el.trim())
+            this.exerciseService.promptTypes = this.exerciseService.question.exerciseOptions
+                ?.prompt_preview_option
+                ? this.exerciseService.question.exerciseOptions?.prompt_preview_option
+                      .split(",")
+                      .map((el) => el.trim())
                 : [];
-            this.exerciseService.responseTypes = this.exerciseService.question.exerciseOptions.responce_preview_option
-                ? this.exerciseService.question.exerciseOptions.responce_preview_option
+            this.exerciseService.responseTypes = this.exerciseService.question.exerciseOptions
+                ?.responce_preview_option
+                ? this.exerciseService.question.exerciseOptions?.responce_preview_option
                       .split(",")
                       .map((el) => el.trim())
                 : [];
@@ -265,7 +284,11 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private getRandomString() {
-        if (window.crypto && window.crypto.getRandomValues && navigator.userAgent.indexOf("Safari") === -1) {
+        if (
+            window.crypto &&
+            window.crypto.getRandomValues &&
+            navigator.userAgent.indexOf("Safari") === -1
+        ) {
             const uIntArray = new Uint32Array(3);
             const a = window.crypto.getRandomValues(uIntArray);
             let token = "";
@@ -302,8 +325,8 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         } else {
             if (
-                this.exerciseService.question.exerciseOptions.type == "card" ||
-                this.exerciseService.question.exerciseOptions.type == "group"
+                this.exerciseService.question.exerciseOptions?.type == "card" ||
+                this.exerciseService.question.exerciseOptions?.type == "group"
             ) {
                 if (this.cardIdArray.indexOf(this.exerciseService.question.id) == -1) {
                     this.cardIdArray.push(this.exerciseService.question.id);
@@ -311,8 +334,8 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             if (
-                this.exerciseService.response.exerciseOptions.type == "card" ||
-                this.exerciseService.response.exerciseOptions.type == "group"
+                this.exerciseService.response.exerciseOptions?.type == "card" ||
+                this.exerciseService.response.exerciseOptions?.type == "group"
             ) {
                 if (this.cardIdArray.indexOf(this.exerciseService.response.id) == -1) {
                     this.cardIdArray.push(this.exerciseService.response.id);
@@ -334,7 +357,7 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
 
     submit() {
         if (
-            this.exerciseService.response.exerciseOptions.response_true_false == "N" &&
+            this.exerciseService.response.exerciseOptions?.response_true_false == "N" &&
             this.exerciseService.response.FullAudioUrl
         ) {
             this.audioService.playPauseAudio(this.exerciseService.response.FullAudioUrl);

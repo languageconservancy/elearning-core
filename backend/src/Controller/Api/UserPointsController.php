@@ -497,12 +497,12 @@ class UserPointsController extends AppController
             $UserActivitiesCount = $this->getUserActivitiesTable()
                 ->find()
                 ->where([
-                    'user_id' => $userId,
-                    'exercise_id' => $exerciseId,
-                    'unit_id' => $unitId,
-                    'level_id' => $levelId,
-                    'card_id' => $cardId,
-                    'user_unit_activity_id' => $UserUnitActivity])
+                    'user_id IS' => $userId,
+                    'exercise_id IS' => $exerciseId,
+                    'unit_id IS' => $unitId,
+                    'level_id IS' => $levelId,
+                    'card_id IS' => $cardId,
+                    'user_unit_activity_id IS' => $UserUnitActivity])
                 ->count();
         }
         return $UserActivitiesCount;

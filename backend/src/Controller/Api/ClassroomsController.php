@@ -410,6 +410,18 @@ class ClassroomsController extends AppController
             ->where(['level_id' => $levelId]);
 
         foreach ($levelUnitIds as $levelUnitId) {
+            // Check for existing record first
+            $existingClassroomLevelUnit = $this->getClassroomLevelUnitsTable()
+                ->find()
+                ->where([
+                    'classroom_id' => $classroomId,
+                    'level_units_id' => $levelUnitId->id
+                ])
+                ->first();
+            if ($existingClassroomLevelUnit) {
+                continue; // skip if unit already exists in this classroom level
+            }
+
             $classroomLevelUnitsEntity = $this->getClassroomLevelUnitsTable()->newEmptyEntity();
             $classroomLevelUnitsParams = [
                 'level_units_id' => $levelUnitId->id,
@@ -600,23 +612,25 @@ class ClassroomsController extends AppController
             // Get level ID, which is same for all units in the level
             $levelId = $requestData['level_id'];
             $levelUnits = $params['level_units'];
-            $levelUnitIds = array_column($levelUnits, 'id');
+            // array_filter removes empty/null values from the array to avoid errors
+            $levelUnitIds = array_filter(array_column($levelUnits, 'id'));
             $levelBelongsToAClassroom = !empty($params['classrooms']);
             $classroomIds = [];
 
             // Add learning path ID to each unit for proper saving
             foreach ($params['level_units'] as &$levelUnit) {
-                if (is_null($levelUnit['learningpath_id'])) {
+                if (!isset($levelUnit['learningpath_id']) || is_null($levelUnit['learningpath_id'])) {
                     $levelUnit['learningpath_id'] = Configure::read('CLASSROOMPATHID');
                 }
             }
 
             // Delete classroom level units that are no longer in the teacher's level units
             if ($levelBelongsToAClassroom) {
-                $classroomIds = array_column($params['classrooms'], 'id');
+                // array_filter removes empty/null values from the array to avoid errors
+                $classroomIds = array_filter(array_column($params['classrooms'], 'id'));
                 if (!empty($classroomIds)) {
                     if (empty($levelUnitIds)) {
-                        $this->getClassroomLevelUnitsTable()->deleteAll(['classroom_id IN' => $paramClassroomIds]);
+                        $this->getClassroomLevelUnitsTable()->deleteAll(['classroom_id IN' => $classroomIds]);
                     } else {
                         $this->getClassroomLevelUnitsTable()->deleteAll([
                             'classroom_id IN' => $classroomIds,
@@ -668,24 +682,33 @@ class ClassroomsController extends AppController
         }
     }
 
+    /**
+     * Update classroom units, which are linked in the classroom_level_units table
+     * @param int $levelId - Classroom ID, which is same as level ID
+     * @param array $paramClassroomIds - Classroom IDs
+     * @param array $paramLevelUnitIds - Level unit IDs
+     * @return void
+     */
     private function updateClassroomLevelUnits($levelId, $paramClassroomIds, $paramLevelUnitIds)
     {
-        $existingClassroomLevelUnitIds = $this->getClassroomLevelUnitsTable()
-            ->find()
-            ->select('level_units_id')
-            ->distinct('level_units_id')
-            ->where(['classroom_id IN' => $paramClassroomIds]);
-
         $newLevelUnitsIds = $this->getLevelUnitsTable()
             ->find()
             ->select('id')
-            ->where([
-                'level_id' => $levelId,
-                'id NOT IN' => $existingClassroomLevelUnitIds
-            ]);
+            ->where(['level_id' => $levelId]);
 
         foreach ($newLevelUnitsIds as $newLevelUnitsId) {
             foreach ($paramClassroomIds as $paramClassroomId) {
+                // Check for existing record per classroom
+                $existingClassroomLevelUnit = $this->getClassroomLevelUnitsTable()
+                    ->find()
+                    ->where([
+                        'classroom_id' => $paramClassroomId,
+                        'level_units_id' => $newLevelUnitsId->id
+                    ])
+                    ->first();
+                if ($existingClassroomLevelUnit) {
+                    continue; // skip if unit already exists in this classroom level
+                }
                 $classroomLevelUnitsEntity = $this->getClassroomLevelUnitsTable()->newEmptyEntity();
                 $classroomLevelUnitsParams = [
                     'classroom_id' => $paramClassroomId,

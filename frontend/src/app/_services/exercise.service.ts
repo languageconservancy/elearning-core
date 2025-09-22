@@ -73,8 +73,8 @@ export class ExerciseService {
     }
 
     private setPromptTypesFromExerciseOptionsOrExercise() {
-        this.promptTypes = this.question.exerciseOptions.prompt_preview_option
-            ? this.question.exerciseOptions.prompt_preview_option
+        this.promptTypes = this.question.exerciseOptions?.prompt_preview_option
+            ? this.question.exerciseOptions?.prompt_preview_option
                   .split(",")
                   .map((el: string) => el.trim())
             : [];
@@ -87,8 +87,8 @@ export class ExerciseService {
         if (!this.response.exerciseOptions?.responce_preview_option) {
             return;
         }
-        this.responseTypes = this.response.exerciseOptions.responce_preview_option
-            ? this.response.exerciseOptions.responce_preview_option
+        this.responseTypes = this.response.exerciseOptions?.responce_preview_option
+            ? this.response.exerciseOptions?.responce_preview_option
                   .split(",")
                   .map((el: string) => el.trim())
             : [];
@@ -176,8 +176,8 @@ export class ExerciseService {
             }
         } else {
             if (
-                this.question.exerciseOptions.type == "card" ||
-                this.question.exerciseOptions.type == "group"
+                this.question.exerciseOptions?.type == "card" ||
+                this.question.exerciseOptions?.type == "group"
             ) {
                 if (this.cardIdArray.indexOf(this.question.id) == -1) {
                     this.cardIdArray.push(this.question.id);
@@ -186,7 +186,7 @@ export class ExerciseService {
 
             if (
                 !!this.response &&
-                ["card", "group"].indexOf(this.response.exerciseOptions.type) >= 0
+                ["card", "group"].indexOf(this.response.exerciseOptions?.type) >= 0
             ) {
                 if (this.cardIdArray.indexOf(this.response.id) == -1) {
                     this.cardIdArray.push(this.response.id);

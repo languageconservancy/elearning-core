@@ -1,7 +1,21 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    ElementRef,
+    Input,
+    Output,
+    EventEmitter,
+} from "@angular/core";
 import { environment } from "environments/environment";
 import { Settings } from "app/_constants/app.constants";
-import { Answer, Unit, Question, QuestionQuestion, Exercise } from "app/pages/learning/unit/unit.component";
+import {
+    Answer,
+    Unit,
+    Question,
+    QuestionQuestion,
+    Exercise,
+} from "app/pages/learning/unit/unit.component";
 
 export enum ActivityState {
     NotAttempted = "Not Attempted",
@@ -80,8 +94,13 @@ export class UnitProgressNavComponent implements OnInit {
 
     activityPressed(activityType: string, activityIdx: number) {
         // Validate the activity index
-        if ((activityIdx < 0 && activityType !== "review") || activityIdx >= this.activities.length) {
-            throw new Error("Invalid activity index " + activityIdx + " for activity type " + activityType);
+        if (
+            (activityIdx < 0 && activityType !== "review") ||
+            activityIdx >= this.activities.length
+        ) {
+            throw new Error(
+                "Invalid activity index " + activityIdx + " for activity type " + activityType,
+            );
         }
 
         // Validate the activity type
@@ -90,7 +109,10 @@ export class UnitProgressNavComponent implements OnInit {
         }
 
         // Don't allow pressing on the current activity to trigger an event
-        if (["lesson", "exercise"].indexOf(activityType) >= 0 && activityIdx !== this.currentActivityIdx) {
+        if (
+            ["lesson", "exercise"].indexOf(activityType) >= 0 &&
+            activityIdx !== this.currentActivityIdx
+        ) {
             if (this.activities[this.currentActivityIdx].state === ActivityState.NotAttempted) {
                 this.setActivityState(this.currentActivityIdx, ActivityState.Attemptable);
             }
@@ -135,7 +157,8 @@ export class UnitProgressNavComponent implements OnInit {
             this.activities.push(JSON.parse(JSON.stringify(progressActivity)));
         }
         this.initExerciseBlocks();
-        if (this.debug) console.debug("Unit previously completed: " + this.unitCompleteOrPreviouslyCompleted);
+        if (this.debug)
+            console.debug("Unit previously completed: " + this.unitCompleteOrPreviouslyCompleted);
     }
 
     initExerciseBlocks() {
@@ -168,7 +191,9 @@ export class UnitProgressNavComponent implements OnInit {
             const existingExerciseOptionId: number = parseInt(existingExerciseOptionIdStr);
             if (
                 !exercise.questions.some((q: Question) => {
-                    const exerciseOptionId: number = this.getExerciseOptionIdFromQuestion(q.question);
+                    const exerciseOptionId: number = this.getExerciseOptionIdFromQuestion(
+                        q.question,
+                    );
                     return exerciseOptionId == existingExerciseOptionId;
                 })
             ) {
@@ -187,7 +212,9 @@ export class UnitProgressNavComponent implements OnInit {
         this.removeQuestionsFromProgressActivity(activityIdx, exercise);
         // add new questions to progress activity if they don't exist
         for (const question of exercise.questions) {
-            const exerciseOptionId: number = this.getExerciseOptionIdFromQuestion(question.question);
+            const exerciseOptionId: number = this.getExerciseOptionIdFromQuestion(
+                question.question,
+            );
             if (exerciseOptionId !== undefined) {
                 if (!this.activities[activityIdx].exerciseQuestions[exerciseOptionId]) {
                     this.activities[activityIdx].exerciseQuestions[exerciseOptionId] = {
@@ -203,12 +230,19 @@ export class UnitProgressNavComponent implements OnInit {
         // set the exercise type for the activity
         this.activities[activityIdx].exerciseType = exercise.exercise_type;
         if (this.debug) {
-            console.debug("Added questions to progress activity: ", this.activities[activityIdx].exerciseQuestions);
+            console.debug(
+                "Added questions to progress activity: ",
+                this.activities[activityIdx].exerciseQuestions,
+            );
         }
     }
 
     numExercisesInBlock(): number {
-        return this.getLastExerciseIndexInCurrentBlock() - this.getFirstExerciseIndexInCurrentBlock() + 1;
+        return (
+            this.getLastExerciseIndexInCurrentBlock() -
+            this.getFirstExerciseIndexInCurrentBlock() +
+            1
+        );
     }
 
     /**
@@ -281,14 +315,18 @@ export class UnitProgressNavComponent implements OnInit {
      */
     updateQuestionState(answer: Answer) {
         if (this.currentActivityType() !== "exercise") {
-            throw new Error("[updateQuestion] Invalid activity type: " + this.currentActivityType());
+            throw new Error(
+                "[updateQuestion] Invalid activity type: " + this.currentActivityType(),
+            );
         }
         // Increment number of attempts for the question
-        this.activities[this.currentActivityIdx].exerciseQuestions[answer.exercise_option_id].numAttempts++;
+        this.activities[this.currentActivityIdx].exerciseQuestions[answer.exercise_option_id]
+            .numAttempts++;
         // Set whether the question was answered correctly
         if (!this.allActivitiesCompleted) {
-            this.activities[this.currentActivityIdx].exerciseQuestions[answer.exercise_option_id].correct =
-                answer.answar_type === "right";
+            this.activities[this.currentActivityIdx].exerciseQuestions[
+                answer.exercise_option_id
+            ].correct = answer.answar_type === "right";
         }
     }
 
@@ -322,15 +360,17 @@ export class UnitProgressNavComponent implements OnInit {
     }
 
     getMatchThePairQuestionIndexFromAnswer(answer: Answer): number {
-        return this.unit.activities[this.currentActivityIdx].exercise.questions.findIndex((q: Question) => {
-            const questionExerciseOptionId = this.getExerciseOptionIdFromQuestion(q.question);
-            return questionExerciseOptionId == answer.exercise_option_id;
-        });
+        return this.unit.activities[this.currentActivityIdx].exercise.questions.findIndex(
+            (q: Question) => {
+                const questionExerciseOptionId = this.getExerciseOptionIdFromQuestion(q.question);
+                return questionExerciseOptionId == answer.exercise_option_id;
+            },
+        );
     }
 
     getExerciseOptionIdFromQuestion(qQuestion: QuestionQuestion): number | undefined {
         if (!!qQuestion.exerciseOptions) {
-            return qQuestion.exerciseOptions.id;
+            return qQuestion.exerciseOptions?.id;
         } else if (!!qQuestion.exercise_option_id) {
             return qQuestion.exercise_option_id;
         }
@@ -344,7 +384,9 @@ export class UnitProgressNavComponent implements OnInit {
 
     updateLessonFrameState() {
         if (this.currentActivityType() !== "lesson") {
-            throw new Error("[updateLessonFrame] Invalid activity type: " + this.currentActivityType());
+            throw new Error(
+                "[updateLessonFrame] Invalid activity type: " + this.currentActivityType(),
+            );
         }
         // update current lesson frame as done
         // this.activities[this.currentActivityIdx]
@@ -357,7 +399,9 @@ export class UnitProgressNavComponent implements OnInit {
             return;
         }
         if (this.currentActivityType() !== "exercise") {
-            throw new Error("[updateExercise] Invalid activity type: " + this.currentActivityType());
+            throw new Error(
+                "[updateExercise] Invalid activity type: " + this.currentActivityType(),
+            );
         }
         if (this.activities[this.currentActivityIdx].state === ActivityState.CompletedCorrectly) {
             // if exercise is already completed correctly, don't worry if they got it wrong this time
@@ -370,7 +414,8 @@ export class UnitProgressNavComponent implements OnInit {
             this.setActivityState(this.currentActivityIdx, ActivityState.CompletedCorrectly);
         } else if (
             progressQuestionsArr.every(
-                (q: ProgressQuestion) => q.numAttempts >= Settings.REQUIRED_NUM_INCORRECT_ATTEMPTS_TO_COMPLETE_QUESTION,
+                (q: ProgressQuestion) =>
+                    q.numAttempts >= Settings.REQUIRED_NUM_INCORRECT_ATTEMPTS_TO_COMPLETE_QUESTION,
             )
         ) {
             this.setActivityState(this.currentActivityIdx, ActivityState.CompletedIncorrectly);
@@ -465,7 +510,8 @@ export class UnitProgressNavComponent implements OnInit {
             for (let j = 0; j < exerciseQuestions.length; j++) {
                 const question = exerciseQuestions[j];
                 if (
-                    question.numAttempts < Settings.REQUIRED_NUM_INCORRECT_ATTEMPTS_TO_COMPLETE_QUESTION &&
+                    question.numAttempts <
+                        Settings.REQUIRED_NUM_INCORRECT_ATTEMPTS_TO_COMPLETE_QUESTION &&
                     !question.correct
                 ) {
                     return i;
@@ -481,8 +527,9 @@ export class UnitProgressNavComponent implements OnInit {
         // start from the beginning of the block to ensure no previous questions
         // are missed.
         return (
-            this.getNextIncompleteExerciseAndQuestionIndex(this.getLastExerciseIndexInCurrentBlock()) ??
-            this.getFirstIncompleteExerciseAndQuestionIndexInBlock()
+            this.getNextIncompleteExerciseAndQuestionIndex(
+                this.getLastExerciseIndexInCurrentBlock(),
+            ) ?? this.getFirstIncompleteExerciseAndQuestionIndexInBlock()
         );
     }
 
@@ -504,7 +551,10 @@ export class UnitProgressNavComponent implements OnInit {
                 continue;
             }
 
-            if (i === this.currentActivityIdx && this.activities[i].exerciseType === "match-the-pair") {
+            if (
+                i === this.currentActivityIdx &&
+                this.activities[i].exerciseType === "match-the-pair"
+            ) {
                 // skip if match-the-pair exercise, since we never advance questions with this type
                 continue;
             }
@@ -530,7 +580,8 @@ export class UnitProgressNavComponent implements OnInit {
             for (let j = startingQuestionIdx; j < exerciseQuestions.length; j++) {
                 const question = exerciseQuestions[j];
                 if (
-                    question.numAttempts < Settings.REQUIRED_NUM_INCORRECT_ATTEMPTS_TO_COMPLETE_QUESTION &&
+                    question.numAttempts <
+                        Settings.REQUIRED_NUM_INCORRECT_ATTEMPTS_TO_COMPLETE_QUESTION &&
                     !question.correct
                 ) {
                     return i;
@@ -700,14 +751,20 @@ export class UnitProgressNavComponent implements OnInit {
             currentActivityEl = this.getCurrentVerticalActivityElement();
         } while (!this.progressNavContainerVertEl?.nativeElement || !currentActivityEl);
 
-        this.scrollChildToCenterVertically(this.progressNavContainerVertEl.nativeElement, currentActivityEl);
+        this.scrollChildToCenterVertically(
+            this.progressNavContainerVertEl.nativeElement,
+            currentActivityEl,
+        );
 
         do {
             await this.delay(100);
             currentActivityEl = this.getCurrentHorizontalActivityElement();
         } while (!this.progressNavContainerHorizEl?.nativeElement || !currentActivityEl);
 
-        this.scrollChildToCenterHorizontally(this.progressNavContainerHorizEl.nativeElement, currentActivityEl);
+        this.scrollChildToCenterHorizontally(
+            this.progressNavContainerHorizEl.nativeElement,
+            currentActivityEl,
+        );
     }
 
     scrollChildToCenterVertically(parent: HTMLElement, child: HTMLElement) {
@@ -765,7 +822,8 @@ export class UnitProgressNavComponent implements OnInit {
         const attemptableActivities = this.activities.filter(
             (activity) => activity.state !== ActivityState.NotAttempted,
         );
-        const addOne = this.activities[this.currentActivityIdx]?.state === ActivityState.NotAttempted;
+        const addOne =
+            this.activities[this.currentActivityIdx]?.state === ActivityState.NotAttempted;
         return Math.max(0, attemptableActivities.length - 1 + (addOne ? 1 : 0));
     }
 }

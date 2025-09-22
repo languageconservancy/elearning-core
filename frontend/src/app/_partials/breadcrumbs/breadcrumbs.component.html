@@ -1,0 +1,14 @@
+<div class="breadcumb pt-1" *ngIf="breadcrumbs.length > 0 && showBreadcrumb">
+    <div class="breadcumb-link" *ngFor="let breadcrumb of breadcrumbs; let i = index">
+        <a
+            *ngIf="breadcrumb?.name !== ''"
+            id="breadcumb-link-{{ i }}"
+            href="javascript:void(0)"
+            [ngClass]="{ active: router?.routerState?.snapshot?.url === breadcrumb.url }"
+            (click)="onBreadcrumbClick(breadcrumb)"
+        >
+            {{ breadcrumb?.name }}
+        </a>
+        <span *ngIf="breadcrumb?.name !== ''" class="breadcumb-slash">/</span>
+    </div>
+</div>

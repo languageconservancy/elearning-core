@@ -10,6 +10,7 @@ import { LocalStorageService } from "app/_services/local-storage.service";
 import { SettingsService } from "app/_services/settings.service";
 import { ReviewService } from "app/_services/review.service";
 import { RegionPolicyService } from "app/_services/region-policy.service";
+import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-levels",
@@ -41,6 +42,7 @@ export class LevelsComponent implements OnInit, OnDestroy {
         private reviewService: ReviewService,
         private learningPathService: LearningPathService,
         public regionPolicyService: RegionPolicyService,
+        private breadcrumbsService: BreadcrumbsService,
     ) {
         this.cookieService
             .get("AuthToken")
@@ -53,7 +55,9 @@ export class LevelsComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.levelSubscription = this.lessonService.currentLevel.subscribe((level) => (this.selectedLevel = level));
+        this.levelSubscription = this.lessonService.currentLevel.subscribe(
+            (level) => (this.selectedLevel = level),
+        );
 
         if (this.localStorage.getItem("LevelID")) {
             this.selectedLevel = parseInt(this.localStorage.getItem("LevelID"));
@@ -103,7 +107,9 @@ export class LevelsComponent implements OnInit, OnDestroy {
     }
 
     private setFireImage() {
-        this.fireImage = this.learningPathService.getFireTypeFromStreak(this.fireData.FireData.fire_days);
+        this.fireImage = this.learningPathService.getFireTypeFromStreak(
+            this.fireData.FireData.fire_days,
+        );
     }
 
     getReviewImageUrl(fireImage: string, noReviews: boolean = false) {
@@ -173,7 +179,10 @@ export class LevelsComponent implements OnInit, OnDestroy {
                     this.path = response.data.results;
                     if (this.path.levels.length > 0) {
                         this.noLevel = false;
-                        if (!this.localStorage.getItem("LevelID") || !this.setLevelFromLocalStorage()) {
+                        if (
+                            !this.localStorage.getItem("LevelID") ||
+                            !this.setLevelFromLocalStorage()
+                        ) {
                             //set the last unlocked level to selected
                             this.path.levels.forEach((level) => {
                                 this.allLevels.push(level);
@@ -199,22 +208,8 @@ export class LevelsComponent implements OnInit, OnDestroy {
             });
     }
 
-    setActiveLevel(level) {
-        /*** breadcrumb code star***/
-        const breadcrumb = [
-            {
-                Name: this.user.learningpath.label,
-                URL: "/dashboard",
-            },
-            {
-                ID: level.id,
-                Name: level.name,
-                URL: "/start-learning",
-            },
-        ];
-        // this.localStorage.setItem('breadcrumb', JSON.stringify(breadcrumb));
-        this.reviewService.setBreadcrumb(breadcrumb);
-        /*** breadcrumb code end***/
+    setActiveLevel(level: any) {
+        this.breadcrumbsService.setLevelBreadcrumbs(this.path.label || "", level.name);
 
         this.localStorage.setItem("LevelID", level.id);
         this.localStorage.removeItem("unitID");
@@ -331,26 +326,18 @@ export class LevelsComponent implements OnInit, OnDestroy {
     }
 
     goToVillage() {
-        this.learningPathService.goToVillage(this.user.learningpath_id, this.user.id, this.currentLevel.id);
+        this.learningPathService.goToVillage(
+            this.user.learningpath_id,
+            this.user.id,
+            this.currentLevel.id,
+        );
     }
 
     goToReview() {
-        const breadcrumb = [
-            {
-                Name: this.user.learningpath.label,
-                URL: "/dashboard",
-            },
-            {
-                ID: this.currentLevel.id,
-                Name: this.currentLevel.name,
-                URL: "/start-learning",
-            },
-            {
-                Name: "Review",
-                URL: "/review",
-            },
-        ];
-        this.reviewService.setBreadcrumb(breadcrumb);
+        this.breadcrumbsService.setLevelReviewBreadcrumbs(
+            this.path.label || "",
+            this.currentLevel.name,
+        );
         void this.router.navigate(["/review"]);
     }
 }

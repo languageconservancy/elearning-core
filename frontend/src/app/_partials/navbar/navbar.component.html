@@ -1,9 +1,12 @@
 <nav #mainDiv class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
         <!-- Site name -->
-        <a class="navbar-brand header-font-size icon-logo" href="javascript:void(0)" [routerLink]="Routes.StartLearning">{{
-            environment.SITE_NAME.toLowerCase()
-        }}</a>
+        <a
+            class="navbar-brand header-font-size icon-logo"
+            href="javascript:void(0)"
+            [routerLink]="Routes.StartLearning"
+            >{{ environment.SITE_NAME.toLowerCase() }}</a
+        >
         <!-- Hamburger button -->
         <button
             class="navbar-toggler navbar-toggler-right"
@@ -23,7 +26,10 @@
             data-toggle="collapse"
             data-target=".collapse"
         >
-            <ul class="navbar-nav ml-auto align-items-center" *ngIf="loggedIn && user.agreements_accepted">
+            <ul
+                class="navbar-nav ml-auto align-items-center"
+                *ngIf="loggedIn && user.agreements_accepted"
+            >
                 <li class="nav-item left-menu">
                     <a
                         id="nav-learn-btn"
@@ -40,7 +46,7 @@
                         class="nav-link mr-1"
                         [ngClass]="{ active: currentRoute === Routes.Review }"
                         href="javascript:void(0)"
-                        (click)="gotoUrlOther('review')"
+                        (click)="gotoUrlOther(Routes.Review)"
                         >Review</a
                     >
                 </li>
@@ -54,8 +60,7 @@
                         >Progress</a
                     >
                 </li>
-                <li class="nav-item left-menu"
-                    *ngIf="canAccessLeaderboard()">
+                <li class="nav-item left-menu" *ngIf="canAccessLeaderboard()">
                     <a
                         id="nav-leaderboard-btn"
                         class="nav-link mr-1"
@@ -65,8 +70,10 @@
                         >Leaderboard</a
                     >
                 </li>
-                <li class="nav-item left-menu"
-                    *ngIf="features?.feature_village === '1' && canAccessVillage()">
+                <li
+                    class="nav-item left-menu"
+                    *ngIf="features?.feature_village === '1' && canAccessVillage()"
+                >
                     <a
                         id="nav-village-btn"
                         class="nav-link mr-1"
@@ -76,7 +83,13 @@
                         >Village</a
                     >
                 </li>
-                <li class="nav-item left-menu d-none d-lg-block" *ngIf="user.role_id === platformRolesService.getRoleId('Teacher') || user.role_id === platformRolesService.getRoleId('Admin')">
+                <li
+                    class="nav-item left-menu d-none d-lg-block"
+                    *ngIf="
+                        user.role_id === platformRolesService.getRoleId('Teacher') ||
+                        user.role_id === platformRolesService.getRoleId('Admin')
+                    "
+                >
                     <a
                         id="nav-teachers-btn"
                         class="nav-link mr-1"
@@ -85,7 +98,7 @@
                             active:
                                 currentRoute === Routes.TeacherDashboard ||
                                 currentRoute === Routes.TeacherLessons ||
-                                currentRoute === Routes.TeacherClassrooms
+                                currentRoute === Routes.TeacherClassrooms,
                         }"
                         [routerLink]="Routes.TeacherDashboard"
                         >Teachers</a
@@ -104,12 +117,20 @@
             </ul>
             <ul class="navbar-nav ml-auto align-items-center">
                 <li class="nav-item d-none d-lg-block">
-                    <a *ngIf="!loggedIn && showSignUpBtns" class="nav-link right-menu mr-4" [routerLink]="Routes.Register"
-                    >Sign up</a>
+                    <a
+                        *ngIf="!loggedIn && showSignUpBtns"
+                        class="nav-link right-menu mr-4"
+                        [routerLink]="Routes.Register"
+                        >Sign up</a
+                    >
                 </li>
                 <li class="nav-item d-none d-lg-block">
-                    <a *ngIf="!loggedIn && showSignIn" class="nav-link right-menu mr-4" [routerLink]="Routes.Login"
-                    >Sign in</a>
+                    <a
+                        *ngIf="!loggedIn && showSignIn"
+                        class="nav-link right-menu mr-4"
+                        [routerLink]="Routes.Login"
+                        >Sign in</a
+                    >
                 </li>
                 <li class="nav-item dropdown bg-transparent mt-0 pt-0">
                     <div *ngIf="loggedIn" class="h-divider d-block d-lg-none bg-white mt-2"></div>

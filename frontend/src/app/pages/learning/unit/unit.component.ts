@@ -13,6 +13,7 @@ import { UnitProgressNavComponent } from "app/_partials/unit-progress-nav/unit-p
 import { environment } from "environments/environment";
 import { Throttle } from "app/_decorators/throttle.decorator";
 import { AudioService } from "app/_services/audio.service";
+import { BreadcrumbsService, BreadcrumbType, Breadcrumb } from "app/_services/breadcrumbs.service";
 
 /**
  * Queue of events to be processed in order.
@@ -753,10 +754,11 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
         private reviewService: ReviewService,
         private router: Router,
         private audioService: AudioService,
+        private breadcrumbsService: BreadcrumbsService,
     ) {}
 
     ngOnInit(): void {
-        this.processBreaadcrumbFromLocalStorage();
+        this.processBreadcrumbsFromLocalStorage();
         this.subscribeToLevelIdAndName();
         this.subscribeToUnitIdAndName();
         this.subscribeToPopupClosedEvents();
@@ -1123,21 +1125,43 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    processBreaadcrumbFromLocalStorage() {
-        const breadcrumb = localStorage.getItem("breadcrumb");
-        let params: any = [];
-        if (!breadcrumb) {
-            this.reviewService.setBreadcrumb([]);
+    processBreadcrumbsFromLocalStorage() {
+        const isClassroom: string | null = localStorage.getItem("isClassroom");
+        const breadcrumbsStr = localStorage.getItem("breadcrumb");
+
+        if (isClassroom) {
+            this.level.isClassroom = parseInt(isClassroom) === 1;
         } else {
-            params = JSON.parse(breadcrumb);
-            if (params[3]?.URL === "/review") {
-                params.splice(3, 1);
-            }
-            const isClassroom: string | null = localStorage.getItem("isClassroom");
-            if (isClassroom) {
-                this.level.isClassroom = parseInt(isClassroom) === 1;
-            }
-            this.reviewService.setBreadcrumb(params);
+            this.level.isClassroom = false;
+        }
+
+        let breadcrumbs: Breadcrumb[] = JSON.parse(breadcrumbsStr);
+        if (breadcrumbs.length === 0) {
+            this.breadcrumbsService.clearBreadcrumbs();
+            console.warn("No breadcrumbs found in local storage");
+            return;
+        }
+
+        // Get the learning path, level, and unit breadcrumbs
+        const learningPathBreadcrumb = breadcrumbs.filter(
+            (breadcrumb) => breadcrumb.type === BreadcrumbType.LearningPath,
+        );
+        const levelBreadcrumb = breadcrumbs.filter(
+            (breadcrumb) => breadcrumb.type === BreadcrumbType.Level,
+        );
+        const unitBreadcrumb = breadcrumbs.filter(
+            (breadcrumb) => breadcrumb.type === BreadcrumbType.Unit,
+        );
+
+        // Set the breadcrumbs, removing the review breadcrumb if it exists
+        if (this.level.isClassroom) {
+            this.breadcrumbsService.setClassroomLevelBreadcrumbs(levelBreadcrumb[0].name);
+        } else {
+            this.breadcrumbsService.setUnitBreadcrumbs(
+                learningPathBreadcrumb[0].name,
+                levelBreadcrumb[0].name,
+                unitBreadcrumb[0].name,
+            );
         }
     }
 
@@ -1632,22 +1656,11 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // #region Navigation to other pages
     goToReview() {
-        const getbreadcrumb = localStorage.getItem("breadcrumb");
-        let params: any = [];
-        if (getbreadcrumb) {
-            params = JSON.parse(getbreadcrumb);
-            params[2] = {
-                ID: this.unit.id,
-                Name: this.unit.name,
-                URL: "/lessons-and-exercises",
-            };
-            params[3] = {
-                ID: this.unit.id,
-                Name: "Review",
-                URL: "/review",
-            };
-        }
-        this.reviewService.setBreadcrumb(params);
+        this.breadcrumbsService.setUnitReviewBreadcrumbs(
+            this.user.learningpath.label,
+            this.level.name,
+            this.unit.name,
+        );
         this.localStorage.setItem("unitID", this.unit.id);
         this.reviewService.setUnit({ unit_id: this.unit.id });
         void this.router.navigate(["review"]);

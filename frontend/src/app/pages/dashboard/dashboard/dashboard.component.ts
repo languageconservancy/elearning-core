@@ -11,6 +11,7 @@ import { ReviewService } from "app/_services/review.service";
 import { ForumService } from "app/_services/forum.service";
 import { environment } from "environments/environment";
 import { LocalizeService } from "app/_services/localize.service";
+import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-dashboard",
@@ -42,8 +43,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private localizeService: LocalizeService,
         private reviewService: ReviewService,
         private forumService: ForumService,
+        private breadcrumbsService: BreadcrumbsService,
     ) {
-        this.userSubscription = this.registrationService.currentUser.subscribe((user) => (this.user = user));
+        this.userSubscription = this.registrationService.currentUser.subscribe(
+            (user) => (this.user = user),
+        );
 
         this.cookieService
             .get("AuthUser")
@@ -82,7 +86,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
                             this.user = res.data.results[0];
                             const timeZoneOffset = new Date().getTimezoneOffset() * 60;
                             this.timeZoneOffset =
-                                timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset);
+                                timeZoneOffset > 0
+                                    ? -Math.abs(timeZoneOffset)
+                                    : Math.abs(timeZoneOffset);
                             this.globalFire();
                         } else {
                             void this.alreadyDeleted();
@@ -170,26 +176,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
             } else if (this.fireImage == "high") {
                 this.pathMessage = "You have been working hard! Time for more REVIEW.";
             } else if (this.fireImage == "ultra") {
-                this.pathMessage = this.translations ? this.translations.pathMessageReviewFireUltra : "";
+                this.pathMessage = this.translations
+                    ? this.translations.pathMessageReviewFireUltra
+                    : "";
                 this.pathMessage += " You are amazing! Continue the great work with some REVIEW.";
             } else {
                 //assume dead
-                this.pathMessage = "Welcome Back! Take some time to REVIEW what you've learned before continuing on.";
+                this.pathMessage =
+                    "Welcome Back! Take some time to REVIEW what you've learned before continuing on.";
             }
         } else {
             if (this.fireImage == "low") {
-                this.pathMessage = "We are glad you are learning with us. It's time to do more LESSONS";
+                this.pathMessage =
+                    "We are glad you are learning with us. It's time to do more LESSONS";
             } else if (this.fireImage == "medium") {
-                this.pathMessage = "You're really picking things up. Time to learn from more LESSONS in the path.";
+                this.pathMessage =
+                    "You're really picking things up. Time to learn from more LESSONS in the path.";
             } else if (this.fireImage == "high") {
-                this.pathMessage = this.translations ? this.translations.pathMessageLessonsFireHigh : "";
+                this.pathMessage = this.translations
+                    ? this.translations.pathMessageLessonsFireHigh
+                    : "";
                 this.pathMessage += " You're really doing your part. Click LEARN to continue.";
             } else if (this.fireImage == "ultra") {
-                this.pathMessage = this.translations ? this.translations.pathMessageLessonsFireUltra : "";
+                this.pathMessage = this.translations
+                    ? this.translations.pathMessageLessonsFireUltra
+                    : "";
                 this.pathMessage += " You are on fire! Keep on LEARNING!";
             } else {
                 //assume dead
-                this.pathMessage = "Welcome Back! Looks like you're ready to take on some new LESSONS.";
+                this.pathMessage =
+                    "Welcome Back! Looks like you're ready to take on some new LESSONS.";
             }
         }
     }
@@ -210,30 +226,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
     }
 
-    goToPage(slug) {
+    goToPage(slug: string) {
         void this.router.navigate([slug]);
         if (slug === "review") {
             this.reviewService.setReviewProgress({});
-            localStorage.removeItem("unitID");
-            localStorage.removeItem("reviewUnit");
-            const breadcrumb = [
-                {
-                    Name: this.user.learningpath.label,
-                    URL: "/dashboard",
-                },
-                {
-                    Name: "Review",
-                    URL: "/review",
-                },
-            ];
-            // this.localStorage.setItem('breadcrumb', JSON.stringify(breadcrumb));
-            this.reviewService.setBreadcrumb(breadcrumb);
+            this.localStorage.removeItem("unitID");
+            this.localStorage.removeItem("reviewUnit");
+            this.breadcrumbsService.setLearningPathReviewBreadcrumbs(this.user.learningpath.label);
         }
     }
 
     goToVillage() {
         this.localStorage.removeItem("forumId");
-        const params = {
+        const params: any = {
             path_id: this.user.learningpath_id,
             user_id: this.user.id,
         };

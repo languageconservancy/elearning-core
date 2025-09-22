@@ -19,7 +19,6 @@ export class ReviewService extends BaseService {
     private reviewMenuSubject = new BehaviorSubject<any>(false);
     private recordingSubject = new BehaviorSubject<any>({});
     private reviewProgressBar = new BehaviorSubject<any>({});
-    private breadcrumbSubject = new BehaviorSubject<any>({});
     private nextSubExerciseSubject = new BehaviorSubject<any>({});
 
     public currentExercise = this.exerciseSubject.asObservable();
@@ -34,12 +33,7 @@ export class ReviewService extends BaseService {
     public unit = this.unitSubject.asObservable();
     public reviewMenu = this.reviewMenuSubject.asObservable();
     public newRecord = this.recordingSubject.asObservable();
-    public breadcrumb = this.breadcrumbSubject.asObservable();
     public nextSubExe = this.nextSubExerciseSubject.asObservable();
-
-    setBreadcrumb(params: any) {
-        this.breadcrumbSubject.next(params);
-    }
 
     nextSubExercise(params: any) {
         this.nextSubExerciseSubject.next(params);

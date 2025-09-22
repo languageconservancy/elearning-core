@@ -15,6 +15,7 @@ import { VirtualKeyboardService } from "app/_services/virtual-keyboard.service";
 import { Routes } from "app/shared/utils/elearning-types";
 import { RegionPolicyService } from "app/_services/region-policy.service";
 import { PlatformRolesService } from "app/_services/platform-roles.service";
+import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
 
 declare let jQuery: any;
 
@@ -57,6 +58,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
         private regionPolicyService: RegionPolicyService,
         private virtualKeyboardService: VirtualKeyboardService,
         public platformRolesService: PlatformRolesService,
+        private breadcrumbsService: BreadcrumbsService,
     ) {
         this.currentUserSub = this.registrationService.currentUser.subscribe((user) => {
             if (user && Object.keys(user).length > 0) {
@@ -322,11 +324,10 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
 
     async gotoUrlOther(url: any) {
         window.scroll(0, 0);
-        localStorage.removeItem("breadcrumb");
         if (url === Routes.Review) {
             this.reviewService.setReviewProgress({});
-            localStorage.removeItem("unitID");
-            localStorage.removeItem("reviewUnit");
+            this.localStorage.removeItem("unitID");
+            this.localStorage.removeItem("reviewUnit");
             this.localStorage.setItem("isClassroom", 0);
             if (!this.user.learningpath?.label) {
                 console.error("User learning path not found");
@@ -335,18 +336,9 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
                 return;
             }
 
-            const breadcrumb = [
-                {
-                    Name: this.user.learningpath.label,
-                    URL: Routes.Dashboard,
-                },
-                {
-                    Name: "Review",
-                    URL: Routes.Review,
-                },
-            ];
-            // this.localStorage.setItem('breadcrumb', JSON.stringify(breadcrumb));
-            this.reviewService.setBreadcrumb(breadcrumb);
+            this.breadcrumbsService.setLearningPathReviewBreadcrumbs(this.user.learningpath.label);
+        } else {
+            this.breadcrumbsService.clearBreadcrumbs();
         }
         if (this.user) {
             void this.router.navigate([url]);

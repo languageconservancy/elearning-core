@@ -5,7 +5,7 @@ import { RouterModule } from "@angular/router";
 import { ShareModule } from "ngx-sharebuttons";
 
 import { AudioRecordComponent } from "./audio-record/audio-record.component";
-import { BreadcrumbComponent } from "./breadcrumb/breadcrumb.component";
+import { BreadcrumbsComponent } from "./breadcrumbs/breadcrumbs.component";
 import { SocialShareComponent } from "./social-share/social-share.component";
 import { RequestQuoteComponent } from "./request-quote/request-quote.component";
 import { ImageZoomComponent } from "./image-zoom/image-zoom.component";
@@ -19,13 +19,20 @@ import { TimerComponent } from "./timer/timer.component";
 import { AgreementsAcceptanceComponent } from "./agreements-acceptance/agreements-acceptance.component";
 import { SignupSuggestionComponent } from "./signup-suggestion/signup-suggestion.component";
 import { AgePromptComponent } from "./age-prompt/age-prompt.component";
-import { UpdateModalComponent } from './update-modal/update-modal.component';
+import { UpdateModalComponent } from "./update-modal/update-modal.component";
 
 @NgModule({
-    imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterModule, ShareModule, PipesModule],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        RouterModule,
+        ShareModule,
+        PipesModule,
+    ],
     declarations: [
         AudioRecordComponent,
-        BreadcrumbComponent,
+        BreadcrumbsComponent,
         SocialShareComponent,
         RequestQuoteComponent,
         ImageZoomComponent,
@@ -42,7 +49,7 @@ import { UpdateModalComponent } from './update-modal/update-modal.component';
     ],
     exports: [
         AudioRecordComponent,
-        BreadcrumbComponent,
+        BreadcrumbsComponent,
         SocialShareComponent,
         RequestQuoteComponent,
         ImageZoomComponent,

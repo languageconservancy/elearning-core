@@ -112,12 +112,12 @@ export class AnagramComponent implements OnInit, OnDestroy {
                     this.exerciseService.question = {};
                     this.exerciseService.question = ques.question;
                     this.exerciseService.promptTypes = ques.question
-                        ? ques.question.exerciseOptions.prompt_preview_option
+                        ? ques.question.exerciseOptions?.prompt_preview_option
                               .split(",")
                               .map((el) => el.trim())
                         : [];
                     this.exerciseService.responseTypes = ques.question
-                        ? ques.question.exerciseOptions.responce_preview_option
+                        ? ques.question.exerciseOptions?.responce_preview_option
                               .split(",")
                               .map((el) => el.trim())
                         : [];
@@ -623,7 +623,7 @@ export class AnagramComponent implements OnInit, OnDestroy {
             this.exerciseService.userAnswer == this.AnswerType.CORRECT ? "right" : "wrong";
         params.popup_status = true; // show regardless of answer
         if (this.sessionType !== "review") {
-            params.exercise_option_id = this.exerciseService.question.exerciseOptions.id;
+            params.exercise_option_id = this.exerciseService.question.exerciseOptions?.id;
         }
         //        params.popup_status = this.exerciseService.userAnswer == this.AnswerType.INCORRECT; // show only for wrong answers
         params.experiencecard_ids = [this.exerciseService.question.id].join();
@@ -644,8 +644,8 @@ export class AnagramComponent implements OnInit, OnDestroy {
             const wrongArray = [];
             if (
                 this.sessionType == "review" ||
-                this.exerciseService.question.exerciseOptions.type == "card" ||
-                this.exerciseService.question.exerciseOptions.type == "group"
+                this.exerciseService.question.exerciseOptions?.type == "card" ||
+                this.exerciseService.question.exerciseOptions?.type == "group"
             ) {
                 wrongArray.push(this.exerciseService.question);
             }

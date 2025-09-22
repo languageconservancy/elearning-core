@@ -54,7 +54,6 @@ export class KeyboardConfigService {
             map((config) => {
                 this.config = this.validateAndMergeConfig(config);
                 this.configLoadedSubject.next(true);
-                console.log("loadConfig config:", JSON.stringify(this.config, null, "  "));
                 return this.config;
             }),
             catchError((error) => {

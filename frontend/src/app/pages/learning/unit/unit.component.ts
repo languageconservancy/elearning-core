@@ -338,11 +338,15 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                 [MachineEvent.Entry]: async () => {
                     this.resetUnitData();
                     await this.initUnitData();
-                    const startingActivityIdx = this.unitProgressNav.getFirstUnattemptedOrIncompleteActivityIdx();
+                    const startingActivityIdx =
+                        this.unitProgressNav.getFirstUnattemptedOrIncompleteActivityIdx();
                     this.currentActivityIdx = startingActivityIdx;
-                    if (this.debug) console.debug("Starting from activity idx: ", startingActivityIdx);
+                    if (this.debug)
+                        console.debug("Starting from activity idx: ", startingActivityIdx);
                     this.unitProgressNav.markCurrentActivityAsAttemptable();
-                    const startingState = this.getMachineStateBasedOnActivityType(this.currentActivityType());
+                    const startingState = this.getMachineStateBasedOnActivityType(
+                        this.currentActivityType(),
+                    );
                     this.machine.transition(startingState);
                 },
                 [MachineEvent.Exit]: () => {
@@ -354,7 +358,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.resetUnitData();
                     await this.initUnitData();
                     this.currentActivityIdx = 0;
-                    const startingState = this.getMachineStateBasedOnActivityType(this.currentActivityType());
+                    const startingState = this.getMachineStateBasedOnActivityType(
+                        this.currentActivityType(),
+                    );
                     this.machine.transition(startingState);
                 },
             },
@@ -370,7 +376,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 [MachineEvent.NextLessonFrameBtnPressed]: async () => {
                     if (this.atLastLessonFrame()) {
-                        console.warn("Next button displayed and pressed when already at last lesson frame");
+                        console.warn(
+                            "Next button displayed and pressed when already at last lesson frame",
+                        );
                         return;
                     }
                     await this.saveLessonFrameCompletionToDatabase();
@@ -380,7 +388,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 [MachineEvent.PreviousLessonFrameBtnPressed]: () => {
                     if (this.currentLessonFrameIdx == 0) {
-                        console.warn("Previous button displayed and pressed when at first lesson frame");
+                        console.warn(
+                            "Previous button displayed and pressed when at first lesson frame",
+                        );
                         return;
                     }
                     this.decrementLessonFrameIdx();
@@ -408,7 +418,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 [MachineEvent.GoToReviewBtnPressed]: () => {
                     if (!this.unitProgressNav.unitCompleteOrPreviouslyCompleted) {
-                        throw new Error("Review button displayed and pressed when unit is not complete");
+                        throw new Error(
+                            "Review button displayed and pressed when unit is not complete",
+                        );
                     }
                     this.unitProgressNav.updateLessonState();
                     this.machine.transition(MachineState.PresentingUnitEndOptions);
@@ -425,7 +437,10 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                         // Do the next exercise in the unit
                         this.advanceToNextActivityIdx();
                         this.machine.transition(MachineState.DoingExerciseBlockInSequentialMode);
-                    } else if (this.atLastActivityInUnit() && !this.unitProgressNav.allActivitiesCompleted) {
+                    } else if (
+                        this.atLastActivityInUnit() &&
+                        !this.unitProgressNav.allActivitiesCompleted
+                    ) {
                         // All activities attempted. Finish any incomplete exercises
                         this.machine.transition(MachineState.DoingIncompleteExercisesInUnit);
                     } else {
@@ -459,7 +474,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.displayExerciseQuestionPopup(saveAnswerResult, answer);
                 },
                 // FIXME Match The Pair exercise getting repeated despite answering correctly
-                [MachineEvent.ExerciseQuestionPopupClosed]: (options: { matchThePairCompleted?: boolean }) => {
+                [MachineEvent.ExerciseQuestionPopupClosed]: (options: {
+                    matchThePairCompleted?: boolean;
+                }) => {
                     if (this.activityIsMatchThePairAndIncomplete(options)) return;
                     if (this.displayNextQuestionInExercise(options)) return;
                     this.machine.dispatch(MachineEvent.AllExerciseQuestionsAttempted);
@@ -513,7 +530,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     const incompleteActivityIdx =
                         this.unitProgressNav.getFirstIncompleteExerciseAndQuestionIndexInBlock();
                     if (incompleteActivityIdx == undefined) {
-                        throw new Error("Transitioned to repeat mode, but no incomplete activity found");
+                        throw new Error(
+                            "Transitioned to repeat mode, but no incomplete activity found",
+                        );
                     }
                     this.currentActivityIdx = incompleteActivityIdx;
                     // Set question index to zero since fetch an exercise only gets incomplete questions
@@ -523,11 +542,13 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.displayExercise();
                 },
                 [MachineEvent.QuestionAnswered]: async (answer: Answer) => {
-                    await this.machine.transitions[MachineState.DoingExerciseBlockInSequentialMode].questionAnswered(
-                        answer,
-                    );
+                    await this.machine.transitions[
+                        MachineState.DoingExerciseBlockInSequentialMode
+                    ].questionAnswered(answer);
                 },
-                [MachineEvent.ExerciseQuestionPopupClosed]: async (options: { matchThePairCompleted?: boolean }) => {
+                [MachineEvent.ExerciseQuestionPopupClosed]: async (options: {
+                    matchThePairCompleted?: boolean;
+                }) => {
                     if (this.activityIsMatchThePairAndIncomplete(options)) return;
 
                     if (!this.unitProgressNav.incompleteQuestionsExistInBlock()) {
@@ -539,7 +560,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     const incompleteActivityIdx =
                         this.unitProgressNav.getNextIncompleteExerciseAndQuestionIndexInBlock();
                     if (incompleteActivityIdx === undefined) {
-                        throw new Error("Incomplete questions exist, but no incomplete activity found");
+                        throw new Error(
+                            "Incomplete questions exist, but no incomplete activity found",
+                        );
                     }
                     if (this.movingToDifferentActivity(incompleteActivityIdx)) {
                         this.unitProgressNav.updateExerciseState();
@@ -560,10 +583,14 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 },
                 [MachineEvent.ExerciseSetPopupClosed]: () => {
-                    this.currentActivityIdx = this.unitProgressNav.getLastExerciseIndexInCurrentBlock();
+                    this.currentActivityIdx =
+                        this.unitProgressNav.getLastExerciseIndexInCurrentBlock();
                     if (this.advanceToNextLessonIfPossible()) return;
                     // At the end of the unit
-                    if (this.atLastActivityInUnit() && this.unitProgressNav.incompleteQuestionsExistInUnit()) {
+                    if (
+                        this.atLastActivityInUnit() &&
+                        this.unitProgressNav.incompleteQuestionsExistInUnit()
+                    ) {
                         return this.machine.transition(MachineState.DoingIncompleteExercisesInUnit);
                     }
                     // Unit is complete
@@ -605,11 +632,13 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.displayExercise();
                 },
                 [MachineEvent.QuestionAnswered]: (answer: Answer) => {
-                    void this.machine.transitions[MachineState.DoingExerciseBlockInSequentialMode].questionAnswered(
-                        answer,
-                    );
+                    void this.machine.transitions[
+                        MachineState.DoingExerciseBlockInSequentialMode
+                    ].questionAnswered(answer);
                 },
-                [MachineEvent.ExerciseQuestionPopupClosed]: async (options: { matchThePairCompleted?: boolean }) => {
+                [MachineEvent.ExerciseQuestionPopupClosed]: async (options: {
+                    matchThePairCompleted?: boolean;
+                }) => {
                     if (this.activityIsMatchThePairAndIncomplete(options)) return;
 
                     if (!this.unitProgressNav.incompleteQuestionsExistInUnit()) {
@@ -621,7 +650,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     const incompleteActivityIdx =
                         this.unitProgressNav.getNextIncompleteExerciseAndQuestionIndexInUnit();
                     if (incompleteActivityIdx === undefined) {
-                        throw new Error("Incomplete questions exist, but no incomplete activity found");
+                        throw new Error(
+                            "Incomplete questions exist, but no incomplete activity found",
+                        );
                     }
                     if (this.movingToDifferentActivity(incompleteActivityIdx)) {
                         this.unitProgressNav.updateExerciseState();
@@ -675,13 +706,20 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
             const action = this.machine.transitions[this.machine.state][actionName];
             if (action) {
                 if (this.debug)
-                    console.debug("Dispatching action: ", actionName, `(${this.machine.state}) `, data ?? "");
+                    console.debug(
+                        "Dispatching action: ",
+                        actionName,
+                        `(${this.machine.state}) `,
+                        data ?? "",
+                    );
                 this.lastEvent = actionName;
                 await action.call(this, data);
             } else {
                 if (this.debug) {
                     // Can possibly happen if the user clicks a button before the UI updates
-                    throw new Error(`Invalid action: ${actionName} in state: ${this.machine.state}`);
+                    throw new Error(
+                        `Invalid action: ${actionName} in state: ${this.machine.state}`,
+                    );
                 }
                 console.warn("Invalid action: ", actionName, " in state: ", this.machine.state);
             }
@@ -828,7 +866,10 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     subscribeToWrongAnswers() {
         this.subscriptions.add(
             this.lessonService.wrongAnswer.subscribe((res: any) => {
-                if (Object.keys(res).length <= 0 || this.unit?.activities[this.currentActivityIdx]?.complete) {
+                if (
+                    Object.keys(res).length <= 0 ||
+                    this.unit?.activities[this.currentActivityIdx]?.complete
+                ) {
                     return;
                 }
                 // User got the answer wrong. Update progress.
@@ -851,23 +892,25 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     @Throttle(Settings.RETURN_KEY_THROTTLE_DELAY_MS)
     subscribeToKeyboardSubmitOrCloseEvent() {
         // Previous and next buttons
-        this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe((event: KeyboardEvent) => {
-            if (this.unit.activities[this.currentActivityIdx].flowType == "lesson") {
-                if (this.showPreviousLessonFrameBtn() && event.shiftKey) {
-                    this.goToPreviousLessonFrameBtnPressed();
-                } else if (this.showNextLessonFrameBtn() && !event.shiftKey) {
-                    this.goToNextLessonFrameBtnPressed();
-                } else if (this.showNextLessonBtn()) {
-                    this.goToNextLessonBtnPressed();
-                } else if (this.showNextExerciseBtn()) {
-                    this.goToNextExerciseBtnPressed();
-                } else if (this.showUnitEndNextBtn()) {
-                    this.unitEndNextBtnPressed();
-                } else if (this.showStartReviewBtn()) {
-                    this.startReviewBtnPressed();
+        this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(
+            (event: KeyboardEvent) => {
+                if (this.unit.activities[this.currentActivityIdx].flowType == "lesson") {
+                    if (this.showPreviousLessonFrameBtn() && event.shiftKey) {
+                        this.goToPreviousLessonFrameBtnPressed();
+                    } else if (this.showNextLessonFrameBtn() && !event.shiftKey) {
+                        this.goToNextLessonFrameBtnPressed();
+                    } else if (this.showNextLessonBtn()) {
+                        this.goToNextLessonBtnPressed();
+                    } else if (this.showNextExerciseBtn()) {
+                        this.goToNextExerciseBtnPressed();
+                    } else if (this.showUnitEndNextBtn()) {
+                        this.unitEndNextBtnPressed();
+                    } else if (this.showStartReviewBtn()) {
+                        this.startReviewBtnPressed();
+                    }
                 }
-            }
-        });
+            },
+        );
     }
 
     setKeyboardListeners(turnOn: boolean) {
@@ -948,9 +991,14 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
             this.currentExercise = res.data.results;
             if (!this.currentExercise) {
                 // Should never happen. Means the API failed to return an exercise
-                throw new Error("Exercise fetch returned null for activity " + this.currentActivityIdx);
+                throw new Error(
+                    "Exercise fetch returned null for activity " + this.currentActivityIdx,
+                );
             }
-            this.unitProgressNav.addQuestionsToProgressActivity(this.currentActivityIdx, this.currentExercise);
+            this.unitProgressNav.addQuestionsToProgressActivity(
+                this.currentActivityIdx,
+                this.currentExercise,
+            );
         } catch (err) {
             console.error("[fetchUnitExercise] ", err);
         } finally {
@@ -961,7 +1009,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     setExerciseAndQuestion() {
         if (!this.currentExercise) {
             // Should never happen
-            throw new Error("No exercise found for current activity of idx " + this.currentActivityIdx);
+            throw new Error(
+                "No exercise found for current activity of idx " + this.currentActivityIdx,
+            );
         }
         if (!this.currentExerciseQuestion()) {
             // Should never happen
@@ -1101,7 +1151,10 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     activityIsMatchThePairAndIncomplete(options: { matchThePairCompleted?: boolean }) {
-        if (this.currentExercise.exercise_type === "match-the-pair" && !options.matchThePairCompleted) {
+        if (
+            this.currentExercise.exercise_type === "match-the-pair" &&
+            !options.matchThePairCompleted
+        ) {
             return true; // Early return if the match-the-pair exercise isn't completed
         }
         return false;
@@ -1237,7 +1290,7 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
 
     getExerciseOptionsIdFromQuestion(qQuestion: QuestionQuestion): number | undefined {
         if (!!qQuestion.exerciseOptions) {
-            return qQuestion.exerciseOptions.id;
+            return qQuestion.exerciseOptions?.id;
         } else if (!!qQuestion.exercise_option_id) {
             return qQuestion.exercise_option_id;
         }
@@ -1250,7 +1303,10 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     async saveExerciseQuestionAnswerToDatabase(answer: Answer): Promise<any> {
-        if (this.currentActivityIdx === undefined || this.currentExerciseQuestionIdx === undefined) {
+        if (
+            this.currentActivityIdx === undefined ||
+            this.currentExerciseQuestionIdx === undefined
+        ) {
             throw new Error("currentActivityIdx or currentExerciseQuestionIdx is undefined");
         }
 
@@ -1260,8 +1316,10 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.unitProgressNav.activityIsIncomplete(this.currentActivityIdx)) {
             if (
-                this.unitProgressNav.numAttemptsForQuestion(this.currentActivityIdx, this.currentExerciseQuestionIdx) >=
-                Settings.REQUIRED_NUM_INCORRECT_ATTEMPTS_TO_COMPLETE_QUESTION
+                this.unitProgressNav.numAttemptsForQuestion(
+                    this.currentActivityIdx,
+                    this.currentExerciseQuestionIdx,
+                ) >= Settings.REQUIRED_NUM_INCORRECT_ATTEMPTS_TO_COMPLETE_QUESTION
             ) {
                 answer.answar_type = "right";
             }
@@ -1356,7 +1414,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.currentLessonFrameIdx == null || this.currentLessonFrameIdx == undefined) {
             return null;
         }
-        return this.unit.activities[this.currentActivityIdx]?.lesson?.lessonframes[this.currentLessonFrameIdx];
+        return this.unit.activities[this.currentActivityIdx]?.lesson?.lessonframes[
+            this.currentLessonFrameIdx
+        ];
     }
 
     nextActivity() {
@@ -1522,18 +1582,26 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
         let correctHtml: string | undefined = undefined;
         const promptResponse: Array<string> = exercise.promteresponsetype.split("-");
 
-        if (!!answeredEx.response && !!answeredEx.response.lakota && answeredEx.response.lakota !== "") {
+        if (
+            !!answeredEx.response &&
+            !!answeredEx.response.lakota &&
+            answeredEx.response.lakota !== ""
+        ) {
             return undefined;
         }
 
         if (!!answeredEx.response) {
             correctHtml =
                 answeredEx.response.response_html ||
-                answeredEx.response.exerciseOptions.exercise_custom_options[0].response_html;
+                answeredEx.response.exerciseOptions?.exercise_custom_options[0].response_html;
         } else if (!!answeredEx.question && !!answeredEx.question.exerciseOptions) {
-            const textOption = answeredEx.question.exerciseOptions.text_option?.trim().replace(/[\[\]]/g, "");
+            const textOption = answeredEx.question.exerciseOptions?.text_option
+                ?.trim()
+                .replace(/[\[\]]/g, "");
             const text =
-                promptResponse[1] === "l" ? answeredEx.question.lakota?.trim() : answeredEx.question.english?.trim();
+                promptResponse[1] === "l"
+                    ? answeredEx.question.lakota?.trim()
+                    : answeredEx.question.english?.trim();
 
             if (textOption && text && textOption === text) {
                 correctHtml = undefined;
@@ -1592,7 +1660,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.currentLessonFrameIdx === undefined) {
             return false;
         }
-        return !!this.currentLesson() && !!this.currentLessonFrame() && this.currentLessonFrameIdx > 0;
+        return (
+            !!this.currentLesson() && !!this.currentLessonFrame() && this.currentLessonFrameIdx > 0
+        );
     }
 
     showNextLessonFrameBtn(): boolean {
@@ -1600,11 +1670,19 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     showNextLessonBtn(): boolean {
-        return !!this.currentLesson() && !!this.atLastLessonFrame() && this.nextActivityType() == "lesson";
+        return (
+            !!this.currentLesson() &&
+            !!this.atLastLessonFrame() &&
+            this.nextActivityType() == "lesson"
+        );
     }
 
     showNextExerciseBtn(): boolean {
-        return !!this.currentLesson() && this.atLastLessonFrame() && this.nextActivityType() == "exercise";
+        return (
+            !!this.currentLesson() &&
+            this.atLastLessonFrame() &&
+            this.nextActivityType() == "exercise"
+        );
     }
 
     showStartReviewBtn(): boolean {

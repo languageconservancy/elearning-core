@@ -79,7 +79,8 @@ export class NonSelectableCardComponent {
 
     getAudioIconUrl() {
         if (
-            (this.audioService.getAudioSrc() != this.card.FullAudioUrl || this.audioService.audioIsPaused()) &&
+            (this.audioService.getAudioSrc() != this.card.FullAudioUrl ||
+                this.audioService.audioIsPaused()) &&
             (this.enabledDataTypes.length == 1 || !this.isActive(this.DataType.Image))
         ) {
             return "./assets/images/audio-large-mute.png";
@@ -91,7 +92,8 @@ export class NonSelectableCardComponent {
         ) {
             return "./assets/images/audio-large.png";
         } else if (
-            (this.audioService.getAudioSrc() != this.card.FullAudioUrl || this.audioService.audioIsPaused()) &&
+            (this.audioService.getAudioSrc() != this.card.FullAudioUrl ||
+                this.audioService.audioIsPaused()) &&
             this.enabledDataTypes.length > 1 &&
             this.isActive(this.DataType.Image)
         ) {

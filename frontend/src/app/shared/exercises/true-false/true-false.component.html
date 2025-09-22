@@ -1,6 +1,8 @@
 <div class="row" *ngIf="exerciseService.exercise?.instruction">
     <div class="col-12">
-        <div class="mar-bot-15 text-center font-language prompt-font-size">{{ exerciseService.exercise?.instruction }}</div>
+        <div class="mar-bot-15 text-center font-language prompt-font-size">
+            {{ exerciseService.exercise?.instruction }}
+        </div>
     </div>
 </div>
 
@@ -24,7 +26,7 @@
     </div>
 </div>
 
-<hr/>
+<hr />
 
 <!-- RESPONSE -->
 <div class="row py-4 justify-content-evenly" id="true-false-ans-btns">
@@ -34,9 +36,16 @@
             tabindex="0"
             class="btn-option bg-option-default border-option-default"
             [ngClass]="{
-                'border-option-correct bg-option-correct': exerciseService.userAnswer === AnswerType.CORRECT && exerciseService.question.exerciseOptions.response_true_false === 'Y' && !exerciseService.firstTime,
-                'border-option-incorrect bg-option-incorrect': exerciseService.userAnswer === AnswerType.INCORRECT && exerciseService.question.exerciseOptions.response_true_false === 'N' && !exerciseService.firstTime,
-                'bg-option-hover border-option-hover': !isMobile && !isTablet && keyboardHighlightedAnswer === 'Y',
+                'border-option-correct bg-option-correct':
+                    exerciseService.userAnswer === AnswerType.CORRECT &&
+                    exerciseService.question.exerciseOptions?.response_true_false === 'Y' &&
+                    !exerciseService.firstTime,
+                'border-option-incorrect bg-option-incorrect':
+                    exerciseService.userAnswer === AnswerType.INCORRECT &&
+                    exerciseService.question.exerciseOptions?.response_true_false === 'N' &&
+                    !exerciseService.firstTime,
+                'bg-option-hover border-option-hover':
+                    !isMobile && !isTablet && keyboardHighlightedAnswer === 'Y',
             }"
             (click)="checkAnswer('Y')"
         >
@@ -50,9 +59,16 @@
             tabindex="0"
             class="btn-option bg-option-default border-option-default"
             [ngClass]="{
-                'border-option-correct bg-option-correct': exerciseService.userAnswer === AnswerType.CORRECT && exerciseService.question.exerciseOptions.response_true_false === 'N' && !exerciseService.firstTime,
-                'border-option-incorrect bg-option-incorrect': exerciseService.userAnswer === AnswerType.INCORRECT && exerciseService.question.exerciseOptions.response_true_false === 'Y' && !exerciseService.firstTime,
-                'bg-option-hover border-option-hover': !isMobile && !isTablet && keyboardHighlightedAnswer === 'N',
+                'border-option-correct bg-option-correct':
+                    exerciseService.userAnswer === AnswerType.CORRECT &&
+                    exerciseService.question.exerciseOptions?.response_true_false === 'N' &&
+                    !exerciseService.firstTime,
+                'border-option-incorrect bg-option-incorrect':
+                    exerciseService.userAnswer === AnswerType.INCORRECT &&
+                    exerciseService.question.exerciseOptions?.response_true_false === 'Y' &&
+                    !exerciseService.firstTime,
+                'bg-option-hover border-option-hover':
+                    !isMobile && !isTablet && keyboardHighlightedAnswer === 'N',
             }"
             (click)="checkAnswer('N')"
         >

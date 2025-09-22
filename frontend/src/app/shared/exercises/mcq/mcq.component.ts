@@ -67,7 +67,10 @@ export class McqComponent implements OnInit, OnDestroy {
 
         if (this.sessionType == "exercise") {
             this.exerciseSubscription = this.lessonService.currentExercise.subscribe((exercise) => {
-                if (Object.keys(exercise).length > 0 && exercise.exercise_type == "multiple-choice") {
+                if (
+                    Object.keys(exercise).length > 0 &&
+                    exercise.exercise_type == "multiple-choice"
+                ) {
                     this.exerciseService.exercise = exercise;
                     this.exerciseService.userAnswer = this.AnswerType.NONE;
                     this.exerciseService.nextButtonShouldBeClickable = false;
@@ -86,7 +89,9 @@ export class McqComponent implements OnInit, OnDestroy {
                     this.exerciseService.firstTime = true;
                     this.exerciseService.question = exercise.question;
                     this.exerciseService.choices = exercise.choices;
-                    this.userResponseAnswers = new Array(exercise.choices.length).fill(AnswerType.NONE);
+                    this.userResponseAnswers = new Array(exercise.choices.length).fill(
+                        AnswerType.NONE,
+                    );
                     this.exerciseService.response = exercise.response;
                     this.exerciseService.userAnswer = this.AnswerType.NONE;
                     this.exerciseService.nextButtonShouldBeClickable = false;
@@ -94,7 +99,10 @@ export class McqComponent implements OnInit, OnDestroy {
 
                     setTimeout(() => {
                         if (this.exerciseService.promptTypes.indexOf("a") > -1) {
-                            this.audioService.playPauseAudio(this.exerciseService.question.FullAudioUrl, "prompt");
+                            this.audioService.playPauseAudio(
+                                this.exerciseService.question.FullAudioUrl,
+                                "prompt",
+                            );
                         }
                     }, 100);
                 }
@@ -118,15 +126,22 @@ export class McqComponent implements OnInit, OnDestroy {
                     this.exerciseService.response = ques.response;
                     this.exerciseService.userAnswer = this.AnswerType.NONE;
 
-                    if (!this.exerciseService.question.FullAudioUrl && this.exerciseService.question.audio) {
-                        this.exerciseService.question.FullAudioUrl = this.exerciseService.question.audio.FullUrl;
+                    if (
+                        !this.exerciseService.question.FullAudioUrl &&
+                        this.exerciseService.question.audio
+                    ) {
+                        this.exerciseService.question.FullAudioUrl =
+                            this.exerciseService.question.audio.FullUrl;
                     }
 
                     this.exerciseService.setPromptResponseTypes();
                     this.exerciseService.getCardIdList();
                     setTimeout(() => {
                         if (this.exerciseService.promptTypes.indexOf("a") > -1) {
-                            this.audioService.playPauseAudio(this.exerciseService.question.FullAudioUrl, "prompt");
+                            this.audioService.playPauseAudio(
+                                this.exerciseService.question.FullAudioUrl,
+                                "prompt",
+                            );
                         }
                     }, 100);
                 }
@@ -165,71 +180,86 @@ export class McqComponent implements OnInit, OnDestroy {
             }
 
             // Submit selected response card as the answer
-            this.keyboardSubmitSelectionSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                if (this.exerciseService.exerciseCompleted) {
-                    return false;
-                }
-                const highlightedCard = this.keyboardHighlightedResponseCardIndex;
-                if (highlightedCard < 0 || highlightedCard >= this.exerciseService.choices.length) {
-                    return false;
-                }
-                this.answer(this.exerciseService.choices[highlightedCard]);
-                this.keyboardHighlightedResponseCardIndex = -1;
-            });
-            // Toggle selected response card
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (this.exerciseService.exerciseCompleted) {
-                    return false;
-                }
-                if (event.shiftKey) {
-                    this.keyboardHighlightedResponseCardIndex = OwoksapeUtils.decrementWrap(
-                        this.keyboardHighlightedResponseCardIndex,
-                        0,
-                        this.exerciseService.choices.length,
-                    );
-                } else {
-                    this.keyboardHighlightedResponseCardIndex = OwoksapeUtils.incrementWrap(
-                        this.keyboardHighlightedResponseCardIndex,
-                        0,
-                        this.exerciseService.choices.length,
-                    );
-                }
-            });
-            // Toggle audio playback
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (this.exerciseService.exerciseCompleted) {
-                    return false;
-                }
-                const highlightedCard = this.keyboardHighlightedResponseCardIndex;
-                if (this.exerciseService.responseType == "a" || this.exerciseService.responseTypes.indexOf("a") > -1) {
-                    if (
-                        !!this.exerciseService.choices[highlightedCard] &&
-                        !!this.exerciseService.choices[highlightedCard].FullAudioUrl
-                    ) {
-                        if (this.exerciseService.responseType == "a") {
-                            this.audioService.playPauseAudio(
-                                this.exerciseService.choices[highlightedCard].FullAudioUrl,
-                                "response",
-                            );
-                        }
+            this.keyboardSubmitSelectionSubscription =
+                this.keyboardService.submitOrCloseEvent.subscribe(() => {
+                    if (this.exerciseService.exerciseCompleted) {
+                        return false;
                     }
-                } else if (
-                    this.exerciseService.promptTypes.indexOf("a") > -1 &&
-                    !!this.exerciseService.question.FullAudioUrl
-                ) {
-                    this.audioService.playPauseAudio(this.exerciseService.question.FullAudioUrl, "prompt");
-                } else if (
-                    !!this.exerciseService.choices[highlightedCard].exerciseOptions &&
-                    !!this.exerciseService.choices[highlightedCard].exerciseOptions.responce_preview_option &&
-                    this.exerciseService.choices[highlightedCard].exerciseOptions.responce_preview_option.indexOf("a") >
-                        -1
-                ) {
-                    this.audioService.playPauseAudio(
-                        this.exerciseService.choices[highlightedCard].FullAudioUrl,
-                        "response",
-                    );
-                }
-            });
+                    const highlightedCard = this.keyboardHighlightedResponseCardIndex;
+                    if (
+                        highlightedCard < 0 ||
+                        highlightedCard >= this.exerciseService.choices.length
+                    ) {
+                        return false;
+                    }
+                    this.answer(this.exerciseService.choices[highlightedCard]);
+                    this.keyboardHighlightedResponseCardIndex = -1;
+                });
+            // Toggle selected response card
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (this.exerciseService.exerciseCompleted) {
+                        return false;
+                    }
+                    if (event.shiftKey) {
+                        this.keyboardHighlightedResponseCardIndex = OwoksapeUtils.decrementWrap(
+                            this.keyboardHighlightedResponseCardIndex,
+                            0,
+                            this.exerciseService.choices.length,
+                        );
+                    } else {
+                        this.keyboardHighlightedResponseCardIndex = OwoksapeUtils.incrementWrap(
+                            this.keyboardHighlightedResponseCardIndex,
+                            0,
+                            this.exerciseService.choices.length,
+                        );
+                    }
+                });
+            // Toggle audio playback
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (this.exerciseService.exerciseCompleted) {
+                        return false;
+                    }
+                    const highlightedCard = this.keyboardHighlightedResponseCardIndex;
+                    if (
+                        this.exerciseService.responseType == "a" ||
+                        this.exerciseService.responseTypes.indexOf("a") > -1
+                    ) {
+                        if (
+                            !!this.exerciseService.choices[highlightedCard] &&
+                            !!this.exerciseService.choices[highlightedCard].FullAudioUrl
+                        ) {
+                            if (this.exerciseService.responseType == "a") {
+                                this.audioService.playPauseAudio(
+                                    this.exerciseService.choices[highlightedCard].FullAudioUrl,
+                                    "response",
+                                );
+                            }
+                        }
+                    } else if (
+                        this.exerciseService.promptTypes.indexOf("a") > -1 &&
+                        !!this.exerciseService.question.FullAudioUrl
+                    ) {
+                        this.audioService.playPauseAudio(
+                            this.exerciseService.question.FullAudioUrl,
+                            "prompt",
+                        );
+                    } else if (
+                        !!this.exerciseService.choices[highlightedCard].exerciseOptions &&
+                        !!this.exerciseService.choices[highlightedCard].exerciseOptions
+                            ?.responce_preview_option &&
+                        this.exerciseService.choices[
+                            highlightedCard
+                        ].exerciseOptions?.responce_preview_option.indexOf("a") > -1
+                    ) {
+                        this.audioService.playPauseAudio(
+                            this.exerciseService.choices[highlightedCard].FullAudioUrl,
+                            "response",
+                        );
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitSelectionSubscription) {
                 this.keyboardSubmitSelectionSubscription.unsubscribe();
@@ -274,7 +304,8 @@ export class McqComponent implements OnInit, OnDestroy {
                     : this.exerciseService.question.id;
             params.activity_type = this.sessionType;
             params.user_id = this.exerciseService.user.id;
-            params.answar_type = this.exerciseService.userAnswer == this.AnswerType.CORRECT ? "right" : "wrong";
+            params.answar_type =
+                this.exerciseService.userAnswer == this.AnswerType.CORRECT ? "right" : "wrong";
             params.experiencecard_ids = this.exerciseService.cardIdArray.join();
             params.popup_status = true;
 
@@ -285,7 +316,7 @@ export class McqComponent implements OnInit, OnDestroy {
                 // exercise-specific params
                 params.exercise_id = this.exerciseService.exercise.id;
                 if (!!this.exerciseService.question.exerciseOptions) {
-                    params.exercise_option_id = this.exerciseService.question.exerciseOptions.id;
+                    params.exercise_option_id = this.exerciseService.question.exerciseOptions?.id;
                 } else if (!!this.exerciseService.question.exercise_option_id) {
                     params.exercise_option_id = this.exerciseService.question.exercise_option_id;
                 } else {
@@ -318,13 +349,13 @@ export class McqComponent implements OnInit, OnDestroy {
                 const wrongArray: any = [];
                 if (this.sessionType == "exercise") {
                     if (
-                        this.exerciseService.question.exerciseOptions.type == "card" ||
-                        this.exerciseService.question.exerciseOptions.type == "group"
+                        this.exerciseService.question.exerciseOptions?.type == "card" ||
+                        this.exerciseService.question.exerciseOptions?.type == "group"
                     ) {
                         wrongArray.push(this.exerciseService.question);
                         if (
                             this.exerciseService.response.id != this.exerciseService.question.id &&
-                            this.exerciseService.response.exerciseOptions.type == "card"
+                            this.exerciseService.response.exerciseOptions?.type == "card"
                         ) {
                             wrongArray.push(this.exerciseService.response);
                         }
@@ -378,19 +409,23 @@ export class McqComponent implements OnInit, OnDestroy {
 
     getAudioIconUrl(audioService: AudioService, exerciseService: ExerciseService) {
         if (
-            (audioService.getAudioSrc() != exerciseService.question.FullAudioUrl || audioService.audioIsPaused()) &&
-            (exerciseService.promptTypes.length == 1 || exerciseService.promptTypes.indexOf("i") < 0)
+            (audioService.getAudioSrc() != exerciseService.question.FullAudioUrl ||
+                audioService.audioIsPaused()) &&
+            (exerciseService.promptTypes.length == 1 ||
+                exerciseService.promptTypes.indexOf("i") < 0)
         ) {
             return "./assets/images/audio-large-mute.png";
         } else if (
             audioService.getAudioSrc() == exerciseService.question.FullAudioUrl &&
             !audioService.audioIsPaused() &&
             audioService.audioType === "prompt" &&
-            (exerciseService.promptTypes.length == 1 || exerciseService.promptTypes.indexOf("i") < 0)
+            (exerciseService.promptTypes.length == 1 ||
+                exerciseService.promptTypes.indexOf("i") < 0)
         ) {
             return "./assets/images/audio-large.png";
         } else if (
-            (audioService.getAudioSrc() != exerciseService.question.FullAudioUrl || audioService.audioIsPaused()) &&
+            (audioService.getAudioSrc() != exerciseService.question.FullAudioUrl ||
+                audioService.audioIsPaused()) &&
             exerciseService.promptTypes.length > 1 &&
             exerciseService.promptTypes.indexOf("i") > -1
         ) {

@@ -8,6 +8,7 @@ import { LocalStorageService } from "app/_services/local-storage.service";
 import { ReviewService } from "app/_services/review.service";
 import { ForumService } from "app/_services/forum.service";
 import { UnitsComponent } from "app/pages/learning-path/units/units.component";
+import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-classroom-units",
@@ -25,8 +26,18 @@ export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, O
         reviewService: ReviewService,
         localStorage: LocalStorageService,
         forumService: ForumService,
+        breadcrumbsService: BreadcrumbsService,
     ) {
-        super(router, cookieService, loader, lessonService, reviewService, localStorage, forumService);
+        super(
+            router,
+            cookieService,
+            loader,
+            lessonService,
+            reviewService,
+            localStorage,
+            forumService,
+            breadcrumbsService,
+        );
 
         this.villageImageUrl = "./assets/images/lesson-icon.png";
         this.subscribeToCurrentLevel();
@@ -91,7 +102,10 @@ export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, O
                         foundFirstActive = true;
                     }
                 } else {
-                    if (unit.classroomLevelUnits.active == false && unit["flagIsScheduled"] == false) {
+                    if (
+                        unit.classroomLevelUnits.active == false &&
+                        unit["flagIsScheduled"] == false
+                    ) {
                         unit["enable"] = false;
                         unit["flagInactive"] = true;
                     }
@@ -99,7 +113,11 @@ export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, O
                         unit["enable"] = false;
                     }
                 }
-                if (!foundFirstActive && unit["flagIsScheduled"] == false && unit["flagInactive"] == false) {
+                if (
+                    !foundFirstActive &&
+                    unit["flagIsScheduled"] == false &&
+                    unit["flagInactive"] == false
+                ) {
                     unit["enable"] = true;
                     foundFirstActive = true;
                 }

@@ -1,5 +1,3 @@
-<app-breadcrumb></app-breadcrumb>
-
 <div class="row">
     <div *ngIf="!!currentLevel" class="col-4 teachers-list pt-2">
         <h5>Teachers</h5>
@@ -7,9 +5,16 @@
         <br class="d-none d-mg-block" />
         <div class="text-center">
             <span *ngFor="let teacher of currentLevel.teachers">
-                <img src="{{ teacher.user.usersetting.FullProfileImageUrl || './assets/images/user_img.png' }}" />
+                <img
+                    src="{{
+                        teacher.user.usersetting.FullProfileImageUrl ||
+                            './assets/images/user_img.png'
+                    }}"
+                />
                 <br />
-                <a target="_blank" href="mailto:{{ teacher.user.email }}">{{ teacher.user.name }}</a>
+                <a target="_blank" href="mailto:{{ teacher.user.email }}">{{
+                    teacher.user.name
+                }}</a>
             </span>
         </div>
     </div>
@@ -28,7 +33,11 @@
         <div class="action-btn-area mr-3">
             <div class="d-flex justify-content-between">
                 <div class="ft-action-btn">
-                    <a id="continue-btn" href="javascript:void(0)" (click)="goToWhereverUserLeftOff()">
+                    <a
+                        id="continue-btn"
+                        href="javascript:void(0)"
+                        (click)="goToWhereverUserLeftOff()"
+                    >
                         <span>
                             <img height="57" src="./assets/images/continue-icon.png" />
                         </span>
@@ -44,7 +53,11 @@
                     </a>
                 </div>
                 <div class="ft-action-btn">
-                    <a href="javascript:void(0)" [ngClass]="{ 'no-reviews': noReviews }" routerLink="/review">
+                    <a
+                        href="javascript:void(0)"
+                        [ngClass]="{ 'no-reviews': noReviews }"
+                        routerLink="/review"
+                    >
                         <span>
                             <span *ngIf="noReviews" class="img-overlay"></span>
                             <img
@@ -53,9 +66,24 @@
                                 src="./assets/images/fire_dead.png"
                                 alt=""
                             />
-                            <img height="58" *ngIf="fireImage === 'low'" src="./assets/images/fire_low.png" alt="" />
-                            <img height="58" *ngIf="fireImage === 'medium'" src="./assets/images/fire_med.png" alt="" />
-                            <img height="58" *ngIf="fireImage === 'high'" src="./assets/images/fire_high.png" alt="" />
+                            <img
+                                height="58"
+                                *ngIf="fireImage === 'low'"
+                                src="./assets/images/fire_low.png"
+                                alt=""
+                            />
+                            <img
+                                height="58"
+                                *ngIf="fireImage === 'medium'"
+                                src="./assets/images/fire_med.png"
+                                alt=""
+                            />
+                            <img
+                                height="58"
+                                *ngIf="fireImage === 'high'"
+                                src="./assets/images/fire_high.png"
+                                alt=""
+                            />
                             <img
                                 height="58"
                                 *ngIf="fireImage === 'ultra'"
@@ -73,7 +101,11 @@
 <!-- Continue, Village, Review buttons without text (Tablets and smaller) -->
 <div class="row d-md-none d-flex mt-3 justify-content-around">
     <div class="ft-action-btn">
-        <img height="50rem" src="./assets/images/continue-icon.png" (click)="goToWhereverUserLeftOff()" />
+        <img
+            height="50rem"
+            src="./assets/images/continue-icon.png"
+            (click)="goToWhereverUserLeftOff()"
+        />
     </div>
     <div class="ft-action-btn">
         <img height="50rem" src="./assets/images/partner-logo.png" (click)="goToVillage()" />
@@ -116,7 +148,12 @@
                                     alt=""
                                     (error)="updateLevelImageUrl($event, level.id)"
                                 />
-                                <img *ngIf="!level.image" class="w-75" src="./assets/images/menu-3.png" alt="" />
+                                <img
+                                    *ngIf="!level.image"
+                                    class="w-75"
+                                    src="./assets/images/menu-3.png"
+                                    alt=""
+                                />
                             </div>
                             <div class="col-8 text-wrap">
                                 <span>{{ level.name }}</span>
@@ -132,7 +169,10 @@
                         <div [ngClass]="{ notclickable: !level.enable }">
                             <a
                                 id="level-{{ i }}-btn"
-                                [ngClass]="{ 'active-level': selectedLevel === level.id, 'mt-0': i === 0 }"
+                                [ngClass]="{
+                                    'active-level': selectedLevel === level.id,
+                                    'mt-0': i === 0,
+                                }"
                                 href="javascript:void(0)"
                                 (click)="setActiveLevel(level)"
                                 >{{ level.name }}</a
@@ -159,7 +199,9 @@
 </div>
 <div class="row" *ngIf="noLevel || noPath">
     <div class="col-12 text-center">
-        <h3 class="text-white no-units" *ngIf="noPath">Please select a learning path from settings.</h3>
+        <h3 class="text-white no-units" *ngIf="noPath">
+            Please select a learning path from settings.
+        </h3>
         <h3 class="text-white no-units" *ngIf="noLevel && !noPath">This path has no levels.</h3>
     </div>
 </div>

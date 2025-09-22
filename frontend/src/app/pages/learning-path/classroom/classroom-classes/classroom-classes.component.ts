@@ -12,6 +12,7 @@ import { SettingsService } from "app/_services/settings.service";
 import { ReviewService } from "app/_services/review.service";
 import { ClassroomService } from "app/_services/classroom.service";
 import { SnackbarService } from "app/_services/snackbar.service";
+import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-classroom-classes",
@@ -54,6 +55,7 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
         // Classroom-specific services
         private classroomService: ClassroomService,
         private route: ActivatedRoute,
+        private breadcrumbService: BreadcrumbsService,
     ) {
         this.getUser();
 
@@ -142,7 +144,8 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
                             }
                             await Swal.fire({
                                 title: classroomInviteTitle,
-                                text: "Would you like to be added to " + classroomInviteMessage + "?",
+                                text:
+                                    "Would you like to be added to " + classroomInviteMessage + "?",
                                 icon: "warning",
                                 showCancelButton: true,
                                 confirmButtonColor: "#3085d6",
@@ -333,7 +336,9 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
     }
 
     private setFireImage() {
-        this.fireImage = this.learningPathService.getFireTypeFromStreak(this.fireData.FireData.fire_days);
+        this.fireImage = this.learningPathService.getFireTypeFromStreak(
+            this.fireData.FireData.fire_days,
+        );
     }
 
     getReviewImageUrl(fireImage: string, noReviews: boolean = false) {
@@ -370,8 +375,13 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
                         });
                         this.allLevels = this.activeLevels.concat(this.inactiveLevels);
                         this.noLevel = false;
-                        if (!this.localStorage.getItem("LevelID") || !this.setLevelFromLocalStorage()) {
-                            this.setActiveLevel(!!this.activeLevels[0] ? this.activeLevels[0] : this.path.levels[0]);
+                        if (
+                            !this.localStorage.getItem("LevelID") ||
+                            !this.setLevelFromLocalStorage()
+                        ) {
+                            this.setActiveLevel(
+                                !!this.activeLevels[0] ? this.activeLevels[0] : this.path.levels[0],
+                            );
                         }
                     } else {
                         this.noLevel = true;
@@ -393,21 +403,7 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
     }
 
     setActiveLevel(level) {
-        /*** breadcrumb code star***/
-        const breadcrumb = [
-            {
-                Name: "Classroom",
-                URL: "/classroom",
-            },
-            {
-                ID: level.id,
-                Name: level.name,
-                URL: "/classroom",
-            },
-        ];
-        // this.localStorage.setItem('breadcrumb', JSON.stringify(breadcrumb));
-        this.reviewService.setBreadcrumb(breadcrumb);
-        /*** breadcrumb code end***/
+        this.breadcrumbService.setClassroomLevelBreadcrumbs(level.name);
 
         this.localStorage.setItem("LevelID", level.id);
         this.localStorage.removeItem("unitID");
@@ -524,6 +520,10 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
     }
 
     goToVillage() {
-        this.learningPathService.goToVillage(this.user.learningpath_id, this.user.id, this.currentLevel.id);
+        this.learningPathService.goToVillage(
+            this.user.learningpath_id,
+            this.user.id,
+            this.currentLevel.id,
+        );
     }
 }

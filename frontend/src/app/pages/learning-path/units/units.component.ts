@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, Input } from "@angular/core";
 import { CookieService } from "app/_services/cookie.service";
 import { Router } from "@angular/router";
 import Swal from "sweetalert2";
@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
 import { ReviewService } from "app/_services/review.service";
 import { ForumService } from "app/_services/forum.service";
 import { environment } from "environments/environment";
+import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-units",
@@ -17,6 +18,7 @@ import { environment } from "environments/environment";
     styleUrls: ["./units.component.scss"],
 })
 export class UnitsComponent implements OnInit, OnDestroy {
+    @Input() path: any = {};
     public level: any = {};
     public fireData: any = {};
     public user: any = {};
@@ -38,6 +40,7 @@ export class UnitsComponent implements OnInit, OnDestroy {
         protected reviewService: ReviewService,
         protected localStorage: LocalStorageService,
         protected forumService: ForumService,
+        protected breadcrumbsService: BreadcrumbsService,
     ) {
         this.subscribeToLastActiveUnitOrReview();
 
@@ -83,18 +86,21 @@ export class UnitsComponent implements OnInit, OnDestroy {
     protected subscribeToLastActiveUnitOrReview() {
         // If this gets trigged, go to the last place the user left off, based on whether it's
         // a unit lesson or review and the unit id.
-        this.lastActiveUnitOrReviewSubscription = this.lessonService.lastActiveUnitOrReview.subscribe((params) => {
-            if (!params.unit || !params.type) {
-                return;
-            }
-            if (params.type == "unit") {
-                this.goToLesson(params.unit);
-            } else if (params.type == "review") {
-                this.review(params.unit);
-            } else {
-                console.error("Error: unhandled type for last active unit or review: " + params.type);
-            }
-        });
+        this.lastActiveUnitOrReviewSubscription =
+            this.lessonService.lastActiveUnitOrReview.subscribe((params) => {
+                if (!params.unit || !params.type) {
+                    return;
+                }
+                if (params.type == "unit") {
+                    this.goToLesson(params.unit);
+                } else if (params.type == "review") {
+                    this.review(params.unit);
+                } else {
+                    console.error(
+                        "Error: unhandled type for last active unit or review: " + params.type,
+                    );
+                }
+            });
     }
 
     protected subscribeToUnitReview() {
@@ -118,7 +124,11 @@ export class UnitsComponent implements OnInit, OnDestroy {
                 } else {
                     const unlockedUnitList = document.querySelectorAll(".ng-unlocked-unit");
                     idx = unlockedUnitList.length - 1;
-                    unlockedUnitList[idx].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+                    unlockedUnitList[idx].scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest",
+                        inline: "start",
+                    });
                 }
                 clearInterval(interval);
             } else if (increm > 100) {
@@ -128,20 +138,11 @@ export class UnitsComponent implements OnInit, OnDestroy {
     }
 
     goToLesson(unit) {
-        /*** breadcrumb code start***/
-        const getbreadcrumb = localStorage.getItem("breadcrumb");
-        let params: any = [];
-        if (getbreadcrumb) {
-            params = JSON.parse(getbreadcrumb);
-            params[2] = {
-                ID: unit.id,
-                Name: unit.name,
-                URL: "/lessons-and-exercises",
-            };
-        }
-        // this.localStorage.setItem('breadcrumb', JSON.stringify(params));
-        this.reviewService.setBreadcrumb(params);
-        /*** breadcrumb code end***/
+        this.breadcrumbsService.setUnitBreadcrumbs(
+            this.path.label || "",
+            this.level.name,
+            unit.name,
+        );
 
         this.lessonService.setUnit(unit);
         this.localStorage.setItem("unitID", unit.id);
@@ -162,27 +163,11 @@ export class UnitsComponent implements OnInit, OnDestroy {
     }
 
     review(unit) {
-        /*** breadcrumb code start***/
-        const getbreadcrumb = localStorage.getItem("breadcrumb");
-        let params: any = [];
-        if (getbreadcrumb) {
-            params = JSON.parse(getbreadcrumb);
-            params[2] = {
-                ID: unit.id,
-                Name: unit.name,
-                URL: "/lessons-and-exercises",
-            };
-            params[3] = {
-                ID: unit.id,
-                Name: "Review",
-                URL: "/review",
-            };
-        }
-
-        // this.localStorage.setItem('breadcrumb', JSON.stringify(params));
-
-        this.reviewService.setBreadcrumb(params);
-        /*** breadcrumb code end***/
+        this.breadcrumbsService.setUnitReviewBreadcrumbs(
+            this.path.label || "",
+            this.level.name,
+            unit.name,
+        );
 
         this.localStorage.setItem("unitID", unit.id);
         // this.reviewService.setReviewProgress({});
@@ -207,7 +192,9 @@ export class UnitsComponent implements OnInit, OnDestroy {
                         res.data.results.showModal = true;
                         this.reviewService.setReviewProgress({ progressValue: res.data.results });
                     } else {
-                        console.error("Error: unable to set boolean to show progress bar. res.data.results not valid.");
+                        console.error(
+                            "Error: unable to set boolean to show progress bar. res.data.results not valid.",
+                        );
                     }
                 })
                 .catch((err) => {
@@ -221,7 +208,7 @@ export class UnitsComponent implements OnInit, OnDestroy {
     setForumParams(unit) {
         this.localStorage.removeItem("forumId");
         const params = {
-            path_id: this.user.learningpath_id,
+            path_id: this.path.id,
             level_id: this.level.id,
             unit_id: unit.id,
             user_id: this.user.id,
@@ -232,7 +219,11 @@ export class UnitsComponent implements OnInit, OnDestroy {
 
     lockedContinueIconClicked(releaseDate = null) {
         if (!!releaseDate) {
-            void Swal.fire(environment.SITE_NAME, "This unit is locked until " + releaseDate.substring(0, 10), "error");
+            void Swal.fire(
+                environment.SITE_NAME,
+                "This unit is locked until " + releaseDate.substring(0, 10),
+                "error",
+            );
         } else {
             void Swal.fire(
                 environment.SITE_NAME,

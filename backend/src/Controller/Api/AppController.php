@@ -148,7 +148,7 @@ class AppController extends \App\Controller\AppController
                 ->select(['Unitdetails.exercise_id'])
                 ->distinct(['Unitdetails.exercise_id'])
                 ->where([
-                    'Unitdetails.unit_id' => $unitId,
+                    'Unitdetails.unit_id IS' => $unitId,
                     'Unitdetails.exercise_id IS NOT NULL',
                     'Unitdetails.exercise_id NOT IN' => $correctExerciseResponsesMinusMTP
                 ]);

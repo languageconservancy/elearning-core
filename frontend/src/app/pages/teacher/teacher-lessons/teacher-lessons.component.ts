@@ -122,7 +122,10 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         //setup forms
         this.newLevelForm = new UntypedFormGroup({
-            name: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            name: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             description: new UntypedFormControl(""),
             newLevelContent: new UntypedFormControl("-2"),
         });
@@ -138,7 +141,9 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
 
     async getAvailableUnits() {
         try {
-            const res: any = await this.classroomService.getAvailablePaths({ user_id: this.teacher.id });
+            const res: any = await this.classroomService.getAvailablePaths({
+                user_id: this.teacher.id,
+            });
             this.allAvailablePaths = res.data.results["availablePaths"];
             this.availablePaths = res.data.results["availablePaths"];
             if (this.debug) console.debug("Available paths", this.availablePaths);
@@ -257,12 +262,14 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
         // Add unit back into each available path/level that normally contains it and re-sort
         this.allAvailablePaths.forEach((path, pathIdx: number) => {
             path.levels.forEach((level, levelIdx: number) => {
-                const availableUnitIdx = this.allAvailablePaths[pathIdx].levels[levelIdx].units.findIndex(
-                    (u) => u.id === unit.id,
-                );
+                const availableUnitIdx = this.allAvailablePaths[pathIdx].levels[
+                    levelIdx
+                ].units.findIndex((u) => u.id === unit.id);
                 if (
                     availableUnitIdx !== -1 &&
-                    this.availablePaths[pathIdx].levels[levelIdx].units.findIndex((u) => u.id == unit.id) === -1
+                    this.availablePaths[pathIdx].levels[levelIdx].units.findIndex(
+                        (u) => u.id == unit.id,
+                    ) === -1
                 ) {
                     // Add unit back into available path/level using unit from
                     // allAvailablePaths to include all fields (sequence) for sorting
@@ -287,7 +294,9 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
 
     createLevelUnitFromAvailableUnit(unitIdx: number): LevelUnit {
         const unit =
-            this.availablePaths[this.currentAvailablePathIndex].levels[this.currentAvailableLevelIndex].units[unitIdx];
+            this.availablePaths[this.currentAvailablePathIndex].levels[
+                this.currentAvailableLevelIndex
+            ].units[unitIdx];
         const levelUnit = {
             id: null,
             learningpath_id: null,
@@ -308,10 +317,9 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
         const levelUnit = this.createLevelUnitFromAvailableUnit(idx);
         this.listLevelUnits.push(levelUnit);
 
-        this.availablePaths[this.currentAvailablePathIndex].levels[this.currentAvailableLevelIndex].units.splice(
-            idx,
-            1,
-        );
+        this.availablePaths[this.currentAvailablePathIndex].levels[
+            this.currentAvailableLevelIndex
+        ].units.splice(idx, 1);
         this.unsavedUnitChanges = true;
     }
 
@@ -324,7 +332,6 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
 
     saveTeacherLevelUnits() {
         if (!!this.listLevelUnits) {
-
             // Clean data for api call
             for (let i = 0; i < this.listLevelUnits.length; i++) {
                 this.listLevelUnits[i].sequence = i + 1;
@@ -359,7 +366,10 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
                     this.loader.setLoader(false);
                 });
         } else {
-            this.snackbarService.showSnackbar({ status: false, msg: "No teacher level units to save." });
+            this.snackbarService.showSnackbar({
+                status: false,
+                msg: "No teacher level units to save.",
+            });
         }
     }
 

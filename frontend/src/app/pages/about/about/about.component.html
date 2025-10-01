@@ -100,7 +100,10 @@
                     [ngClass]="{ 'show active': item.Id === activeTab }"
                 >
                     <!--						<h2 *ngIf="item.Id != 'press' || item.Id != 'privacy'">{{item.tabTitle}}</h2>-->
-                    <h2 *ngIf="item.Id === 'press' || item.Id !== 'privacy' || item.Id !== 'terms'" class="pb-0">
+                    <h2
+                        *ngIf="item.Id === 'press' || item.Id !== 'privacy' || item.Id !== 'terms'"
+                        class="pb-0"
+                    >
                         {{ item.tabTitle }}
                     </h2>
                     <div
@@ -110,12 +113,12 @@
                 </div>
                 <iframe
                     *ngIf="activeTab === 'privacy'"
-                    src="https://owoksape.com/info/privacy.php"
+                    [src]="getPrivacyUrl() | safeUrl"
                     style="width: 100%; border: none; height: 450px"
                 ></iframe>
                 <iframe
                     *ngIf="activeTab === 'terms'"
-                    src="https://owoksape.com/info/terms_old.php"
+                    [src]="getTermsUrl() | safeUrl"
                     style="width: 100%; border: none; height: 450px"
                 ></iframe>
             </div>

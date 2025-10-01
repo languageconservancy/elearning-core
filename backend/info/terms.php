@@ -3,20 +3,81 @@
 //error_reporting (E_ALL ^ E_NOTICE); /* 1st line (recommended) */
 header('Content-type: text/html; charset=utf-8');
 
-// override env function from cakephp, to suppress errors due to not having
-// dotenv functions available outside cakephp
-function env($key, $value = null, $default = null) {
-	return "";
+
+// Simple .env file loader function
+function loadEnvFile($filePath) {
+  if (!file_exists($filePath)) {
+      return false;
+  }
+
+  $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+  foreach ($lines as $line) {
+      $line = trim($line);
+
+      // Skip comments and empty lines
+      if (empty($line) || strpos($line, '#') === 0) {
+          continue;
+      }
+
+      // Parse key=value pairs
+      if (strpos($line, '=') !== false) {
+          list($key, $value) = explode('=', $line, 2);
+          $key = trim($key);
+          $value = trim($value, " \t\n\r\0\x0B\"'"); // Remove quotes and whitespace
+
+          if (!array_key_exists($key, $_ENV)) {
+              $_ENV[$key] = $value;
+              $_SERVER[$key] = $value;
+              putenv("$key=$value");
+          }
+      }
+  }
+  return true;
 }
 
-// Read in cakephp config
-$conf = include("../backend/config/app.php");
+// CakePHP-compatible env function
+function env($key, $default = null) {
+  if (array_key_exists($key, $_ENV)) {
+      return $_ENV[$key];
+  }
+  if (array_key_exists($key, $_SERVER)) {
+      return $_SERVER[$key];
+  }
+  return getenv($key) ?: $default;
+}
+
+// Try to load .env file from different possible locations
+// When deployed to public_html/info/, backend would be at ../backend/
+$envPaths = [
+  '../backend/config/.env',  // When deployed to public_html/info/
+];
+
+foreach ($envPaths as $envPath) {
+  if (loadEnvFile($envPath)) {
+      break;
+  }
+}
+
+// Try to load CakePHP config from different possible locations
+$configPaths = [
+  '../backend/config/app.php',  // When deployed to public_html/info/
+];
+
+$conf = null;
+foreach ($configPaths as $configPath) {
+  if (file_exists($configPath)) {
+      $conf = include($configPath);
+      break;
+  }
+}
+
 $dbConf = $conf['Datasources']['default'];
 
-DEFINE ('DB_USER', $dbConf['username']);
-DEFINE ('DB_PASSWORD', $dbConf['password']);
+DEFINE ('DB_USER', env('DATABASE_USERNAME', 'root'));
+DEFINE ('DB_PASSWORD', env('DATABASE_PASSWORD', 'root'));
 DEFINE ('DB_HOST', $dbConf['host']);
 DEFINE ('DB_NAME', $dbConf['database']);
+DEFINE ('APP_NAME', $conf['App']['name']);
 
 // Make MySQLi connection
 $dbConn = @($GLOBALS["___mysqli_ston"] = mysqli_connect(

@@ -72,6 +72,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.breadcrumbsService.clearBreadcrumbs();
         this.cookieService
             .get("AuthUser")
             .then((value) => {
@@ -90,6 +91,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
                                     ? -Math.abs(timeZoneOffset)
                                     : Math.abs(timeZoneOffset);
                             this.globalFire();
+                            this.breadcrumbsService.setLearningPathBreadcrumbs(
+                                this.user.learningpath.label,
+                            );
                         } else {
                             void this.alreadyDeleted();
                         }

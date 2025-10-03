@@ -84,6 +84,7 @@ export class UnitProgressNavComponent implements OnInit {
     // since any incorrectly completed activities will be reset upon entering the
     // unit or repeating the unit.
     allActivitiesCompleted: boolean = false;
+    allExercisesCompleted: boolean = false;
     debug: boolean = !environment.production;
 
     constructor() {}
@@ -157,8 +158,10 @@ export class UnitProgressNavComponent implements OnInit {
             this.activities.push(JSON.parse(JSON.stringify(progressActivity)));
         }
         this.initExerciseBlocks();
-        if (this.debug)
+        this.updateUnitCompletion();
+        if (this.debug) {
             console.debug("Unit previously completed: " + this.unitCompleteOrPreviouslyCompleted);
+        }
     }
 
     initExerciseBlocks() {
@@ -457,6 +460,19 @@ export class UnitProgressNavComponent implements OnInit {
                 );
             } else if (activity.type === "lesson") {
                 return activity.state == ActivityState.CompletedCorrectly;
+            } else {
+                throw new Error("[updateUnitCompletion] Invalid activity type: " + activity.type);
+            }
+        });
+
+        this.allExercisesCompleted = this.activities.every((activity) => {
+            if (activity.type === "lesson") {
+                return true;
+            } else if (activity.type === "exercise") {
+                return (
+                    activity.state === ActivityState.CompletedCorrectly ||
+                    activity.state === ActivityState.CompletedIncorrectly
+                );
             } else {
                 throw new Error("[updateUnitCompletion] Invalid activity type: " + activity.type);
             }

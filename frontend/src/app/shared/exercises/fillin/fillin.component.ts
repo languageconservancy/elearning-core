@@ -332,7 +332,7 @@ export class FillinComponent implements OnInit, OnDestroy {
      * and initializes the choices for multiple choice options.
      */
     private initUi() {
-        this.keyboardHighlightedMcqChoiceIndex = 0;
+        this.keyboardHighlightedMcqChoiceIndex = -1;
         this.inputs = {};
         this.maxLengths = {};
         this.answer = [];

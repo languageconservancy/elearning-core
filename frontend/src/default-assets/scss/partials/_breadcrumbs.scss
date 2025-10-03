@@ -3,13 +3,20 @@
 .breadcumb {
     width: 100%;
     display: flex;
-    white-space: nowrap;
-    overflow-x: auto;
-    &::-webkit-scrollbar {
-        display: none;
+    flex-wrap: wrap;
+    gap: 0;
+
+    // On larger screens, prevent wrapping and use horizontal scroll
+    @media (min-width: 768px) {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        overflow-x: auto;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
-    -ms-overflow-style: none;
-    scrollbar-width: none;
 }
 .breadcumb a {
     font-size: 1.1rem;
@@ -23,6 +30,13 @@
 .breadcumb .breadcumb-link:last-child span {
     display: none;
 }
+.breadcumb-link {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; // Prevent individual breadcrumb items from wrapping
+    flex-shrink: 0; // Prevent items from shrinking
+}
+
 .breadcumb .breadcumb-link span {
     color: theme.$text_primary_contrast;
     position: relative;

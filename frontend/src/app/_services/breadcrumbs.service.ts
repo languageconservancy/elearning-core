@@ -43,6 +43,21 @@ export class BreadcrumbsService {
         localStorage.removeItem(this.STORAGE_KEY);
     }
 
+    getLearningPathBreadcrumbFromStorage() {
+        const breadcrumbs = this.loadFromStorage();
+        return breadcrumbs.find((breadcrumb) => breadcrumb.type === BreadcrumbType.LearningPath);
+    }
+
+    getLevelBreadcrumbFromStorage() {
+        const breadcrumbs = this.loadFromStorage();
+        return breadcrumbs.find((breadcrumb) => breadcrumb.type === BreadcrumbType.Level);
+    }
+
+    getUnitBreadcrumbFromStorage() {
+        const breadcrumbs = this.loadFromStorage();
+        return breadcrumbs.find((breadcrumb) => breadcrumb.type === BreadcrumbType.Unit);
+    }
+
     getLearningPathBreadcrumb(learningPath: string) {
         return {
             type: BreadcrumbType.LearningPath,
@@ -92,6 +107,11 @@ export class BreadcrumbsService {
     }
 
     setLearningPathReviewBreadcrumbs(learningPath: string) {
+        let learningPathBreadcrumb = null;
+        if (!learningPath) {
+            learningPathBreadcrumb = this.getLearningPathBreadcrumbFromStorage();
+            learningPath = learningPathBreadcrumb.name;
+        }
         if (!learningPath) {
             console.error("Learning path is required to set learning path review breadcrumb", {
                 learningPath,
@@ -107,6 +127,16 @@ export class BreadcrumbsService {
     }
 
     setLevelReviewBreadcrumbs(learningPath: string, level: string) {
+        let learningPathBreadcrumb = null;
+        let levelBreadcrumb = null;
+        if (!learningPath) {
+            learningPathBreadcrumb = this.getLearningPathBreadcrumbFromStorage();
+            learningPath = learningPathBreadcrumb.name;
+        }
+        if (!level) {
+            levelBreadcrumb = this.getLevelBreadcrumbFromStorage();
+            level = levelBreadcrumb.name;
+        }
         if (!learningPath || !level) {
             console.error("Learning path and level are required to set level review breadcrumb.", {
                 learningPath,
@@ -124,6 +154,22 @@ export class BreadcrumbsService {
     }
 
     setUnitReviewBreadcrumbs(learningPath: string, level: string, unit: string) {
+        let learningPathBreadcrumb = null;
+        let levelBreadcrumb = null;
+        let unitBreadcrumb = null;
+        if (!learningPath) {
+            learningPathBreadcrumb = this.getLearningPathBreadcrumbFromStorage();
+            learningPath = learningPathBreadcrumb.name;
+        }
+        if (!level) {
+            levelBreadcrumb = this.getLevelBreadcrumbFromStorage();
+            level = levelBreadcrumb.name;
+        }
+        if (!unit) {
+            unitBreadcrumb = this.getUnitBreadcrumbFromStorage();
+            unit = unitBreadcrumb.name;
+        }
+
         if (!learningPath || !level || !unit) {
             console.error(
                 "Learning path, level, and unit are required to set unit review breadcrumb.",
@@ -135,6 +181,7 @@ export class BreadcrumbsService {
             );
             return;
         }
+
         const breadcrumbs: Breadcrumb[] = [
             this.getLearningPathBreadcrumb(learningPath),
             this.getLevelBreadcrumb(level),
@@ -146,6 +193,11 @@ export class BreadcrumbsService {
     }
 
     setLearningPathBreadcrumbs(learningPath: string) {
+        let learningPathBreadcrumb = null;
+        if (!learningPath) {
+            learningPathBreadcrumb = this.getLearningPathBreadcrumbFromStorage();
+            learningPath = learningPathBreadcrumb.name;
+        }
         if (!learningPath) {
             console.error("Learning path is required to set learning path breadcrumb", {
                 learningPath,
@@ -158,6 +210,16 @@ export class BreadcrumbsService {
     }
 
     setLevelBreadcrumbs(learningPath: string, level: string) {
+        let learningPathBreadcrumb = null;
+        let levelBreadcrumb = null;
+        if (!learningPath) {
+            learningPathBreadcrumb = this.getLearningPathBreadcrumbFromStorage();
+            learningPath = learningPathBreadcrumb.name;
+        }
+        if (!level) {
+            levelBreadcrumb = this.getLevelBreadcrumbFromStorage();
+            level = levelBreadcrumb.name;
+        }
         if (!learningPath || !level) {
             console.error("Learning path and level are required to set level breadcrumb.", {
                 learningPath,
@@ -174,6 +236,11 @@ export class BreadcrumbsService {
     }
 
     setClassroomLevelBreadcrumbs(level: string) {
+        let levelBreadcrumb = null;
+        if (!level) {
+            levelBreadcrumb = this.getLevelBreadcrumbFromStorage();
+            level = levelBreadcrumb.name;
+        }
         if (!level) {
             console.error("Level is required to set classroom level breadcrumb", {
                 level,
@@ -189,6 +256,21 @@ export class BreadcrumbsService {
     }
 
     setUnitBreadcrumbs(learningPath: string, level: string, unit: string) {
+        let learningPathBreadcrumb = null;
+        let levelBreadcrumb = null;
+        let unitBreadcrumb = null;
+        if (!learningPath) {
+            learningPathBreadcrumb = this.getLearningPathBreadcrumbFromStorage();
+            learningPath = learningPathBreadcrumb.name;
+        }
+        if (!level) {
+            levelBreadcrumb = this.getLevelBreadcrumbFromStorage();
+            level = levelBreadcrumb.name;
+        }
+        if (!unit) {
+            unitBreadcrumb = this.getUnitBreadcrumbFromStorage();
+            unit = unitBreadcrumb.name;
+        }
         if (!learningPath || !level || !unit) {
             console.error("Learning path, level, and unit are required to set unit breadcrumb.", {
                 learningPath,

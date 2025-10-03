@@ -94,7 +94,7 @@ export class UnitsComponent implements OnInit, OnDestroy {
                 if (params.type == "unit") {
                     this.goToLesson(params.unit);
                 } else if (params.type == "review") {
-                    this.review(params.unit);
+                    this.goToReview(params.unit);
                 } else {
                     console.error(
                         "Error: unhandled type for last active unit or review: " + params.type,
@@ -162,7 +162,7 @@ export class UnitsComponent implements OnInit, OnDestroy {
         }
     }
 
-    review(unit) {
+    goToReview(unit) {
         this.breadcrumbsService.setUnitReviewBreadcrumbs(
             this.path.label || "",
             this.level.name,

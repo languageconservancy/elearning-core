@@ -29,7 +29,7 @@ echo -e "Rsyncing the following files\nfrom ${BACKEND_REPO_DIR} to ${SERVER_DIR}
 # Create the backend directory if it doesn't exist
 mkdir -p ${SERVER_DIR}/backend
 cd ${BACKEND_REPO_DIR}
-rsync -a ${BACKEND_FILES_TO_RSYNC} ${SERVER_DIR}/backend/
+rsync -a ${BACKEND_FILES_TO_RSYNC} --exclude="config/.env"${SERVER_DIR}/backend/
 rsync -a info ${SERVER_DIR}/
 
 # Clear the cache directories

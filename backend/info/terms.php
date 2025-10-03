@@ -1,89 +1,92 @@
 <?php
 
-//error_reporting (E_ALL ^ E_NOTICE); /* 1st line (recommended) */
 header('Content-type: text/html; charset=utf-8');
 
-
-// Simple .env file loader function
+// Simple .env file loader
 function loadEnvFile($filePath) {
-  if (!file_exists($filePath)) {
-      return false;
-  }
+    if (!file_exists($filePath)) {
+        return false;
+    }
 
-  $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-  foreach ($lines as $line) {
-      $line = trim($line);
-
-      // Skip comments and empty lines
-      if (empty($line) || strpos($line, '#') === 0) {
-          continue;
-      }
-
-      // Parse key=value pairs
-      if (strpos($line, '=') !== false) {
-          list($key, $value) = explode('=', $line, 2);
-          $key = trim($key);
-          $value = trim($value, " \t\n\r\0\x0B\"'"); // Remove quotes and whitespace
-
-          if (!array_key_exists($key, $_ENV)) {
-              $_ENV[$key] = $value;
-              $_SERVER[$key] = $value;
-              putenv("$key=$value");
-          }
-      }
-  }
-  return true;
+    $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if (empty($line) || strpos($line, '#') === 0) {
+            continue;
+        }
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value, " \t\n\r\0\x0B\"'");
+            if (!array_key_exists($key, $_ENV)) {
+                $_ENV[$key] = $value;
+                $_SERVER[$key] = $value;
+                putenv("$key=$value");
+            }
+        }
+    }
+    return true;
 }
 
-// CakePHP-compatible env function
+// Simple env function
 function env($key, $default = null) {
-  if (array_key_exists($key, $_ENV)) {
-      return $_ENV[$key];
-  }
-  if (array_key_exists($key, $_SERVER)) {
-      return $_SERVER[$key];
-  }
-  return getenv($key) ?: $default;
+    return $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key) ?: $default;
 }
 
-// Try to load .env file from different possible locations
-// When deployed to public_html/info/, backend would be at ../backend/
-$envPaths = [
-  '../backend/config/.env',  // When deployed to public_html/info/
-];
+// Simple config getter
+function getConfigValue($key, $default = null) {
+    global $localConfig, $mainConfig;
 
-foreach ($envPaths as $envPath) {
-  if (loadEnvFile($envPath)) {
-      break;
-  }
+    // Check local config first (flat keys like 'App.name')
+    if ($localConfig && isset($localConfig[$key])) {
+        return $localConfig[$key];
+    }
+
+    // Check main config (nested access)
+    if ($mainConfig) {
+        $keys = explode('.', $key);
+        $value = $mainConfig;
+        foreach ($keys as $k) {
+            if (is_array($value) && isset($value[$k])) {
+                $value = $value[$k];
+            } else {
+                return $default;
+            }
+        }
+        return $value;
+    }
+
+    return $default;
 }
 
-// Try to load CakePHP config from different possible locations
-$configPaths = [
-  '../backend/config/app.php',  // When deployed to public_html/info/
-];
-
-$conf = null;
-foreach ($configPaths as $configPath) {
-  if (file_exists($configPath)) {
-      $conf = include($configPath);
-      break;
-  }
+// Load .env file
+if (file_exists('../backend/config/.env')) {
+    loadEnvFile('../backend/config/.env');
 }
 
-$dbConf = $conf['Datasources']['default'];
+// Load configs
+$mainConfig = null;
+if (file_exists('../backend/config/app.php')) {
+    $mainConfig = include('../backend/config/app.php');
+}
 
-DEFINE ('DB_USER', env('DATABASE_USERNAME', 'root'));
-DEFINE ('DB_PASSWORD', env('DATABASE_PASSWORD', 'root'));
-DEFINE ('DB_HOST', $dbConf['host']);
-DEFINE ('DB_NAME', $dbConf['database']);
-DEFINE ('APP_NAME', $conf['App']['name']);
+$localConfig = null;
+if (file_exists('../backend/config/app_local.php')) {
+    $localConfig = include('../backend/config/app_local.php');
+}
+
+// Get database config
+$dbHost = getConfigValue('Datasources.default.host', 'localhost');
+$dbName = getConfigValue('Datasources.default.database', 'default_db');
+$dbUser = env('DATABASE_USERNAME', 'root');
+$dbPassword = env('DATABASE_PASSWORD', 'root');
+$appName = getConfigValue('App.name', 'Default App');
 
 // Make MySQLi connection
 $dbConn = @($GLOBALS["___mysqli_ston"] = mysqli_connect(
-	DB_HOST,
-	DB_USER,
-	DB_PASSWORD
+	$dbHost,
+	$dbUser,
+	$dbPassword
 )) OR die ('Cannot connect to MySQL.');
 
 // Define UTF-8 character encoding
@@ -92,11 +95,11 @@ mysqli_query($GLOBALS["___mysqli_ston"], 'SET NAMES utf8');
 // Select the database
 (
 	(bool) mysqli_query(
-		$GLOBALS["___mysqli_ston"], "USE " . constant('DB_NAME')
+		$GLOBALS["___mysqli_ston"], "USE " . $dbName
 	)
 ) OR die ('Unable to select database.');
 
-// Get privacy policy
+// Get terms of service
 $pq = mysqli_query($dbConn,
 	"SELECT `text` FROM `contents` WHERE `keyword` = 'terms'");
 

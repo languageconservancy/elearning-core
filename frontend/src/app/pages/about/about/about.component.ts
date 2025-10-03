@@ -50,6 +50,16 @@ export class AboutComponent implements OnInit {
         }
     }
 
+    getPrivacyUrl(): string {
+        // return `${environment.ROOT}/info/privacy.php`;
+        return "http://localhost/info/privacy.php";
+    }
+
+    getTermsUrl(): string {
+        // return `${environment.ROOT}/info/terms.php`;
+        return "http://localhost/info/terms.php";
+    }
+
     gotoUrl(url: any) {
         void this.router.navigate(["about/" + url]);
     }

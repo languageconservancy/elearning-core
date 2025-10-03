@@ -48,8 +48,6 @@ export class BreadcrumbsComponent implements OnDestroy {
                     ? event.urlAfterRedirects.substring(1)
                     : event.urlAfterRedirects;
 
-                console.log("baseRoute", this.baseRoute);
-
                 // Check if breadcrumb should be shown for this route
                 this.showBreadcrumb = this.checkIfBreadcrumbIsAllowed(this.baseRoute);
             }

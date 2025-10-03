@@ -1703,7 +1703,7 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
             !!this.currentLesson() &&
             this.atLastLessonFrame() &&
             this.atLastActivityInUnit() &&
-            this.unitProgressNav.allActivitiesCompleted
+            this.unitProgressNav.allExercisesCompleted
         );
     }
 

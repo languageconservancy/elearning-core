@@ -1,6 +1,10 @@
 <div class="justify-content-start units-container mt-3 mt-lg-0" *ngIf="level.units?.length > 0">
     <ng-container *ngFor="let unit of level.units; let i = index">
-        <div *ngIf="!unitInactive(unit)" id="unit-{{ i }}-container" class="logo-container-box col-12 pb-2">
+        <div
+            *ngIf="!unitInactive(unit)"
+            id="unit-{{ i }}-container"
+            class="logo-container-box col-12 pb-2"
+        >
             <div
                 class=""
                 [ngClass]="{
@@ -25,7 +29,9 @@
                                 ></div>
                             </div>
                         </div>
-                        <div id="unit-{{ i }}-description" class="txt-detail font-language">{{ unit.description }}</div>
+                        <div id="unit-{{ i }}-description" class="txt-detail font-language">
+                            {{ unit.description }}
+                        </div>
                     </div>
 
                     <!-- Slot 3 (default is Reading, Writing, Listening, Speaking icons) -->
@@ -36,7 +42,9 @@
                                     <img
                                         src="./assets/images/reading-blue.png"
                                         alt="Reading"
-                                        [style.opacity]="0.1 + unit.unitFire.reding_percentage / 100"
+                                        [style.opacity]="
+                                            0.1 + unit.unitFire.reding_percentage / 100
+                                        "
                                     />
                                 </a>
                             </div>
@@ -45,7 +53,9 @@
                                     <img
                                         src="./assets/images/writing-blue.png"
                                         alt="Writing"
-                                        [style.opacity]="0.1 + unit.unitFire.writing_percentage / 100"
+                                        [style.opacity]="
+                                            0.1 + unit.unitFire.writing_percentage / 100
+                                        "
                                     />
                                 </a>
                             </div>
@@ -56,7 +66,9 @@
                                     <img
                                         src="./assets/images/listening-blue.png"
                                         alt="Listening"
-                                        [style.opacity]="0.1 + unit.unitFire.listening_percentage / 100"
+                                        [style.opacity]="
+                                            0.1 + unit.unitFire.listening_percentage / 100
+                                        "
                                     />
                                 </a>
                             </div>
@@ -65,7 +77,9 @@
                                     <img
                                         src="./assets/images/speaking-blue.png"
                                         alt="Speaking"
-                                        [style.opacity]="0.1 + unit.unitFire.speaking_percentage / 100"
+                                        [style.opacity]="
+                                            0.1 + unit.unitFire.speaking_percentage / 100
+                                        "
                                     />
                                 </a>
                             </div>
@@ -83,7 +97,11 @@
                                 tooltip
                                 [title]="getContinueIconTooltip(unit)"
                             >
-                                <img class="w-75 unit-action-btn" [src]="getContinueUnitIcon(unit)" alt="" />
+                                <img
+                                    class="w-75 unit-action-btn"
+                                    [src]="getContinueUnitIcon(unit)"
+                                    alt=""
+                                />
                             </a>
                         </div>
                     </div>
@@ -93,10 +111,16 @@
                             <a
                                 href="javascript:void(0)"
                                 [ngClass]="{ 'disabled-link': unit.unitPercentage === 0 }"
-                                [ngClass]="{ 'filter-gray-faded-disabled': unit.unitPercentage < 100 }"
+                                [ngClass]="{
+                                    'filter-gray-faded-disabled': unit.unitPercentage < 100,
+                                }"
                                 (click)="setForumParams(unit)"
                             >
-                                <img class="w-75 unit-action-btn" src="./assets/images/list-village.png" alt="" />
+                                <img
+                                    class="w-75 unit-action-btn"
+                                    src="./assets/images/list-village.png"
+                                    alt=""
+                                />
                             </a>
                         </div>
                     </div>
@@ -116,10 +140,12 @@
                             <a
                                 href="javascript:void(0)"
                                 [ngClass]="{ 'disabled-link': unitNotCompleted(unit) }"
-                                [ngClass]="{ 'filter-gray-faded-disabled': unit.unitPercentage < 100 }"
+                                [ngClass]="{
+                                    'filter-gray-faded-disabled': unit.unitPercentage < 100,
+                                }"
                                 tooltip
                                 title="Review"
-                                (click)="review(unit)"
+                                (click)="goToReview(unit)"
                             >
                                 <img
                                     class="w-75 unit-action-btn"
@@ -164,7 +190,9 @@
                                 ></div>
                             </div>
                         </div>
-                        <div id="unit-{{ i }}-description" class="txt-detail font-language">{{ unit.description }}</div>
+                        <div id="unit-{{ i }}-description" class="txt-detail font-language">
+                            {{ unit.description }}
+                        </div>
                     </div>
 
                     <!-- Slot 3 (default is Reading, Writing, Listening, Speaking icons) -->
@@ -175,7 +203,9 @@
                                     <img
                                         src="./assets/images/reading-blue.png"
                                         alt="Reading"
-                                        [style.opacity]="0.1 + unit.unitFire.reding_percentage / 100"
+                                        [style.opacity]="
+                                            0.1 + unit.unitFire.reding_percentage / 100
+                                        "
                                     />
                                 </a>
                             </div>
@@ -184,7 +214,9 @@
                                     <img
                                         src="./assets/images/writing-blue.png"
                                         alt="Writing"
-                                        [style.opacity]="0.1 + unit.unitFire.writing_percentage / 100"
+                                        [style.opacity]="
+                                            0.1 + unit.unitFire.writing_percentage / 100
+                                        "
                                     />
                                 </a>
                             </div>
@@ -195,7 +227,9 @@
                                     <img
                                         src="./assets/images/listening-blue.png"
                                         alt="Listening"
-                                        [style.opacity]="0.1 + unit.unitFire.listening_percentage / 100"
+                                        [style.opacity]="
+                                            0.1 + unit.unitFire.listening_percentage / 100
+                                        "
                                     />
                                 </a>
                             </div>
@@ -204,7 +238,9 @@
                                     <img
                                         src="./assets/images/speaking-blue.png"
                                         alt="Speaking"
-                                        [style.opacity]="0.1 + unit.unitFire.speaking_percentage / 100"
+                                        [style.opacity]="
+                                            0.1 + unit.unitFire.speaking_percentage / 100
+                                        "
                                     />
                                 </a>
                             </div>
@@ -217,7 +253,9 @@
                             <a
                                 href="javascript:void(0)"
                                 [ngClass]="{ 'disabled-link': unit.unitPercentage === 0 }"
-                                [ngClass]="{ 'filter-gray-faded-disabled': unit.unitPercentage < 100 }"
+                                [ngClass]="{
+                                    'filter-gray-faded-disabled': unit.unitPercentage < 100,
+                                }"
                                 (click)="setForumParams(unit)"
                             >
                                 <img class="w-75" src="./assets/images/list-village.png" alt="" />
@@ -240,12 +278,18 @@
                             <a
                                 href="javascript:void(0)"
                                 [ngClass]="{ 'disabled-link': unitNotCompleted(unit) }"
-                                [ngClass]="{ 'filter-gray-faded-disabled': unit.unitPercentage < 100 }"
+                                [ngClass]="{
+                                    'filter-gray-faded-disabled': unit.unitPercentage < 100,
+                                }"
                                 tooltip
                                 title="Review"
-                                (click)="review(unit)"
+                                (click)="goToReview(unit)"
                             >
-                                <img class="w-75" [src]="getReviewImageUrl(unit.unitFire.all_percentage)" alt="" />
+                                <img
+                                    class="w-75"
+                                    [src]="getReviewImageUrl(unit.unitFire.all_percentage)"
+                                    alt=""
+                                />
                             </a>
                         </div>
                     </div>

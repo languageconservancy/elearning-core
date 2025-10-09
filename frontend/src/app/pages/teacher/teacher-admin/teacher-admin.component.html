@@ -4,8 +4,8 @@
             <div id="teacher-info" class="logo-container-box col-lg-12">
                 <h5>School Administration</h5>
                 <p>
-                    From this page, you can add students and teachers to your school and change school settings and
-                    information.
+                    From this page, you can add students and teachers to your school and change
+                    school settings and information.
                 </p>
                 <h5>
                     <a href="/contact-us"
@@ -51,18 +51,20 @@
                 <div class="row">
                     <div class="col-xs-2 col-sm-2 col-lg-12">
                         <h5>
-                            {{ school.school.name }} Teachers
+                            {{ teacherSchoolUser.school.name }} Teachers
                             <!--<i class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download Roster"></i>-->
                         </h5>
 
                         <div class="panel panel-warning teacher-dnd teacher-dnd-left">
                             <div class="panel-body">
                                 <ul class="list-group">
-                                    <li *ngFor="let teacher of schoolTeachers; let i = index" class="list-group-item">
-                                        <img src="{{ teacher.user.usersetting.FullProfileImageUrl }}" />{{
-                                            teacher.user.name
-                                        }}
-                                        - {{ teacher.user.email }}
+                                    <li
+                                        *ngFor="let teacher of schoolTeachers; let i = index"
+                                        class="list-group-item"
+                                    >
+                                        <img
+                                            src="{{ teacher.user.usersetting.FullProfileImageUrl }}"
+                                        />{{ teacher.user.name }} - {{ teacher.user.email }}
                                     </li>
                                 </ul>
                             </div>
@@ -88,7 +90,9 @@
                                                 class="list-group-item"
                                             >
                                                 <p>{{ classroom.name }}</p>
-                                                <a href="javascript:void(0)" (click)="deleteClassroom(classroom.id)"
+                                                <a
+                                                    href="javascript:void(0)"
+                                                    (click)="deleteClassroom(classroom.id)"
                                                     >Delete classroom</a
                                                 >
                                             </li>
@@ -102,11 +106,16 @@
                                     <div class="panel-body">
                                         <ul class="list-group">
                                             <li
-                                                *ngFor="let classroom of archivedClassrooms; let i = index"
+                                                *ngFor="
+                                                    let classroom of archivedClassrooms;
+                                                    let i = index
+                                                "
                                                 class="list-group-item"
                                             >
                                                 <p>{{ classroom.name }}</p>
-                                                <a href="javascript:void(0)" (click)="deleteClassroom(classroom.id)"
+                                                <a
+                                                    href="javascript:void(0)"
+                                                    (click)="deleteClassroom(classroom.id)"
                                                     >Delete classroom</a
                                                 >
                                             </li>
@@ -126,27 +135,33 @@
                 <div class="row">
                     <div class="col-xs-2 col-sm-2 col-lg-12">
                         <h5>
-                            {{ school.school.name }} Students
+                            {{ teacherSchoolUser.school.name }} Students
                             <!--<i class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download Roster"></i>-->
                         </h5>
 
                         <div class="panel panel-warning teacher-dnd teacher-dnd-right">
                             <div class="panel-body">
                                 <ul class="list-group">
-                                    <li *ngFor="let student of schoolStudents; let i = index" class="list-group-item">
-                                        <img src="{{ student.user.usersetting.FullProfileImageUrl }}" />{{
-                                            student.user.name
-                                        }}
-                                        - {{ student.user.email }}
+                                    <li
+                                        *ngFor="let student of schoolStudents; let i = index"
+                                        class="list-group-item"
+                                    >
+                                        <img
+                                            src="{{ student.user.usersetting.FullProfileImageUrl }}"
+                                        />{{ student.user.name }} - {{ student.user.email }}
                                         <!--<div *ngIf="student.user.fb_id==null && student.user.google_id==null && student.user.clever_id==null" class="editStudent"><i fa fa-caret-down" data-toggle="tooltip" data-placement="top" (click)="getEditUser(i)" title="Edit User"></i><div>-->
                                         <div
                                             *ngIf="
                                                 (!student.user.fb_id || student.user.fb_id === 0) &&
-                                                (!student.user.google_id || student.user.google_id === 0) &&
-                                                (!student.user.clever_id || student.user.clever_id === 0)
+                                                (!student.user.google_id ||
+                                                    student.user.google_id === 0) &&
+                                                (!student.user.clever_id ||
+                                                    student.user.clever_id === 0)
                                             "
                                         >
-                                            <a href="javascript:void(0)" (click)="changePasswordModal(i)"
+                                            <a
+                                                href="javascript:void(0)"
+                                                (click)="changePasswordModal(i)"
                                                 >reset password</a
                                             >
                                         </div>
@@ -174,33 +189,56 @@
                     When adding a new users, you may either add students individually <br />
                     or upload an excel file using the following
                     <a [href]="newUsersUploadTemplateLink" target="_blank">template</a>
-                    <input type="file" (change)="importExcelUsers($event)" accept=".xlsx,.xls" class="ml-3" />
+                    <input
+                        type="file"
+                        (change)="importExcelUsers($event)"
+                        accept=".xlsx,.xls"
+                        class="ml-3"
+                    />
                 </p>
 
                 <form [formGroup]="newUsersForm" (submit)="addNewUsers(newUsersForm)">
                     <span><label for="name">Add Students to Class</label></span>
                     <span
-                        ><select formControlName="classroom" class="form-control seoc-btn-thin seoc-btn-width">
+                        ><select
+                            formControlName="classroom"
+                            class="form-control seoc-btn-thin seoc-btn-width"
+                        >
                             <option value="-1" selected>Add to School Only</option>
-                            <option *ngFor="let classroom of classrooms; let i = index" value="{{ i }}">
+                            <option
+                                *ngFor="let classroom of classrooms; let i = index"
+                                value="{{ i }}"
+                            >
                                 {{ classroom.name }}
                             </option>
                         </select>
                     </span>
 
                     <div class="user-array-form" formArrayName="new_users">
-                        <div *ngFor="let item of newUsers.controls; let userIndex = index" [formGroupName]="userIndex">
+                        <div
+                            *ngFor="let item of newUsers.controls; let userIndex = index"
+                            [formGroupName]="userIndex"
+                        >
                             <label class="label-w-200">
                                 Student ID:
-                                <input class="form-control seoc-btn-thin seoc-btn-width" formControlName="studentid" />
+                                <input
+                                    class="form-control seoc-btn-thin seoc-btn-width"
+                                    formControlName="studentid"
+                                />
                             </label>
                             <label class="label-w-200">
                                 First:
-                                <input class="form-control seoc-btn-thin seoc-btn-width" formControlName="fname" />
+                                <input
+                                    class="form-control seoc-btn-thin seoc-btn-width"
+                                    formControlName="fname"
+                                />
                             </label>
                             <label class="label-w-200">
                                 Last:
-                                <input class="form-control seoc-btn-thin seoc-btn-width" formControlName="lname" />
+                                <input
+                                    class="form-control seoc-btn-thin seoc-btn-width"
+                                    formControlName="lname"
+                                />
                             </label>
                             <label class="label-w-200">
                                 Email:
@@ -212,7 +250,10 @@
                             </label>
                             <label class="label-w-200">
                                 Password:
-                                <input class="form-control seoc-btn-thin seoc-btn-width" formControlName="password" />
+                                <input
+                                    class="form-control seoc-btn-thin seoc-btn-width"
+                                    formControlName="password"
+                                />
                             </label>
                             <label class="label-w-155">
                                 Date of Birth:
@@ -224,13 +265,18 @@
                             </label>
                             <label for="role"
                                 >Role
-                                <select formControlName="role" class="form-control seoc-btn-thin seoc-btn-width">
+                                <select
+                                    formControlName="role"
+                                    class="form-control seoc-btn-thin seoc-btn-width"
+                                >
                                     <option value="3" selected>Student</option>
                                     <option value="1">Teacher</option>
                                     <option value="2">Substitute</option>
                                 </select></label
                             >
-                            <a class="ml-2" (click)="deleteNewUserRow(userIndex)"><i class="fa fa-times"></i></a>
+                            <a class="ml-2" (click)="deleteNewUserRow(userIndex)"
+                                ><i class="fa fa-times"></i
+                            ></a>
                         </div>
                     </div>
                     <button type="button" class="btn btn-text-hover" (click)="addNewUserRow()">
@@ -242,15 +288,21 @@
             </div>
             <div *ngIf="modalType === 'getLink'" class="modal-body">
                 <p>
-                    A link can be created to allow students into your classroom.<br />Those students must either already
-                    have an account or create one themselves.
+                    A link can be created to allow students into your classroom.<br />Those students
+                    must either already have an account or create one themselves.
                 </p>
                 <form [formGroup]="getLinkForm">
                     <span><label for="name">Select Classroom</label></span>
                     <span
-                        ><select formControlName="classroom" class="form-control seoc-btn-thin seoc-btn-width">
+                        ><select
+                            formControlName="classroom"
+                            class="form-control seoc-btn-thin seoc-btn-width"
+                        >
                             <option value="-1" selected>Add to School Only</option>
-                            <option *ngFor="let classroom of classrooms; let i = index" value="{{ i }}">
+                            <option
+                                *ngFor="let classroom of classrooms; let i = index"
+                                value="{{ i }}"
+                            >
                                 {{ classroom.name }}
                             </option>
                         </select>
@@ -258,22 +310,34 @@
 
                     <label class="link-btn">
                         <a (click)="copyInputMessage()">Copy Me!</a>
-                        <input class="seoc-btn-thin link-btn" value="{{ wordlink }}" #inputWordLink />
+                        <input
+                            class="seoc-btn-thin link-btn"
+                            value="{{ wordlink }}"
+                            #inputWordLink
+                        />
                     </label>
-                    <button type="button" class="btn btn-text-hover" (click)="generateLink(getLinkForm)">
+                    <button
+                        type="button"
+                        class="btn btn-text-hover"
+                        (click)="generateLink(getLinkForm)"
+                    >
                         Generate New Link
                     </button>
                 </form>
             </div>
             <div *ngIf="modalType === 'googleClassroom'" class="modal-body">
                 <p>
-                    You may connect your account and add students to classes using your existing Google Classroom
-                    account.
+                    You may connect your account and add students to classes using your existing
+                    Google Classroom account.
                 </p>
                 <h3>Coming Soon!</h3>
             </div>
             <div *ngIf="modalType === 'changePassword'" class="modal-body">
-                <form name="changeForm" [formGroup]="changeForm" (submit)="changePassword(changeForm)">
+                <form
+                    name="changeForm"
+                    [formGroup]="changeForm"
+                    (submit)="changePassword(changeForm)"
+                >
                     <input
                         #passwordInput
                         class="form-control input-default seoc-btn-width"
@@ -303,7 +367,9 @@
                     />
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" (click)="closeModal()">Cancel</button>
+                        <button type="button" class="btn btn-default" (click)="closeModal()">
+                            Cancel
+                        </button>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>

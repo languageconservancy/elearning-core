@@ -29,13 +29,13 @@ import { ErrorCode } from "app/shared/utils/error-code";
 })
 export class TeacherAdminComponent implements OnInit, OnDestroy {
     private teacherSubscription: Subscription;
-    private schoolSubscription: Subscription;
+    private schoolUserSubscription: Subscription;
     @ViewChild("formModal") formModal;
     @ViewChild("passwordInput") passwordInput: ElementRef;
     public changeForm: UntypedFormGroup;
     public newLevelForm: UntypedFormGroup;
-    public teacher: any = [];
-    public school: any = [];
+    public teacherUser: any = [];
+    public teacherSchoolUser: any = [];
     public classrooms: any = [];
     public archivedClassrooms: any = [];
     public schoolStudents: any = [];
@@ -77,11 +77,11 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
         this.teacherService.setTab("teacher-lessons");
 
         this.teacherSubscription = this.teacherService.teacherObj.subscribe((teacher) => {
-            this.teacher = teacher;
+            this.teacherUser = teacher;
         });
 
-        this.schoolSubscription = this.teacherService.currentSchool.subscribe((school) => {
-            this.school = school;
+        this.schoolUserSubscription = this.teacherService.currentSchool.subscribe((schoolUser) => {
+            this.teacherSchoolUser = schoolUser;
             this.getSchoolStudents();
         });
     }
@@ -94,16 +94,28 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
             new_users: this.fb.array([
                 this.fb.group({
                     studentid: new UntypedFormControl("", []),
-                    fname: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-                    lname: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+                    fname: new UntypedFormControl("", [
+                        Validators.required,
+                        this.validateBlankValue.bind(this),
+                    ]),
+                    lname: new UntypedFormControl("", [
+                        Validators.required,
+                        this.validateBlankValue.bind(this),
+                    ]),
                     email: new UntypedFormControl("", [
                         Validators.required,
                         Validators.pattern(emailRegex),
                         this.validateBlankValue.bind(this),
                     ]),
-                    password: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+                    password: new UntypedFormControl("", [
+                        Validators.required,
+                        this.validateBlankValue.bind(this),
+                    ]),
                     role: "3",
-                    dob: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+                    dob: new UntypedFormControl("", [
+                        Validators.required,
+                        this.validateBlankValue.bind(this),
+                    ]),
                 }),
             ]),
         });
@@ -116,14 +128,14 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.teacherSubscription.unsubscribe();
-        this.schoolSubscription.unsubscribe();
+        this.schoolUserSubscription.unsubscribe();
     }
 
     getClassrooms() {
         this.classroomService
             .getTeacherClassrooms({
-                user_id: this.teacher.id,
-                school_id: this.school.school.id,
+                user_id: this.teacherUser.id,
+                school_id: this.teacherSchoolUser.school.id,
             })
             .then((res) => {
                 this.updateView(res.data.results);
@@ -156,8 +168,8 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
     deleteClassroom(id) {
         this.classroomService
             .deleteClassroom({
-                user_id: this.teacher.id,
-                school_id: this.school.school.id,
+                user_id: this.teacherUser.id,
+                school_id: this.teacherSchoolUser.school.id,
                 classroom_id: id,
             })
             .then((res) => {
@@ -196,7 +208,7 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
         if (form.valid) {
             this.setLoader(true);
             const data = {
-                teacher_id: this.teacher.id,
+                teacher_id: this.teacherUser.id,
                 student_user_id: this.schoolStudents[this.activeEditUser].user.id,
                 new_password: form.value.password,
             };
@@ -208,7 +220,10 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
                         if (res.data.status) {
                             this.closeModal();
                         } else {
-                            this.snackbarService.showSnackbar({ status: false, msg: res.data.message });
+                            this.snackbarService.showSnackbar({
+                                status: false,
+                                msg: res.data.message,
+                            });
                         }
                     },
                     (err) => {
@@ -233,7 +248,9 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
 
     private validatePasswordConfirmation(control: UntypedFormControl): any {
         if (this.changeForm) {
-            return control.value === this.changeForm.get("password").value ? null : { notSame: true };
+            return control.value === this.changeForm.get("password").value
+                ? null
+                : { notSame: true };
         }
     }
 
@@ -243,7 +260,15 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
 
     addNewUserRow() {
         this.newUsers.push(
-            this.fb.group({ studentid: "", fname: "", lname: "", email: "", password: "", role: "3", dob: "" }),
+            this.fb.group({
+                studentid: "",
+                fname: "",
+                lname: "",
+                email: "",
+                password: "",
+                role: "3",
+                dob: "",
+            }),
         );
     }
 
@@ -269,7 +294,8 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
                     let existingUserEmail = {};
                     let registeredUserId = {};
                     const data = {
-                        name: form.value.new_users[i].fname + " " + form.value.new_users[i].lname[0],
+                        name:
+                            form.value.new_users[i].fname + " " + form.value.new_users[i].lname[0],
                         dob: form.value.new_users[i].dob,
                         email: form.value.new_users[i].email,
                         password: form.value.new_users[i].password,
@@ -296,10 +322,10 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
                                 this.setLoader(false);
                             }
                             const params = {
-                                user_id: this.teacher.id,
+                                user_id: this.teacherUser.id,
                                 type: "addNewSchoolUsers",
                                 params: {
-                                    school_id: this.school.school.id,
+                                    school_id: this.teacherSchoolUser.school.id,
                                     student_id: form.value.new_users[i].studentid,
                                     f_name: form.value.new_users[i].fname,
                                     l_name: form.value.new_users[i].lname,
@@ -423,7 +449,14 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
         total_seconds -= seconds;
         const hours = Math.floor(total_seconds / (60 * 60));
         const minutes = Math.floor(total_seconds / 60) % 60;
-        return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
+        return new Date(
+            date_info.getFullYear(),
+            date_info.getMonth(),
+            date_info.getDate(),
+            hours,
+            minutes,
+            seconds,
+        );
     }
 
     excelDatetoAge(serial) {
@@ -435,9 +468,12 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
     }
 
     getSchoolStudents() {
-        if (!!this.teacher && !!this.school) {
+        if (!!this.teacherUser && !!this.teacherSchoolUser) {
             this.classroomService
-                .getTeacherClassroomUnitsAndStudents({ user_id: this.teacher.id, school_id: this.school.school_id })
+                .getTeacherClassroomUnitsAndStudents({
+                    user_id: this.teacherUser.id,
+                    school_id: this.teacherSchoolUser.school_id,
+                })
                 .then((res) => {
                     this.schoolStudents = res.data.results.schoolStudents;
                     this.schoolTeachers = res.data.results.schoolTeachers;
@@ -452,7 +488,10 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
         this.modalHeader = "Add Students";
         this.modalType = modalType;
         this.classroomService
-            .getTeacherClassrooms({ user_id: this.teacher.id, school_id: this.school.school.id })
+            .getTeacherClassrooms({
+                user_id: this.teacherUser.id,
+                school_id: this.teacherSchoolUser.school.id,
+            })
             .then((res) => {
                 this.classrooms = res.data.results;
                 this.formModal.nativeElement.className = "modal fade show";
@@ -470,10 +509,10 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
         }
 
         const params = {
-            user_id: this.teacher.id,
+            user_id: this.teacherUser.id,
             type: "generateWordlink",
             params: {
-                school_id: this.school.school.id,
+                school_id: this.teacherSchoolUser.school.id,
                 classroom_id: classroomId,
             },
         };

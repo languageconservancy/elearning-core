@@ -40,6 +40,7 @@ export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, O
         );
 
         this.villageImageUrl = "./assets/images/lesson-icon.png";
+        this.path = { label: "Classroom" };
         this.subscribeToCurrentLevel();
 
         this.subscribeToLastActiveUnitOrReview();

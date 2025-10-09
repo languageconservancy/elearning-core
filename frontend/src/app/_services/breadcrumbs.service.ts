@@ -279,6 +279,7 @@ export class BreadcrumbsService {
             });
             return;
         }
+
         const breadcrumbs: Breadcrumb[] = [
             this.getLearningPathBreadcrumb(learningPath),
             this.getLevelBreadcrumb(level),

@@ -13,7 +13,7 @@ import { UnitProgressNavComponent } from "app/_partials/unit-progress-nav/unit-p
 import { environment } from "environments/environment";
 import { Throttle } from "app/_decorators/throttle.decorator";
 import { AudioService } from "app/_services/audio.service";
-import { BreadcrumbsService, BreadcrumbType, Breadcrumb } from "app/_services/breadcrumbs.service";
+import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
 
 /**
  * Queue of events to be processed in order.
@@ -758,7 +758,6 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     ) {}
 
     ngOnInit(): void {
-        this.processBreadcrumbsFromLocalStorage();
         this.subscribeToLevelIdAndName();
         this.subscribeToUnitIdAndName();
         this.subscribeToPopupClosedEvents();
@@ -1123,46 +1122,6 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
             popup_status: true,
             status: true,
         });
-    }
-
-    processBreadcrumbsFromLocalStorage() {
-        const isClassroom: string | null = localStorage.getItem("isClassroom");
-        const breadcrumbsStr = localStorage.getItem("breadcrumb");
-
-        if (isClassroom) {
-            this.level.isClassroom = parseInt(isClassroom) === 1;
-        } else {
-            this.level.isClassroom = false;
-        }
-
-        let breadcrumbs: Breadcrumb[] = JSON.parse(breadcrumbsStr);
-        if (breadcrumbs.length === 0) {
-            this.breadcrumbsService.clearBreadcrumbs();
-            console.warn("No breadcrumbs found in local storage");
-            return;
-        }
-
-        // Get the learning path, level, and unit breadcrumbs
-        const learningPathBreadcrumb = breadcrumbs.filter(
-            (breadcrumb) => breadcrumb.type === BreadcrumbType.LearningPath,
-        );
-        const levelBreadcrumb = breadcrumbs.filter(
-            (breadcrumb) => breadcrumb.type === BreadcrumbType.Level,
-        );
-        const unitBreadcrumb = breadcrumbs.filter(
-            (breadcrumb) => breadcrumb.type === BreadcrumbType.Unit,
-        );
-
-        // Set the breadcrumbs, removing the review breadcrumb if it exists
-        if (this.level.isClassroom) {
-            this.breadcrumbsService.setClassroomLevelBreadcrumbs(levelBreadcrumb[0].name);
-        } else {
-            this.breadcrumbsService.setUnitBreadcrumbs(
-                learningPathBreadcrumb[0].name,
-                levelBreadcrumb[0].name,
-                unitBreadcrumb[0].name,
-            );
-        }
     }
 
     // #endregion Rxjs Observable updates

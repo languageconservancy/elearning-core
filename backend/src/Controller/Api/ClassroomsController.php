@@ -808,7 +808,7 @@ class ClassroomsController extends AppController
     private function generateAndSaveWordlink($params)
     {
         if (!isset($params['school_id'])) {
-            return ['status' => false, 'msg' => 'Wordlink creation failed.', 'data' => []];
+            return ['status' => false, 'msg' => 'Wordlink creation failed. School ID not provided.', 'data' => []];
         }
 
         $wordlink = $this->generateWordlink();
@@ -823,11 +823,13 @@ class ClassroomsController extends AppController
         }
 
         $wordlinkEntity = $this->getWordlinksTable()->patchEntity($wordlinkEntity, $wordlinkParams);
-        if ($this->getWordlinksTable()->save($wordlinkEntity)) {
-            return ['status' => true, 'msg' => 'New Wordlink Created', 'data' => $wordlinkParams];
+        if (!$this->getWordlinksTable()->save($wordlinkEntity)) {
+            $error = $this->getFirstError($wordlinkEntity);
+
+            return ['status' => false, 'msg' => 'Wordlink creation failed. Wordlink failed to save. ' . $error, 'data' => []];
         }
 
-        return ['status' => false, 'msg' => 'Wordlink creation failed.', 'data' => []];
+        return ['status' => true, 'msg' => 'New Wordlink Created', 'data' => $wordlinkParams];
     }
 
     private function getFirstError($entity)
@@ -862,6 +864,9 @@ class ClassroomsController extends AppController
             $replace = array('A', 'E', 'I', 'O', 'U', 'N', 'C', 'H', 'S', 'H', 'Z', 'G', '', '', '', '', '', '');
             $wordLink .= str_replace($search, $replace, mb_strtoupper($matches[0]));
         }
+        // Remove custom HTML entities like <size=12> or <color=#000000>
+        $wordLink = preg_replace('/<[^>]*>/', '', $wordLink);
+
         return $wordLink;
     }
 

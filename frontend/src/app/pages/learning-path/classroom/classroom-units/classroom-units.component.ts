@@ -9,6 +9,8 @@ import { ReviewService } from "app/_services/review.service";
 import { ForumService } from "app/_services/forum.service";
 import { UnitsComponent } from "app/pages/learning-path/units/units.component";
 import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
+import { SiteSettingsService } from "app/_services/site-settings.service";
+import { BaseService } from "app/_services/base.service";
 
 @Component({
     selector: "app-classroom-units",
@@ -27,6 +29,8 @@ export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, O
         localStorage: LocalStorageService,
         forumService: ForumService,
         breadcrumbsService: BreadcrumbsService,
+        siteSettingsService: SiteSettingsService,
+        baseService: BaseService,
     ) {
         super(
             router,
@@ -37,6 +41,8 @@ export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, O
             localStorage,
             forumService,
             breadcrumbsService,
+            siteSettingsService,
+            baseService,
         );
 
         this.villageImageUrl = "./assets/images/lesson-icon.png";

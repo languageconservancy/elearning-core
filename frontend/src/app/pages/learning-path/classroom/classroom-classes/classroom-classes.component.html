@@ -31,7 +31,7 @@
 <div class="row d-none d-md-flex">
     <div class="col-8 offset-4">
         <div class="action-btn-area mr-3">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-evenly">
                 <div class="ft-action-btn">
                     <a
                         id="continue-btn"
@@ -44,7 +44,10 @@
                         Continue
                     </a>
                 </div>
-                <div class="ft-action-btn">
+                <div
+                    class="ft-action-btn"
+                    *ngIf="features?.feature_village === '1' && canAccessVillage"
+                >
                     <a href="javascript:void(0)" (click)="goToVillage()">
                         <span>
                             <img height="57" src="./assets/images/partner-logo.png" />
@@ -99,7 +102,7 @@
     </div>
 </div>
 <!-- Continue, Village, Review buttons without text (Tablets and smaller) -->
-<div class="row d-md-none d-flex mt-3 justify-content-around">
+<div class="row d-md-none d-flex mt-3 justify-content-evenly">
     <div class="ft-action-btn">
         <img
             height="50rem"
@@ -107,7 +110,7 @@
             (click)="goToWhereverUserLeftOff()"
         />
     </div>
-    <div class="ft-action-btn">
+    <div class="ft-action-btn" *ngIf="features?.feature_village === '1'">
         <img height="50rem" src="./assets/images/partner-logo.png" (click)="goToVillage()" />
     </div>
     <div class="ft-action-btn">

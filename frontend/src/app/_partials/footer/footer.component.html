@@ -28,14 +28,14 @@
                                         >Progress</a
                                     >
                                 </li>
-                                <li *ngIf="canAccessLeaderboard()">
+                                <li *ngIf="canAccessLeaderboard">
                                     <a
                                         href="javascript:void(0)"
                                         (click)="gotoUrlOther('leader-board')"
                                         >Leaderboard</a
                                     >
                                 </li>
-                                <li *ngIf="features?.feature_village === '1' && canAccessVillage()">
+                                <li *ngIf="features?.feature_village === '1' && canAccessVillage">
                                     <a href="javascript:void(0)" (click)="goToVillage()">Village</a>
                                 </li>
                             </ul>

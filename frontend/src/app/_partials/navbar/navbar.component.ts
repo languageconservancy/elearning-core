@@ -13,7 +13,6 @@ import { environment } from "environments/environment";
 import { SiteSettingsService } from "app/_services/site-settings.service";
 import { VirtualKeyboardService } from "app/_services/virtual-keyboard.service";
 import { Routes } from "app/shared/utils/elearning-types";
-import { RegionPolicyService } from "app/_services/region-policy.service";
 import { PlatformRolesService } from "app/_services/platform-roles.service";
 import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
 
@@ -33,9 +32,10 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     public showReview: boolean = false;
     public showSignUpBtns: boolean = false;
     public expiredToken = false;
-    private settings: any = null;
     public features: any = null;
     public Routes = Routes;
+    public canAccessVillage: boolean = false;
+    public canAccessLeaderboard: boolean = false;
 
     public currentUserSub: Subscription;
     public userObjSub: Subscription;
@@ -55,7 +55,6 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
         private forumService: ForumService,
         private thisRoute: ActivatedRoute,
         private siteSettingsService: SiteSettingsService,
-        private regionPolicyService: RegionPolicyService,
         private virtualKeyboardService: VirtualKeyboardService,
         public platformRolesService: PlatformRolesService,
         private breadcrumbsService: BreadcrumbsService,
@@ -71,15 +70,6 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
                 void this.setUser(user);
             }
         });
-
-        this.siteSettingsService
-            .getSettings()
-            .then((settings) => {
-                this.settings = settings;
-            })
-            .catch((err) => {
-                console.error(err);
-            });
 
         this.siteSettingsService
             .getFeatures()
@@ -168,32 +158,6 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
         this.logOutSub.unsubscribe();
     }
 
-    /**
-     * Checks if the user is allowed to access the leaderboard.
-     *
-     * @returns {boolean} True if the user is allowed to access the leaderboard, false otherwise.
-     */
-    canAccessLeaderboard(): boolean {
-        return (
-            this.regionPolicyService.isAdult(this.user?.approximate_age) ||
-            (this.settings?.setting_minors_can_access_leaderboard === "1" &&
-                !this.regionPolicyService.isBetweenChildAndAdult(this.user?.approximate_age))
-        );
-    }
-
-    /**
-     * Checks if the user is allowed to access the village.
-     *
-     * @returns {boolean} True if the user is allowed to access the village, false otherwise.
-     */
-    public canAccessVillage(): boolean {
-        return (
-            this.regionPolicyService.isAdult(this.user?.approximate_age) ||
-            (this.settings?.setting_minors_can_access_village === "1" &&
-                !this.regionPolicyService.isBetweenChildAndAdult(this.user?.approximate_age))
-        );
-    }
-
     private setButtonVisibility(currentRoute: string) {
         switch (currentRoute) {
             case Routes.Register:
@@ -226,6 +190,15 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!!authToken) {
             this.getReviewData();
         }
+
+        this.canAccessVillage = await this.siteSettingsService.canAccessVillage(
+            this.user?.approximate_age,
+        );
+        console.log("canAccessVillage", this.canAccessVillage);
+        this.canAccessLeaderboard = await this.siteSettingsService.canAccessLeaderboard(
+            this.user?.approximate_age,
+        );
+        console.log("canAccessLeaderboard", this.canAccessLeaderboard);
     }
 
     private getUserSettings(type: boolean = false) {
@@ -258,6 +231,14 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
                             } else {
                                 this.loggedIn = true;
                                 this.user = res.data.results[0];
+                                this.canAccessVillage =
+                                    await this.siteSettingsService.canAccessVillage(
+                                        this.user?.approximate_age,
+                                    );
+                                this.canAccessLeaderboard =
+                                    await this.siteSettingsService.canAccessLeaderboard(
+                                        this.user?.approximate_age,
+                                    );
                                 this.getReviewData();
                             }
                         } else {

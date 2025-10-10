@@ -11,6 +11,8 @@ import { ReviewService } from "app/_services/review.service";
 import { ForumService } from "app/_services/forum.service";
 import { environment } from "environments/environment";
 import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
+import { SiteSettingsService } from "app/_services/site-settings.service";
+import { BaseService } from "app/_services/base.service";
 
 @Component({
     selector: "app-units",
@@ -31,6 +33,8 @@ export class UnitsComponent implements OnInit, OnDestroy {
     private continueUnitLockedImg: string = "./assets/images/unit-lock-icon.png";
     private continueUnitScheduledImg: string = "/assets/images/timed-icon.png";
     protected villageImageUrl: string = "./assets/images/list-village.png";
+    public canAccessVillage: boolean = false;
+    public features: any = {};
 
     constructor(
         protected router: Router,
@@ -41,25 +45,38 @@ export class UnitsComponent implements OnInit, OnDestroy {
         protected localStorage: LocalStorageService,
         protected forumService: ForumService,
         protected breadcrumbsService: BreadcrumbsService,
+        protected siteSettingsService: SiteSettingsService,
+        protected baseService: BaseService,
     ) {
         this.subscribeToLastActiveUnitOrReview();
 
         this.subscribeToUnitReview();
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.subscribeToCurrentLevel();
+
+        try {
+            this.features = await this.siteSettingsService.getFeatures();
+        } catch (err) {
+            console.error(err);
+        }
 
         this.cookieService
             .get("AuthUser")
-            .then((value) => {
+            .then(async (value) => {
                 if (value == "") {
-                    throw value;
+                    this.baseService.logout();
+                    return;
                 }
                 this.user = JSON.parse(value);
+                this.canAccessVillage = await this.siteSettingsService.canAccessVillage(
+                    this.user?.approximate_age,
+                );
             })
             .catch((err) => {
                 console.warn("No AuthUser cookie", err);
+                this.baseService.logout();
             });
     }
 

@@ -60,7 +60,7 @@
                         >Progress</a
                     >
                 </li>
-                <li class="nav-item left-menu" *ngIf="canAccessLeaderboard()">
+                <li class="nav-item left-menu" *ngIf="canAccessLeaderboard">
                     <a
                         id="nav-leaderboard-btn"
                         class="nav-link mr-1"
@@ -72,7 +72,7 @@
                 </li>
                 <li
                     class="nav-item left-menu"
-                    *ngIf="features?.feature_village === '1' && canAccessVillage()"
+                    *ngIf="features?.feature_village === '1' && canAccessVillage"
                 >
                     <a
                         id="nav-village-btn"

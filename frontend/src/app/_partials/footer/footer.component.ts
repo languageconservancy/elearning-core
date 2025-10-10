@@ -7,7 +7,6 @@ import { ForumService } from "app/_services/forum.service";
 import { ReviewService } from "app/_services/review.service";
 import { environment } from "environments/environment";
 import { SiteSettingsService } from "app/_services/site-settings.service";
-import { RegionPolicyService } from "app/_services/region-policy.service";
 
 @Component({
     selector: "app-footer",
@@ -16,8 +15,9 @@ import { RegionPolicyService } from "app/_services/region-policy.service";
 })
 export class FooterComponent {
     public user: any;
-    private settings: any = null;
     public features: any = null;
+    public canAccessVillage: boolean = false;
+    public canAccessLeaderboard: boolean = false;
     public environment = environment;
     public copyrightDate = new Date().getFullYear();
 
@@ -29,27 +29,25 @@ export class FooterComponent {
         private cookieService: CookieService,
         private reviewService: ReviewService,
         private siteSettingsService: SiteSettingsService,
-        private regionPolicyService: RegionPolicyService,
-    ) {
+    ) {}
+
+    ngOnInit() {
         this.cookieService
             .get("AuthUser")
-            .then((value) => {
+            .then(async (value) => {
                 if (value == "") {
                     throw value;
                 }
                 this.user = JSON.parse(value);
+                this.canAccessVillage = await this.siteSettingsService.canAccessVillage(
+                    this.user?.approximate_age,
+                );
+                this.canAccessLeaderboard = await this.siteSettingsService.canAccessLeaderboard(
+                    this.user?.approximate_age,
+                );
             })
             .catch((err) => {
                 console.warn("No AuthUser cookie", err);
-            });
-
-        this.siteSettingsService
-            .getSettings()
-            .then((settings) => {
-                this.settings = settings;
-            })
-            .catch((err) => {
-                console.error(err);
             });
 
         this.siteSettingsService
@@ -60,32 +58,6 @@ export class FooterComponent {
             .catch((err) => {
                 console.error(err);
             });
-    }
-
-    /**
-     * Checks if the user is allowed to access the leaderboard.
-     *
-     * @returns {boolean} True if the user is allowed to access the leaderboard, false otherwise.
-     */
-    canAccessLeaderboard(): boolean {
-        return (
-            this.regionPolicyService.isAdult(this.user?.approximate_age) ||
-            (this.settings?.setting_minors_can_access_leaderboard === "1" &&
-                !this.regionPolicyService.isBetweenChildAndAdult(this.user?.approximate_age))
-        );
-    }
-
-    /**
-     * Checks if the user is allowed to access the village.
-     *
-     * @returns {boolean} True if the user is allowed to access the village, false otherwise.
-     */
-    public canAccessVillage(): boolean {
-        return (
-            this.regionPolicyService.isAdult(this.user?.approximate_age) ||
-            (this.settings?.setting_minors_can_access_village === "1" &&
-                !this.regionPolicyService.isBetweenChildAndAdult(this.user?.approximate_age))
-        );
     }
 
     gotoUrl(url: any) {

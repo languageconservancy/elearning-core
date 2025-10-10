@@ -13,6 +13,8 @@ import { ReviewService } from "app/_services/review.service";
 import { ClassroomService } from "app/_services/classroom.service";
 import { SnackbarService } from "app/_services/snackbar.service";
 import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
+import { SiteSettingsService } from "app/_services/site-settings.service";
+import { BaseService } from "app/_services/base.service";
 
 @Component({
     selector: "app-classroom-classes",
@@ -32,6 +34,8 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
     public fireData: any = {};
     public noReviews: boolean = false;
     public fireImage: string = "dead";
+    public features: any = {};
+    public canAccessVillage: boolean = false;
     // Classroom-specific properties
     protected defaultLevelImageUrl: string = "./assets/images/menu-3.png";
     public activeLevels: any = [];
@@ -56,6 +60,8 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
         private classroomService: ClassroomService,
         private route: ActivatedRoute,
         private breadcrumbService: BreadcrumbsService,
+        private siteSettingsService: SiteSettingsService,
+        private baseService: BaseService,
     ) {
         this.getUser();
 
@@ -70,6 +76,15 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.localStorage.setItem("isClassroom", 1);
+        this.getFeatures();
+    }
+
+    private async getFeatures() {
+        try {
+            this.features = await this.siteSettingsService.getFeatures();
+        } catch (error) {
+            console.error("[classroom-classes] Error getting features. ", error);
+        }
     }
 
     ngOnDestroy() {
@@ -81,15 +96,19 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    this.baseService.logout();
+                    return;
                 }
                 this.loader.setLoader(true);
                 const loggedInUser = JSON.parse(value);
                 this.settingsService
                     .getAllSettings(loggedInUser.id)
-                    .then((res) => {
+                    .then(async (res) => {
                         if (res.data.status) {
                             this.user = res.data.results[0];
+                            this.canAccessVillage = await this.siteSettingsService.canAccessVillage(
+                                this.user?.approximate_age,
+                            );
                             this.checkQueryParamsForClassroomInvite();
 
                             this.getFireData();
@@ -114,6 +133,8 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
                     });
             })
             .catch(() => {
+                console.error("[classroom-classes] alreadyDeleted");
+                this.baseService.logout();
                 void this.router.navigate([""]);
             });
     }

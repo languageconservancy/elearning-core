@@ -11,6 +11,7 @@ import { SettingsService } from "app/_services/settings.service";
 import { ReviewService } from "app/_services/review.service";
 import { RegionPolicyService } from "app/_services/region-policy.service";
 import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
+import { SiteSettingsService } from "app/_services/site-settings.service";
 
 @Component({
     selector: "app-levels",
@@ -31,6 +32,7 @@ export class LevelsComponent implements OnInit, OnDestroy {
     public fireImage: string = "dead";
     protected defaultLevelImageUrl: string = "./assets/images/menu-3.png";
     public levelSubscription: Subscription;
+    public features: any = {};
 
     constructor(
         private router: Router,
@@ -43,6 +45,7 @@ export class LevelsComponent implements OnInit, OnDestroy {
         private learningPathService: LearningPathService,
         public regionPolicyService: RegionPolicyService,
         private breadcrumbsService: BreadcrumbsService,
+        private siteSettingsService: SiteSettingsService,
     ) {
         this.cookieService
             .get("AuthToken")
@@ -69,6 +72,15 @@ export class LevelsComponent implements OnInit, OnDestroy {
         localStorage.removeItem("unitID");
         localStorage.removeItem("reviewUnit");
         this.localStorage.setItem("isClassroom", 0);
+        this.getFeatures();
+    }
+
+    private async getFeatures() {
+        try {
+            this.features = await this.siteSettingsService.getFeatures();
+        } catch (error) {
+            console.error("[levels] Error getting features. ", error);
+        }
     }
 
     ngOnDestroy() {

@@ -106,7 +106,14 @@
                         </div>
                     </div>
                     <!-- Slot four (default is Village icon) -->
-                    <div *ngIf="!unitScheduled(unit)" class="col-4 align-self-center px-1">
+                    <div
+                        *ngIf="
+                            !unitScheduled(unit) &&
+                            canAccessVillage &&
+                            features?.feature_village === '1'
+                        "
+                        class="col-4 align-self-center px-1"
+                    >
                         <div class="">
                             <a
                                 href="javascript:void(0)"
@@ -159,7 +166,7 @@
                 <!-- Small screens (END) -->
 
                 <!-- Large screens -->
-                <div class="row d-none d-sm-flex">
+                <div class="row d-none d-sm-flex justify-content-evenly">
                     <!-- Continue button -->
                     <div class="col-2 align-self-center px-1">
                         <div class="">
@@ -248,7 +255,14 @@
                     </div>
 
                     <!-- Slot four (default is Village icon) -->
-                    <div *ngIf="!unitScheduled(unit)" class="col-2 align-self-center px-1">
+                    <div
+                        *ngIf="
+                            !unitScheduled(unit) &&
+                            canAccessVillage &&
+                            features?.feature_village === '1'
+                        "
+                        class="col-2 align-self-center px-1"
+                    >
                         <div class="">
                             <a
                                 href="javascript:void(0)"

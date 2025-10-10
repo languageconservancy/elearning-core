@@ -7,6 +7,7 @@ import { SettingsService } from "./settings.service";
 import { CookieService } from "./cookie.service";
 import { LocalStorageService } from "./local-storage.service";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
+import { RegionPolicyService } from "./region-policy.service";
 
 @Injectable({
     providedIn: "root",
@@ -24,6 +25,7 @@ export class SiteSettingsService extends BaseService {
         protected localStorage: LocalStorageService,
         protected router: Router,
         protected socialAuthService: SocialAuthService,
+        protected regionPolicyService: RegionPolicyService,
     ) {
         super(cookieService, localStorage, router, socialAuthService);
         this.settingsLoaded = this.fetchSettings();
@@ -84,12 +86,47 @@ export class SiteSettingsService extends BaseService {
     }
 
     async getContentByKeyword(keyword: string): Promise<any> {
-        return this.callApi(API.Settings.GET_CONTENT_BY_KEYWORD, "POST", { keyword }, {}, "site", false)
+        return this.callApi(
+            API.Settings.GET_CONTENT_BY_KEYWORD,
+            "POST",
+            { keyword },
+            {},
+            "site",
+            false,
+        )
             .then((res) => {
                 return res;
             })
             .catch((error) => {
                 console.error("Error fetching content by keyword", error);
             });
+    }
+
+    async canAccessVillage(userAge: number): Promise<boolean> {
+        // user age could be null, since social logins don't supply it
+        if (!userAge) {
+            return false;
+        }
+        return this.settingsLoaded.then(() => {
+            return (
+                this.regionPolicyService.isAdult(userAge) ||
+                (this.settings?.setting_minors_can_access_village === "1" &&
+                    !this.regionPolicyService.isChild(userAge))
+            );
+        });
+    }
+
+    async canAccessLeaderboard(userAge: number): Promise<boolean> {
+        // user age could be null, since social logins don't supply it
+        if (!userAge) {
+            return false;
+        }
+        return this.settingsLoaded.then(() => {
+            return (
+                this.regionPolicyService.isAdult(userAge) ||
+                (this.settings?.setting_minors_can_access_leaderboard === "1" &&
+                    !this.regionPolicyService.isChild(userAge))
+            );
+        });
     }
 }

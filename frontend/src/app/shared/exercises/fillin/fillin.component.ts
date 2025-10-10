@@ -400,9 +400,9 @@ export class FillinComponent implements OnInit, OnDestroy {
 
         // Split at spaces, excluding spaces inside brackets,
         // into array: ['[Šúŋka]', 'kiŋ', '[sá pa]', 's[h]e?']
-        const wordsAndBracketsArray = textWithBrackets.split(
-            new RegExp(RegexConsts.SPLIT_AT_SPACES_REGEX),
-        );
+        const wordsAndBracketsArray = textWithBrackets
+            .split(new RegExp(RegexConsts.SPLIT_AT_SPACES_REGEX))
+            .filter((text: string) => text.length > 0);
 
         // Create UI response text array
         wordsAndBracketsArray.forEach((text: string) => {

@@ -91,6 +91,7 @@ export class MatchPairComponent implements OnInit, OnDestroy {
         });
 
         this.exerciseSubscription = this.specifiedService.currentExercise.subscribe((exercise) => {
+            this.exerciseService.exercise = exercise;
             this.highlightedChoiceIndex = -1;
             this.highlightedPromptIndex = -1;
             this.audioService.pauseAudio();
@@ -100,7 +101,6 @@ export class MatchPairComponent implements OnInit, OnDestroy {
             if (Object.keys(exercise).length > 0 && exercise.exercise_type == "match-the-pair") {
                 this.exerciseService.exerciseCompleted = false;
                 this.setKeyboardListeners(true);
-                this.exerciseService.exercise = exercise;
                 this.exerciseService.promptType = exercise.promteresponsetype
                     ? exercise.promteresponsetype.split("-")[0]
                     : "";

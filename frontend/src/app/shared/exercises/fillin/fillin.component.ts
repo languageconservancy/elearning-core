@@ -243,7 +243,7 @@ export class FillinComponent implements OnInit, OnDestroy {
         // Exercise subscription
         this.subscriptions.add(
             this.specifiedService.currentExercise.subscribe((exercise) => {
-                this.exerciseService.exercise = {};
+                this.exerciseService.exercise = exercise;
                 this.exerciseService.promptTypes = [];
                 this.exerciseService.responseTypes = [];
 
@@ -255,7 +255,6 @@ export class FillinComponent implements OnInit, OnDestroy {
                 }
 
                 this.turnOnKeyboardListeners();
-                this.exerciseService.exercise = exercise;
                 const promptResponse = exercise.promteresponsetype.split("-");
                 if (this.sessionType == "review") {
                     this.fillInType = "typing";
@@ -274,12 +273,9 @@ export class FillinComponent implements OnInit, OnDestroy {
 
         this.subscriptions.add(
             this.lessonService.currentQuestion.subscribe((ques) => {
-                this.exerciseService.question = {};
-                this.fillInType = "";
-
                 if (
-                    Object.keys(ques).length <= 0 ||
-                    this.exerciseService.exercise.exercise_type != "fill_in_the_blanks"
+                    this.exerciseService.exercise.exercise_type != "fill_in_the_blanks" ||
+                    Object.keys(ques).length <= 0
                 ) {
                     return;
                 }

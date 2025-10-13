@@ -71,13 +71,12 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
 
         // Exercise subscription
         this.exerciseSubscription = this.specifiedService.currentExercise.subscribe((exercise) => {
-            this.exerciseService.exercise = {};
+            this.exerciseService.exercise = exercise;
             this.exerciseService.question = {};
             this.exerciseService.firstTime = true;
             this.audioService.pauseAudio();
             if (Object.keys(exercise).length > 0 && exercise.exercise_type == "truefalse") {
                 this.exerciseService.userAnswer = this.AnswerType.NONE;
-                this.exerciseService.exercise = exercise;
                 this.exerciseService.nextButtonShouldBeClickable = false;
                 this.exerciseService.exerciseCompleted = false;
                 this.setKeyboardListeners(true);

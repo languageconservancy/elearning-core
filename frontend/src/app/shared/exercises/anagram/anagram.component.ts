@@ -75,11 +75,10 @@ export class AnagramComponent implements OnInit, OnDestroy {
 
         // Exercise subscription
         this.exerciseSubscription = this.specifiedService.currentExercise.subscribe((exercise) => {
-            this.exerciseService.exercise = {};
+            this.exerciseService.exercise = exercise;
             this.exerciseService.question = {};
             this.answer = [];
             if (Object.keys(exercise).length > 0 && exercise.exercise_type == "anagram") {
-                this.exerciseService.exercise = exercise;
                 const promptResponses = exercise.promteresponsetype.split("-");
                 this.mainResponse = promptResponses[1];
                 this.exerciseService.userAnswer = this.AnswerType.NONE;

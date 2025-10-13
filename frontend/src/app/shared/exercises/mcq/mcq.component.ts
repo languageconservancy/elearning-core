@@ -67,11 +67,11 @@ export class McqComponent implements OnInit, OnDestroy {
 
         if (this.sessionType == "exercise") {
             this.exerciseSubscription = this.lessonService.currentExercise.subscribe((exercise) => {
+                this.exerciseService.exercise = exercise;
                 if (
                     Object.keys(exercise).length > 0 &&
                     exercise.exercise_type == "multiple-choice"
                 ) {
-                    this.exerciseService.exercise = exercise;
                     this.exerciseService.userAnswer = this.AnswerType.NONE;
                     this.exerciseService.nextButtonShouldBeClickable = false;
                 }

@@ -522,7 +522,7 @@ class AppController extends \App\Controller\AppController
                 $this->processMatchPairOption($option, $cardType, $questions);
                 break;
             case 'truefalse':
-                $this->processTrueFalseOption($option, $cardType, $questions);
+                $this->processTrueFalseOption($option, $cardType, $questions, $choices);
                 break;
             case 'anagram':
                 $this->processAnagramOption($option, $cardType, $questions);
@@ -685,14 +685,14 @@ class AppController extends \App\Controller\AppController
     }
 
     // Process functions for true/false options
-    private function processTrueFalseOption($option, $cardType, &$questions)
+    private function processTrueFalseOption($option, $cardType, &$questions, &$choices)
     {
         switch ($cardType) {
             case 'card':
                 $this->processCardTypeTrueFalse($option, $questions);
                 break;
             case 'card_group':
-                $this->processCardGroupTypeTrueFalse($option, $questions);
+                $this->processCardGroupTypeTrueFalse($option, $questions, $choices);
                 break;
             case 'custom':
                 $this->processCustomTypeTrueFalse($option, $questions);
@@ -719,12 +719,13 @@ class AppController extends \App\Controller\AppController
         }
     }
 
-    private function processCardGroupTypeTrueFalse($option, &$questions)
+    private function processCardGroupTypeTrueFalse($option, &$questions, &$choices)
     {
         switch ($option['card_type']) {
             case 'P':
                 if (!empty($option['card_id'])) {
                     $questions[] = $option['card_id'];
+                    $choices[] = $option;
                 }
                 break;
             default:

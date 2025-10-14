@@ -38,6 +38,11 @@ class ExerciseController extends AppController
         $exerciseId = $data['exercise_id'];
 
         $exercise = $this->getExercisesTable()->get($data['exercise_id'])->toArray();
+        if (empty($exercise)) {
+            Log::error("Exercise not found: " . $data['exercise_id']);
+            $this->sendApiData(false, 'Exercise not found.', [], HttpStatusCodes::NOT_FOUND);
+            return;
+        }
         $exerciseOptions = $this->getExerciseoptionsTable()
             ->find('all', ['contain' => 'ExerciseCustomOptions'])
             ->where(['exercise_id' => $data['exercise_id']])

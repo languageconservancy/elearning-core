@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use Cake\ORM\Query;
 use App\Lib\UtilLibrary;
 use Cake\Log\Log;
+use App\Lib\RegionPolicy;
 
 class ForumController extends AppController
 {

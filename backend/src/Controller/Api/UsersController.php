@@ -1467,6 +1467,7 @@ class UsersController extends AppController
     }
 
     //general function for get user friend by id. param id,
+    // throws Exception if failed to send email
 
     public function contactUs()
     {
@@ -1493,7 +1494,16 @@ class UsersController extends AppController
         }
 
         $getMailData['param']['email'] = $siteSettings['site_email'];
-        $this->sendMail($getMailData, $getMailData['template'], $getMailData['layout']);
+        try {
+          $sendAttempted = $this->sendMail($getMailData, $getMailData['template'], $getMailData['layout']);
+          if (!$sendAttempted) {
+            throw new Exception('Failed to send email.');
+          }
+        } catch (Exception $e) {
+            $this->sendApiData(false, $e->getMessage(), [], HttpStatusCode::INTERNAL_SERVER_ERROR);
+            return;
+        }
+
         $this->sendApiData(true, 'Thanks for contacting us. The '
             . Configure::read('App.name') . ' Team will contact you soon.', array());
     }

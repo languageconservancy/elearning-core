@@ -1341,36 +1341,39 @@ class AppController extends \App\Controller\AppController
     /**
      * Send Mail for Api Function
      */
-    protected function sendMail($parameters, $template = 'email_template', $layout = 'email_layout')
+    protected function sendMail($parameters, $template = 'email_template', $layout = 'email_layout'): bool
     {
-        $mailfunction = Configure::read('MAILFUNCTION');
+        $mailFunctionEnabled = Configure::read('MAILFUNCTION');
 
-        if ($mailfunction) {
-            $subject = $parameters['subject'];
-            $body = $parameters['body'];
-
-            $siteSettings = $this->getSitesettingsTable()
-                ->find('list', ['keyField' => 'key', 'valueField' => 'value'])
-                ->toArray();
-
-            $email = new Mailer('default');
-            $email->setEmailFormat('both')
-                ->setTransport('smtp')
-                ->setFrom([$siteSettings['site_email'] => $siteSettings['site_name']])
-                ->setTo($parameters['param']['email'])
-                ->setReplyTo($siteSettings['site_email'])
-                ->setReturnPath($siteSettings['site_email'])
-                ->setSubject($subject)
-                ->setViewVars([
-                    'emailcontent' => $body,
-                    'site_settings' => $siteSettings,
-                    'site_link' => Configure::read('sitepath')])
-                ->viewBuilder()
-                    ->setTemplate($template)
-                    ->setLayout($layout);
-            $email->deliver();
+        if (!$mailFunctionEnabled) {
+            Log::error("Mail function is disabled");
+            return false;
         }
-        return 1;
+
+        $subject = $parameters['subject'];
+        $body = $parameters['body'];
+
+        $siteSettings = $this->getSitesettingsTable()
+            ->find('list', ['keyField' => 'key', 'valueField' => 'value'])
+            ->toArray();
+
+        $email = new Mailer('default');
+        $email->setEmailFormat('both')
+            ->setTransport('smtp')
+            ->setFrom([$siteSettings['site_email'] => $siteSettings['site_name']])
+            ->setTo($parameters['param']['email'])
+            ->setReplyTo($siteSettings['site_email'])
+            ->setReturnPath($siteSettings['site_email'])
+            ->setSubject($subject)
+            ->setViewVars([
+                'emailcontent' => $body,
+                'site_settings' => $siteSettings,
+                'site_link' => Configure::read('sitepath')])
+            ->viewBuilder()
+                ->setTemplate($template)
+                ->setLayout($layout);
+        $email->deliver();
+        return true;
     }
 
     protected function updateAgeFromDob($userId): void

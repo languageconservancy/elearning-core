@@ -190,6 +190,15 @@ return [
             'tls' => null,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
+        'smtp' => [
+            'className' => 'Smtp',
+            'host' => '127.0.0.1',
+            'port' => 587,
+            'timeout' => 30,
+            'username' => null,
+            'password' => null,
+            'tls' => null,
+        ],
     ],
 
     /**
@@ -345,7 +354,7 @@ return [
     'Session' => [
         'defaults' => 'php',
     ],
-    'MAILFUNCTION' => env('MAILFUNCTION', false),
+    'MAILFUNCTION' => true,
     'AWSUPLOAD' => env('AWSUPLOAD', false),
     'SITEUPLOAD' => env('SITEUPLOAD', false),
     'AWSAPIKEY' => env('AWSAPIKEY', ''),

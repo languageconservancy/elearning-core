@@ -1,5 +1,15 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, ViewEncapsulation } from "@angular/core";
+import {
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    ElementRef,
+    ViewChild,
+    ViewEncapsulation,
+    OnInit,
+    OnChanges,
+} from "@angular/core";
 import { PipesModule } from "app/_pipes/pipes.module";
 import { AudioService } from "app/_services/audio.service";
 import { DeviceDetectorService } from "ngx-device-detector";
@@ -31,7 +41,7 @@ type Card = {
     styleUrls: ["./selectable-card.component.scss"],
     encapsulation: ViewEncapsulation.None,
 })
-export class SelectableCardComponent {
+export class SelectableCardComponent implements OnInit, OnChanges {
     @Input() card: Card;
     @Input() index: number;
     @Input() highlightedCardIndex: number;
@@ -53,6 +63,7 @@ export class SelectableCardComponent {
 
     isHovered: boolean = false; // Whether mouse is hovering over card
     isVideoHovered: boolean = false; // Whether mouse is hovering over video
+    showSelectButton: boolean = false; // Whether this card should show a select button
 
     // Make enums accessible to template
     DataType = CardDataType;
@@ -65,6 +76,18 @@ export class SelectableCardComponent {
         private audioService: AudioService,
         private deviceService: DeviceDetectorService,
     ) {}
+
+    ngOnInit() {
+        this.updateSelectButtonVisibility();
+    }
+
+    ngOnChanges() {
+        this.updateSelectButtonVisibility();
+    }
+
+    private updateSelectButtonVisibility() {
+        this.showSelectButton = this.hasSelectButton();
+    }
 
     /**
      * Play/Pause audio
@@ -107,10 +130,32 @@ export class SelectableCardComponent {
         }
     }
 
-    cardSelected() {
-        if (!this.isDisabled) {
-            this.cardSelectedEvent.emit(this.card);
+    /**
+     * On card click, if the card doesn't have a select button, emit the card selected event.
+     */
+    onCardClick() {
+        if (this.isDisabled) {
+            return;
         }
+
+        this.cardSelectedEvent.emit(this.card);
+    }
+
+    /**
+     * Check if the card has a select button.
+     * A video card with no english text (which sits below the video) has a select button.
+     * A audio card with only audio doesn't have card area, so it has a select button.
+     * @returns true if the card has a select button, false otherwise.
+     */
+    hasSelectButton(): boolean {
+        const hasVideo = this.isActive(this.DataType.Video);
+        const hasEnglish = this.isActive(this.DataType.English);
+        const hasAudio = this.isActive(this.DataType.Audio);
+        const enabledTypesLength = this.enabledDataTypes.length;
+
+        const result = (hasVideo && !hasEnglish) || (hasAudio && enabledTypesLength === 1);
+
+        return result;
     }
 
     videoClicked(event: Event): void {

@@ -50,7 +50,7 @@ Card design is as follows, with the audio section being a button:
     }"
     (mouseenter)="onMouseEnterCard()"
     (mouseleave)="onMouseLeaveCard()"
-    (click)="cardSelected()"
+    (click)="onCardClick()"
 >
     <!-- Card language text -->
     <div
@@ -113,18 +113,13 @@ Card design is as follows, with the audio section being a button:
         [innerHTML]="card.english | safeHtml"
     ></div>
 
-    <!-- Select button for when video is present to avoid selecting when wanting to play/pause -->
+    <!-- Select button text for when video or only audio is present to guide users -->
     <div class="w-100 d-flex flex-fill flex-column align-items-center justify-content-center">
-        <button
-            class="border-0 w-100 header-font-size py-4 bg-transparent rounded-top-left-0 rounded-top-right-0 font-weight-bold font-secondary text-primary"
-            *ngIf="
-                (isActive(DataType.Video) && !isActive(DataType.English)) ||
-                (isActive(DataType.Audio) && enabledDataTypes.length === 1)
-            "
-            (click)="cardSelected()"
-            [ngClass]="{}"
+        <div
+            class="border-0 w-100 header-font-size py-4 bg-transparent rounded-top-left-0 rounded-top-right-0 font-weight-bold font-secondary text-primary text-center"
+            *ngIf="showSelectButton"
         >
             Select
-        </button>
+        </div>
     </div>
 </div>

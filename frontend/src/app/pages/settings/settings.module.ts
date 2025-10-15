@@ -8,7 +8,6 @@ import { AccountComponent } from "./account/account.component";
 import { GalleryComponent } from "./_partials/gallery/gallery.component";
 import { LearningComponent } from "./learning/learning.component";
 import { NotificationsComponent } from "./notifications/notifications.component";
-import { ParentalLockComponent } from "./_partials/parental-lock/parental-lock.component";
 import { PrivacyComponent } from "./privacy/privacy.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { SettingSidebarComponent } from "./_partials/setting-sidebar/setting-sidebar.component";
@@ -31,7 +30,6 @@ import { SettingsComponent } from "./settings/settings.component";
         GalleryComponent,
         LearningComponent,
         NotificationsComponent,
-        ParentalLockComponent,
         PrivacyComponent,
         ProfileComponent,
         SettingSidebarComponent,

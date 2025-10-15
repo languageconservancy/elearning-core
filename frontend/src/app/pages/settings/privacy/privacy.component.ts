@@ -14,6 +14,23 @@ import { SnackbarService } from "app/_services/snackbar.service";
 
 declare let jQuery: any;
 
+interface Privacy {
+    isAdult: boolean;
+    profileIsPublic: boolean;
+    onPublicLeaderboard: boolean;
+    audioArchive: boolean;
+    parentalLockOn: boolean;
+    parentalLockCode: string;
+}
+
+interface UserSettings {
+    parentalLockCode: string;
+    profileIsPublic: boolean;
+    onPublicLeaderboard: boolean;
+    audioArchive: boolean;
+    parentalLockOn: boolean;
+}
+
 @Component({
     selector: "app-privacy",
     templateUrl: "./privacy.component.html",
@@ -25,9 +42,23 @@ export class PrivacyComponent implements OnInit, OnDestroy {
     public user: any;
     public lockFlag: boolean = false;
     public lockEditFlag: boolean = false;
-    public privacy: any = {};
-    public parentalForm: UntypedFormGroup;
-    public parentalEditForm: UntypedFormGroup;
+    public privacy: Privacy = {
+        isAdult: false,
+        profileIsPublic: false,
+        onPublicLeaderboard: false,
+        audioArchive: false,
+        parentalLockOn: false,
+        parentalLockCode: "",
+    };
+    public initialUserSettings: UserSettings = {
+        parentalLockCode: "",
+        profileIsPublic: false,
+        onPublicLeaderboard: false,
+        audioArchive: false,
+        parentalLockOn: false,
+    };
+    public createParentalLockCodeForm: UntypedFormGroup;
+    public updateParentalLockCodeForm: UntypedFormGroup;
 
     constructor(
         private settingsService: SettingsService,
@@ -50,23 +81,29 @@ export class PrivacyComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => {
+            console.log("parentalLockCode changed");
+            this.lockFlag = false;
+        });
         this.settingsService.setTab("privacy");
     }
 
     ngOnInit() {
-        this.parentalForm = new UntypedFormGroup({
+        this.createParentalLockCodeForm = new UntypedFormGroup({
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            parentalLock: new UntypedFormControl("", Validators.required),
+            parentalLockCode: new UntypedFormControl("", Validators.required),
         });
 
         this.setLoader(true);
         this.getSettings();
-        this.parentalEditForm = new UntypedFormGroup({
+        this.updateParentalLockCodeForm = new UntypedFormGroup({
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            parentalLockOld: new UntypedFormControl("", [Validators.required, this.validateParentalLock.bind(this)]),
+            parentalLockCodeCurrent: new UntypedFormControl("", [
+                Validators.required,
+                this.validateParentalLockCode.bind(this),
+            ]),
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            parentalLockNew: new UntypedFormControl("", Validators.required),
+            parentalLockCodeNew: new UntypedFormControl("", Validators.required),
         });
     }
 
@@ -74,9 +111,11 @@ export class PrivacyComponent implements OnInit, OnDestroy {
         this.lockSubscription.unsubscribe();
     }
 
-    private validateParentalLock(control: UntypedFormControl): any {
+    private validateParentalLockCode(control: UntypedFormControl): any {
         if (this.user) {
-            return control.value === this.user.usersetting.parental_lock ? null : { notSame: true };
+            return control.value === this.initialUserSettings.parentalLockCode
+                ? null
+                : { notSame: true };
         }
     }
 
@@ -94,11 +133,12 @@ export class PrivacyComponent implements OnInit, OnDestroy {
                         this.setLoader(false);
                         if (res.data.status) {
                             this.user = res.data.results[0];
-
+                            this.storeUserSettings(this.user);
                             const parentalLock = this.localStorage.getItem("parentalLockCode");
                             if (this.user.usersetting.parental_lock_on == "1") {
                                 this.lockFlag = this.user.usersetting.parental_lock
-                                    ? parentalLock && parentalLock == this.user.usersetting.parental_lock
+                                    ? parentalLock &&
+                                      parentalLock == this.user.usersetting.parental_lock
                                         ? false
                                         : true
                                     : false;
@@ -123,6 +163,16 @@ export class PrivacyComponent implements OnInit, OnDestroy {
             });
     }
 
+    private storeUserSettings(user: any) {
+        this.initialUserSettings = {
+            parentalLockCode: user.usersetting.parental_lock,
+            profileIsPublic: user.usersetting.public_profile == "0" ? false : true,
+            onPublicLeaderboard: user.usersetting.public_leaderboard == "0" ? false : true,
+            audioArchive: user.usersetting.audio_archive == "0" ? false : true,
+            parentalLockOn: user.usersetting.parental_lock_on == "1" ? true : false,
+        };
+    }
+
     private setLoader(val: boolean) {
         this.loader.setLoader(val);
     }
@@ -137,27 +187,28 @@ export class PrivacyComponent implements OnInit, OnDestroy {
 
     setUpModels() {
         this.privacy = {
-            adult: this.regionPolicyService.isAdult(this.user?.approximate_age) ? true : false,
-            public: this.user.usersetting.public_profile == "0" ? false : true,
-            leaderboard: this.user.usersetting.public_leaderboard == "0" ? false : true,
+            isAdult: this.regionPolicyService.isAdult(this.user?.approximate_age) ? true : false,
+            profileIsPublic: this.user.usersetting.public_profile == "0" ? false : true,
+            onPublicLeaderboard: this.user.usersetting.public_leaderboard == "0" ? false : true,
             audioArchive: this.user.usersetting.audio_archive == "0" ? false : true,
-            parental_toggle: this.user.usersetting.parental_lock_on == "1" ? true : false,
+            parentalLockOn: this.user.usersetting.parental_lock_on == "1" ? true : false,
+            parentalLockCode: this.user.usersetting.parental_lock,
         };
     }
 
-    setPrivacy(type: string) {
+    updatePrivacySetting(settingType: string) {
         let data = {};
-        switch (type) {
+        switch (settingType) {
             case "public":
                 data = {
                     id: this.user.id,
-                    public_profile: this.privacy.public ? "1" : "0",
+                    public_profile: this.privacy.profileIsPublic ? "1" : "0",
                 };
                 break;
             case "leaderboard":
                 data = {
                     id: this.user.id,
-                    public_leaderboard: this.privacy.leaderboard ? "1" : "0",
+                    public_leaderboard: this.privacy.onPublicLeaderboard ? "1" : "0",
                 };
                 break;
             case "audioArchive":
@@ -169,7 +220,7 @@ export class PrivacyComponent implements OnInit, OnDestroy {
             case "parentalLock":
                 data = {
                     id: this.user.id,
-                    parental_lock: this.privacy.parental_lock,
+                    parental_lock: this.initialUserSettings.parentalLockCode,
                 };
                 break;
             default:
@@ -184,6 +235,7 @@ export class PrivacyComponent implements OnInit, OnDestroy {
             .updateUserSettings(data)
             .then(async (res) => {
                 this.user = res.data.results[0];
+                this.storeUserSettings(this.user);
                 try {
                     await this.baseService.setAuthUserCookie(this.user);
                 } catch (err) {
@@ -199,38 +251,41 @@ export class PrivacyComponent implements OnInit, OnDestroy {
     }
 
     openParentalLockModal() {
-        if (this.privacy.parental_toggle && !this.user.usersetting.parental_lock) {
+        if (this.privacy.parentalLockOn && !this.user.usersetting.parental_lock) {
+            // parental lock is turned on but no code is set, open modal to set code.
             jQuery("#parentalLockModal").modal("show");
         }
-        this.setParentalToggle(this.privacy.parental_toggle);
+        this.setParentalLockState(this.privacy.parentalLockOn);
     }
 
-    setParentalToggle(type) {
+    setParentalLockState(enabled: boolean) {
         const data: any = {
             id: this.user.id,
-            parental_lock_on: type ? "1" : "0",
+            parental_lock_on: enabled ? "1" : "0",
         };
 
-        if (!type) {
+        if (!enabled) {
             this.lockEditFlag = false;
             this.localStorage.removeItem("parentalLockCode");
         }
         this.updateUser(data);
     }
 
-    changeParentalLock(form) {
+    onParentalLockCodeChange(form) {
         if (form.valid) {
-            this.privacy.parental_lock = this.lockEditFlag ? form.value.parentalLockNew : form.value.parentalLock;
-            this.setPrivacy("parentalLock");
+            this.privacy.parentalLockOn = this.lockEditFlag
+                ? form.value.parentalLockCodeNew
+                : form.value.parentalLockCode;
+            this.updatePrivacySetting("parentalLock");
             jQuery("#parentalLockModal").modal("hide");
             form.reset();
         }
     }
 
-    cancelParentalLock() {
+    cancelUpdatingParentalLockCode() {
         if (!this.lockEditFlag) {
-            this.privacy.parental_toggle = false;
-            this.setParentalToggle(false);
+            this.privacy.parentalLockOn = false;
+            this.setParentalLockState(false);
         }
     }
 

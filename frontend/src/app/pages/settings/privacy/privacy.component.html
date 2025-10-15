@@ -1,8 +1,9 @@
 <div class="p-lg-4 pb-4">
     <div class="text-left">
         <p>
-            The {{ environment.SITE_NAME }} community is here to support you in your {{ environment.LANGUAGE }} learning
-            path. If age or privacy is a concern though, please select the appropriate options below.
+            The {{ environment.SITE_NAME }} community is here to support you in your
+            {{ environment.LANGUAGE }} learning path. If age or privacy is a concern though, please
+            select the appropriate options below.
         </p>
     </div>
     <div class="scroll-y">
@@ -18,7 +19,7 @@
                         <label class="switch">
                             <input
                                 type="checkbox"
-                                [(ngModel)]="privacy.parental_toggle"
+                                [(ngModel)]="privacy.parentalLockOn"
                                 (change)="openParentalLockModal()"
                             />
                             <span class="slider round"></span>
@@ -26,7 +27,7 @@
                         <a
                             href="javascript:void(0)"
                             class="invite-frd edit-parental-lock rounded-pill"
-                            *ngIf="privacy.parental_toggle && user.usersetting.parental_lock"
+                            *ngIf="privacy.parentalLockOn && privacy.parentalLockCode"
                             (click)="lockEditFlag = true"
                             data-toggle="modal"
                             data-target="#parentalLockModal"
@@ -48,11 +49,21 @@
                     <label class="switch">
                         <input
                             type="checkbox"
-                            [disabled]="!privacy.adult"
-                            [(ngModel)]="privacy.public"
-                            (change)="setPrivacy('public')"
+                            [disabled]="
+                                !privacy.isAdult ||
+                                (privacy.parentalLockOn && privacy.parentalLockCode)
+                            "
+                            [(ngModel)]="privacy.profileIsPublic"
+                            (change)="updatePrivacySetting('public')"
                         />
-                        <span class="slider round" [ngClass]="{ 'greyed-out': !privacy.adult }"></span>
+                        <span
+                            class="slider round"
+                            [ngClass]="{
+                                'greyed-out':
+                                    !privacy.isAdult ||
+                                    (privacy.parentalLockOn && privacy.parentalLockCode),
+                            }"
+                        ></span>
                     </label>
                 </div>
             </div>
@@ -68,11 +79,26 @@
                     <label class="switch">
                         <input
                             type="checkbox"
-                            [disabled]="!privacy.adult"
-                            [(ngModel)]="privacy.leaderboard"
-                            (change)="setPrivacy('leaderboard')"
+                            [disabled]="
+                                !privacy.isAdult ||
+                                (privacy.parentalLockOn && privacy.parentalLockCode)
+                            "
+                            [(ngModel)]="privacy.onPublicLeaderboard"
+                            (change)="updatePrivacySetting('leaderboard')"
+                            [ngClass]="{
+                                'greyed-out':
+                                    !privacy.isAdult ||
+                                    (privacy.parentalLockOn && privacy.parentalLockCode),
+                            }"
                         />
-                        <span class="slider round" [ngClass]="{ 'greyed-out': !privacy.adult }"></span>
+                        <span
+                            class="slider round"
+                            [ngClass]="{
+                                'greyed-out':
+                                    !privacy.isAdult ||
+                                    (privacy.parentalLockOn && privacy.parentalLockCode),
+                            }"
+                        ></span>
                     </label>
                 </div>
             </div>
@@ -86,13 +112,17 @@
 									</div>
 									<div class="col-xs-12 col-sm-3 col-lg-3">
 										<label class="switch">
-											<input type="checkbox" [(ngModel)]="privacy.audioArchive" (change)="setPrivacy('audioArchive')">
+											<input type="checkbox" [(ngModel)]="privacy.audioArchive" (change)="updatePrivacySetting('audioArchive')">
 											<span class="slider round"></span>
 										</label>
 									</div>
 								</div>
 							</div> -->
-        <button id="view-privacy-btn" (click)="goToUrl('about/privacy')" class="btn btn-blue-real mt-3">
+        <button
+            id="view-privacy-btn"
+            (click)="goToUrl('about/privacy')"
+            class="btn btn-blue-real mt-3"
+        >
             View Privacy Policy
         </button>
     </div>
@@ -117,7 +147,7 @@
                     class="close"
                     data-dismiss="modal"
                     aria-label="Close"
-                    (click)="cancelParentalLock()"
+                    (click)="cancelUpdatingParentalLockCode()"
                 >
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -126,19 +156,19 @@
                 <form
                     *ngIf="!lockEditFlag"
                     name="parentalForm"
-                    [formGroup]="parentalForm"
-                    (submit)="changeParentalLock(parentalForm)"
+                    [formGroup]="createParentalLockCodeForm"
+                    (submit)="onParentalLockCodeChange(createParentalLockCodeForm)"
                 >
                     <input
                         class="form-control input-default seoc-btn-width"
-                        autocomplet="off"
-                        formControlName="parentalLock"
-                        name="parentalLock"
+                        autocomplete="off"
+                        formControlName="parentalLockCode"
+                        name="parentalLockCode"
                         [ngClass]="{
                             'has-error':
-                                parentalForm.value.parentalLock &&
-                                parentalForm.controls.parentalLock.invalid &&
-                                parentalForm.controls.parentalLock.touched,
+                                createParentalLockCodeForm.value.parentalLockCode &&
+                                createParentalLockCodeForm.controls.parentalLockCode.invalid &&
+                                createParentalLockCodeForm.controls.parentalLockCode.touched,
                         }"
                         type="password"
                         placeholder="Parental Lock Code"
@@ -149,43 +179,42 @@
                             type="button"
                             class="btn btn-gray-text-hover"
                             data-dismiss="modal"
-                            (click)="cancelParentalLock()"
+                            (click)="cancelUpdatingParentalLockCode()"
                         >
                             Cancel
                         </button>
-                        <button type="submit" class="btn btn-primary" (click)="changeParentalLock(parentalForm)">
-                            Submit
-                        </button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
                 <form
                     *ngIf="lockEditFlag"
                     name="parentalEditForm"
-                    [formGroup]="parentalEditForm"
-                    (submit)="changeParentalLock(parentalEditForm)"
+                    [formGroup]="updateParentalLockCodeForm"
+                    (submit)="onParentalLockCodeChange(updateParentalLockCodeForm)"
                 >
                     <input
                         class="form-control input-default seoc-btn-width"
-                        formControlName="parentalLockOld"
-                        name="parentalLockOld"
+                        formControlName="parentalLockCodeCurrent"
+                        name="parentalLockCodeCurrent"
                         [ngClass]="{
                             'has-error':
-                                parentalEditForm.value.parentalLockOld &&
-                                parentalEditForm.controls.parentalLockOld.invalid &&
-                                parentalEditForm.controls.parentalLockOld.touched,
+                                updateParentalLockCodeForm.value.parentalLockCodeCurrent &&
+                                updateParentalLockCodeForm.controls.parentalLockCodeCurrent
+                                    .invalid &&
+                                updateParentalLockCodeForm.controls.parentalLockCodeCurrent.touched,
                         }"
                         type="password"
                         placeholder="Current Parental Lock Code"
                     />
                     <input
                         class="form-control input-default seoc-btn-width"
-                        formControlName="parentalLockNew"
-                        name="parentalLockNew"
+                        formControlName="parentalLockCodeNew"
+                        name="parentalLockCodeNew"
                         [ngClass]="{
                             'has-error':
-                                parentalEditForm.value.parentalLockNew &&
-                                parentalEditForm.controls.parentalLockNew.invalid &&
-                                parentalEditForm.controls.parentalLockNew.touched,
+                                updateParentalLockCodeForm.value.parentalLockCodeNew &&
+                                updateParentalLockCodeForm.controls.parentalLockCodeNew.invalid &&
+                                updateParentalLockCodeForm.controls.parentalLockCodeNew.touched,
                         }"
                         type="password"
                         placeholder="New Parental Lock Code"
@@ -196,13 +225,11 @@
                             type="button"
                             class="btn btn-gray-text-hover"
                             data-dismiss="modal"
-                            (click)="cancelParentalLock()"
+                            (click)="cancelUpdatingParentalLockCode()"
                         >
                             Cancel
                         </button>
-                        <button type="submit" class="btn btn-primary" (click)="changeParentalLock(parentalEditForm)">
-                            Submit
-                        </button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>

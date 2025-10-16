@@ -16,8 +16,6 @@ export const environment = {
     LANGUAGE: "{{languageEnglish}}",
     LANGUAGE_NATIVE: "{{languageNative}}",
     SITE_OWNER: "{{appOwner}}",
-    GOOGLE_PLAY_STORE_URL: "{{googlePlayStoreUrl}}",
-    ITUNES_STORE_URL: "{{itunesStoreUrl}}",
     IOS_APP_ID_NUMBER: "{{iosAppIdNumber}}",
     APP_ID: "{{appId}}",
     ENABLE_SOCIAL_LOGINS: "{{enableCapacitorSocialLogins}}",

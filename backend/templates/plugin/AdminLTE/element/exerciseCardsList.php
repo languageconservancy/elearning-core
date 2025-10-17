@@ -85,7 +85,6 @@ if (!function_exists('generateTableId')) {
         }
         $id = preg_replace('/\s+/', '', $id); // Remove any unintended spaces
         $id .= $idSuffix;
-        Log::debug("Table ID: $id");
         return $id;
     }
 }

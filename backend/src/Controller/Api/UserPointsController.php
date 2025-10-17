@@ -1082,7 +1082,7 @@ class UserPointsController extends AppController
                 'path_id' => $pathId,
                 'user_id' => $userId,
                 'entry_date' => $currentDate,
-                'unit_id' => $unit_id,
+                'unit_id IS' => $unit_id,
                 'timer_type' => 'path');
         }
 

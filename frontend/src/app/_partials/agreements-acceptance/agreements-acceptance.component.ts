@@ -17,7 +17,7 @@
  * Outputs: None
  */
 
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { ApiResponse } from "app/shared/utils/elearning-types";
@@ -32,6 +32,9 @@ import { ModalService } from "app/_services/modal.service";
     styleUrls: ["./agreements-acceptance.component.scss"],
 })
 export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
+    @ViewChild("termsScrollContainer") termsScrollContainer: ElementRef;
+    @ViewChild("privacyScrollContainer") privacyScrollContainer: ElementRef;
+
     showModalSubscription: Subscription;
 
     constructor(
@@ -48,8 +51,10 @@ export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
     public termsAndConditions: any = []; // Terms and conditions content
     public privacyPolicy: any = []; // Privacy policy content
     // Flags
-    public termsScrolledToBottom: boolean = false; // Flag to check if user has scrolled to bottom of terms
-    public privacyScrolledToBottom: boolean = false; // Flag to check if user has scrolled to bottom of privacy policy
+    public termsScrolledToBottom: boolean = false; // Flag to check if user is currently at bottom of terms
+    public privacyScrolledToBottom: boolean = false; // Flag to check if user is currently at bottom of privacy policy
+    public termsHasBeenRead: boolean = false; // Flag to check if user has ever scrolled to bottom of terms
+    public privacyHasBeenRead: boolean = false; // Flag to check if user has ever scrolled to bottom of privacy policy
     public isTermsAccepted: boolean = false; // Flag to check if user has accepted terms
     public isPrivacyAccepted: boolean = false; // Flag to check if user has accepted privacy policy
 
@@ -153,11 +158,15 @@ export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
             Math.abs(element.scrollHeight - element.scrollTop - element.clientHeight) <
             AgreementsAcceptanceComponent.SCROLL_END_TOLERANCE;
 
-        if (scrolledToBottom) {
-            if (tab === "terms") {
-                this.termsScrolledToBottom = true;
-            } else if (tab === "privacy") {
-                this.privacyScrolledToBottom = true;
+        if (tab === "terms") {
+            this.termsScrolledToBottom = scrolledToBottom;
+            if (scrolledToBottom) {
+                this.termsHasBeenRead = true;
+            }
+        } else if (tab === "privacy") {
+            this.privacyScrolledToBottom = scrolledToBottom;
+            if (scrolledToBottom) {
+                this.privacyHasBeenRead = true;
             }
         }
     }
@@ -232,5 +241,35 @@ export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
         this.isTermsAccepted = false;
         this.isPrivacyAccepted = false;
         this.activeTab = "terms";
+        // Reset scroll flags when form is reset
+        this.termsScrolledToBottom = false;
+        this.privacyScrolledToBottom = false;
+        this.termsHasBeenRead = false;
+        this.privacyHasBeenRead = false;
+    }
+
+    /**
+     * Scroll to the bottom of the specified tab content.
+     * @param tab - Name of tab to scroll to bottom, either 'terms' or 'privacy'.
+     */
+    public scrollToBottom(tab: string) {
+        let scrollContainer: ElementRef;
+
+        if (tab === "terms") {
+            scrollContainer = this.termsScrollContainer;
+        } else if (tab === "privacy") {
+            scrollContainer = this.privacyScrollContainer;
+        } else {
+            console.error("Invalid tab name for scrollToBottom:", tab);
+            return;
+        }
+
+        if (scrollContainer && scrollContainer.nativeElement) {
+            const element = scrollContainer.nativeElement;
+            element.scrollTo({
+                top: element.scrollHeight,
+                behavior: "smooth",
+            });
+        }
     }
 }

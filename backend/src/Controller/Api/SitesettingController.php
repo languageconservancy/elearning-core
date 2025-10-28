@@ -81,7 +81,7 @@ class SitesettingController extends AppController
     {
         try {
             $settings = $this->getSiteSettingsTable()->getPrefixedKeys('setting_');
-            $this->sendApiData(true, 'Site settings fetched successfully.', []);
+            $this->sendApiData(true, 'Site settings fetched successfully.', $settings);
         } catch (\Exception $e) {
             throw new \Exception(
                 'Error fetching site settings. ' . $e->getMessage(),

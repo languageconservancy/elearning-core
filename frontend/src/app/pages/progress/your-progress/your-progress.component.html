@@ -1,9 +1,11 @@
 <app-page-title [pageTitle]="'Progress'"></app-page-title>
 <div class="row justify-content-center text-center flex-lg-nowrap mt-3">
-    <div class="col-12 col-lg-4" *ngIf="canAccessLeaderboard()">
-        <app-progress-left-panel [canAccessLeaderboard]="canAccessLeaderboard()"></app-progress-left-panel>
+    <div class="col-12 col-lg-4" *ngIf="userCanAccessLeaderboard">
+        <app-progress-left-panel
+            [userCanAccessLeaderboard]="userCanAccessLeaderboard"
+        ></app-progress-left-panel>
     </div>
-    <div class="l-speed mx-2 col-12 col-lg-8" [ngClass]="{'col': canAccessLeaderboard()}">
+    <div class="l-speed mx-2 col-12 col-lg-8" [ngClass]="{ col: userCanAccessLeaderboard }">
         <div class="row justify-content-start no-gutters">
             <div class="logo-container-box col mb-3">
                 <h3 class="top-heading">
@@ -165,7 +167,9 @@
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.firebadges?.fire_days >= 14) }"
+                            [ngClass]="{
+                                badgesOpacity: !(getprogress?.badge?.firebadges?.fire_days >= 14),
+                            }"
                         >
                             <img src="./assets/images/fire_ultra.png" alt="" />
                         </div>
@@ -192,13 +196,17 @@
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 1000) }"
+                            [ngClass]="{
+                                badgesOpacity: !(getprogress?.badge?.socialpoint >= 1000),
+                            }"
                         >
                             <img src="./assets/images/teepee_04.png" alt="" />
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 5000) }"
+                            [ngClass]="{
+                                badgesOpacity: !(getprogress?.badge?.socialpoint >= 5000),
+                            }"
                         >
                             <img src="./assets/images/teepee_05.png" alt="" />
                         </div>
@@ -207,7 +215,10 @@
                         <!-- Progress badge -->
                         <div *ngIf="getprogress?.badge?.levelbadge">
                             <div *ngFor="let levelbadgeImg of getprogress?.badge?.levelbadge">
-                                <div class="summary-img-box" [ngClass]="{ badgesOpacity: !levelbadgeImg.status }">
+                                <div
+                                    class="summary-img-box"
+                                    [ngClass]="{ badgesOpacity: !levelbadgeImg.status }"
+                                >
                                     <img [src]="levelbadgeImg.image" alt="" />
                                 </div>
                             </div>

@@ -27,11 +27,14 @@
 <div class="profile-leftpannel d-none d-lg-block">
     <ul>
         <li>
-            <a href="javascript:void(0)" [ngClass]="{ active: router.url === '/progress' }" routerLink="/progress"
+            <a
+                href="javascript:void(0)"
+                [ngClass]="{ active: router.url === '/progress' }"
+                routerLink="/progress"
                 ><h5 class="mb-0">Your Progress</h5></a
             >
         </li>
-        <li *ngIf="canAccessLeaderboard">
+        <li *ngIf="userCanAccessLeaderboard">
             <a
                 href="javascript:void(0)"
                 [ngClass]="{ active: router.url === '/leader-board' }"

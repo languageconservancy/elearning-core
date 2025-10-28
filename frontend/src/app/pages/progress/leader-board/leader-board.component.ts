@@ -6,7 +6,6 @@ import { Loader } from "app/_services/loader.service";
 import { LocalStorageService } from "app/_services/local-storage.service";
 import { ProgressService } from "app/_services/progress.service";
 import { SiteSettingsService } from "app/_services/site-settings.service";
-import { RegionPolicyService } from "app/_services/region-policy.service";
 
 @Component({
     selector: "app-leader-board",
@@ -14,13 +13,12 @@ import { RegionPolicyService } from "app/_services/region-policy.service";
     styleUrls: ["./leader-board.component.scss"],
 })
 export class LeaderBoardComponent implements OnInit {
-    public top_users: any = [];
-    public top_friends: any = [];
-    private settings: any = null;
-
+    public topUsers: any = [];
+    public topFriends: any = [];
+    public userCanAccessLeaderboard: boolean = false;
     public user: any = [];
-    public leaderBoardData: any = [];
-    public leaderboard_flag: string = "";
+    public leaderboardData: any = [];
+    public leaderboardFlag: string = "";
     constructor(
         private progressService: ProgressService,
         private loader: Loader,
@@ -28,44 +26,29 @@ export class LeaderBoardComponent implements OnInit {
         private localStorage: LocalStorageService,
         private router: Router,
         private siteSettingsService: SiteSettingsService,
-        private regionPolicyService: RegionPolicyService,
-    ) {
-        this.siteSettingsService
-            .getSettings()
-            .then((settings) => {
-                this.settings = settings;
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
+    ) {}
 
     ngOnInit() {
+        void this.initialize();
+    }
+
+    private async initialize() {
         this.cookieService
             .get("AuthUser")
-            .then((value) => {
+            .then(async (value) => {
                 if (value != "") {
                     this.user = JSON.parse(value);
                     const params = { user_id: this.user.id };
                     this.getLeaderBoard(params);
+                    this.userCanAccessLeaderboard =
+                        await this.siteSettingsService.canAccessLeaderboard(
+                            this.user?.approximate_age as number,
+                        );
                 }
             })
             .catch((err) => {
                 console.warn("No AuthUser cookie", err);
             });
-    }
-
-    /**
-     * Checks if the user is allowed to access the leaderboard.
-     *
-     * @returns {boolean} True if the user is allowed to access the leaderboard, false otherwise.
-     */
-    canAccessLeaderboard(): boolean {
-        return (
-            this.regionPolicyService.isAdult(this.user?.approximate_age) ||
-            (this.settings?.setting_minors_can_access_leaderboard === "1" &&
-                !this.regionPolicyService.isBetweenChildAndAdult(this.user?.approximate_age))
-        );
     }
 
     getLeaderBoard(params: { user_id: any }) {
@@ -76,10 +59,10 @@ export class LeaderBoardComponent implements OnInit {
                 if (!res.data.status) {
                     throw new Error(res.data.message);
                 }
-                this.leaderboard_flag = res.data.results.leaderboard_flag;
-                this.leaderBoardData = res.data.results;
-                this.top_users = this.leaderBoardData.top_users;
-                this.top_friends = this.leaderBoardData.friends;
+                this.leaderboardFlag = res.data.results.leaderboard_flag;
+                this.leaderboardData = res.data.results;
+                this.topUsers = this.leaderboardData.top_users;
+                this.topFriends = this.leaderboardData.friends;
             })
             .catch((err: any) => {
                 console.error(err);

@@ -16,7 +16,6 @@ import { BaseService } from "app/_services/base.service";
 import { AgreementsService } from "app/_services/agreements.service";
 import { Routes } from "app/shared/utils/elearning-types";
 import { RegionPolicyService } from "app/_services/region-policy.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
 
 @Component({
     selector: "app-registration",
@@ -249,6 +248,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                     await this.handleFailedSignup();
                     return;
                 }
+
                 const updatedUser =
                     await this.agreementsService.handleAgreementsAcceptance(authUser);
                 if (!updatedUser) {

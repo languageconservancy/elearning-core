@@ -92,7 +92,12 @@ export class SocialWebService {
      * Extracts necessary data from Facebook user object to send to our
      * login endpoint.
      */
-    extractFacebookUserData(user: any): { type: string; social_id: number; name: string; email: string } {
+    extractFacebookUserData(user: any): {
+        type: string;
+        social_id: number;
+        name: string;
+        email: string;
+    } {
         return {
             type: "fb",
             social_id: user.id,

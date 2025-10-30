@@ -98,7 +98,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
             .get("AuthUser")
             .then((value) => {
                 if (!!value) {
-                    this.getUserSettings();
+                    this.getUserSettings(false);
                 } else {
                     throw value;
                 }
@@ -191,17 +191,10 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
             this.getReviewData();
         }
 
-        this.canAccessVillage = await this.siteSettingsService.canAccessVillage(
-            this.user?.approximate_age,
-        );
-        console.log("canAccessVillage", this.canAccessVillage);
-        this.canAccessLeaderboard = await this.siteSettingsService.canAccessLeaderboard(
-            this.user?.approximate_age,
-        );
-        console.log("canAccessLeaderboard", this.canAccessLeaderboard);
+        void this.updateAccess(this.user);
     }
 
-    private getUserSettings(type: boolean = false) {
+    private getUserSettings(isRouteChange: boolean = false) {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
@@ -216,29 +209,25 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
                         if (res.data.status) {
                             const authUser = Object.assign({}, res.data.results[0]);
                             delete authUser.userimages;
+
+                            // Always check if user is active
+                            if (authUser.is_active == 0) {
+                                console.error("User is not active");
+                                return this.baseService.logout();
+                            }
+
                             jQuery(".dropdown-toggle").dropdown();
                             try {
                                 await this.baseService.setAuthUserCookie(authUser);
                             } catch (err) {
-                                console.debug("Error setting AuthUser cookie. ", err);
+                                console.info("Error setting AuthUser cookie. ", err);
                                 return this.baseService.logout();
                             }
-                            if (type) {
-                                if (res.data.results[0].is_active == 0) {
-                                    console.error("User is not active");
-                                    return this.baseService.logout();
-                                }
-                            } else {
-                                this.loggedIn = true;
-                                this.user = res.data.results[0];
-                                this.canAccessVillage =
-                                    await this.siteSettingsService.canAccessVillage(
-                                        this.user?.approximate_age,
-                                    );
-                                this.canAccessLeaderboard =
-                                    await this.siteSettingsService.canAccessLeaderboard(
-                                        this.user?.approximate_age,
-                                    );
+                            this.loggedIn = true;
+                            this.user = authUser;
+                            await this.updateAccess(this.user);
+
+                            if (!isRouteChange) {
                                 this.getReviewData();
                             }
                         } else {
@@ -257,6 +246,24 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
                 console.error(err);
                 void this.baseService.logout();
             });
+    }
+
+    private async updateAccess(user: any) {
+        if (!user) {
+            console.error("[navbar] updateAccess: user is not defined");
+            return;
+        }
+
+        try {
+            this.canAccessVillage = await this.siteSettingsService.canAccessVillage(
+                user?.approximate_age,
+            );
+            this.canAccessLeaderboard = await this.siteSettingsService.canAccessLeaderboard(
+                user?.approximate_age,
+            );
+        } catch (err) {
+            console.error("[navbar] updateAccess: error updating access", err);
+        }
     }
 
     private getReviewData() {
@@ -293,14 +300,6 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.forumService.setForumParams(params);
         void this.router.navigate([Routes.Village]);
-    }
-
-    goToTeacher() {
-        //do nothing
-    }
-
-    goToClassroom() {
-        //do nothing
     }
 
     async gotoUrlOther(url: any) {

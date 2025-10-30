@@ -354,29 +354,29 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body modal-n-table">
-                <h4>Are you sure you want to delete your account?</h4>
-                <p><u>Your account and personal data will be deleted.</u></p>
-                <h5>Type <b>DELETE</b> to confirm deletion.</h5>
-                <input
-                    id="account-deletion-input"
-                    [ngModel]="accountDeletion.inputValue"
-                    type="text"
-                    (ngModelChange)="onAccountDeletionInputChange($event)"
-                    autocomplete="off"
-                />
-                <p *ngIf="accountDeletion.error" class="text-danger">
-                    Please type "DELETE" to confirm account deletion
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-text-hover" data-dismiss="modal">
-                    Cancel
-                </button>
-                <button type="button" class="btn btn-danger" (click)="modalDeleteAccountPressed()">
-                    Delete Account
-                </button>
-            </div>
+            <form (ngSubmit)="modalDeleteAccountPressed()">
+                <div class="modal-body modal-n-table">
+                    <h4>Are you sure you want to delete your account?</h4>
+                    <p><u>Your account and personal data will be deleted.</u></p>
+                    <h5>Type <b>DELETE</b> to confirm deletion.</h5>
+                    <input
+                        id="account-deletion-input"
+                        [ngModel]="accountDeletion.inputValue"
+                        type="text"
+                        (ngModelChange)="onAccountDeletionInputChange($event)"
+                        autocomplete="off"
+                    />
+                    <p *ngIf="accountDeletion.error" class="text-danger">
+                        Please type "DELETE" to confirm account deletion
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

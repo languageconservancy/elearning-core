@@ -207,9 +207,6 @@ export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
         // Emit response event
         this.agreementsService.submitResponse(true);
 
-        // Ensure proper modal cleanup, especially for mobile devices
-        this.ensureModalCleanup();
-
         this.resetForm();
     }
 
@@ -236,36 +233,7 @@ export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
      */
     public rejectBtnPressed() {
         this.agreementsService.submitResponse(false);
-
-        // Ensure proper modal cleanup, especially for mobile devices
-        this.ensureModalCleanup();
-
         this.resetForm();
-    }
-
-    /**
-     * Ensure proper modal cleanup, especially for mobile devices.
-     * This method addresses the issue where Bootstrap modals on iOS can leave
-     * behind a semi-transparent overlay that blocks touches.
-     */
-    private ensureModalCleanup() {
-        setTimeout(() => {
-            // Force close the modal using jQuery
-            jQuery("#agreements-modal").modal("hide");
-
-            // Remove modal backdrop if it exists
-            const backdrop = document.querySelector(".modal-backdrop");
-            if (backdrop) {
-                backdrop.remove();
-            }
-
-            // Remove modal-open class from body
-            document.body.classList.remove("modal-open");
-
-            // Reset body padding and overflow that might be set by Bootstrap
-            document.body.style.paddingRight = "";
-            document.body.style.overflow = "";
-        }, 100);
     }
 
     /**

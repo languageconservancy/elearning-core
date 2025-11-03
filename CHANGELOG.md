@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.0.0](https://github.com/languageconservancy/elearning-core/compare/v1.1.0...v2.0.0) (2025-11-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* upgrade to capacitor 6 and plugins to appropriate versions
+
+### Features
+
+* capacitor 6, social logins, login flow, bug fixes ([549fcc3](https://github.com/languageconservancy/elearning-core/commit/549fcc3aae12885d2be1f8bdf47114bfff851b97))
+
+
+### Bug Fixes
+
+* clean up agreements modal backdrop on closure ([c9736dc](https://github.com/languageconservancy/elearning-core/commit/c9736dc290229069bd9398af5975ebf364b6d697))
+* facebook login, modal closures, user/navbar update on age modal closure ([a19e81b](https://github.com/languageconservancy/elearning-core/commit/a19e81b333d9db33f1dda7a71c753a2a3db664ff))
+* progress dropdown. canAccessLeaderboard has redundant code. ([35de0ce](https://github.com/languageconservancy/elearning-core/commit/35de0ce4f56157f86eae6977f67c994eff2d43c6))
+* return actual fetched sitesettings settings instead of empty array ([4250704](https://github.com/languageconservancy/elearning-core/commit/425070437d361d79db03159a19a16188ffb78f29))
+* revert about/privacy and about/terms testing code back to proper login urls ([1b686a9](https://github.com/languageconservancy/elearning-core/commit/1b686a94551625903587450df105787d2199fce6))
+* sign-up approximate age setting ([db90d08](https://github.com/languageconservancy/elearning-core/commit/db90d086dad632d61d518850676e350ec92b00dd))
+* upgrade to capacitor 6 and plugins to appropriate versions ([1e1e22a](https://github.com/languageconservancy/elearning-core/commit/1e1e22a24f6f2b047adf53be0acfd846e34ed6a2))
+
 ## [1.1.0](https://github.com/languageconservancy/elearning-core/compare/v1.0.2...v1.1.0) (2025-10-17)
 
 

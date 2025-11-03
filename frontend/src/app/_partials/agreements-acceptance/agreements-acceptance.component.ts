@@ -26,6 +26,8 @@ import { SiteSettingsService } from "app/_services/site-settings.service";
 import { AgreementsService } from "app/_services/agreements.service";
 import { ModalService } from "app/_services/modal.service";
 
+declare let jQuery: any;
+
 @Component({
     selector: "app-agreements-acceptance",
     templateUrl: "./agreements-acceptance.component.html",

@@ -16,7 +16,9 @@
                     <b>Email</b>
                 </div>
                 <div class="col-6 my-auto">
-                    <a href="javascript:void(0)" class="text-dark text-wrap text-break">{{ user.email }}</a>
+                    <a href="javascript:void(0)" class="text-dark text-wrap text-break">{{
+                        user.email
+                    }}</a>
                 </div>
             </div>
         </div>
@@ -31,7 +33,11 @@
                         class="d-flex flex-column flex-nowrap align-items-center justify-content-center align-content-center"
                     >
                         <label class="switch">
-                            <input [(ngModel)]="socialModel.google" (change)="socialChange('google')" type="checkbox" />
+                            <input
+                                [(ngModel)]="socialModel.google"
+                                (change)="socialChange('google')"
+                                type="checkbox"
+                            />
                             <span id="googleres" class="slider round"></span>
                         </label>
                         <!-- <a
@@ -65,14 +71,14 @@
                             />
                             <span class="slider round"></span>
                         </label>
-                        <a
+                        <!-- <a
                             href="javascript:void(0)"
                             *ngIf="socialModel.facebook"
                             (click)="fbInvite()"
                             class="invite-frd"
                         >
                             <i class="fa fa-user-plus" aria-hidden="true"></i> Invite friends
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>
@@ -117,7 +123,10 @@
                     <b>Deactivate Account</b>
                 </div>
                 <div class="col-6">
-                    <a href="javascript:void(0)" (click)="openModal('deactivateProfile')" class="btn-action"
+                    <a
+                        href="javascript:void(0)"
+                        (click)="openModal('deactivateProfile')"
+                        class="btn-action"
                         >Deactivate</a
                     >
                 </div>
@@ -129,7 +138,12 @@
                     <b>Delete Account</b>
                 </div>
                 <div class="col-6">
-                    <a href="javascript:void(0)" (click)="openModal('deleteAccount')" class="btn-action">Delete</a>
+                    <a
+                        href="javascript:void(0)"
+                        (click)="openModal('deleteAccount')"
+                        class="btn-action"
+                        >Delete</a
+                    >
                 </div>
             </div>
         </div>
@@ -137,7 +151,13 @@
 </div>
 
 <!-- Google Invite Modal -->
-<div class="modal fade modal-n" id="googleInviteModal" tabindex="-1" role="dialog" aria-labelledby="GoogleInviteModal">
+<div
+    class="modal fade modal-n"
+    id="googleInviteModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="GoogleInviteModal"
+>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -190,8 +210,15 @@
                 ></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-text-hover" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" (click)="sendGoogleInvite()" data-dismiss="modal">
+                <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="sendGoogleInvite()"
+                    data-dismiss="modal"
+                >
                     Send
                 </button>
             </div>
@@ -201,7 +228,13 @@
 <!-- Google Invite Modal -->
 
 <!-- Reset Password Modal -->
-<div class="modal fade modal-n" id="resetPass" tabindex="-1" role="dialog" aria-labelledby="ResetPassword">
+<div
+    class="modal fade modal-n"
+    id="resetPass"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ResetPassword"
+>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -256,7 +289,9 @@
                     />
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-text-hover" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+                        Cancel
+                    </button>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
@@ -266,7 +301,13 @@
 <!-- Reset Password Modal -->
 
 <!-- Profile Deactivation Confirmation -->
-<div class="modal fade modal-n" id="deactivateProfile" tabindex="-1" role="dialog" aria-labelledby="DeactivateProfile">
+<div
+    class="modal fade modal-n"
+    id="deactivateProfile"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="DeactivateProfile"
+>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -280,8 +321,15 @@
                 <p>This will keep your data intact, but prevent you from logging in.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-text-hover" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deactivateProfile()">
+                <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                    (click)="deactivateProfile()"
+                >
                     Yes
                 </button>
             </div>
@@ -291,7 +339,13 @@
 <!-- Profile Deactivation Confirmation -->
 
 <!-- Profile Delete Confirmation -->
-<div class="modal fade modal-n" id="deleteAccount" tabindex="-1" role="dialog" aria-labelledby="DeleteAccount">
+<div
+    class="modal fade modal-n"
+    id="deleteAccount"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="DeleteAccount"
+>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -300,27 +354,29 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body modal-n-table">
-                <h4>Are you sure you want to delete your account?</h4>
-                <p><u>Your account and personal data will be deleted.</u></p>
-                <h5>Type <b>DELETE</b> to confirm deletion.</h5>
-                <input
-                    id="account-deletion-input"
-                    [ngModel]="accountDeletion.inputValue"
-                    type="text"
-                    (ngModelChange)="onAccountDeletionInputChange($event)"
-                    autocomplete="off"
-                />
-                <p *ngIf="accountDeletion.error" class="text-danger">
-                    Please type "DELETE" to confirm account deletion
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-text-hover" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" (click)="modalDeleteAccountPressed()">
-                    Delete Account
-                </button>
-            </div>
+            <form (ngSubmit)="modalDeleteAccountPressed()">
+                <div class="modal-body modal-n-table">
+                    <h4>Are you sure you want to delete your account?</h4>
+                    <p><u>Your account and personal data will be deleted.</u></p>
+                    <h5>Type <b>DELETE</b> to confirm deletion.</h5>
+                    <input
+                        id="account-deletion-input"
+                        [ngModel]="accountDeletion.inputValue"
+                        type="text"
+                        (ngModelChange)="onAccountDeletionInputChange($event)"
+                        autocomplete="off"
+                    />
+                    <p *ngIf="accountDeletion.error" class="text-danger">
+                        Please type "DELETE" to confirm account deletion
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -346,7 +402,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-text-hover" data-dismiss="modal" (click)="deleteUsersAccount()">
+                <button
+                    type="button"
+                    class="btn btn-text-hover"
+                    data-dismiss="modal"
+                    (click)="deleteUsersAccount()"
+                >
                     YES
                 </button>
             </div>
@@ -377,10 +438,20 @@
                 <h4>This profile is already deactivated.</h4>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-text-hover" data-dismiss="modal" (click)="alreadyDeleted()">
+                <button
+                    type="button"
+                    class="btn btn-text-hover"
+                    data-dismiss="modal"
+                    (click)="alreadyDeleted()"
+                >
                     Cancel
                 </button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="alreadyDeleted()">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                    (click)="alreadyDeleted()"
+                >
                     Yes
                 </button>
             </div>
@@ -389,7 +460,13 @@
 </div>
 <!-- Profile Delete Confirmation -->
 <!-- Reset Progress Data Confirmation -->
-<div class="modal fade modal-n" id="resetProgressData" tabindex="-1" role="dialog" aria-labelledby="ResetProgressData">
+<div
+    class="modal fade modal-n"
+    id="resetProgressData"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ResetProgressData"
+>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header text-center">
@@ -419,8 +496,15 @@
                 />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-gray-text-hover" data-dismiss="modal">Cancel</button>
-                <button id="reset-data-yes-btn" type="button" class="btn btn-primary" (click)="resetProgressData()">
+                <button type="button" class="btn btn-gray-text-hover" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button
+                    id="reset-data-yes-btn"
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="resetProgressData()"
+                >
                     Yes
                 </button>
             </div>

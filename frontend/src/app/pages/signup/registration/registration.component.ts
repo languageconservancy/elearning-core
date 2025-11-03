@@ -36,7 +36,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         ? "6LfJRxwgAAAAAL7jSsHK4C9U0jgcAwWDy70Ylyl_"
         : "6LfZ48wfAAAAALDjum-CDaIHeM64Oxdfakkp_WPS";
     private previousAge: number = 0;
-    private isChild: boolean = false;
 
     constructor(
         private router: Router,
@@ -136,11 +135,9 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         if (this.regionPolicyService.isChild(age)) {
             this.usernamePlaceholder = "Username (not your real name)";
             this.emailPlaceholder = "Parent's email";
-            this.isChild = true;
         } else {
             this.usernamePlaceholder = "Username";
             this.emailPlaceholder = "Email";
-            this.isChild = false;
         }
 
         if (
@@ -251,6 +248,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                     await this.handleFailedSignup();
                     return;
                 }
+
                 const updatedUser =
                     await this.agreementsService.handleAgreementsAcceptance(authUser);
                 if (!updatedUser) {
@@ -271,6 +269,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                         "Error notifying parent of child signup. Please check your email.",
                     );
                 }
+
                 await this.navigateToNextPage();
             })
             .catch((err) => {

@@ -40,7 +40,19 @@ export class AuthGuard {
      * @returns boolean - true if the route is login or signup, false otherwise.
      */
     private isPublicRoute(route: string): boolean {
-        return ["", "register"].indexOf(route) > -1;
+        const publicRoutes: readonly string[] = [
+            Routes.Login,
+            Routes.Register,
+            Routes.ForgotPassword,
+            Routes.ChangePassword,
+            Routes.PageNotFound,
+            Routes.UnderConstruction,
+            Routes.About,
+            Routes.AboutPrivacy,
+            Routes.AboutTerms,
+            Routes.ContactUs,
+        ];
+        return publicRoutes.indexOf(route) > -1;
     }
 
     /**
@@ -50,7 +62,14 @@ export class AuthGuard {
      */
     private handlePublicRoute(): Observable<boolean> {
         return from(this.cookieService.get("AuthUser")).pipe(
-            switchMap((user: string) => (user ? this.handleLoggedInUser(user) : of(true))),
+            switchMap((user: string) => {
+                if (!user) {
+                    return of(true); // User not logged in, allow navigation
+                }
+
+                // For other public routes (like register), handle agreements normally
+                return this.handleLoggedInUser(user);
+            }),
             catchError(() => {
                 // User not logged in. Allow navigation to public route.
                 return of(true);

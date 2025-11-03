@@ -51,6 +51,7 @@ import { ModalService } from "app/_services/modal.service";
 import { TrialAccountService } from "app/_services/trial-account.service";
 import { AgePromptService } from "app/_services/age-prompt.service";
 import { PlatformRolesService } from "app/_services/platform-roles.service";
+import { SiteSettingsService } from "app/_services/site-settings.service";
 
 declare let window: any;
 declare let google: any;
@@ -193,9 +194,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     setUpFacebookAuthSubscriber() {
         this.socialAuthServiceSubscription = this.authService.authState.subscribe((user) => {
             if (!user) {
-                console.error("authServiceSubscriber bad user");
+                console.error(
+                    "setUpFacebookAuthSubscriber bad user - Facebook login returned null/undefined user. Check Facebook login settings and permissions.",
+                );
                 return;
             }
+
             const provider = user?.provider.toLowerCase();
             if (provider !== "facebook") {
                 console.warn("Got unhandled sign-in provider: ", user.provider);
@@ -203,8 +207,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             if (provider === "facebook" && !this.fbBtnClicked) {
                 // facebook login invalid repeat
+                console.info(
+                    "Facebook login detected but fbBtnClicked is false - ignoring (this prevents duplicate logins)",
+                );
                 return;
             }
+
             const fbUser = this.socialWebService.extractFacebookUserData(user);
             void this.handleAsyncLogin(fbUser);
         });
@@ -371,7 +379,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                     : "identity-credentials-get";
 
                 iframe.setAttribute("allow", newAllow);
-                console.log("Added FedCM permission to Google Sign-in iframe");
+                console.info("Added FedCM permission to Google Sign-in iframe");
             }
         } catch (error) {
             console.warn("Failed to add FedCM permission to iframe:", error);
@@ -421,13 +429,17 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                 const fbUser = await this.socialMobileService.signInWithFacebook();
                 await this.handleAsyncLogin(fbUser);
             } catch (err) {
+                console.error("Mobile Facebook login error:", err);
                 this.snackbarService.handleError(err, "Facebook login failed.");
             }
         } else {
             this.fbBtnClicked = true;
             try {
                 await this.socialWebService.signInWithFacebook();
+                // Note: For web, the actual login handling happens in the authState subscription
             } catch (err) {
+                console.error("Web Facebook login error:", err);
+                this.fbBtnClicked = false;
                 this.snackbarService.handleError(err, "Facebook login failed.");
             }
         }

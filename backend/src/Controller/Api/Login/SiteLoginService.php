@@ -98,7 +98,7 @@ class SiteLoginService extends LoginService
                 $data['dob'] = date('Y-m-d', strtotime($data['dob']));
             }
             // compute age from dob
-            $data['age'] = $this->getAgeFromDob($data['dob']);
+            $data['approximate_age'] = $this->getAgeFromDob($data['dob']);
             //set default path and speed
             $data = $this->setUserDefaults($data);
             $user = $this->getUsersTable()->newEmptyEntity();

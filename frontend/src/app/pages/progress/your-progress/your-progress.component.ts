@@ -17,6 +17,7 @@ export class YourProgressComponent implements OnInit {
     public getprogress: any = [];
     public fireImage: string = "dead";
     private settings: any = null;
+    public userCanAccessLeaderboard: boolean = false;
 
     constructor(
         private progressService: ProgressService,
@@ -39,7 +40,7 @@ export class YourProgressComponent implements OnInit {
     ngOnInit() {
         this.cookieService
             .get("AuthUser")
-            .then((value) => {
+            .then(async (value) => {
                 if (value != "") {
                     this.user = JSON.parse(value);
                     const params = {
@@ -47,24 +48,15 @@ export class YourProgressComponent implements OnInit {
                         path_id: this.user.learningpath_id,
                     };
                     this.getProgressDetails(params);
+                    this.userCanAccessLeaderboard =
+                        await this.siteSettingsService.canAccessLeaderboard(
+                            this.user?.approximate_age as number,
+                        );
                 }
             })
             .catch((err) => {
                 console.warn("No AuthUser cookie", err);
             });
-    }
-
-    /**
-     * Checks if the user is allowed to access the leaderboard.
-     *
-     * @returns {boolean} True if the user is allowed to access the leaderboard, false otherwise.
-     */
-    canAccessLeaderboard(): boolean {
-        return (
-            this.regionPolicyService.isAdult(this.user?.approximate_age) ||
-            (this.settings?.setting_minors_can_access_leaderboard === "1" &&
-                !this.regionPolicyService.isBetweenChildAndAdult(this.user?.approximate_age))
-        );
     }
 
     getProgressDetails(params) {

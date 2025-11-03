@@ -8,6 +8,8 @@ import { Routes } from "app/shared/utils/elearning-types";
 import { ModalService } from "app/_services/modal.service";
 import { RegionPolicyService } from "app/_services/region-policy.service";
 import { PlatformRolesService } from "app/_services/platform-roles.service";
+import { CookieService } from "app/_services/cookie.service";
+import { BaseService } from "app/_services/base.service";
 
 @Component({
     selector: "app-age-prompt",
@@ -29,6 +31,8 @@ export class AgePromptComponent implements OnInit {
         private modalService: ModalService,
         private regionPolicyService: RegionPolicyService,
         private platformRolesService: PlatformRolesService,
+        private cookieService: CookieService,
+        private baseService: BaseService,
     ) {}
 
     ngOnInit() {
@@ -170,21 +174,21 @@ export class AgePromptComponent implements OnInit {
                 id: userId,
                 name: form.value.username,
                 email: form.value.parentsEmail,
-                approximate_age: form.value.age,
+                approximate_age: parseInt(form.value.age, 10),
                 dob: formattedDob,
             };
         } else {
             // Non-child or student user
             return {
                 id: userId,
-                approximate_age: form.value.age,
+                approximate_age: parseInt(form.value.age, 10),
                 dob: formattedDob,
             };
         }
     }
 
     /**
-     * Update user info in the database.
+     * Update user info in the database and refresh the AuthUser cookie.
      * @param userData {any} - user data to update in the database
      * @returns {Promise<boolean>} - true if successful, false otherwise
      */
@@ -198,10 +202,62 @@ export class AgePromptComponent implements OnInit {
             if (!res.data.status) {
                 throw new Error(res.data.message);
             }
+
+            // Update the AuthUser cookie with the new approximate_age
+            const updatedAuthUser = await this.updateAuthUserCookie(userData);
+
+            // Emit the updated user data to refresh navbar and other components
+            if (updatedAuthUser) {
+                // Add a small delay to ensure cookie is fully written before emitting
+                setTimeout(() => {
+                    this.settingsService.setUser(updatedAuthUser);
+                }, 100);
+            }
+
             return true;
         } catch (error) {
             this.snackbarService.handleError(error, "Error updating user data");
             return false;
+        }
+    }
+
+    /**
+     * Updates the AuthUser cookie with the new user data.
+     * @param userData - The updated user data containing approximate_age
+     * @returns The updated user object, or null if update failed
+     */
+    private async updateAuthUserCookie(userData: any): Promise<any> {
+        try {
+            // Get current AuthUser from cookie
+            const currentAuthUserStr = await this.cookieService.get("AuthUser");
+            if (!currentAuthUserStr) {
+                console.warn("No AuthUser cookie found to update");
+                return null;
+            }
+
+            const currentAuthUser = JSON.parse(currentAuthUserStr);
+
+            // Update the user object with new data
+            const updatedAuthUser = {
+                ...currentAuthUser,
+                approximate_age: parseInt(userData.approximate_age, 10),
+                dob: userData.dob,
+            };
+
+            // If it's a child user, also update name and email
+            if ("name" in userData && "email" in userData) {
+                updatedAuthUser.name = userData.name;
+                updatedAuthUser.email = userData.email;
+            }
+
+            // Save the updated user object back to the cookie
+            await this.baseService.setAuthUserCookie(updatedAuthUser);
+
+            return updatedAuthUser;
+        } catch (error) {
+            console.error("Error updating AuthUser cookie:", error);
+            // Don't throw here - the database update was successful, cookie update is secondary
+            return null;
         }
     }
 

@@ -3,7 +3,6 @@ import { Router } from "@angular/router";
 
 import * as API from "app/_constants/api.constants";
 import { BaseService } from "./base.service";
-import { SettingsService } from "./settings.service";
 import { CookieService } from "./cookie.service";
 import { LocalStorageService } from "./local-storage.service";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
@@ -20,7 +19,6 @@ export class SiteSettingsService extends BaseService {
     private featuresLoaded: Promise<any>;
 
     constructor(
-        protected settingsService: SettingsService,
         public cookieService: CookieService,
         protected localStorage: LocalStorageService,
         protected router: Router,

@@ -6,7 +6,6 @@ import { ApiResponse } from "app/shared/utils/elearning-types";
 import { filter, take } from "rxjs/operators";
 import { Loader } from "app/_services/loader.service";
 import { SnackbarService } from "app/_services/snackbar.service";
-import { SettingsService } from "./settings.service";
 
 @Injectable({
     providedIn: "root",
@@ -26,7 +25,6 @@ export class AgreementsService {
         private loader: Loader,
         private snackbarService: SnackbarService,
         private baseService: BaseService,
-        private settingsService: SettingsService,
     ) {}
 
     // Open modal

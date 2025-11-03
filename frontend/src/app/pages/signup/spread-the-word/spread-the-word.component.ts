@@ -43,7 +43,9 @@ export class SpreadTheWordComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.userSubscription = this.registrationService.currentUser.subscribe((userId) => (this.userId = userId.id));
+        this.userSubscription = this.registrationService.currentUser.subscribe(
+            (userId) => (this.userId = userId.id),
+        );
 
         this.localizeService.getTranslations().subscribe((data) => {
             this.translations = data["components"]["spread-the-word"];

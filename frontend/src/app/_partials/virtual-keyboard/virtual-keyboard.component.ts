@@ -14,6 +14,11 @@ import {
 import Keyboard, { KeyboardInput, KeyboardLayoutObject } from "simple-keyboard";
 import { VirtualKeyboardService } from "app/_services/virtual-keyboard.service";
 import { KeyboardConfigService, KeyboardConfig } from "app/_services/keyboard-config.service";
+import { environment } from "environments/environment";
+
+const DEBUG = !environment.production;
+
+type LayoutName = "default" | "shift";
 
 /**
  * VirtualKeyboard is a wrapper for the third-party
@@ -76,6 +81,13 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
     private keyboardConfig: KeyboardConfig | null = null;
     private configLoaded = false;
     private domReady = false;
+
+    private keyCodes = [
+        "Backquote Digit1 Digit2 Digit3 Digit4 Digit5 Digit6 Digit7 Digit8 Digit9 Digit0 Minus Equals N/A",
+        "N/A KeyQ KeyW KeyE KeyR KeyT KeyY KeyU KeyI KeyO KeyP BracketLeft BracketRight Backslash",
+        "N/A KeyA KeyS KeyD KeyF KeyG KeyH KeyJ KeyK KeyL Semicolon Quote N/A",
+        "N/A KeyZ KeyX KeyC KeyV KeyB KeyN KeyM Comma Period Slash N/A",
+    ];
 
     constructor(
         private renderer2: Renderer2,
@@ -219,29 +231,29 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
     physicalKeyToLayoutChar(code: string): string {
         if (!this.keyboardConfig || !this.keyboard) return "";
 
-        let layoutRow: number = -1;
-        let layoutColumn: number = -1;
-        let char: string = "";
+        const currentLayoutName: LayoutName = this.keyboard.options.layoutName as LayoutName;
+        const currentLayout: KeyboardLayoutObject = this.keyboard.options.layout;
+        let rowIndex: number = -1;
+        let colIndex: number = -1;
 
-        const keyCodes = Object.keys(this.keyboardConfig.keyCodesConversions);
-        for (let i = 0; i < keyCodes.length; i++) {
-            const keyCodesRowSplit = keyCodes[i].split(" ");
-            if (keyCodesRowSplit.indexOf(code) >= 0) {
-                layoutRow = i;
-                layoutColumn = keyCodesRowSplit.indexOf(code);
+        // Find the row and column of the key code in the keyCodes array
+        // Loop through 4 rows of key codes
+        for (rowIndex = 0; rowIndex < this.keyCodes.length; rowIndex++) {
+            const rowCodes = this.keyCodes[rowIndex].split(" ");
+            colIndex = rowCodes.indexOf(code);
+            if (colIndex >= 0) {
+                break;
             }
         }
 
-        if (layoutRow <= -1) {
-            return char;
+        // If code not found in keyCodes array, return empty string
+        if (rowIndex < 0 || colIndex < 0) {
+            return "";
         }
 
-        // Use the current layout from the keyboard config
-        const layout = this.getCurrentLayoutObject();
-        if (!layout) return char;
-
-        char = layout.default[layoutRow].split(" ")[layoutColumn];
-        return char;
+        // Get the character from the layout at the row and column index
+        const row = currentLayout[currentLayoutName][rowIndex];
+        return row.split(" ")[colIndex];
     }
 
     /**
@@ -283,14 +295,13 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
             return;
         }
 
-        // Don't process if current layout is the default layout
-        const defaultLayout = this.getCurrentLayoutObject();
-        if (!defaultLayout || this.keyboard.options.layoutName === "default") {
-            return;
-        }
-
         // Don't process if alt, ctrl, or super/cmd are pressed
         if (event.altKey || event.ctrlKey || event.metaKey) {
+            if (DEBUG) {
+                console.debug(
+                    "[handleCharacterConversion] Not processing character conversion due to alt, ctrl, or super/cmd being pressed",
+                );
+            }
             return;
         }
 

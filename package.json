@@ -1,6 +1,6 @@
 {
   "name": "elearning-core",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "eLearning platform language-agnostic core, used in client projects as a submodule",
   "keywords": [
     "elearning",

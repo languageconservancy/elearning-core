@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/languageconservancy/elearning-core/compare/v2.0.0...v2.0.1) (2025-11-04)
+
+
+### Bug Fixes
+
+* virtual keyboard conversions from physical keyboard to language keyboard characters ([830653f](https://github.com/languageconservancy/elearning-core/commit/830653fdcbdefaad06965d4505aa31a858617d6f))
+* virtual keyboard conversions from physical keyboard to language keyboard characters ([dd27de9](https://github.com/languageconservancy/elearning-core/commit/dd27de9d4e492a8da0d294c5391828b0a329921a))
+
 ## [2.0.0](https://github.com/languageconservancy/elearning-core/compare/v1.1.0...v2.0.0) (2025-11-03)
 
 

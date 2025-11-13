@@ -18,7 +18,6 @@ const config: CapacitorConfig =
                   CapacitorHttp: {
                       enabled: true,
                   },
-                  GoogleAuth: {},
               },
               android: {
                   includePlugins: ["@capacitor/app", "@capacitor/device", "@capacitor/preferences"],
@@ -41,13 +40,6 @@ const config: CapacitorConfig =
                   CapacitorHttp: {
                       enabled: true,
                   },
-                  GoogleAuth: {
-                      scopes: ["profile", "email"],
-                      iosClientId: environment.GOOGLE_CLIENT_ID_IOS,
-                      androidClientId: environment.GOOGLE_CLIENT_ID_WEB,
-                      clientId: environment.GOOGLE_CLIENT_ID_WEB,
-                      forceCodeForRefreshToken: true,
-                  },
               },
               android: {
                   includePlugins: [
@@ -56,7 +48,7 @@ const config: CapacitorConfig =
                       "@capacitor/preferences",
                       "@capacitor-community/apple-sign-in",
                       "@capacitor-community/facebook-login",
-                      "@codetrix-studio/capacitor-google-auth",
+                      "@capgo/capacitor-social-login",
                   ],
               },
               ios: {
@@ -66,7 +58,7 @@ const config: CapacitorConfig =
                       "@capacitor/preferences",
                       "@capacitor-community/apple-sign-in",
                       "@capacitor-community/facebook-login",
-                      "@codetrix-studio/capacitor-google-auth",
+                      "@capgo/capacitor-social-login",
                   ],
               },
           };

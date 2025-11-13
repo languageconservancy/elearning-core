@@ -20,16 +20,8 @@ import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms
 import { Router } from "@angular/router";
 import { ActivatedRoute } from "@angular/router";
 import { DeviceDetectorService } from "ngx-device-detector";
-import { jwtDecode } from "jwt-decode";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
 import { Capacitor } from "@capacitor/core";
-import {
-    SignInWithApple,
-    SignInWithAppleResponse,
-    SignInWithAppleOptions,
-} from "@capacitor-community/apple-sign-in";
-// Not sure why this isn't being found
-// import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
 import { Subscription, firstValueFrom } from "rxjs";
 import { filter, take } from "rxjs/operators";
 import { BaseService } from "app/_services/base.service";
@@ -51,10 +43,7 @@ import { ModalService } from "app/_services/modal.service";
 import { TrialAccountService } from "app/_services/trial-account.service";
 import { AgePromptService } from "app/_services/age-prompt.service";
 import { PlatformRolesService } from "app/_services/platform-roles.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-
-declare let window: any;
-declare let google: any;
+import { SocialLoginError } from "app/_exceptions/social-login.errors";
 
 @Component({
     selector: "app-login",
@@ -79,7 +68,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     public isNativePlatform: boolean = false;
     private fbBtnClicked: boolean = false;
     private loginData: any;
-    @ViewChild("googleSigninBtn") googleSigninButton: ElementRef;
+    @ViewChild("googleSigninWebBtn") googleSigninWebBtn: ElementRef;
 
     constructor(
         private agePromptService: AgePromptService,
@@ -127,15 +116,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         // Set up query params handling
         this.subscribeToQueryParams();
 
-        if (
-            (this.deviceDetector.isMobile() || this.deviceDetector.isTablet()) &&
-            this.googleConfigValid
-        ) {
-            // Init Google login on mobile
-            this.socialMobileService.initGoogle();
-        } else if (this.facebookConfigValid) {
-            // Set up callback for Facebook login on web
-            this.setUpFacebookAuthSubscriber();
+        if (this.facebookConfigValid || this.googleConfigValid) {
+            // Set up callback for Facebook and Google login on web
+            this.setUpSocialAuthSubscriber();
         }
     }
 
@@ -191,30 +174,41 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         this.subscriptions.push(sub);
     }
 
-    setUpFacebookAuthSubscriber() {
+    /**
+     * Sets up subscriber for social auth state changes (Facebook and Google)
+     * This is triggered automatically when users click the social login buttons
+     */
+    setUpSocialAuthSubscriber() {
         this.socialAuthServiceSubscription = this.authService.authState.subscribe((user) => {
+            console.debug("Social auth state changed, user: ", user);
+
             if (!user) {
-                console.error(
-                    "setUpFacebookAuthSubscriber bad user - Facebook login returned null/undefined user. Check Facebook login settings and permissions.",
-                );
+                console.debug("User signed out or null");
                 return;
             }
 
-            const provider = user?.provider.toLowerCase();
-            if (provider !== "facebook") {
-                console.warn("Got unhandled sign-in provider: ", user.provider);
-                return;
-            }
-            if (provider === "facebook" && !this.fbBtnClicked) {
-                // facebook login invalid repeat
-                console.info(
-                    "Facebook login detected but fbBtnClicked is false - ignoring (this prevents duplicate logins)",
+            let authData: any = null;
+
+            if (user.provider === "FACEBOOK") {
+                authData = this.socialWebService.handleFacebookLoginCallback(
+                    user,
+                    this.fbBtnClicked,
                 );
+                if (!authData) {
+                    return;
+                }
+            } else if (user.provider === "GOOGLE") {
+                authData = this.socialWebService.handleGoogleLoginCallback(user);
+                if (!authData) {
+                    return;
+                }
+            } else {
+                console.warn("Unknown social provider:", user.provider);
                 return;
             }
 
-            const fbUser = this.socialWebService.extractFacebookUserData(user);
-            void this.handleAsyncLogin(fbUser);
+            // Handle the login with the extracted auth data
+            void this.handleAsyncLogin(authData);
         });
         this.addSubscription(this.socialAuthServiceSubscription);
     }
@@ -224,166 +218,17 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             if (this.facebookConfigValid) {
                 this.socialMobileService.initFacebook();
             }
-        } else {
             if (this.googleConfigValid) {
-                if (typeof google === "undefined") {
-                    window.onload = () => {
-                        this.setUpGoogleSignInWebBtn();
-                    };
-                } else {
-                    this.setUpGoogleSignInWebBtn();
-                }
+                this.socialMobileService.initGoogle();
+            }
+            if (this.appleConfigValid) {
+                this.socialMobileService.initApple();
             }
         }
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach((sub) => sub?.unsubscribe());
-    }
-
-    /**
-     * Creates Sign In With Google for Web button.
-     * Initializes and renders the button.
-     * Includes FedCM compliance workaround for iframe permissions.
-     * References:
-     *   - https://developers.google.com/identity/gsi/web/reference/js-reference
-     *   - https://stackoverflow.com/questions/65439066/using-google-one-tap-in-angular
-     *   - https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API
-     */
-    setUpGoogleSignInWebBtn(): void {
-        if (
-            this.baseService.loginType != "" ||
-            this.deviceDetector.isMobile() ||
-            this.deviceDetector.isTablet()
-        ) {
-            return;
-        }
-
-        google.accounts.id.initialize({
-            client_id: environment.GOOGLE_CLIENT_ID_WEB,
-            callback: this.handleGoogleLoginBtnWebClick.bind(this),
-            auto_select: false,
-            cancel_on_tap_outside: true,
-        });
-
-        window.google.accounts.id.renderButton(this.googleSigninButton.nativeElement, {
-            theme: "outline",
-            size: "large",
-            shape: "pill",
-            width: "250",
-            logo_alignment: "left",
-        });
-
-        // FedCM compliance workaround - add required permission to Google's iframe
-        this.addFedCMPermissionToGoogleIframes();
-
-        google.accounts.id.prompt((/*notification: any*/) => {
-            // console.info("notification: ", notification);
-        });
-    }
-
-    /**
-     * FedCM Compliance Workaround
-     * Monitors for Google Sign-in iframes and adds the required
-     * allow="identity-credentials-get" attribute for FedCM compliance.
-     * This is necessary because Google's SDK doesn't currently include
-     * this attribute when creating iframes.
-     */
-    private addFedCMPermissionToGoogleIframes(): void {
-        // Check for existing iframes first
-        this.updateExistingGoogleIframes();
-
-        // Monitor for new iframes being added
-        if (typeof MutationObserver !== "undefined") {
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.type === "childList") {
-                        mutation.addedNodes.forEach((node) => {
-                            if (node.nodeType === Node.ELEMENT_NODE) {
-                                const element = node as Element;
-                                this.processElementForGoogleIframes(element);
-                            }
-                        });
-                    }
-                });
-            });
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true,
-            });
-
-            // Clean up observer after a reasonable time
-            setTimeout(() => observer.disconnect(), 10000);
-        }
-    }
-
-    /**
-     * Updates existing Google Sign-in iframes with FedCM permissions
-     */
-    private updateExistingGoogleIframes(): void {
-        // Wait a bit for Google's SDK to create the iframe
-        setTimeout(() => {
-            this.processElementForGoogleIframes(document.body);
-        }, 100);
-    }
-
-    /**
-     * Recursively processes an element and its children to find and update Google iframes
-     */
-    private processElementForGoogleIframes(element: Element): void {
-        // Check if this element is a Google iframe
-        if (element.tagName === "IFRAME") {
-            const iframe = element as HTMLIFrameElement;
-            if (this.isGoogleSignInIframe(iframe)) {
-                this.addFedCMPermissionToIframe(iframe);
-            }
-        }
-
-        // Check all child elements
-        element.querySelectorAll("iframe").forEach((iframe) => {
-            if (this.isGoogleSignInIframe(iframe)) {
-                this.addFedCMPermissionToIframe(iframe);
-            }
-        });
-    }
-
-    /**
-     * Determines if an iframe is a Google Sign-in iframe
-     */
-    private isGoogleSignInIframe(iframe: HTMLIFrameElement): boolean {
-        const src = iframe.src || "";
-        const id = iframe.id || "";
-
-        // Check for Google Sign-in iframe indicators
-        return (
-            src.includes("accounts.google.com") ||
-            src.includes("gstatic.com") ||
-            id.includes("gsi") ||
-            iframe.getAttribute("data-gs-iframe") !== null ||
-            iframe.closest("[data-gs-iframe]") !== null
-        );
-    }
-
-    /**
-     * Adds FedCM permission to a Google iframe
-     */
-    private addFedCMPermissionToIframe(iframe: HTMLIFrameElement): void {
-        try {
-            const currentAllow = iframe.getAttribute("allow") || "";
-
-            // Check if identity-credentials-get is already present
-            if (!currentAllow.includes("identity-credentials-get")) {
-                const newAllow = currentAllow
-                    ? `${currentAllow}; identity-credentials-get`
-                    : "identity-credentials-get";
-
-                iframe.setAttribute("allow", newAllow);
-                console.info("Added FedCM permission to Google Sign-in iframe");
-            }
-        } catch (error) {
-            console.warn("Failed to add FedCM permission to iframe:", error);
-        }
     }
 
     /**
@@ -409,17 +254,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /**
-     * Handles when the user clicks the google sign-in button on web.
-     * @param {CredentialResponse} response - Google sign-in response
-     */
-    handleGoogleLoginBtnWebClick(response: any /*CredentialResponse*/) {
-        const authData = this.socialWebService.extractGoogleUserFromCredentialResponse(response);
-        this.ngZone.run(() => {
-            void this.handleAsyncLogin(authData);
-        });
-    }
-
-    /**
      * Attempts to log the user in using Facebook Login API.
      * Handles mobile and web.
      */
@@ -429,7 +263,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                 const fbUser = await this.socialMobileService.signInWithFacebook();
                 await this.handleAsyncLogin(fbUser);
             } catch (err) {
-                console.error("Mobile Facebook login error:", err);
                 this.snackbarService.handleError(err, "Facebook login failed.");
             }
         } else {
@@ -438,7 +271,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                 await this.socialWebService.signInWithFacebook();
                 // Note: For web, the actual login handling happens in the authState subscription
             } catch (err) {
-                console.error("Web Facebook login error:", err);
                 this.fbBtnClicked = false;
                 this.snackbarService.handleError(err, "Facebook login failed.");
             }
@@ -451,71 +283,29 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     async handleAppleLoginBtnTap(): Promise<void> {
         try {
-            const authData = await this.signInWithApple();
+            const authData =
+                this.deviceDetector.isMobile() || this.deviceDetector.isTablet()
+                    ? await this.socialMobileService.signInWithApple()
+                    : await this.socialWebService.signInWithApple();
+
             await this.handleAsyncLogin(authData);
-        } catch (err) {
-            this.snackbarService.handleError(err, "Sign in with Apple failed.");
+        } catch (error) {
+            console.error("Error signing in with Apple: ", error);
+
+            // Display user-friendly message based on error type
+            if (error instanceof SocialLoginError) {
+                this.snackbarService.showSnackbar({
+                    status: false,
+                    msg: error.getUserMessage(),
+                });
+            } else {
+                // Fallback for unexpected errors
+                this.snackbarService.showSnackbar({
+                    status: false,
+                    msg: "Sign in with Apple failed. Please try again or use a different login method.",
+                });
+            }
         }
-    }
-
-    /**
-     * Handles signing in the Apple process. Subsequent calls don't include
-     * the user's email or name. To reset this, on the phone, go to
-     * Settings->Apple ID->Password & Security->Sign in with Apple and
-     * swipe left on the app and tap Delete.
-     */
-    async signInWithApple(): Promise<any> {
-        let appId = environment.APP_ID;
-        appId += Capacitor.isNativePlatform() ? "" : ".web";
-        const options: SignInWithAppleOptions = {
-            clientId: appId,
-            redirectURI: environment.LOGIN_URI,
-            scopes: "email name",
-            state: "12345",
-            nonce: "nonce",
-        };
-
-        return SignInWithApple.authorize(options).then((result: SignInWithAppleResponse) => {
-            if (!result?.response) {
-                throw new Error("Error signing in with Apple");
-            } else if (!result.response.identityToken) {
-                throw new Error("Identity token missing from Apple sign in response");
-            }
-
-            // Extract response and fill in name and email if they're there.
-            const appleUser = result.response;
-            const errorMsg = "Bad Apple JWT. Try a different login method.";
-            let decoded = null;
-            try {
-                decoded = jwtDecode(appleUser.identityToken);
-            } catch (err) {
-                this.snackbarService.handleError(err, errorMsg);
-                return Promise.reject(err);
-            }
-
-            if (!decoded) {
-                this.snackbarService.handleError(new Error("Bad Apple JWT"), errorMsg);
-                return Promise.reject(new Error(errorMsg));
-            }
-
-            const loginData = {
-                type: "apple",
-                social_id: decoded.sub,
-                name: "user",
-                email: decoded.email || "default@email.com",
-            };
-
-            if (!!appleUser.givenName) {
-                if (!!appleUser.familyName) {
-                    loginData.name = `${appleUser.givenName} ${appleUser.familyName}`;
-                } else {
-                    loginData.name = appleUser.givenName;
-                }
-            } else if (!!appleUser.familyName) {
-                loginData.name = appleUser.familyName;
-            }
-            return loginData;
-        });
     }
 
     /**

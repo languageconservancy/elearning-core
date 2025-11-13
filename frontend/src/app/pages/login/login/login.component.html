@@ -1,15 +1,18 @@
 <div class="row sign-box mb-4 no-gutters">
     <div class="col-lg-6 text-center d-flex flex-column align-items-center justify-content-center">
         <div class="d-flex flex-column flex-nowrap align-content-center align-items-center">
-            <div
+            <asl-google-signin-button
                 *ngIf="
-                    !deviceDetector.isMobile() && !deviceDetector.isTablet() && googleConfigValid
+                    googleConfigValid && !deviceDetector.isMobile() && !deviceDetector.isTablet()
                 "
-                #googleSigninBtn
-                id="google-signin-link"
-                class="d-flex justify-content-center mb-3"
-                [attr.allow]="'identity-credentials-get'"
-            ></div>
+                type="standard"
+                size="large"
+                text="signin_with"
+                shape="pill"
+                logo_alignment="left"
+                width="250"
+                class="mb-3"
+            ></asl-google-signin-button>
             <a
                 *ngIf="
                     (deviceDetector.isMobile() || deviceDetector.isTablet()) && googleConfigValid

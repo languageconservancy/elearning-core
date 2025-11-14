@@ -180,10 +180,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     setUpSocialAuthSubscriber() {
         this.socialAuthServiceSubscription = this.authService.authState.subscribe((user) => {
-            console.debug("Social auth state changed, user: ", user);
-
             if (!user) {
-                console.debug("User signed out or null");
+                console.info("User signed out or null");
                 return;
             }
 
@@ -217,12 +215,18 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.deviceDetector.isMobile() || this.deviceDetector.isTablet()) {
             if (this.facebookConfigValid) {
                 this.socialMobileService.initFacebook();
+            } else {
+                console.info("Facebook config is not valid, skipping initialization");
             }
             if (this.googleConfigValid) {
                 this.socialMobileService.initGoogle();
+            } else {
+                console.info("Google config is not valid, skipping initialization");
             }
             if (this.appleConfigValid) {
                 this.socialMobileService.initApple();
+            } else {
+                console.info("Apple config is not valid, skipping initialization");
             }
         }
     }

@@ -43,7 +43,6 @@ export class SocialMobileService {
                     mode: "online", // Changed to online mode to access profile data
                 },
             });
-            console.debug("Google login initialized");
         } catch (error) {
             console.error("Error initializing Google login: ", error);
             throw error;
@@ -108,7 +107,7 @@ export class SocialMobileService {
      * Initialize Facebook login
      * @returns {void}
      */
-    async initFacebook() {
+    async initFacebook(): Promise<void> {
         try {
             await SocialLogin.initialize({
                 facebook: {
@@ -116,7 +115,6 @@ export class SocialMobileService {
                     clientToken: environment.FACEBOOK_CLIENT_TOKEN,
                 },
             });
-            console.debug("Facebook login initialized");
         } catch (error) {
             console.error("Error initializing Facebook login: ", error);
             throw error;
@@ -138,7 +136,7 @@ export class SocialMobileService {
                 provider: "facebook",
                 options: {
                     permissions: ["public_profile", "email"],
-                    limitedLogin: true,
+                    limitedLogin: false,
                     nonce: "1234567890",
                 },
             });
@@ -216,8 +214,6 @@ export class SocialMobileService {
                 },
             });
 
-            console.debug("Apple login response: ", res);
-
             if (!res.result) {
                 console.error("Error signing in with Apple: No result");
                 throw new SocialLoginError(
@@ -249,7 +245,7 @@ export class SocialMobileService {
                     err,
                 );
             }
-            console.debug("Decoded claims", claims);
+
             const profile = res.result.profile;
 
             // Return the user's data

@@ -5,11 +5,7 @@ import {
     FacebookLoginProvider,
     GoogleLoginProvider,
 } from "@abacritt/angularx-social-login";
-import {
-    SignInWithApple,
-    SignInWithAppleResponse,
-    SignInWithAppleOptions,
-} from "@capacitor-community/apple-sign-in";
+import { SignInWithApple } from "@capacitor-community/apple-sign-in";
 import { jwtDecode } from "jwt-decode";
 
 import { SnackbarService } from "app/_services/snackbar.service";
@@ -153,7 +149,6 @@ export class SocialWebService {
     async signInWithGoogle(): Promise<any> {
         try {
             const user = await this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
-            console.debug("Google user: ", user);
             return this.extractGoogleUserData(user);
         } catch (error) {
             console.error("Error signing in with Google: ", error);
@@ -226,8 +221,6 @@ export class SocialWebService {
     }
 
     async signInWithApple(): Promise<any> {
-        console.log("signInWithApple", environment.APP_ID, environment.LOGIN_URI);
-
         // Attempt authorization
         let result = null;
         try {
@@ -257,8 +250,6 @@ export class SocialWebService {
                 error,
             );
         }
-
-        console.log("signInWithApple result", result);
 
         // Validate response
         if (!result?.response) {

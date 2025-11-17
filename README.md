@@ -1,4 +1,5 @@
 # eLearning Core
+
 [![GitHub Release](https://img.shields.io/github/v/release/languageconservancy/elearning-core?style=flat-square)](https://github.com/languageconservancy/elearning-core/releases)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MPL-2.0)
 ![GitHub contributors](https://img.shields.io/github/contributors/languageconservancy/elearning-core?style=flat-square)
@@ -7,6 +8,7 @@ This repo contains the core backend, frontend (web, Android, iOS), and build log
 This enables easy transfer of ownership of platform-specific code, database, etc., while keep the main code available for everyone to use.
 
 ## Technologies
+
 See [package.json](https://github.com/languageconservancy/elearning-core/blob/main/frontend/package.json) and [composer.json](https://github.com/languageconservancy/elearning-core/blob/main/backend/composer.json) for current versions.
 
 - **Frontend**: Angular (TypeScript)
@@ -274,6 +276,27 @@ npm run core cap:add-ios
 ```
 
 These will we create `core/frontend/ios` and `core/frontend/android`.
+
+## Social Logins
+
+### Overview
+
+Apple, Google, and Facebook login are supported to varying degrees. Social logins are handled by two separate packages:
+
+- [Cap-go/capacitor-social-login](https://github.com/Cap-go/capacitor-social-login) for Android and iOS
+- [angularx-social-login](https://github.com/abacritt/angularx-social-login) for web
+
+### Web
+
+Supported social logins on web are Apple, Google, and Facebook.
+
+### Android
+
+Supported social logins on Android are Google and Facebook.
+
+### iOS
+
+Supported social logins on iOS are Apple, Google, and Facebook.
 
 ## License
 

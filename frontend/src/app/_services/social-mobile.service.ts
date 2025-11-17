@@ -1,13 +1,28 @@
 import { Injectable } from "@angular/core";
-import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
-import { FacebookLogin, FacebookLoginResponse } from "@capacitor-community/facebook-login";
+import { Capacitor } from "@capacitor/core";
+import {
+    GoogleLoginResponse,
+    GoogleLoginResponseOnline,
+    SocialLogin,
+    InitializeOptions,
+} from "@capgo/capacitor-social-login";
 
 import { environment } from "environments/environment";
+import { SocialLoginError, SocialLoginErrorType } from "app/_exceptions/social-login.errors";
 
 interface LimitedLoginClaims {
     sub: number;
     name: string;
     email: string;
+}
+
+/**
+ * Type guard to check if the Google login response is online (has profile data)
+ */
+function isGoogleLoginResponseOnline(
+    response: GoogleLoginResponse,
+): response is GoogleLoginResponseOnline {
+    return response.responseType === "online";
 }
 
 @Injectable({
@@ -16,60 +31,133 @@ interface LimitedLoginClaims {
 export class SocialMobileService {
     constructor() {}
 
-    initGoogle() {
-        GoogleAuth.initialize({
-            clientId: `${environment.GOOGLE_CLIENT_ID_IOS}`,
-            scopes: ["profile", "email"],
-            grantOfflineAccess: true,
-        });
+    /*------------------------------------------------------------------------*/
+    /*                           Google Login                               */
+    /*------------------------------------------------------------------------*/
+    async initGoogle() {
+        try {
+            await SocialLogin.initialize({
+                google: {
+                    webClientId: `${environment.GOOGLE_CLIENT_ID_WEB}`,
+                    iOSClientId: `${environment.GOOGLE_CLIENT_ID_IOS}`,
+                    mode: "online", // Changed to online mode to access profile data
+                },
+            });
+        } catch (error) {
+            console.error("Error initializing Google login: ", error);
+            throw error;
+        }
     }
 
-    signInWithGoogle() {
-        return GoogleAuth.signIn().then((googleUser: any) => {
-            if (!googleUser) {
-                throw googleUser;
+    /**
+     * Sign in with Google
+     * @returns { type: string; social_id: string; name: string; email: string; }
+     */
+    async signInWithGoogle(): Promise<{
+        type: string;
+        social_id: string;
+        name: string;
+        email: string;
+        profile_image: string;
+    }> {
+        try {
+            const res = await SocialLogin.login({
+                provider: "google",
+                options: {
+                    scopes: ["profile", "email"],
+                    forceRefreshToken: true,
+                },
+            });
+
+            if (!res.result) {
+                console.error("Error signing in with Google: ", res);
+                throw res;
             }
+
+            // Type guard to ensure we have an online response with profile data
+            if (!isGoogleLoginResponseOnline(res.result)) {
+                throw new Error(
+                    "Google login returned offline response. Profile data is not available in offline mode.",
+                );
+            }
+
+            const profile = res.result.profile;
+
             return {
                 type: "google",
-                social_id: googleUser.id,
-                name: googleUser.displayName || googleUser.givenName + googleUser.familyName,
-                email: googleUser.email,
-                profile_image: googleUser.imageUrl,
+                social_id: profile?.id || null,
+                name:
+                    profile?.name ||
+                    (profile?.givenName && profile?.familyName
+                        ? `${profile.givenName} ${profile.familyName}`
+                        : profile?.givenName || profile?.familyName || ""),
+                email: profile?.email || null,
+                profile_image: profile?.imageUrl || "",
             };
-        });
-    }
-
-    initFacebook() {
-        void FacebookLogin.initialize({ appId: environment.FACEBOOK_APP_ID });
-    }
-
-    async signInWithFacebook(): Promise<any> {
-        // Check if user has a current access token
-        // let result: FacebookLoginResponse = await FacebookLogin.getCurrentAccessToken();
-        // if (!result?.accessToken?.token) {
-        console.log("No current access token, logging in...");
-        let result: FacebookLoginResponse = await FacebookLogin.login({
-            permissions: ["public_profile", "email"],
-        });
-
-        const jwt = result?.accessToken?.token;
-        if (!jwt) {
-            throw new Error("Facebook login failed. No JWT found in login response.");
+        } catch (error) {
+            throw error;
         }
+    }
 
-        const claims = this.decodeLimitedLoginJwt(jwt);
-        console.debug("Decoded claims", claims);
+    /*------------------------------------------------------------------------*/
+    /*                           Facebook Login                               */
+    /*------------------------------------------------------------------------*/
 
-        // Facebook login successful
-        // const userProfileJson = await fetch(
-        // `https://graph.facebook.com/me?fields=id,name,email&access_token=${result?.accessToken?.token}`,
-        // );
-        // const userProfile = await userProfileJson.json();
-        // if (!userProfile) {
-        // throw new Error("Failed to get Facebook user profile");
-        // }
+    /**
+     * Initialize Facebook login
+     * @returns {void}
+     */
+    async initFacebook(): Promise<void> {
+        try {
+            await SocialLogin.initialize({
+                facebook: {
+                    appId: environment.FACEBOOK_APP_ID,
+                    clientToken: environment.FACEBOOK_CLIENT_TOKEN,
+                },
+            });
+        } catch (error) {
+            console.error("Error initializing Facebook login: ", error);
+            throw error;
+        }
+    }
 
-        return this.extractFacebookUserData(claims);
+    /**
+     * Sign in with Facebook
+     * @returns { type: string; social_id: string; name: string; email: string; }
+     */
+    async signInWithFacebook(): Promise<{
+        type: string;
+        social_id: string;
+        name: string;
+        email: string;
+    }> {
+        try {
+            const res = await SocialLogin.login({
+                provider: "facebook",
+                options: {
+                    permissions: ["public_profile", "email"],
+                    limitedLogin: false,
+                    nonce: "1234567890",
+                },
+            });
+
+            if (!res.result) {
+                console.error("Error signing in with Facebook: ", res);
+                throw res;
+            }
+
+            const profile = res.result.profile;
+
+            return {
+                type: "fb",
+                social_id: profile?.userID || null,
+                name: profile?.name || null,
+                email: profile?.email || null,
+            };
+        } catch (error) {
+            console.error("Error logging in with Facebook: ", error);
+            throw error;
+        }
     }
 
     decodeLimitedLoginJwt(jwt: string): LimitedLoginClaims {
@@ -84,21 +172,118 @@ export class SocialMobileService {
         return JSON.parse(json) as LimitedLoginClaims;
     }
 
+    /*------------------------------------------------------------------------*/
+    /*                           Apple Login                               */
+    /*------------------------------------------------------------------------*/
+
     /**
-     * Extracts necessary data from Facebook JWT to send to our
-     * login endpoint.
+     * Initialize Apple login
+     * @returns {void}
      */
-    extractFacebookUserData(claims: LimitedLoginClaims): {
+    async initApple() {
+        let appleInitOptions: InitializeOptions = { apple: {} };
+        // If Android, set the clientId and redirectUrl to the app's ID and login URI
+        if (Capacitor.getPlatform() === "android") {
+            appleInitOptions.apple.clientId = environment.APP_ID;
+            appleInitOptions.apple.redirectUrl = environment.LOGIN_URI;
+        }
+        try {
+            await SocialLogin.initialize(appleInitOptions);
+        } catch (error) {
+            console.error("Error initializing Apple login: ", error);
+            throw error;
+        }
+    }
+
+    /**
+     * Sign in with Apple
+     * @returns { type: string; social_id: string; name: string; email: string; }
+     */
+    async signInWithApple(): Promise<{
         type: string;
-        social_id: number;
+        social_id: string;
         name: string;
         email: string;
-    } {
-        return {
-            type: "fb",
-            social_id: claims.sub,
-            name: claims.name,
-            email: claims.email,
-        };
+    }> {
+        try {
+            const res = await SocialLogin.login({
+                provider: "apple",
+                options: {
+                    scopes: ["email", "name"],
+                    nonce: "nonce",
+                },
+            });
+
+            if (!res.result) {
+                console.error("Error signing in with Apple: No result");
+                throw new SocialLoginError(
+                    SocialLoginErrorType.NO_TOKEN,
+                    "Apple",
+                    "No result from Apple sign in",
+                );
+            }
+
+            if (!res.result.idToken) {
+                console.error("Identity token missing from Apple sign in response");
+                throw new SocialLoginError(
+                    SocialLoginErrorType.NO_TOKEN,
+                    "Apple",
+                    "Identity token missing from Apple sign in response",
+                );
+            }
+
+            // Decode the idToken to get the user's Apple ID
+            const idToken = res.result.idToken;
+            let claims: LimitedLoginClaims;
+            try {
+                claims = this.decodeLimitedLoginJwt(idToken);
+            } catch (err) {
+                throw new SocialLoginError(
+                    SocialLoginErrorType.DECODE_ERROR,
+                    "Apple",
+                    "Failed to decode Apple JWT",
+                    err,
+                );
+            }
+
+            const profile = res.result.profile;
+
+            // Return the user's data
+            return {
+                type: "apple",
+                social_id: claims.sub.toString() || null,
+                name:
+                    profile?.givenName + " " + profile?.familyName ||
+                    profile?.givenName ||
+                    profile?.familyName ||
+                    "user",
+                email: claims.email || null,
+            };
+        } catch (error) {
+            console.error("Error logging in with Apple: ", error);
+
+            // If it's already a SocialLoginError, re-throw it
+            if (error instanceof SocialLoginError) {
+                throw error;
+            }
+
+            // Check if user cancelled
+            if (error?.code === "1001" || error?.message?.includes("cancel")) {
+                throw new SocialLoginError(
+                    SocialLoginErrorType.AUTH_CANCELLED,
+                    "Apple",
+                    "User cancelled Apple sign in",
+                    error,
+                );
+            }
+
+            // Unknown error
+            throw new SocialLoginError(
+                SocialLoginErrorType.UNKNOWN_ERROR,
+                "Apple",
+                "Unknown error during Apple sign in",
+                error,
+            );
+        }
     }
 }

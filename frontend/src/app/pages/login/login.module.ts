@@ -7,6 +7,7 @@ import {
     SocialAuthServiceConfig,
     GoogleLoginProvider,
     FacebookLoginProvider,
+    GoogleSigninButtonModule,
 } from "@abacritt/angularx-social-login";
 
 import { PipesModule } from "app/_pipes/pipes.module";
@@ -22,6 +23,7 @@ import { environment } from "environments/environment";
         ReactiveFormsModule,
         RouterModule,
         SocialLoginModule,
+        GoogleSigninButtonModule,
         PipesModule,
         PartialsModule,
     ],

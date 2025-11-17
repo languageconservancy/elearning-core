@@ -190,9 +190,11 @@ export class FillinComponent implements OnInit, OnDestroy {
 
     keyboardReady() {
         this.keyboardIsReady = true;
-        this.virtualKeyboard.keyboard.setOptions({
-            maxLength: this.maxLengths,
-        });
+        if (this.virtualKeyboard?.keyboard) {
+            this.virtualKeyboard.keyboard.setOptions({
+                maxLength: this.maxLengths,
+            });
+        }
     }
 
     private getDeviceInfo() {
@@ -394,6 +396,11 @@ export class FillinComponent implements OnInit, OnDestroy {
                 ? this.exerciseService.question.exerciseOptions?.text_option
                 : this.exerciseService.exercise.question.question;
 
+        if (!textWithBrackets) {
+            console.error("No text found for fill-in-the-blanks exercise");
+            return;
+        }
+
         // Split at spaces, excluding spaces inside brackets,
         // into array: ['[Šúŋka]', 'kiŋ', '[sá pa]', 's[h]e?']
         const wordsAndBracketsArray = textWithBrackets
@@ -423,6 +430,10 @@ export class FillinComponent implements OnInit, OnDestroy {
             const answerIsCorrectGroup: AnswerType[] = [];
             group.forEach((part: UiText, partIndex: number) => {
                 if (part.type === "blank") {
+                    if (!part.optionName) {
+                        console.error("Blank has no optionName", part);
+                        return;
+                    }
                     const inputId = `input_${groupIndex}_${partIndex}`;
                     this.blankFlatIndexMap.push({
                         groupIndex,
@@ -440,6 +451,9 @@ export class FillinComponent implements OnInit, OnDestroy {
                     answerIsCorrectGroup.push(AnswerType.NONE);
 
                     this.maxAnswerLength = Math.max(this.maxAnswerLength, part.optionName.length);
+                    if (inputId == "") {
+                        console.error("Input ID is empty", inputId);
+                    }
                     this.inputs[inputId] = "";
 
                     if (isFirstBlank) {
@@ -518,7 +532,7 @@ export class FillinComponent implements OnInit, OnDestroy {
     typingResponseBlankClicked(groupIndex: number, partIndex: number, event: any) {
         if (event) {
             this.setActiveBlankIndex(groupIndex, partIndex);
-            if (this.keyboardIsReady) {
+            if (this.keyboardIsReady && this.virtualKeyboard) {
                 this.virtualKeyboard.onInputFocus(event);
                 this.virtualKeyboard.show();
                 this.activeInputEl = event.target;
@@ -579,7 +593,9 @@ export class FillinComponent implements OnInit, OnDestroy {
             return;
         }
         this.answerSubmitted = true;
-        this.virtualKeyboard.hide();
+        if (this.virtualKeyboard) {
+            this.virtualKeyboard.hide();
+        }
 
         if (event) {
             event.stopPropagation();
@@ -765,7 +781,9 @@ export class FillinComponent implements OnInit, OnDestroy {
         this.turnOffKeyboardListeners();
         setTimeout(() => {
             this.handleAnswer(result);
-            this.virtualKeyboard.hide();
+            if (this.virtualKeyboard) {
+                this.virtualKeyboard.hide();
+            }
             // Release focus from active input so keyboard doesn't reappear on next typing exercise
             if (this.activeInputEl) {
                 this.activeInputEl.blur();

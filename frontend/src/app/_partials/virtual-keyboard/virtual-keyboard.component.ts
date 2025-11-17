@@ -57,7 +57,7 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
     // Parent component defines if app is debug mode
     @Input() debug: boolean = false;
     // Parent component sends inputs to use virtual keyboard on
-    @Input() inputs: KeyboardInput;
+    @Input() inputs: KeyboardInput = {};
     // Class for keyboard
     @Input() customClass: string;
     // This component sends SimpleKeyboard virtual key strings to parent when pressed
@@ -134,17 +134,24 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
     private tryInitializeKeyboard(): void {
         // Only create keyboard when both config is loaded and DOM is ready
         if (!this.configLoaded || !this.domReady) {
+            if (DEBUG) {
+                console.warn("Keyboard not initialized yet. Config not loaded or DOM not ready.");
+            }
             return;
         }
 
         // Create SimpleKeyboard with necessary options.
         try {
             const divClass = `.${this.customClass}`;
+            // Use first input key if focusedInputId is not set
+            const initialInputName =
+                this.focusedInputId || Object.keys(this.inputs)[0] || "default";
+
             this.keyboard = new Keyboard(divClass, {
                 debug: this.debug,
                 input: this.inputs,
                 layout: this.keyboardConfig.defaultLayoutObject,
-                inputName: this.focusedInputId ?? "",
+                inputName: initialInputName,
                 onChange: (value) => this.onInputValueChange(value),
                 onKeyPress: (key) => this.onVirtualKeyPress(key),
                 onKeyReleased: (key) => this.onVirtualKeyRelease(key),
@@ -335,16 +342,6 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
             if (isTextElement) {
                 this.show();
             }
-            // if (el.dataset.skbtn === this.langSwitchKeyRight
-            //     || el.dataset.skbtn === this.langSwitchKeyLeft) {
-            //     const input = <HTMLInputElement>document.getElementById(this.focusedInputId);
-            //     const newVal = input.value.replace(this.langSwitchKey, '');
-            //     if (!!input) {
-            //         input.value = newVal;
-            //     }
-            //     this.inputs[this.focusedInputId] = newVal;
-            //     this.keyboard.replaceInput(this.inputs);
-            // }
         }
     };
 

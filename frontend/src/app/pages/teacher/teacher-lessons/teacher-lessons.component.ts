@@ -232,20 +232,24 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
         });
     }
 
-    drop(event: CdkDragDrop<LevelUnit[]>) {
+    drop(event: CdkDragDrop<LevelUnit[]> | CdkDragDrop<any[]>) {
+        console.debug("Drop event", event);
         if (event.previousContainer === event.container) {
+            // Handle reordering within the same container
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             if (event.previousIndex !== event.currentIndex) {
                 this.unsavedUnitChanges = true;
             }
         } else {
+            // Handle transferring items between containers
             this.unsavedUnitChanges = true;
-            transferArrayItem(
-                event.previousContainer.data,
-                event.container.data,
-                event.previousIndex,
-                event.currentIndex,
-            );
+            // Create level unit from available unit
+            const levelUnit = this.createLevelUnitFromAvailableUnit(event.previousIndex);
+            console.debug("Adding unit to lesson", levelUnit, event.previousIndex);
+            // Remove from source container
+            event.previousContainer.data.splice(event.previousIndex, 1);
+            // Add to destination container
+            event.container.data.splice(event.currentIndex, 0, levelUnit);
         }
     }
 

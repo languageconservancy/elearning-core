@@ -6,7 +6,6 @@ export const environment = {
     ROOT: "{{webUrl}}",
     GOOGLE_CLIENT_ID_WEB: "{{googleClientIdWeb}}",
     GOOGLE_CLIENT_ID_IOS: "{{googleClientIdIos}}",
-    GOOGLE_REVERSE_CLIENT_ID_IOS: "{{googleReverseClientIdIos}}",
     GOOGLE_API_KEY: "{{googleApiKey}}",
     FACEBOOK_APP_ID: "{{facebookAppId}}",
     FACEBOOK_CLIENT_TOKEN: "{{facebookClientToken}}",

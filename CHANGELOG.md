@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.0.2](https://github.com/languageconservancy/elearning-core/compare/v2.0.1...v2.0.2) (2025-11-19)
+
+
+### Bug Fixes
+
+* google, facebook, apple sign-in on web and ios fixed ([a04885f](https://github.com/languageconservancy/elearning-core/commit/a04885ffebb073ba6d6db38b42cde929e615aa83))
+* remove unused config values ([bee9031](https://github.com/languageconservancy/elearning-core/commit/bee9031de16fdeab8c6dd47dc86ee6d12ce282ce))
+* remove unused config values ([1a72758](https://github.com/languageconservancy/elearning-core/commit/1a727584146f6d0791e402c21a6140c4f145eecd))
+* social logins ([5a6e121](https://github.com/languageconservancy/elearning-core/commit/5a6e1214cf6c32c92836dbaa91646e38b1a1a2e6))
+* teacher-lessons drag unit drop level-unit ([e3fe8a5](https://github.com/languageconservancy/elearning-core/commit/e3fe8a59fa4cf92844b6ad5b321386aaf28d2d6c))
+* teacher-lessons drag unit drop level-unit ([d2c5731](https://github.com/languageconservancy/elearning-core/commit/d2c57310d8e574601c282aec087ad7cadf7977c2))
+* virtual keyboard empty input id during initting if inputs aren't ready ([d4339ea](https://github.com/languageconservancy/elearning-core/commit/d4339ea185e436685231a366b941ec39b48b575a))
+* virtual keyboard on-screen buttons error ([aec9cdd](https://github.com/languageconservancy/elearning-core/commit/aec9cdd009b9223349a164db31178f033736cfe6))
+
 ## [2.0.1](https://github.com/languageconservancy/elearning-core/compare/v2.0.0...v2.0.1) (2025-11-04)
 
 

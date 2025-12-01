@@ -7,7 +7,7 @@ import {
 } from "@abacritt/angularx-social-login";
 import { SignInWithApple } from "@capacitor-community/apple-sign-in";
 import { jwtDecode } from "jwt-decode";
-
+import { BaseService } from "app/_services/base.service";
 import { SnackbarService } from "app/_services/snackbar.service";
 import { environment } from "environments/environment";
 import { SocialLoginError, SocialLoginErrorType } from "app/_exceptions/social-login.errors";
@@ -22,6 +22,7 @@ export class SocialWebService {
     constructor(
         private socialAuthService: SocialAuthService,
         private snackbarService: SnackbarService,
+        private baseService: BaseService,
     ) {}
 
     /*------------------------------------------------------------------------*/
@@ -51,12 +52,14 @@ export class SocialWebService {
             console.error(
                 "setUpFacebookAuthSubscriber bad user - Facebook login returned null/undefined user. Check Facebook login settings and permissions.",
             );
+            this.baseService.setLoginType("");
             return;
         }
 
         const provider = user?.provider.toLowerCase();
         if (provider !== "facebook") {
             console.warn("Got unhandled sign-in provider: ", user.provider);
+            this.baseService.setLoginType("");
             return;
         }
         if (provider === "facebook" && !fbBtnClicked) {
@@ -64,10 +67,13 @@ export class SocialWebService {
             console.info(
                 "Facebook login detected but fbBtnClicked is false - ignoring (this prevents duplicate logins)",
             );
+            this.baseService.setLoginType("");
             return;
         }
 
         const fbUser = this.extractFacebookUserData(user);
+
+        this.baseService.setLoginType("fb");
 
         return fbUser;
     }
@@ -149,9 +155,11 @@ export class SocialWebService {
     async signInWithGoogle(): Promise<any> {
         try {
             const user = await this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+            this.baseService.setLoginType("google");
             return this.extractGoogleUserData(user);
         } catch (error) {
             console.error("Error signing in with Google: ", error);
+            this.baseService.setLoginType("");
             throw error;
         }
     }
@@ -207,9 +215,11 @@ export class SocialWebService {
     handleGoogleLoginCallback(user: any): any {
         if (!user) {
             console.error("Google login returned null/undefined user");
+            this.baseService.setLoginType("");
             return null;
         }
 
+        this.baseService.setLoginType("google");
         return this.extractGoogleUserData(user);
     }
 
@@ -233,12 +243,12 @@ export class SocialWebService {
             });
         } catch (error) {
             console.error("Error authorizing with Apple: ", error);
-            // Check if user cancelled
+            // Check if user canceled
             if (error?.error === "popup_closed_by_user" || error?.code === "1001") {
                 throw new SocialLoginError(
                     SocialLoginErrorType.AUTH_CANCELLED,
                     "Apple",
-                    "User cancelled Apple sign in",
+                    "User canceled Apple sign in",
                     error,
                 );
             }
@@ -312,6 +322,8 @@ export class SocialWebService {
         } else if (appleUser.familyName) {
             loginData.name = appleUser.familyName;
         }
+
+        this.baseService.setLoginType("apple");
 
         return loginData;
     }

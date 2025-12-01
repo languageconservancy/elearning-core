@@ -2,15 +2,18 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { HttpStatusCode } from "@angular/common/http";
 import { Router } from "@angular/router";
-import { CapacitorHttp, HttpResponse } from "@capacitor/core";
+import { Capacitor, CapacitorHttp, HttpResponse } from "@capacitor/core";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
 import { ForbidenResponseReasons } from "app/shared/utils/elearning-types";
 
 import * as API from "app/_constants/api.constants";
 import { CookieService } from "./cookie.service";
 import { LocalStorageService } from "./local-storage.service";
+import { SocialLogin } from "@capgo/capacitor-social-login";
 
-@Injectable()
+@Injectable({
+    providedIn: "root",
+})
 export class BaseService {
     public AuthType: string = "agent";
     public loginType: string = "";
@@ -249,14 +252,47 @@ export class BaseService {
     }
 
     private async signOutOfSocialAccount() {
-        if (["fb", "google"].indexOf(this.loginType) >= 0) {
+        if (Capacitor.isNativePlatform()) {
+            let options: any = {};
+            switch (this.loginType) {
+                case "google":
+                    options = {
+                        provider: "google",
+                    };
+                    break;
+                case "fb":
+                    options = {
+                        provider: "facebook",
+                    };
+                    break;
+                case "apple":
+                    options = {
+                        provider: "apple",
+                    };
+                    break;
+                default:
+                    console.error("Invalid login type: " + this.loginType);
+                    return;
+            }
             try {
-                await this.socialAuthService.signOut(true);
+                await SocialLogin.logout(options);
+                console.info(`[${this.constructor.name}] Signed out of social account. `, options);
             } catch (err) {
-                console.warn(
+                console.error(
                     `[${this.constructor.name}] Error signing out of social account. `,
                     err,
                 );
+            }
+        } else {
+            if (["fb", "google"].indexOf(this.loginType) >= 0) {
+                try {
+                    await this.socialAuthService.signOut(true);
+                } catch (err) {
+                    console.warn(
+                        `[${this.constructor.name}] Error signing out of social account. `,
+                        err,
+                    );
+                }
             }
         }
     }

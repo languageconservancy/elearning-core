@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.3](https://github.com/languageconservancy/elearning-core/compare/v2.0.2...v2.0.3) (2025-12-01)
+
+
+### Bug Fixes
+
+* google-sign by logging out properly for mobile logins, for when logging out or deleting accounts ([3a8ba56](https://github.com/languageconservancy/elearning-core/commit/3a8ba56ae45d8d7adfe24043175f94b1ee4154ff))
+* google-sign by logging out properly for mobile logins, for when logging out or deleting accounts ([48108a1](https://github.com/languageconservancy/elearning-core/commit/48108a11dd7b1105ec3f03493aaa5e294033459d))
+
 ## [2.0.2](https://github.com/languageconservancy/elearning-core/compare/v2.0.1...v2.0.2) (2025-11-19)
 
 

@@ -6,6 +6,7 @@ import {
     SocialLogin,
     InitializeOptions,
 } from "@capgo/capacitor-social-login";
+import { BaseService } from "app/_services/base.service";
 
 import { environment } from "environments/environment";
 import { SocialLoginError, SocialLoginErrorType } from "app/_exceptions/social-login.errors";
@@ -29,7 +30,7 @@ function isGoogleLoginResponseOnline(
     providedIn: "root",
 })
 export class SocialMobileService {
-    constructor() {}
+    constructor(private baseService: BaseService) {}
 
     /*------------------------------------------------------------------------*/
     /*                           Google Login                               */
@@ -66,6 +67,7 @@ export class SocialMobileService {
                 options: {
                     scopes: ["profile", "email"],
                     forceRefreshToken: true,
+                    // forcePrompt: true,
                 },
             });
 
@@ -83,6 +85,8 @@ export class SocialMobileService {
 
             const profile = res.result.profile;
 
+            this.baseService.setLoginType("google");
+
             return {
                 type: "google",
                 social_id: profile?.id || null,
@@ -95,6 +99,7 @@ export class SocialMobileService {
                 profile_image: profile?.imageUrl || "",
             };
         } catch (error) {
+            this.baseService.setLoginType("");
             throw error;
         }
     }
@@ -148,6 +153,8 @@ export class SocialMobileService {
 
             const profile = res.result.profile;
 
+            this.baseService.setLoginType("fb");
+
             return {
                 type: "fb",
                 social_id: profile?.userID || null,
@@ -156,6 +163,7 @@ export class SocialMobileService {
             };
         } catch (error) {
             console.error("Error logging in with Facebook: ", error);
+            this.baseService.setLoginType("");
             throw error;
         }
     }
@@ -248,6 +256,8 @@ export class SocialMobileService {
 
             const profile = res.result.profile;
 
+            this.baseService.setLoginType("apple");
+
             // Return the user's data
             return {
                 type: "apple",
@@ -262,17 +272,19 @@ export class SocialMobileService {
         } catch (error) {
             console.error("Error logging in with Apple: ", error);
 
+            this.baseService.setLoginType("");
+
             // If it's already a SocialLoginError, re-throw it
             if (error instanceof SocialLoginError) {
                 throw error;
             }
 
-            // Check if user cancelled
+            // Check if user canceled
             if (error?.code === "1001" || error?.message?.includes("cancel")) {
                 throw new SocialLoginError(
                     SocialLoginErrorType.AUTH_CANCELLED,
                     "Apple",
-                    "User cancelled Apple sign in",
+                    "User canceled Apple sign in",
                     error,
                 );
             }

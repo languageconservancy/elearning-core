@@ -60,9 +60,27 @@ if (file_exists(CONFIG . '.env')) {
         ->toServer(true);
 }
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, GET, PUT, PATCH, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: *');
+/*
+ * Handle CORS for local development only.
+ * In production, the Cors plugin handles this via middleware.
+ * This early handling prevents OPTIONS requests from being redirected by auth middleware.
+ */
+$httpOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$isLocalDev = strpos($httpOrigin, 'http://localhost') === 0;
+
+if ($isLocalDev) {
+    header('Access-Control-Allow-Origin: ' . $httpOrigin);
+    header('Access-Control-Allow-Methods: POST, GET, PUT, PATCH, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With');
+    header('Access-Control-Expose-Headers: *');
+    header('Access-Control-Allow-Credentials: true');
+
+    // Handle preflight OPTIONS requests immediately
+    if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+        http_response_code(200);
+        exit(0);
+    }
+}
 
 /*
  * Read configuration file and inject configuration into various
@@ -237,19 +255,3 @@ Configure::write('Clever', [
     'client_secret' => env('CLEVER_CLIENT_SECRET', '')
 ]);
 
-/*
- * Allow CORS when using localhost
- */
-if (
-    Configure::read('debug') &&
-    !empty($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'localhost' &&
-    !empty($_SERVER['HTTP_ORIGIN']) &&
-    $_SERVER['HTTP_ORIGIN'] == 'http://localhost:4200' &&
-    $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
-) {
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: POST, GET, PUT, PATCH, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: *');
-    header('Access-Control-Expose-Headers: *');
-    exit(0);
-}

@@ -367,8 +367,10 @@ return [
     'AWS_LINK' => env('AWS_LINK', 'https://bucket.s3.us-west-2.amazonaws.com/'),
     'Cors' => [
         'AllowOrigin' => true,
-        'MaxAge' => 3600,
         'AllowMethods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        'AllowHeaders' => ['Authorization', 'Content-Type', 'X-Requested-With'],
+        'AllowCredentials' => true,
+        'ExposeHeaders' => ['*'],
         'MaxAge' => 86400,
     ],
     'LANGUAGE' => env('LANGUAGE', 'Language')

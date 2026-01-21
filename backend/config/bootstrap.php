@@ -60,9 +60,13 @@ if (file_exists(CONFIG . '.env')) {
         ->toServer(true);
 }
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, GET, PUT, PATCH, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: *');
+/*
+ * CORS is handled by the Cors plugin loaded in Application.php
+ * Configuration is in app.php under the 'Cors' key.
+ *
+ * NOTE: Do not add manual CORS headers here as it will cause duplicate
+ * 'Access-Control-Allow-Origin' headers which browsers reject.
+ */
 
 /*
  * Read configuration file and inject configuration into various
@@ -237,19 +241,3 @@ Configure::write('Clever', [
     'client_secret' => env('CLEVER_CLIENT_SECRET', '')
 ]);
 
-/*
- * Allow CORS when using localhost
- */
-if (
-    Configure::read('debug') &&
-    !empty($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == 'localhost' &&
-    !empty($_SERVER['HTTP_ORIGIN']) &&
-    $_SERVER['HTTP_ORIGIN'] == 'http://localhost:4200' &&
-    $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
-) {
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: POST, GET, PUT, PATCH, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: *');
-    header('Access-Control-Expose-Headers: *');
-    exit(0);
-}

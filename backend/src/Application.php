@@ -43,9 +43,11 @@ use Psr\Http\Message\ResponseInterface;
 use App\Policy\RequestPolicy;
 use Authorization\Middleware\RequestAuthorizationMiddleware;
 use App\Middleware\EnforceAgreementsAcceptanceMiddleware;
+use App\Middleware\AuthDebugMiddleware;
 use Authorization\Policy\MapResolver;
 use Cake\Http\ServerRequest;
 use Cake\Log\Log;
+use Cors\Routing\Middleware\CorsMiddleware;
 
 /**
  * Application setup class.
@@ -138,6 +140,10 @@ class Application extends BaseApplication implements
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
+            // Handle CORS preflight (OPTIONS) requests first, before any other middleware
+            // This prevents authentication/authorization from redirecting preflight requests
+            ->add(new CorsMiddleware())
+
             // Catch any exceptions in the lower layers,
             // and make an error page/response
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
@@ -158,6 +164,8 @@ class Application extends BaseApplication implements
             // available as array through $request->getData()
             // https://book.cakephp.org/4/en/controllers/middleware.html#body-parser-middleware
             ->add(new BodyParserMiddleware())
+            // Fix Authorization header for Apache/FastCGI (MAMP 7 compatibility)
+            ->add(new AuthDebugMiddleware())
             // Add the AuthenticationMiddleware. It should be
             // after routing and body parser.
             ->add(new AuthenticationMiddleware($this))
@@ -201,20 +209,24 @@ class Application extends BaseApplication implements
     {
         $service = new AuthenticationService();
 
-        $redirectUrl = Router::url([
-            'prefix' => 'Admin',
-            'controller' => 'Users',
-            'action' => 'login',
-            'plugin' => null,
-        ]);
+        // Only configure redirect for Admin requests, not API requests.
+        // API requests should return 401 Unauthorized, not redirect (which breaks CORS).
+        if ($request->getParam('prefix') === 'Admin') {
+            $redirectUrl = Router::url([
+                'prefix' => 'Admin',
+                'controller' => 'Users',
+                'action' => 'login',
+                'plugin' => null,
+            ]);
 
-        // Define where users should be redirected to when they are not authenticated.
-        // This queryParam string must be the same as those in
-        // the middleware() function above for the unauthorizedHandlers.
-        $service->setConfig([
-            'unauthenticatedRedirect' => $redirectUrl,
-            'queryParam' => 'redirectUrl',
-        ]);
+            // Define where users should be redirected to when they are not authenticated.
+            // This queryParam string must be the same as those in
+            // the middleware() function above for the unauthorizedHandlers.
+            $service->setConfig([
+                'unauthenticatedRedirect' => $redirectUrl,
+                'queryParam' => 'redirectUrl',
+            ]);
+        }
 
         // Load identifiers
         // Email and password fields

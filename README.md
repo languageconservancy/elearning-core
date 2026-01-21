@@ -119,6 +119,11 @@ Platform repos, which add the `elearning-core` repo as a submodule, provide the 
     1.  Search for `sql mode`
     1.  Click `Edit` next the `sql mode` and remove the `ONLY_FULL_GROUP_BY` and hit Enter or click `save`.
 
+1.  **Load the rewrite module**
+
+    - Uncomment the following line in /Applications/MAMP/conf/apache/httpd.conf
+      - LoadModule rewrite_module modules/mod_rewrite.so
+
 1.  **Build and Serve the Demo Platform**:
 
     ```bash

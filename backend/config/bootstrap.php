@@ -61,26 +61,12 @@ if (file_exists(CONFIG . '.env')) {
 }
 
 /*
- * Handle CORS for local development only.
- * In production, the Cors plugin handles this via middleware.
- * This early handling prevents OPTIONS requests from being redirected by auth middleware.
+ * CORS is handled by the Cors plugin loaded in Application.php
+ * Configuration is in app.php under the 'Cors' key.
+ *
+ * NOTE: Do not add manual CORS headers here as it will cause duplicate
+ * 'Access-Control-Allow-Origin' headers which browsers reject.
  */
-$httpOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$isLocalDev = strpos($httpOrigin, 'http://localhost') === 0;
-
-if ($isLocalDev) {
-    header('Access-Control-Allow-Origin: ' . $httpOrigin);
-    header('Access-Control-Allow-Methods: POST, GET, PUT, PATCH, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With');
-    header('Access-Control-Expose-Headers: *');
-    header('Access-Control-Allow-Credentials: true');
-
-    // Handle preflight OPTIONS requests immediately
-    if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
-        http_response_code(200);
-        exit(0);
-    }
-}
 
 /*
  * Read configuration file and inject configuration into various

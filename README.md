@@ -22,116 +22,280 @@ See [package.json](https://github.com/languageconservancy/elearning-core/blob/ma
 The `elearning-core` submodule provides essential functionality, configuration, and scripts that support the frontend and deployment processes.
 Platform repos, which add the `elearning-core` repo as a submodule, provide the platform specific assets and configuration.
 
-## Getting Started
+## Prerequisites
 
-## Quick Start
+### Platform repo with submodule
 
-1.  **Fork this template** to your organization and name it the name of your platform/app.
+- If you haven't already, create your platform repository by following the instruction in the [elearning-template repo](https://github.com/languageconservancy/elearning-template).
+- Before starting the instructions below, you should have your platform repo cloned to your local computer and the `core` submodule is pulled in.
 
-1.  **Clone your fork**:
+### Local Apache Server
 
-    ```bash
-    git clone git@github.com:your-org/your-platform.git
-    cd your-platform
-    ```
+- You must have a local Apache server to run this project locally.
+- This README assume the use of MAMP.
 
-1.  **Initialize the core submodules**:
+#### Installing & Setting Up MAMP
 
-    ```bash
-    npm run init
-    # or
-    git submodule update --init --recursive
-    ```
+1. Install MAMP from [https://www.mamp.info/en/mac/](https://www.mamp.info/en/mac/). As of January 2026 we are on v7.3.
+1. In MAMP set the following paramters:
 
-1.  **Install dependencies**:
+    - PHP version: v7.4.33
+    - Ports: Apache: 80, Nginx: 80, MySQL: 3306
+    - MySQL server: v5.7.44
+    - PHP-Cache: OPcache
 
-    ```bash
-    npm run core install-dependencies
-    ```
+1. In /Application/MAMP/conf/apache/httpd.conf, make sure this line is uncommented so plugins load properly in the backend.
+    - `LoadModule rewrite_module modules/mod_rewrite.so`
 
-1.  **Prepare Platform (local) to Avoid Errors**:
-
-    Run this command so that `environment.ts` is built, which the next step requires.
+1. Set `sql_mode`. This is to avoid having to change it in phpMyAdmin every time the server is restarted.
 
     ```bash
-    npm run core prepare-platform:local
+    touch /Applications/MAMP/conf/my.cnf && open -t /Applications/MAMP/conf/my.cnf
     ```
 
-1.  **Add Android & iOS Projects**:
+1. Start the server
+    - Click the **Start** button at the top-left of the MAMP window.
 
-    If you need to build Android and iOS apps, add the projects using CapacitorJS.
-    These command need to be run after preparing the platform, so that `environment.ts` is already generated (See previous step).
+### Add Path to Server Root as Environment Variable
 
-    ```bash
-    npm run core cap:add-android
-    npm run core cap:add-ios
-    ```
+**Set the environment variable for your local web server root directory and source it**:
 
-1.  **Customize your platform**:
+This example points to where MAMP places its web server root. Run one of the following to add the `WWW_PATH` used in the `npm run core sync-local-backend` script.
 
-    **Web-app**:
+   For bash shells on Mac
 
-    - Edit `platform/assets/` with your content
-    - Update `platform/config/` with your settings
+   ```bash
+   echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.bash_profile
+   source ~/.bash_profile
+   ```
 
-    **Android & iOS**:
+   For zsh shells on Mac
 
-    Updating Android and iOS projects should be done in `core/frontend/android` and `core/frontend/ios`, then when you want to save those updates to your project copy the projects to the platform directory with the following commands:
+   ```bash
+   echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.zshenv
+   source ~/.zshenv
+   ```
 
-         ```bash
-         npm run core copy-core-android-to-platform
-         npm run core copy-core-ios-to-platform
-         ```
+### Demo database
 
-1.  **Set the environment variable for your local web server root directory**:
-    This example points to where MAMP places its web server root.
+**Open phpMyAdmin**
 
-    ```bash
-    echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.bash_profile
-    ```
+- With MAMP server started, open **phpMyAdmin** by going to `http://localhost/phpmyadmin`
 
-1.  **Build the platform**
+**Create new elearning_demo_db database**
+- In the left side menu, click **New**
+- Database name: **elearning_demo_db**
+- Collation type: **utf8mb4_general_ci**
 
-    ```bash
-    npm run core build:demo
-    ```
+**Import the database**
+- Select the newly crated database in the left menu
+- Select the **Import** tab at the top
+- Select **Choose File** and select the database located at `core/demo/elearning_demo_db.sql`
+- You can leave all the other settings alone
+- Click the **Import** button
 
-1.  **Copy backend to your local web server root directory**:
+### Github Personal Access Token
 
-    ```bash
-    npm run core sync-local-backend
-    ```
+#### Create a Personal Access Token in Github
 
-1.  **Copy demo assets to core/backend/webroot**:
+  - This is required because we are pulling a private repo using composer, since the public one has a bug.
+  1. On github.com go to your user settings (Avatar icon in top right -> Settings)
+  1. Scroll to very bottom of side menu and click on **Developer Settings**
+  1. Under **Personal Access Tokens** dropdown, select **Tokens (classic)**
+  1. Click the dropdown **Generate new token** and select
+  1. Make sure only **public_repo** under **repo** is checked. **repo** should not be checked.
+  1. Create the token and save it somewhere safe. You won't be able to access it again.
 
-    ```bash
-    npm run core copy-demo-assets
-    ```
+### Install dependencies
 
-1.  **Upload demo database to phpMyAdmin**:
+Run to following command to from the parent repo to install the following:
+- frontend NPM packages
+- backend composer packages (this is where you'll paste your Personal Access Token when prompted)
+- cocoapods
 
-    - Import core/demo/elearning_demo_db.sql to phpMyAdmin
+```bash
+npm run core install-dependencies
+```
 
-    In phpMyAdmin do the following to avoid SQL errors.
+### Copy demo assets to core/backend/webroot
 
-    1.  click on the `Server:localhost:<port>` text at the very top.
-    1.  Go to the `Variables` tab
-    1.  Search for `sql mode`
-    1.  Click `Edit` next the `sql mode` and remove the `ONLY_FULL_GROUP_BY` and hit Enter or click `save`.
+```bash
+npm run core copy-demo-assets
+```
 
-1.  **Load the rewrite module**
+## Prepare Environment
 
-    - Uncomment the following line in /Applications/MAMP/conf/apache/httpd.conf
-      - LoadModule rewrite_module modules/mod_rewrite.so
+### Notes on running `npm` commands
 
-1.  **Build and Serve the Demo Platform**:
+- If you're in your platform directory, you'll run `npm run core` ...
+- If you're in the core directory, you'll just run `npm run` ...
 
-    ```bash
-    npm run core serve:demo
-    ```
+The following instructions assume you're in your platform directory, just above the core submodule.
 
-1.  **Test The App**
-    In your browser, navigate to `http://localhost:4200`. The app should load.
+### Prepare Platform (demo)
+
+Run this command so that `environment.ts` is built, which the next step requires.
+
+```bash
+npm run core prepare-platform:demo
+```
+
+## Build the Web-App
+
+### Build the demo web-app
+
+This will build the Angular web-app and sync the iOS and Android projects if they exist.
+
+```bash
+npm run core build:demo
+```
+
+## .env file
+
+A .env file is required for database and secrets access by the backend.
+
+This file must live on the server (local or production) in `backend/config/`.
+A default file exists at `core/backend/config/env.default`.
+
+Where you store this file or the info in it is up to you. Just make sure the staging and production version are secure.
+
+## Serving the demo
+
+To serve the demo web-app you'll need to make sure the backend is copied to the server root, and then serve the Angular app:
+
+### Copy repo backend to server root
+
+This will copy the core/backend files in your sandbox to the server root at `$WWW_PATH/backend/`
+
+```bash
+npm run core sync-local-backend
+```
+
+### Serve
+
+Build and serve the app. The default url is `localhost:4200`
+
+```bash
+npm run core serve:demo
+```
+
+## Android & iOS Apps
+
+### Add Android & iOS Projects
+
+If you need to build Android and iOS apps, add the projects using CapacitorJS.
+These command need to be run after preparing the platform, so that `environment.ts` is already generated (See previous step).
+
+```bash
+npm run core cap:add-android
+npm run core cap:add-ios
+```
+
+### Version control of Mobile Apps
+
+The Android and iOS projects must be built inside the core/frontend directory, but can't be version-controlled there, because that's a submodule and is platform-agnostic.
+
+Two pairs of NPM scripts exist to solve this:
+
+#### Update your version-controlled Android app from the one in `core/frontend/android`
+
+```bash
+npm run core copy-core-android-to-platform
+```
+
+#### Update your version-controlled iOS project from the one in `core/frontend/ios`
+
+```bash
+npm run core copy-core-ios-to-platform
+```
+
+#### Update the buildable Android project from your version-controlled one
+
+```bash
+npm run core copy-android-to-core
+```
+
+#### Update the buildable iOS project from your version-controlled one
+
+```bash
+npm run core copy-ios-to-core
+```
+
+## Syncing the Mobile Apps
+
+If the web-app is built but your need to sync it to the mobile app projects again, you can run the following command:
+
+```bash
+npm run core cap:sync
+```
+
+You should make to the apps are synced before building/running the apps in Android Studio or Xcode.
+
+### Building and running the Android app
+
+You must open and build/run the Android app using Android Studio.
+
+Any time you update the web-app, you need to rebuild so the build web-app in the Android folder is updated.
+
+### Building and running the iOS app
+
+You must open and build/run the iOS app using Xcode.
+
+Any time you update the web-app, you need to rebuild so the build web-app in the iOS folder is updated.
+
+### Running the Android app on a physical device
+
+To run the staging or production Android app on your physical Android device, you'll need to create a signed APK and transfer it to your device.
+
+In Android Studio:
+
+1. **Build** -> **Generate Signed App Bundle or APK**
+1. Select **APK** in the dialog window and click **Next**
+1. Under **Key store path**, click **Choose existing...** to find your staging keystore.
+1. Fill in **Key store password**, **Key alias**, and **Key password**
+1. Click **Next**
+
+#### Ensure your have ADB (Android Debugger command-line tool)
+
+You can install ADB via Android Studio or Homebrew
+
+**Android Studio:**
+
+1. **Android Studio** -> **Settings...**
+1. **Languages & Frameworks** -> **Android SKD**
+1. Select the **SDK Tools** tab
+1. Make sure the following lines are checked:
+    - Android SDK Build-Tools
+    - Android SDK Command-line Tools (latest)
+    - Android SDK Platform-Tools
+1. Click **Apply**
+
+In the terminal, navigate to where `adb` is:
+
+```bash
+cd ~/Library/Android/sdk/platform-tools/
+```
+
+#### Transfer signed APK to device
+
+**Check existing devices**
+
+```bash
+./adb devices
+```
+
+**Transfer APK to device**
+
+```bash
+./adb -s <device_id> install <path-to-apk>
+```
+
+### Running the iOS app
+
+To run the iOS, open Xcode workspace (NOT the project), which is at `core/frontend/ios/App/App.xcworkspace/`
+
+1. In the top bar, select the production or staging app, and the device or simulator to run on
+1. Click the Run icon at the top-left
 
 ## Structure
 
@@ -254,30 +418,6 @@ To run the code locally, for testing in a web browser, you can use the serve com
 
 ```bash
 npm run core serve:<demo|local>
-```
-
-## Android & iOS Apps
-
-Android and iOS apps are created by you (with CapacitorJS commands) and stored in your project repo.
-NPM scripts exist to copy from the core/frontend/ios|android directories to platform/ios|android and the reverse.
-
-The core/frontend/ios|android directories are where you open the projects in Xcode and Android Studio.
-Then use the commands below to copy the projects from the core repo to the platform repo where you should version control them. `.gitignore` already exists in these mobile projects, so you can add all the files with `git add platform/ios` and `git add platform/android`.
-
-```bash
-npm run core copy-core-ios-to-platform
-npm run core copy-core-android-to-platform
-```
-
-### Creating the Android & iOS Projects
-
-- Android & iOS apps should be created per CapacitorJS instructions:
-
-From the project directory:
-
-```bash
-npm run core cap:add-android
-npm run core cap:add-ios
 ```
 
 These will we create `core/frontend/ios` and `core/frontend/android`.

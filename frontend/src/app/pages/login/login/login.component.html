@@ -3,7 +3,7 @@
         <div class="d-flex flex-column flex-nowrap align-content-center align-items-center">
             <asl-google-signin-button
                 *ngIf="
-                    googleConfigValid && !deviceDetector.isMobile() && !deviceDetector.isTablet()
+                    environment.ENABLE_GOOGLE_LOGIN && googleConfigValid && !deviceDetector.isMobile() && !deviceDetector.isTablet()
                 "
                 type="standard"
                 size="large"
@@ -15,7 +15,7 @@
             ></asl-google-signin-button>
             <a
                 *ngIf="
-                    (deviceDetector.isMobile() || deviceDetector.isTablet()) && googleConfigValid
+                    (deviceDetector.isMobile() || deviceDetector.isTablet()) && environment.ENABLE_GOOGLE_LOGIN && googleConfigValid
                 "
                 href="javascript:void(0)"
                 id="google-signin-link-custom"
@@ -26,7 +26,7 @@
                 <span class="flex-grow-1">Sign in with Google</span>
             </a>
             <a
-                *ngIf="facebookConfigValid"
+                *ngIf="environment.ENABLE_FACEBOOK_LOGIN && facebookConfigValid"
                 href="javascript:void(0)"
                 id="facebook-signin-link"
                 (click)="handleFacebookLoginBtnClickOrTap()"
@@ -36,7 +36,7 @@
                 <span class="flex-grow-1">Sign in with Facebook</span>
             </a>
             <a
-                *ngIf="!(isAndroid && isNativePlatform) && appleConfigValid"
+                *ngIf="!(isAndroid && isNativePlatform) && environment.ENABLE_APPLE_LOGIN && appleConfigValid"
                 href="javascript:void(0)"
                 id="apple-signin-link"
                 (click)="handleAppleLoginBtnTap()"
@@ -47,7 +47,7 @@
             </a>
             <a
                 *ngIf="
-                    cleverConfigValid && !deviceDetector.isMobile() && !deviceDetector.isTablet()
+                    environment.ENABLE_CLEVER_LOGIN && cleverConfigValid && !deviceDetector.isMobile() && !deviceDetector.isTablet()
                 "
                 href="javascript:void(0)"
                 (click)="handleCleverLoginBtnClick()"
@@ -59,10 +59,10 @@
             </a>
             <p
                 *ngIf="
-                    googleConfigValid ||
-                    facebookConfigValid ||
-                    appleConfigValid ||
-                    cleverConfigValid
+                    (environment.ENABLE_GOOGLE_LOGIN && googleConfigValid) ||
+                    (environment.ENABLE_FACEBOOK_LOGIN && facebookConfigValid) ||
+                    (environment.ENABLE_APPLE_LOGIN && appleConfigValid) ||
+                    (environment.ENABLE_CLEVER_LOGIN && cleverConfigValid)
                 "
                 id="signin-with-email"
             >

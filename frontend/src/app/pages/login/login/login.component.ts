@@ -116,7 +116,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         // Set up query params handling
         this.subscribeToQueryParams();
 
-        if (this.facebookConfigValid || this.googleConfigValid) {
+        if (this.environment.ENABLE_FACEBOOK_LOGIN && this.facebookConfigValid || this.environment.ENABLE_GOOGLE_LOGIN && this.googleConfigValid) {
             // Set up callback for Facebook and Google login on web
             this.setUpSocialAuthSubscriber();
         }
@@ -154,7 +154,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             // If Clever config is invalid, display a message and return
-            if (!this.cleverConfigValid) {
+            if (!this.cleverConfigValid || !this.environment.ENABLE_CLEVER_LOGIN) {
                 this.socialWebService.displayCleverDisabledMessage();
                 return;
             }
@@ -213,17 +213,17 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         if (this.deviceDetector.isMobile() || this.deviceDetector.isTablet()) {
-            if (this.facebookConfigValid) {
+            if (this.environment.ENABLE_FACEBOOK_LOGIN && this.facebookConfigValid) {
                 this.socialMobileService.initFacebook();
             } else {
                 console.info("Facebook config is not valid, skipping initialization");
             }
-            if (this.googleConfigValid) {
+            if (this.environment.ENABLE_GOOGLE_LOGIN && this.googleConfigValid) {
                 this.socialMobileService.initGoogle();
             } else {
                 console.info("Google config is not valid, skipping initialization");
             }
-            if (this.appleConfigValid) {
+            if (this.environment.ENABLE_APPLE_LOGIN && this.appleConfigValid) {
                 this.socialMobileService.initApple();
             } else {
                 console.info("Apple config is not valid, skipping initialization");

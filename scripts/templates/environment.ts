@@ -17,6 +17,25 @@ export const environment = {
     SITE_OWNER: "{{appOwner}}",
     IOS_APP_ID_NUMBER: "{{iosAppIdNumber}}",
     APP_ID: "{{appId}}",
-    ENABLE_SOCIAL_LOGINS: "{{enableCapacitorSocialLogins}}",
-    production: {{production}},
+    {{#if enableAppleLogin}}
+    ENABLE_APPLE_LOGIN: {{enableAppleLogin}}, // true or false
+    {{else}}
+    ENABLE_APPLE_LOGIN: false,
+    {{/if}}
+    {{#if enableGoogleLogin}}
+    ENABLE_GOOGLE_LOGIN: {{enableGoogleLogin}}, // true or false,
+    {{else}}
+    ENABLE_GOOGLE_LOGIN: false,
+    {{/if}}
+    {{#if enableFacebookLogin}}
+    ENABLE_FACEBOOK_LOGIN: {{enableFacebookLogin}}, // true or false
+    {{else}}
+    ENABLE_FACEBOOK_LOGIN: false,
+    {{/if}}
+    {{#if enableCleverLogin}}
+    ENABLE_CLEVER_LOGIN: {{enableCleverLogin}}, // true or false
+    {{else}}
+    ENABLE_CLEVER_LOGIN: false,
+    {{/if}}
+    production: {{production}}, // true or false
 };

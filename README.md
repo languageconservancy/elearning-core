@@ -49,9 +49,12 @@ Platform repos, which add the `elearning-core` repo as a submodule, provide the 
 
 1. Set `sql_mode`. This is to avoid having to change it in phpMyAdmin every time the server is restarted.
 
-    ```bash
-    touch /Applications/MAMP/conf/my.cnf && open -t /Applications/MAMP/conf/my.cnf
-    ```
+    - Copy `core/demo/mamp/my.cnf` to `/Applications/MAMP/conf/`
+    - The contents are:
+```bash
+[mysqld]
+sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+```
 
 1. Start the server
     - Click the **Start** button at the top-left of the MAMP window.

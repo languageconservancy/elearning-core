@@ -90,10 +90,15 @@ function exportUnitData($unitId, $pdo)
 
 function transformData($data)
 {
-    // Remove existing IDs
-    foreach ($data as &$tableData) {
-        foreach ($tableData as &$row) {
-            unset($row['id']);
+    // Preserve original IDs for mapping, then clear them from multi-row arrays
+    // so the DB can assign new auto-increment IDs on insert.
+    $multiRow = ['unitDetails', 'exercises', 'exerciseOptions', 'exerciseCustomOptions',
+                 'lessons', 'lessonFrames', 'lessonFrameBlocks', 'cards'];
+    foreach ($multiRow as $key) {
+        if (!empty($data[$key]) && is_array($data[$key])) {
+            foreach ($data[$key] as &$row) {
+                unset($row['id']);
+            }
         }
     }
     return $data;
@@ -109,13 +114,17 @@ function importData($data, $pdo)
     $stmt->execute([$unit['name'], $unit['description'], $unit['type'], $unit['created'], $unit['modified']]);
     $idMap['unit'][$unit['id']] = $pdo->lastInsertId();
 
-    // Insert unit details
+    // Insert unit details (learningpath_id and sequence are required columns)
     foreach ($data['unitDetails'] as $unitDetail) {
-        $stmt = $pdo->prepare("INSERT INTO unit_details (unit_id, lesson_id, exercise_id) VALUES (?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO unit_details (learningpath_id, unit_id, lesson_id, exercise_id, sequence, created, modified) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
+            $unitDetail['learningpath_id'],
             $idMap['unit'][$unitDetail['unit_id']],
-            $unitDetail['lesson_id'] ? $idMap['lesson'][$unitDetail['lesson_id']] : null,
-            $unitDetail['exercise_id'] ? $idMap['exercise'][$unitDetail['exercise_id']] : null
+            $unitDetail['lesson_id'] ? ($idMap['lesson'][$unitDetail['lesson_id']] ?? null) : null,
+            $unitDetail['exercise_id'] ? ($idMap['exercise'][$unitDetail['exercise_id']] ?? null) : null,
+            $unitDetail['sequence'] ?? 1,
+            $unitDetail['created'] ?? date('Y-m-d H:i:s'),
+            $unitDetail['modified'] ?? date('Y-m-d H:i:s'),
         ]);
     }
 

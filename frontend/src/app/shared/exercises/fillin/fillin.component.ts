@@ -190,11 +190,17 @@ export class FillinComponent implements OnInit, OnDestroy {
 
     keyboardReady() {
         this.keyboardIsReady = true;
-        if (this.virtualKeyboard?.keyboard) {
-            this.virtualKeyboard.keyboard.setOptions({
-                maxLength: this.maxLengths,
-            });
+        this.syncVirtualKeyboard();
+    }
+
+    /**
+     * Rebind the virtual keyboard when inputs are rebuilt for a new question.
+     */
+    private syncVirtualKeyboard(): void {
+        if (this.fillInType !== "typing" || !this.virtualKeyboard?.keyboard) {
+            return;
         }
+        this.virtualKeyboard.syncInputs(this.maxLengths);
     }
 
     private getDeviceInfo() {
@@ -476,6 +482,7 @@ export class FillinComponent implements OnInit, OnDestroy {
 
         setTimeout(() => {
             this.setBlanksWidths();
+            this.syncVirtualKeyboard();
         }, 200);
     }
 

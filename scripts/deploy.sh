@@ -427,10 +427,14 @@ Description:
     Installation script for installing the platform and copying it to the server.
     All variables are set in the ../../scripts/deploy-vars.sh file, or you can set them manually. Just make
     sure ../../scripts/deploy-vars.sh doesn't override the correct values.
-    To install the platform:
-        $ ./install_release.sh -t staging -c install
+    To install the platform (both frontend and backend):
+        $ ./deploy.sh -t staging -c install -f -b
     To create a GitHub release for the platform:
-        $ ./install_release.sh -t production -c createrelease
+        $ ./deploy.sh -t production -c createrelease
+    To install the frontend only:
+        $ ./deploy.sh -t staging -c install -f
+    To install the backend only:
+        $ ./deploy.sh -t staging -c install -b
 
 Usage:
     -b|--backend                    (Perform command from -c arg for backend)
@@ -447,8 +451,8 @@ Usage:
     --dryrun                        (Don't run any serious commands, just print them)
 
 Examples:
-    ./install_release.sh -t staging -c install -f
-    ./install_release.sh -t production -c install -f -b --dryrun
+    ./deploy.sh -t staging -c install -f
+    ./deploy.sh -t production -c install -f -b --dryrun
 
 Frontend files that get installed:
 ${FRONTEND_DIST_FILES}
@@ -603,7 +607,7 @@ run_main() {
 
     check_variable ${commandType} "Must specify a command type. Usage:"
 
-    print_heading "\nRunning ${CORE_DIR}/scripts/install_release.sh"
+    print_heading "\nRunning ${CORE_DIR}/scripts/deploy.sh"
 
     verify_files_and_dirs_exist
 

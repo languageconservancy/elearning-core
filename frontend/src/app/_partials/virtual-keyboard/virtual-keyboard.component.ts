@@ -1,6 +1,8 @@
 import {
     Component,
     OnInit,
+    OnChanges,
+    SimpleChanges,
     AfterViewInit,
     ViewEncapsulation,
     Renderer2,
@@ -53,7 +55,7 @@ type LayoutName = "default" | "shift";
  *         [debug]="<parentDebugVar>"
  *     </app-keyboard>
  */
-export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewInit {
+export class VirtualKeyboardComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
     // Parent component defines if app is debug mode
     @Input() debug: boolean = false;
     // Parent component sends inputs to use virtual keyboard on
@@ -120,6 +122,12 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
         );
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes["inputs"] && !changes["inputs"].firstChange && this.keyboard) {
+            this.syncInputs();
+        }
+    }
+
     ngOnDestroy() {
         delete this.keyboard;
         this.unlisteners.forEach((callback) => callback());
@@ -137,6 +145,10 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
             if (DEBUG) {
                 console.warn("Keyboard not initialized yet. Config not loaded or DOM not ready.");
             }
+            return;
+        }
+
+        if (this.keyboard) {
             return;
         }
 
@@ -182,6 +194,40 @@ export class VirtualKeyboardComponent implements OnInit, OnDestroy, AfterViewIni
             this.keyboardReady.emit();
         } catch (err) {
             console.error("Error creating keyboard: ", err);
+        }
+    }
+
+    /**
+     * Rebind SimpleKeyboard to the current inputs object. Call when the parent
+     * rebuilds inputs in place (e.g. next fill-in question) or replaces the reference.
+     */
+    public syncInputs(maxLength?: Record<string, number>): void {
+        if (!this.keyboard) {
+            return;
+        }
+
+        this.hide();
+        this.keyboard.replaceInput(this.inputs);
+
+        const inputKeys = Object.keys(this.inputs);
+        const focusedId =
+            this.focusedInputId && inputKeys.includes(this.focusedInputId)
+                ? this.focusedInputId
+                : inputKeys[0];
+
+        if (this.focusedInputId && !inputKeys.includes(this.focusedInputId)) {
+            this.focusedInputId = focusedId ?? "";
+        }
+
+        const options: { inputName?: string; maxLength?: Record<string, number> } = {};
+        if (focusedId) {
+            options.inputName = focusedId;
+        }
+        if (maxLength) {
+            options.maxLength = maxLength;
+        }
+        if (Object.keys(options).length > 0) {
+            this.keyboard.setOptions(options);
         }
     }
 

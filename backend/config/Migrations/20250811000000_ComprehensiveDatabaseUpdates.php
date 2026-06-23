@@ -27,15 +27,22 @@ class ComprehensiveDatabaseUpdates extends AbstractMigration
     public function up(): void
     {
         // Step 1: add_coppa_fields - Insert COPPA-related site settings
-        $this->execute("
-            INSERT INTO `sitesettings` (`display_name`, `key`, `value`)
-            VALUES
-                ('Setting Minors Can Access Leaderboard', 'setting_minors_can_access_leaderboard', '1'),
-                ('Setting Minors Can Access Village', 'setting_minors_can_access_village', '1'),
-                ('Setting Minors Can Access Friends', 'setting_minors_can_access_friends', '0'),
-                ('Feature Village', 'feature_village', '1')
-            ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)
-        ");
+        $this->insertSiteSettingIfMissing(
+            'Setting Minors Can Access Leaderboard',
+            'setting_minors_can_access_leaderboard',
+            '1'
+        );
+        $this->insertSiteSettingIfMissing(
+            'Setting Minors Can Access Village',
+            'setting_minors_can_access_village',
+            '1'
+        );
+        $this->insertSiteSettingIfMissing(
+            'Setting Minors Can Access Friends',
+            'setting_minors_can_access_friends',
+            '0'
+        );
+        $this->insertSiteSettingIfMissing('Feature Village', 'feature_village', '1');
 
         // Step 2: users_add_approximate_age - Add approximate_age column to users table
         $usersTable = $this->table('users');
@@ -49,57 +56,38 @@ class ComprehensiveDatabaseUpdates extends AbstractMigration
         }
 
         // Step 3: users_set_age_adults_students - Update approximate_age for eligible users
-        $this->execute("
-            UPDATE users U
-            LEFT JOIN school_users SU ON SU.user_id = U.id
-            SET U.approximate_age =
-                CASE
-                    WHEN U.dob IS NULL THEN NULL -- Handle missing DOBs
-                    WHEN TIMESTAMPDIFF(YEAR, U.dob, CURDATE()) >= 13 OR SU.user_id IS NOT NULL
-                    THEN TIMESTAMPDIFF(YEAR, U.dob, CURDATE())
-                    ELSE NULL
-                END
-        ");
-
-        // Step 4: school_roles_create_table - Create school_roles table with data
-        if (!$this->hasTable('school_roles')) {
-            $schoolRolesTable = $this->table('school_roles', [
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'collation' => 'utf8mb4_general_ci'
-            ]);
-
-            $schoolRolesTable
-                ->addColumn('name', 'string', [
-                    'length' => 50,
-                    'null' => false,
-                    'collation' => 'utf8mb4_general_ci'
-                ])
-                ->create();
-
-            // Insert initial data
+        if ($usersTable->hasColumn('approximate_age')) {
             $this->execute("
-                INSERT INTO `school_roles` (`name`) VALUES
-                ('teacher'),
-                ('substitute'),
-                ('student')
+                UPDATE users U
+                LEFT JOIN school_users SU ON SU.user_id = U.id
+                SET U.approximate_age =
+                    CASE
+                        WHEN U.dob IS NULL THEN NULL -- Handle missing DOBs
+                        WHEN TIMESTAMPDIFF(YEAR, U.dob, CURDATE()) >= 13 OR SU.user_id IS NOT NULL
+                        THEN TIMESTAMPDIFF(YEAR, U.dob, CURDATE())
+                        ELSE NULL
+                    END
             ");
         }
 
+        // Step 4: school_roles_create_table - Create school_roles table with data
+        $this->ensureSchoolRolesTable();
+
         // Step 5: emailcontents_insert_parent_notification - Insert parent notification email template
-        $this->execute("
-            INSERT INTO `emailcontents`
-            (
-                `display_name`,
-                `key`,
-                `subject`,
-                `content`
-            )
-            VALUES (
-                'Parent Notification',
-                'parent_notification',
-                'Your child has created #AN_A #APPLICATIONNAME account',
-                '<tr>
+        if (!$this->emailContentExists('parent_notification')) {
+            $this->execute("
+                INSERT INTO `emailcontents`
+                (
+                    `display_name`,
+                    `key`,
+                    `subject`,
+                    `content`
+                )
+                VALUES (
+                    'Parent Notification',
+                    'parent_notification',
+                    'Your child has created #AN_A #APPLICATIONNAME account',
+                    '<tr>
         <td style=\"text-align:left;width:100%;padding-top:20px;padding-left:40px;padding-right:40px;color:#000000;font-family:''Open Sans'',Calibri,Arial,sans-serif;font-size:24px;font-weight:bold;line-height:24px\">
             <span style=\"font-size:16px\">Hi Parent,</span>
         </td>
@@ -141,12 +129,9 @@ class ComprehensiveDatabaseUpdates extends AbstractMigration
             </p>
         </td>
     </tr>'
-            )
-            ON DUPLICATE KEY UPDATE
-                `display_name` = VALUES(`display_name`),
-                `subject` = VALUES(`subject`),
-                `content` = VALUES(`content`)
-        ");
+                )
+            ");
+        }
 
         // Step 6: roles_rename_student_to_user - Rename 'student' role to 'user'
         // Only rename if 'user' role doesn't already exist
@@ -160,30 +145,15 @@ class ComprehensiveDatabaseUpdates extends AbstractMigration
         }
 
         // Step 7: roles_add_developer_and_student - Add new developer and student roles
-        $this->execute("
-            INSERT INTO `roles` (`id`, `role`)
-            VALUES
-                (5, 'content developer'),
-                (6, 'student')
-            ON DUPLICATE KEY UPDATE `role` = VALUES(`role`)
-        ");
+        $this->insertRoleIfMissing(5, 'content developer');
+        $this->insertRoleIfMissing(6, 'student');
 
         // Step 8: users_school_users_to_student - Update school users to student role
-        $this->execute("
-            UPDATE users U
-            INNER JOIN school_users SU ON SU.user_id = U.id
-            SET U.role_id = 6
-            WHERE U.role_id = 3 AND SU.role_id = 3
-        ");
+        $this->updateSchoolUsersToStudentRole();
 
         // Step 9: sitesettings_insert_version_fields - Insert app version settings
-        $this->execute("
-            INSERT INTO `sitesettings`(`display_name`, `key`, `value`)
-            VALUES
-                ('Min Supported App Version', 'min_supported_app_version', '2.5.0'),
-                ('Latest App Version', 'latest_app_version', '2.5.0')
-            ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)
-        ");
+        $this->insertSiteSettingIfMissing('Min Supported App Version', 'min_supported_app_version', '2.5.0');
+        $this->insertSiteSettingIfMissing('Latest App Version', 'latest_app_version', '2.5.0');
     }
 
     /**
@@ -247,5 +217,115 @@ class ComprehensiveDatabaseUpdates extends AbstractMigration
                 'feature_village'
             )
         ");
+    }
+
+    private function insertSiteSettingIfMissing(string $displayName, string $key, string $value): void
+    {
+        $existing = $this->fetchRow(
+            'SELECT 1 AS found FROM `sitesettings` WHERE `key` = ' . $this->quoteSql($key) . ' LIMIT 1'
+        );
+        if ($existing) {
+            return;
+        }
+
+        $this->execute(sprintf(
+            'INSERT INTO `sitesettings` (`display_name`, `key`, `value`) VALUES (%s, %s, %s)',
+            $this->quoteSql($displayName),
+            $this->quoteSql($key),
+            $this->quoteSql($value)
+        ));
+    }
+
+    private function emailContentExists(string $key): bool
+    {
+        $existing = $this->fetchRow(
+            'SELECT 1 AS found FROM `emailcontents` WHERE `key` = ' . $this->quoteSql($key) . ' LIMIT 1'
+        );
+
+        return (bool)$existing;
+    }
+
+    private function ensureSchoolRolesTable(): void
+    {
+        if (!$this->hasTable('school_roles')) {
+            $this->table('school_roles', [
+                'primary_key' => ['id'],
+                'engine' => 'InnoDB',
+                'collation' => 'utf8mb4_general_ci'
+            ])
+                ->addColumn('name', 'string', [
+                    'length' => 50,
+                    'null' => false,
+                    'collation' => 'utf8mb4_general_ci'
+                ])
+                ->create();
+        }
+
+        foreach (['teacher', 'substitute', 'student'] as $schoolRole) {
+            $this->insertSchoolRoleIfMissing($schoolRole);
+        }
+    }
+
+    private function insertSchoolRoleIfMissing(string $name): void
+    {
+        $existing = $this->fetchRow(
+            'SELECT 1 AS found FROM `school_roles` WHERE `name` = ' . $this->quoteSql($name) . ' LIMIT 1'
+        );
+        if ($existing) {
+            return;
+        }
+
+        $this->execute('INSERT INTO `school_roles` (`name`) VALUES (' . $this->quoteSql($name) . ')');
+    }
+
+    private function insertRoleIfMissing(int $id, string $role): void
+    {
+        $existingByRole = $this->fetchRow(
+            'SELECT 1 AS found FROM `roles` WHERE `role` = ' . $this->quoteSql($role) . ' LIMIT 1'
+        );
+        if ($existingByRole) {
+            return;
+        }
+
+        $existingById = $this->fetchRow(
+            'SELECT 1 AS found FROM `roles` WHERE `id` = ' . $id . ' LIMIT 1'
+        );
+        if ($existingById) {
+            return;
+        }
+
+        $this->execute(sprintf(
+            'INSERT INTO `roles` (`id`, `role`) VALUES (%d, %s)',
+            $id,
+            $this->quoteSql($role)
+        ));
+    }
+
+    private function updateSchoolUsersToStudentRole(): void
+    {
+        $userRole = $this->fetchRow("SELECT `id` FROM `roles` WHERE `role` = 'user' LIMIT 1");
+        $studentRole = $this->fetchRow("SELECT `id` FROM `roles` WHERE `role` = 'student' LIMIT 1");
+        $schoolStudentRole = $this->fetchRow(
+            "SELECT `id` FROM `school_roles` WHERE `name` = 'student' LIMIT 1"
+        );
+
+        if (!$userRole || !$studentRole || !$schoolStudentRole) {
+            return;
+        }
+
+        $this->execute(sprintf(
+            'UPDATE users U
+            INNER JOIN school_users SU ON SU.user_id = U.id
+            SET U.role_id = %d
+            WHERE U.role_id = %d AND SU.role_id = %d',
+            (int)$studentRole['id'],
+            (int)$userRole['id'],
+            (int)$schoolStudentRole['id']
+        ));
+    }
+
+    private function quoteSql(string $value): string
+    {
+        return "'" . str_replace("'", "''", $value) . "'";
     }
 }

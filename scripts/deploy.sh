@@ -5,20 +5,15 @@
 #------------------------------------------------------------------------------#
 # - Used to install the E-Learning Platform to a server (both web frontend and backend)
 # - Steps that the script does:
-#   1. Parse command-line arguments (build-type, skip-frontend, skip-backend)
+#   1. Parses command-line arguments (build-type, command-type, frontend, backend, dryrun, backupPublicHtml, setPermissions, overrideTagBranchCheck)
 #   2. Create variables of paths and print them out for user
-#   3. Create diff (files changed) from current commit to last tag.
-#      Save them to:
-#        owoksape-docker-build/tmp/owoksape-web-app.diff
-#        owoksape-docker-build/tmp/owoksape-backend.diff
-#   4. Create commit info for each repo and store it in a file
-#      Save them to:
-#        public_html/commit-info-frontend.txt and
-#        public_html/backend/commit-info-backend.txt
-#   5. Build frontend and copy dist files to public_html. Copies all files
-#      in dist except assets, and copies assets/images.
-#   6. Copy backend src and composer files to public_html/backend and
-#      run composer update --no-interaction --no-dev to update non-dev dependencies
+#   3. Sets server user and document root based on build type
+#   4. Verifies files and directories exist
+#   5. Deletes old frontend dist directory
+#   6. Deletes old server frontend files
+#   7. Copies frontend files to server
+#   8. Changes ownership and permissions on server
+#   9. Adds version file to server
 
 # Exit on error and pipefail
 set -euo pipefail
@@ -48,6 +43,7 @@ PARAMS=""
 # Command-line arguments
 buildType=""
 commandType=""
+versionFile=false
 runFrontend=false
 runBackend=false
 dryRun=false
@@ -57,7 +53,6 @@ setPermissions=false
 overrideTagBranchCheck=false
 # Global variables
 sshIdentityFile=""
-versionFileContainsInfo=false
 serverUser=""
 documentRoot=""
 extraBackendFilesToInstall=""
@@ -324,57 +319,33 @@ install_backend_composer_packages() {
     fi
 }
 
-add_frontend_version_file_to_server() {
-    print_heading "\nCreate frontend version info file on server"
+# Creates version file on server with the following information:
+# Platform: <name>, Tag: <tag>, Commit hash: <commit hash>, Commit date: <commit date>
+# Core: <name>, Tag: <tag>, Commit hash: <commit hash>, Commit date: <commit date>
+add_version_file_to_server() {
+    print_heading "\nCreate version info file on server"
 
     if ${dryRun} ; then
-        echo "Creating frontend version info file on server"
+        echo "Creating version info file on server"
     else
         set -x # turn on mode that prints all commands to terminal
-        platformTag=`cd ${PLATFORM_REPO_DIR} && git describe --tags --abbrev=0`
-        platformCommitHash=`cd ${PLATFORM_REPO_DIR} && git rev-parse HEAD`
-        platformCommitDate=`cd ${PLATFORM_REPO_DIR} && git show -s --format=%ci HEAD`
-        ngVersion=`cd ${PLATFORM_REPO_DIR} && ${NG_BINARY} version`
-        set +x # turn off mode that prints all commands to terminal
-        # remove ASCII Angular image cause it invalidates bash command
-        searchString="Angular CLI:"
-        toPrint=${ngVersion#*$searchString}
-
-    text="Platform
-    Tag: ${platformTag}
-    Commit hash: ${platformCommitHash}
-    Commit date: ${platformCommitDate}
-    Local repo angular:
-${searchString}${toPrint}"
-
-        set -x # turn on mode that prints all commands to terminal
-        ssh -i ${sshIdentityFile} ${sshUser}@${sshHost} "sudo sh -c 'echo \"${text}\" > ${documentRoot}/platform_version_info.txt'"
-        set +x # turn off mode that prints all commands to terminal
-    fi
-}
-
-add_backend_version_file_to_server() {
-    print_heading "\nCreate backend version info file on server"
-
-    if ${dryRun} ; then
-        echo "Creating backend version info file on server"
-    else
-        set -x # turn on mode that prints all commands to terminal
-        backendTag=`cd ${BACKEND_DIR} && git describe --tags --abbrev=0`
-        backendCommitHash=`cd ${BACKEND_DIR} && git rev-parse HEAD`
-        backendCommitDate=`cd ${BACKEND_DIR} && git show -s --format=%ci HEAD`
-        composerVersion=`ssh -t -i ${sshIdentityFile} ${sshUser}@${sshHost} "composer --version"`
+        # Get platform tag and commit hash/date
+        versionTag=$(cd "${PLATFORM_REPO_DIR}" && git describe --tags --abbrev=0 2>/dev/null || echo "No tag found")
+        versionCommitHash=$(cd "${PLATFORM_REPO_DIR}" && git rev-parse HEAD 2>/dev/null || echo "No commit hash found")
+        versionCommitDate=$(cd "${PLATFORM_REPO_DIR}" && git show -s --format=%ci HEAD 2>/dev/null || echo "No commit date found")
+        # Get core tag and commit hash/date
+        coreTag=$(cd "${CORE_DIR}" && git describe --tags --abbrev=0 2>/dev/null || echo "No tag found")
+        coreCommitHash=$(cd "${CORE_DIR}" && git rev-parse HEAD 2>/dev/null || echo "No commit hash found")
+        coreCommitDate=$(cd "${CORE_DIR}" && git show -s --format=%ci HEAD 2>/dev/null || echo "No commit date found")
+        todaysDate=$(date +"%Y-%m-%d")
         set +x # turn off mode that prints all commands to terminal
 
-    text="Backend
-    Tag: ${backendTag}
-    Commit hash: ${backendCommitHash}
-    Commit date: ${backendCommitDate}
-    Server system composer:
-    ${composerVersion}"
+    text="Platform: ${versionTag}, ${versionCommitHash}, ${versionCommitDate}
+Core: ${coreTag}, ${coreCommitHash}, ${coreCommitDate}
+Updated: ${todaysDate}"
 
         set -x # turn on mode that prints all commands to terminal
-        ssh -i ${sshIdentityFile} ${sshUser}@${sshHost} "sudo sh -c 'echo \"${text}\" > ${documentRoot}/backend_version_info.txt'"
+        ssh -i ${sshIdentityFile} ${sshUser}@${sshHost} "sudo sh -c 'echo \"${text}\" > ${documentRoot}/version_info.txt'"
         set +x # turn off mode that prints all commands to terminal
     fi
 }
@@ -405,7 +376,6 @@ print_settings() {
     echo "  backupPublicHtml:    ${backupPublicHtml}"
     print_heading "Variables:"
     echo "  sshIdentityFile:     ${sshIdentityFile}"
-    echo "  versionFileContainsInfo: ${versionFileContainsInfo}"
     echo "  serverUser:          ${serverUser}"
     echo "  documentRoot:        ${documentRoot}"
     echo "  backendConfig:       ${backendConfig}"
@@ -447,6 +417,7 @@ Usage:
     -o|--override-tag-branch-check  (Override tag and branch check)
     -s|--set-permissions            (Set permissions on public_html and public_html_backups)
     -t|--build-type <type           (Type of build. <type> can be one of the following: <production|staging>)
+    -v|--version-file               (Create version file on server)
     --backup                        (Back up public_html to public_html-Y-M-D-H-M-S)
     --dryrun                        (Don't run any serious commands, just print them)
 
@@ -599,6 +570,8 @@ run_main() {
         exit 0
     fi
 
+
+
     if ${setPermissions} ; then
         change_ownership_and_permissions ${documentRoot}
         change_ownership_and_permissions ${domainRoot}/public_html_backups
@@ -612,6 +585,11 @@ run_main() {
     verify_files_and_dirs_exist
 
     print_settings
+
+    if ${versionFile} ; then
+        add_version_file_to_server
+        exit 0
+    fi
 
     if [[ $runFrontend == true || $runBackend == true ]]; then
         print_heading "\nBuilding frontend and backend..."
@@ -638,10 +616,12 @@ run_main() {
         fi
     fi
 
-    if [ "${commandType}" == "createrelease" ]; then
-        create_release_on_github "owoksape"
-        exit 0
-    fi
+    add_version_file_to_server
+
+    # if [ "${commandType}" == "createrelease" ]; then
+    #     create_release_on_github ""
+    #     exit 0
+    # fi
 }
 
 #------------------------------------------------------------------------------#
@@ -729,6 +709,10 @@ while (( "$#" )); do
                 echo -e "⚠️ ${RED}Error: Argument for $1 is missing${COLOR_RESET}" >&2
                 exit 1
             fi
+            ;;
+        -v|--version-file)
+            versionFile=true
+            shift
             ;;
         -*|--*=) # unsupported flags
             print_error "⚠️ Error: Unsupported flag $1" >&2

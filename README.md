@@ -43,8 +43,9 @@ Platform repos, which add the `elearning-core` repo as a submodule, provide the 
     - Ports: Apache: 80, Nginx: 80, MySQL: 3306
     - MySQL server: v5.7.44
     - PHP-Cache: OPcache
+    - Document Root: Application->MAMP->htdocs (assumes backend is in htdocs. If it's in a subfolder, point to whatever its parent is)
   
-    
+
     1. **NOTE**: If you don’t see 7.4.33 in the PHP version dropdown do the following: Goto /Application/MAMP/bin/php and rename all php versions except the two you want as options by adding an underscore to the beginning of their names.
     1. **NOTE**: You may have to add this to your ~/.bash_profile to use PHP v7.4.33 instead of the latest version:
         - `export PATH="/Applications/MAMP/bin/php/php7.4.33/bin/:$PATH"`

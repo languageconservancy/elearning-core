@@ -1,0 +1,199 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "eLearning: Start demo dev server",
+      "type": "shell",
+      "command": "npm run serve:demo",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Compiled successfully|Failed to compile|Application bundle generation complete"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "detail": "Daily web dev. Frontend at http://localhost:4200 — needs MAMP + demo DB."
+    },
+    {
+      "label": "eLearning: Apply backend config changes (demo)",
+      "dependsOn": [
+        "eLearning: Prepare platform (demo)",
+        "eLearning: Sync backend to MAMP"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "detail": "After editing app_local.php or platform/config/demo/.env"
+    },
+    {
+      "label": "eLearning: First-time web setup",
+      "dependsOn": [
+        "eLearning: Copy demo assets to backend",
+        "eLearning: Sync backend to MAMP"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "detail": "Run once after clone: demo webroot + backend on MAMP"
+    },
+    {
+      "label": "eLearning: Prepare platform (demo)",
+      "type": "shell",
+      "command": "npm run prepare-platform:demo",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Copy platform assets and generate config for demo"
+    },
+    {
+      "label": "eLearning: Sync backend to MAMP",
+      "type": "shell",
+      "command": "npm run sync-local-backend",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Push core/backend to $WWW_PATH — run after PHP or backend config changes"
+    },
+    {
+      "label": "eLearning: Copy demo assets to backend",
+      "type": "shell",
+      "command": "npm run copy-demo-assets",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Copy demo/webroot into backend/webroot"
+    },
+    {
+      "label": "eLearning: Build demo (verify output)",
+      "type": "shell",
+      "command": "npm run build:demo",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Production-like frontend build for demo environment"
+    },
+    {
+      "label": "eLearning: Build staging (includes mobile sync)",
+      "type": "shell",
+      "command": "npm run build:staging",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Staging build + cap:sync for Android/iOS testing"
+    },
+    {
+      "label": "eLearning: Build production",
+      "type": "shell",
+      "command": "npm run build:production",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Production build + cap:sync"
+    },
+    {
+      "label": "eLearning: Sync mobile to platform (core → platform)",
+      "dependsOn": [
+        "eLearning: Sync Android to platform (core → platform)",
+        "eLearning: Sync iOS to platform (core → platform)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "detail": "After Android Studio or Xcode edits under core/frontend — rsync to platform/ for commit"
+    },
+    {
+      "label": "eLearning: Sync Android to platform (core → platform)",
+      "type": "shell",
+      "command": "npm run copy-core-android-to-platform",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Push core/frontend/android → platform/android (rsync --delete)"
+    },
+    {
+      "label": "eLearning: Sync iOS to platform (core → platform)",
+      "type": "shell",
+      "command": "npm run copy-core-ios-to-platform",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Push core/frontend/ios → platform/ios (rsync --delete)"
+    },
+    {
+      "label": "eLearning: Init submodule (first clone)",
+      "type": "shell",
+      "command": "npm run init",
+      "options": {
+        "cwd": "${workspaceFolder:platform}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Run from platform repo root after clone"
+    },
+    {
+      "label": "eLearning: Update core submodule",
+      "type": "shell",
+      "command": "npm run update-core",
+      "options": {
+        "cwd": "${workspaceFolder:platform}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Pull latest elearning-core submodule"
+    },
+    {
+      "label": "eLearning: Install all dependencies",
+      "type": "shell",
+      "command": "npm run install-dependencies",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "First-time setup: npm + composer + cocoapods"
+    },
+    {
+      "label": "eLearning: List available commands",
+      "type": "shell",
+      "command": "npm run",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "detail": "Show all core npm scripts"
+    }
+  ]
+}

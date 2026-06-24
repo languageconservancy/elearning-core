@@ -47,7 +47,8 @@ npm run <command>         # only when cwd is core/
    npm install                    # at repo root (hoists core/frontend workspace deps)
    npm run core install-dependencies
    ```
-4. Create GitHub Personal Access Token (classic, `public_repo` only) for private composer package.
+4. Open **`core/elearning-platform.code-workspace`** in Cursor/VS Code. It loads **platform**, **core**, and **frontend** roots — tasks come from core; the frontend root keeps ESLint/TypeScript working on Angular files.
+5. Create GitHub Personal Access Token (classic, `public_repo` only) for private composer package.
 
 ## Phase 2 — Platform assets & config
 
@@ -192,6 +193,7 @@ npm run core copy-core-ios-to-platform
 ```
 Bootstrap progress:
 - [ ] Fork template, init submodule, install dependencies
+- [ ] Open `core/elearning-platform.code-workspace` (platform + core + frontend roots)
 - [ ] Customize platform/assets/ and platform/config/<env>/
 - [ ] Create platform/config/<env>/.env locally
 - [ ] Verify web: prepare-platform:local → serve:local

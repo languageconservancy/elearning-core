@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "name": "platform",
+      "path": ".."
+    },
+    {
+      "name": "core",
+      "path": "."
+    },
+    {
+      "name": "frontend",
+      "path": "./frontend"
+    }
+  ],
+  "settings": {}
+}

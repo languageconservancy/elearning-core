@@ -7,6 +7,8 @@
 This repo contains the core backend, frontend (web, Android, iOS), and build logic for the eLearning platform main code. It is designed as a submodule to be used by each specific eLearning platform, in order to keep those platforms separate.
 This enables easy transfer of ownership of platform-specific code, database, etc., while keep the main code available for everyone to use.
 
+**New developer?** Read [DEVELOPING.md](DEVELOPING.md) and open [elearning-platform.code-workspace](elearning-platform.code-workspace) in Cursor/VS Code. That workspace includes **platform**, **core**, and **frontend** roots — the frontend root keeps ESLint and TypeScript working correctly on Angular files.
+
 ## Technologies
 
 See [package.json](https://github.com/languageconservancy/elearning-core/blob/main/frontend/package.json) and [composer.json](https://github.com/languageconservancy/elearning-core/blob/main/backend/composer.json) for current versions.
@@ -324,6 +326,9 @@ To run the iOS, open Xcode workspace (NOT the project), which is at `core/fronte
 - `demo/`
   A pre-filled database and assets, meant to include all the various lesson and exercise types, for thorough manual testing via the frontend apps. New exercises and lessons that confirm bugfixes will be added to this database.
   To use this, import the database into your local phpMyAdmin and copy the webroot assets to your www/backend/webroot directory.
+
+- `elearning-platform.code-workspace`
+  Multi-root VS Code/Cursor workspace for platform development. Opens **platform**, **core**, and **frontend** roots so tasks and Angular linting work correctly. See [DEVELOPING.md](DEVELOPING.md).
 
 - `README.md`
   This file.

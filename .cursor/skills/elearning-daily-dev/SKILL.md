@@ -6,9 +6,23 @@ description: >-
   expanding the demo database when bugs are found. Use when developing,
   testing locally, fixing bugs, updating core, or when the user asks
   what command to run after changing assets, config, or backend code.
+  Also use when the user asks about the VS Code workspace, eLearning tasks,
+  or ESLint/TypeScript errors on Angular files.
 ---
 
 # eLearning Daily Development
+
+## IDE workspace
+
+Open **`core/elearning-platform.code-workspace`** in Cursor/VS Code (not the platform folder alone). It loads three roots:
+
+| Root | Purpose |
+|------|---------|
+| **platform** | Repo root — assets, config, mobile projects |
+| **core** | Submodule — backend, tasks, demo DB |
+| **frontend** | `core/frontend/` — Angular app as its own root for ESLint/TypeScript |
+
+The **frontend** root is required so linters resolve `tsconfig.json` and `.eslintrc.json` correctly. Without it, Angular files often show false errors. Tasks live under `core/.vscode/tasks.json` and only appear when this workspace is open.
 
 ## Command convention
 
@@ -150,6 +164,7 @@ See [demo-db-workflow.md](demo-db-workflow.md) for the full add-to-demo and comm
 4. **Demo DB lives in core** — `core/demo/elearning_demo_db.sql`. Platform repos don't own it.
 5. **Re-import after pulling core** — when a teammate commits an updated demo DB, drop/re-import in phpMyAdmin.
 6. **Root README commands may be wrong** — always use `npm run core <command>`, not bare `npm run serve:demo` at repo root.
+7. **False ESLint/TS errors on Angular files** — open `core/elearning-platform.code-workspace` so the **frontend** workspace root is active.
 
 ## Related skills
 

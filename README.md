@@ -7,8 +7,6 @@
 This repo contains the core backend, frontend (web, Android, iOS), and build logic for the eLearning platform main code. It is designed as a submodule to be used by each specific eLearning platform, in order to keep those platforms separate.
 This enables easy transfer of ownership of platform-specific code, database, etc., while keep the main code available for everyone to use.
 
-**New developer?** Read [DEVELOPING.md](DEVELOPING.md) and open [elearning-platform.code-workspace](elearning-platform.code-workspace) in Cursor/VS Code. That workspace includes **platform**, **core**, and **frontend** roots — the frontend root keeps ESLint and TypeScript working correctly on Angular files.
-
 ## Technologies
 
 See [package.json](https://github.com/languageconservancy/elearning-core/blob/main/frontend/package.json) and [composer.json](https://github.com/languageconservancy/elearning-core/blob/main/backend/composer.json) for current versions.
@@ -45,12 +43,6 @@ Platform repos, which add the `elearning-core` repo as a submodule, provide the 
     - Ports: Apache: 80, Nginx: 80, MySQL: 3306
     - MySQL server: v5.7.44
     - PHP-Cache: OPcache
-    - Document Root: Application->MAMP->htdocs (assumes backend is in htdocs. If it's in a subfolder, point to whatever its parent is)
-  
-
-    1. **NOTE**: If you don’t see 7.4.33 in the PHP version dropdown do the following: Goto /Application/MAMP/bin/php and rename all php versions except the two you want as options by adding an underscore to the beginning of their names.
-    1. **NOTE**: You may have to add this to your ~/.bash_profile to use PHP v7.4.33 instead of the latest version:
-        - `export PATH="/Applications/MAMP/bin/php/php7.4.33/bin/:$PATH"`
 
 1. In /Application/MAMP/conf/apache/httpd.conf, make sure this line is uncommented so plugins load properly in the backend.
     - `LoadModule rewrite_module modules/mod_rewrite.so`
@@ -327,9 +319,6 @@ To run the iOS, open Xcode workspace (NOT the project), which is at `core/fronte
   A pre-filled database and assets, meant to include all the various lesson and exercise types, for thorough manual testing via the frontend apps. New exercises and lessons that confirm bugfixes will be added to this database.
   To use this, import the database into your local phpMyAdmin and copy the webroot assets to your www/backend/webroot directory.
 
-- `elearning-platform.code-workspace`
-  Multi-root VS Code/Cursor workspace for platform development. Opens **platform**, **core**, and **frontend** roots so tasks and Angular linting work correctly. See [DEVELOPING.md](DEVELOPING.md).
-
 - `README.md`
   This file.
 
@@ -425,6 +414,65 @@ To prepare and build for a specific environment you run a similar NPM script, as
 ```bash
 npm run core build:<demo|local|staging|production>
 ```
+
+## Deploying
+
+Deployment is handled by `core/scripts/deploy.sh` from your platform repo root. The script builds the selected environment, then copies the frontend and/or backend to the remote server over SSH.
+
+### Configure deployment variables
+
+Create `scripts/deploy-vars.sh` in your platform repo (one level above `core/`). The deploy script sources this file automatically. Set the SSH and server paths for each environment you deploy to:
+
+```bash
+export STAGING_SERVER_USER="elearnresource"
+export STAGING_DOCUMENT_ROOT="/home/elearnresource/example.elearnresource.com/public_html"
+export STAGING_DOMAIN_ROOT="/home/elearnresource/example.elearnresource.com"
+export STAGING_SSH_IDENTITY_FILE="$HOME/.ssh/TLC.pem"
+export STAGING_SSH_USER="centos"
+export STAGING_SSH_HOST="ec2-example.us-west-2.compute.amazonaws.com"
+
+export PRODUCTION_SERVER_USER="example"
+export PRODUCTION_DOCUMENT_ROOT="/home/example/public_html"
+export PRODUCTION_DOMAIN_ROOT="/home/example"
+export PRODUCTION_SSH_IDENTITY_FILE="$HOME/.ssh/TLC.pem"
+export PRODUCTION_SSH_USER="centos"
+export PRODUCTION_SSH_HOST="ec2-example.us-west-2.compute.amazonaws.com"
+```
+
+### Configure the environment
+
+Before deploying, update the files in `config/<staging|production>/` for that environment. Values in `app-config.json` (such as `apiUrl`, `webUrl`, and `ogImage`) are written into the built frontend during `prepare-platform`. The matching `app_local.php` and a `.env` file must already exist on the server in `backend/config/`.
+
+### Deploy commands
+
+Run these from your platform repo root (the directory that contains `core/`):
+
+```bash
+# Build and install frontend and backend to staging
+./core/scripts/deploy.sh -t staging -c install -f -b
+
+# Frontend only
+./core/scripts/deploy.sh -t staging -c install -f
+
+# Backend only
+./core/scripts/deploy.sh -t staging -c install -b
+
+# Preview commands without making changes
+./core/scripts/deploy.sh -t staging -c install -f -b --dryrun
+
+# Create a GitHub release (production only, requires a tagged commit on main)
+./core/scripts/deploy.sh -t production -c createrelease
+```
+
+Production installs prompt for confirmation before proceeding. Use `-k` to skip that prompt.
+
+Other useful flags:
+
+- `--backup` — back up `public_html` on the server before installing
+- `-s` — fix ownership and permissions on `public_html` and backups
+- `-i <path>` — override the SSH identity file from `deploy-vars.sh`
+
+Run `./core/scripts/deploy.sh -h` for the full option list.
 
 ## Serving for local testing
 

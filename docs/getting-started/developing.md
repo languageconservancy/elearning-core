@@ -85,7 +85,7 @@ core/frontend/    ──ng serve──►  :4200
 core/backend/     ──sync──►      $WWW_PATH/backend/  (MAMP)
 ```
 
-Mobile is an extra loop: native projects live in `platform/android/` and `platform/ios/`, get copied into `core/frontend/` for builds. See [README.md](README.md) and [.cursor/skills/bootstrap-new-platform/SKILL.md](.cursor/skills/bootstrap-new-platform/SKILL.md).
+Mobile is an extra loop: native projects live in `platform/android/` and `platform/ios/`, get copied into `core/frontend/` for builds. See [README.md](../../README.md) and [.cursor/skills/bootstrap-new-platform/SKILL.md](../../.cursor/skills/bootstrap-new-platform/SKILL.md).
 
 ## Troubleshooting
 
@@ -98,6 +98,7 @@ Mobile is an extra loop: native projects live in `platform/android/` and `platfo
 
 ## More detail
 
-- Core setup (detailed): [README.md](README.md)
-- Social login setup (Facebook, Google, Apple): [frontend/SOCIAL_LOGIN_GUIDE.md](frontend/SOCIAL_LOGIN_GUIDE.md)
-- Daily dev reference (for AI/agents): [.cursor/skills/elearning-daily-dev/SKILL.md](.cursor/skills/elearning-daily-dev/SKILL.md)
+- Core setup (detailed): [README.md](../../README.md)
+- Documentation index: [docs/README.md](../README.md)
+- Social login setup (Facebook, Google, Apple): [frontend/social-login.md](../frontend/social-login.md)
+- Daily dev reference (for AI/agents): [.cursor/skills/elearning-daily-dev/SKILL.md](../../.cursor/skills/elearning-daily-dev/SKILL.md)

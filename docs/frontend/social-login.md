@@ -171,7 +171,7 @@ This writes:
 
 ## Step 3 — Android native configuration
 
-Native projects are version-controlled in `platform/android/` but **built** from `core/frontend/android/`. See [mobile-native-files.md](../.cursor/skills/bootstrap-new-platform/mobile-native-files.md) for the copy workflow.
+Native projects are version-controlled in `platform/android/` but **built** from `core/frontend/android/`. See [mobile-native-files.md](../../.cursor/skills/bootstrap-new-platform/mobile-native-files.md) for the copy workflow.
 
 ```bash
 npm run core copy-android-to-core

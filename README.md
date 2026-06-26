@@ -7,7 +7,9 @@
 This repo contains the core backend, frontend (web, Android, iOS), and build logic for the eLearning platform main code. It is designed as a submodule to be used by each specific eLearning platform, in order to keep those platforms separate.
 This enables easy transfer of ownership of platform-specific code, database, etc., while keep the main code available for everyone to use.
 
-**New developer?** Read [DEVELOPING.md](DEVELOPING.md) and open [elearning-platform.code-workspace](elearning-platform.code-workspace) in Cursor/VS Code. That workspace includes **platform**, **core**, and **frontend** roots — the frontend root keeps ESLint and TypeScript working correctly on Angular files.
+**New developer?** Read [docs/getting-started/developing.md](docs/getting-started/developing.md) and open [elearning-platform.code-workspace](elearning-platform.code-workspace) in Cursor/VS Code. That workspace includes **platform**, **core**, and **frontend** roots — the frontend root keeps ESLint and TypeScript working correctly on Angular files.
+
+**Documentation index:** [docs/README.md](docs/README.md)
 
 ## Technologies
 
@@ -328,7 +330,10 @@ To run the iOS, open Xcode workspace (NOT the project), which is at `core/fronte
   To use this, import the database into your local phpMyAdmin and copy the webroot assets to your www/backend/webroot directory.
 
 - `elearning-platform.code-workspace`
-  Multi-root VS Code/Cursor workspace for platform development. Opens **platform**, **core**, and **frontend** roots so tasks and Angular linting work correctly. See [DEVELOPING.md](DEVELOPING.md).
+  Multi-root VS Code/Cursor workspace for platform development. Opens **platform**, **core**, and **frontend** roots so tasks and Angular linting work correctly. See [docs/getting-started/developing.md](docs/getting-started/developing.md).
+
+- `docs/`
+  Documentation index and guides. Start at [docs/README.md](docs/README.md).
 
 - `README.md`
   This file.

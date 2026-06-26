@@ -185,7 +185,7 @@ npm run core copy-core-ios-to-platform
 3. **Only staging/production auto-sync** — `build:local` and `build:demo` do not run `cap:sync`.
 4. **Open projects under core/frontend** — `node_modules` paths in Gradle/Podfile assume that location.
 5. **Android package vs applicationId** — `MainActivity.java` stays at `org.tlc.elearning`; unique store identity is in `productFlavors.applicationId`.
-6. **Docs may describe unimplemented generators** — `PLATFORM_ASSETS_README.md` mentions generating `strings.xml` and plists; current `generate-config-based-files.js` only generates `environment.ts` and `index.html`. Native files are hand-maintained in `platform/`.
+6. **Docs may describe unimplemented generators** — [platform-assets.md](../../docs/scripts/platform-assets.md) mentions generating `strings.xml` and plists; current `generate-config-based-files.js` only generates `environment.ts` and `index.html`. Native files are hand-maintained in `platform/`.
 7. **Social login needs triple alignment** — `app-config.json` → `environment.ts` → native files (Android flavor `strings.xml`, iOS `Info.plist` URL schemes).
 
 ## Checklist
@@ -205,5 +205,5 @@ Bootstrap progress:
 ## Additional resources
 
 - Full mobile file customization list: [mobile-native-files.md](mobile-native-files.md)
-- Authoritative setup docs: `core/README.md`
-- Social login: `core/frontend/SOCIAL_LOGIN_GUIDE.md`
+- Authoritative setup docs: `core/README.md` and [docs/README.md](../../docs/README.md)
+- Social login: [docs/frontend/social-login.md](../../docs/frontend/social-login.md)

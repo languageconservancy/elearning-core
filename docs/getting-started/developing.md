@@ -40,9 +40,10 @@ Tasks and docs live in core so they stay in sync when you `npm run update-core`.
 
 1. Clone your language repo (`elearning-<app-name>/`) and init the submodule: `npm run init`
 2. Install dependencies: `npm run core install-dependencies`
-3. Set up a local Apache + MySQL stack — see **[local-server-setup.md](local-server-setup.md)** (MAMP or XAMPP, PHP 7.4.33, `scripts/local-dev-vars.sh`, demo DB import)
-4. Run task **eLearning: First-time web setup** (or `copy-demo-assets` then `sync-local-backend`)
-5. For mobile builds: run **eLearning: Sync mobile to core (platform → core)** so `platform/android/` and `platform/ios/` are copied into `core/frontend/` (required after a fresh clone before opening Android Studio or Xcode)
+3. Create language repo var files if missing: `npm run core init-language-repo-vars` (or task **Init language repo vars**) — see [language-repo-vars.md](language-repo-vars.md)
+4. Set up a local Apache + MySQL stack — see **[local-server-setup.md](local-server-setup.md)** (MAMP or XAMPP, PHP 7.4.33, edit `scripts/local-dev-vars.sh`, demo DB import)
+5. Run task **eLearning: First-time web setup** (or `copy-demo-assets` then `sync-local-backend`)
+6. For mobile builds: run **eLearning: Sync mobile to core (platform → core)** so `platform/android/` and `platform/ios/` are copied into `core/frontend/` (required after a fresh clone before opening Android Studio or Xcode)
 
 Then **Terminal → Run Task…** → **eLearning: Start demo dev server**.
 
@@ -111,7 +112,8 @@ Mobile is an extra loop: native projects live in `platform/android/` and `platfo
 
 ## More detail
 
-- Local Apache/MySQL setup (MAMP or XAMPP): [local-server-setup.md](local-server-setup.md)
+- Language repo var files: [language-repo-vars.md](language-repo-vars.md)
+- Local Apache/MySQL setup: [local-server-setup.md](local-server-setup.md)
 - Core overview and npm commands: [README.md](../../README.md)
 - Documentation index: [docs/README.md](../README.md)
 - Social login setup (Facebook, Google, Apple): [frontend/social-login.md](../frontend/social-login.md)

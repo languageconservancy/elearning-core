@@ -18,7 +18,7 @@ Shared backend, frontend (web, Android, iOS), and build tooling for eLearning la
 - [Prerequisites](#prerequisites)
 - [npm commands](#npm-commands)
 - [Build, prepare, and serve](#build-prepare-and-serve)
-- [Secrets (`.env`)](#secrets-env)
+- [Secrets and language repo vars](#secrets-env)
 - [Mobile apps](#mobile-apps)
 - [Repository structure](#repository-structure)
 - [Language repo layout](#language-repo-layout)
@@ -59,8 +59,9 @@ npm run core install-dependencies         # npm, composer, cocoapods
 
 Then follow the getting-started guides:
 
-1. **[Local server setup](docs/getting-started/local-server-setup.md)** — MAMP or XAMPP, `scripts/local-dev-vars.sh`, demo DB import
-2. **[Developing on a platform](docs/getting-started/developing.md)** — first-time web setup task, daily serve/sync workflow
+1. **`npm run core init-language-repo-vars`** — create `scripts/local-dev-vars.sh` / `deploy-vars.sh` from [core/scripts/examples/](scripts/examples/) if missing ([language-repo-vars.md](docs/getting-started/language-repo-vars.md))
+2. **[Local server setup](docs/getting-started/local-server-setup.md)** — MAMP or XAMPP, edit `scripts/local-dev-vars.sh`, demo DB import
+3. **[Developing on a platform](docs/getting-started/developing.md)** — first-time web setup task, daily serve/sync workflow
 
 Typical daily loop once set up:
 
@@ -113,6 +114,7 @@ All commands from the **language repo root** unless noted.
 | `npm run core prepare-platform:<env>` | Copy `platform/assets/` → core, generate `environment.ts` and backend config |
 | `npm run core build:<env>` | Prepare + Angular production build (`demo`, `local`, `staging`, `production`) |
 | `npm run core serve:<env>` | Prepare + dev server at `http://localhost:4200` (`demo` or `local`) |
+| `npm run core init-language-repo-vars` | Create `scripts/local-dev-vars.sh` and `scripts/deploy-vars.sh` from templates if missing ([language-repo-vars.md](docs/getting-started/language-repo-vars.md)) |
 | `npm run core sync-local-backend` | Push `core/backend/` → `$ELEARNING_WWW_PATH/backend/` ([local-server-setup.md](docs/getting-started/local-server-setup.md)) |
 | `npm run core copy-demo-assets` | Copy demo lesson media into `core/backend/webroot/` ([demo/README.md](docs/demo/README.md)) |
 
@@ -122,13 +124,17 @@ Asset copy order (defaults, then platform overrides): [developing.md — Archite
 
 Platform asset and template details: [docs/scripts/platform-assets.md](docs/scripts/platform-assets.md).
 
-## Secrets (`.env`)
+## Secrets and language repo vars
+
+**Guide:** [language-repo-vars.md](docs/getting-started/language-repo-vars.md) — templates in `core/scripts/examples/`, your copies in language repo `scripts/`.
 
 Backend database credentials and secrets live in `platform/config/<env>/.env`
 
 See `core/backend/config/.env.default` for available keys. Never commit production secrets to a public repo.
 
-Deploy server paths and SSH targets (non-secret) live in the language repo's `scripts/deploy-vars.sh`.
+Deploy server paths and SSH targets (non-secret) live in the language repo's `scripts/deploy-vars.sh`. Templates: `core/scripts/examples/deploy-vars.example.sh`. See [language-repo-vars.md](docs/getting-started/language-repo-vars.md).
+
+Local Apache document root: `scripts/local-dev-vars.sh` (gitignored). Template: `core/scripts/examples/local-dev-vars.example.sh`.
 
 ## Mobile apps
 
@@ -149,7 +155,7 @@ After a fresh clone, run VS Code task **eLearning: Sync mobile to core (platform
 |------|---------|
 | `backend/` | CakePHP API (`/api/*`) and admin panel (`/admin/*`) |
 | `frontend/` | Angular app; Capacitor `android/` and `ios/` live here during builds |
-| `scripts/` | Build/deploy tooling — asset copy, config generation, `deploy.sh`, `sync-local-backend.sh` |
+| `scripts/` | Build/deploy tooling — asset copy, config generation, `deploy.sh`, `sync-local-backend.sh`, `examples/` (var templates) |
 | `demo/` | Demo database SQL, webroot media, MAMP `my.cnf` — [demo/README.md](docs/demo/README.md) |
 | `docs/` | Documentation index — [docs/README.md](docs/README.md) |
 | `elearning-platform.code-workspace` | Multi-root VS Code workspace — [developing.md](docs/getting-started/developing.md#open-the-workspace-required-for-tasks-and-linting) |
@@ -172,9 +178,8 @@ elearning-<app-name>/
 │   ├── android/
 │   └── ios/
 ├── scripts/
-│   ├── deploy-vars.sh       # deploy targets (version controlled)
-│   ├── local-dev-vars.sh    # local Apache root (gitignored; see .example.sh)
-│   └── local-dev-vars.example.sh
+│   ├── deploy-vars.sh       # deploy targets (version controlled; from core/scripts/examples/)
+│   └── local-dev-vars.sh    # local Apache root (gitignored; from core/scripts/examples/)
 └── package.json             # "core": "node scripts/proxy.js"
 ```
 

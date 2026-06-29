@@ -395,8 +395,8 @@ show_usage() {
 echo "
 Description:
     Installation script for installing the platform and copying it to the server.
-    All variables are set in the ../../scripts/deploy-vars.sh file, or you can set them manually. Just make
-    sure ../../scripts/deploy-vars.sh doesn't override the correct values.
+    All variables are set in the language repo scripts/deploy-vars.sh file (template: core/scripts/examples/deploy-vars.example.sh).
+    Run npm run core init-language-repo-vars to create it from the template if missing.
     To install the platform (both frontend and backend):
         $ ./deploy.sh -t staging -c install -f -b
     To create a GitHub release for the platform:

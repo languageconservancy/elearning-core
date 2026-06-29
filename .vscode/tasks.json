@@ -177,6 +177,18 @@
       "detail": "Push core/frontend/ios → platform/ios (rsync --delete)"
     },
     {
+      "label": "eLearning: Init language repo vars",
+      "type": "shell",
+      "command": "npm run init-language-repo-vars",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      },
+      "detail": "Create scripts/local-dev-vars.sh and scripts/deploy-vars.sh from core/scripts/examples/ if missing"
+    },
+    {
       "label": "eLearning: Init submodule (first clone)",
       "type": "shell",
       "command": "npm run init",

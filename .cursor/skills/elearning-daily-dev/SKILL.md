@@ -51,7 +51,7 @@ Use **demo** for everyday local testing, not `local`.
 ### Start of session (once per machine setup)
 
 ```bash
-# MAMP running, scripts/local-dev-vars.sh set, demo DB imported into phpMyAdmin as elearning_demo_db
+# MAMP running, scripts/local-dev-vars.sh set (npm run core init-language-repo-vars), demo DB imported
 npm run core copy-demo-assets        # demo webroot → core/backend/webroot
 npm run core sync-local-backend      # core/backend → $ELEARNING_WWW_PATH/backend/
 ```

@@ -21,11 +21,13 @@ SERVER_DIR="${ELEARNING_WWW_PATH:-${WWW_PATH}}"
 
 if [ -z "${SERVER_DIR}" ]; then
     echo "❗Error: ELEARNING_WWW_PATH is not set."
-    echo "Copy scripts/local-dev-vars.example.sh to scripts/local-dev-vars.sh in your language repo"
+    echo "Run: npm run core init-language-repo-vars"
+    echo "Or copy core/scripts/examples/local-dev-vars.example.sh to scripts/local-dev-vars.sh in your language repo"
     echo "and set ELEARNING_WWW_PATH to your Apache document root (parent folder of backend/)."
     exit 1
 fi
 
+# The files to rsync are the ones that are needed to run the backend
 BACKEND_FILES_TO_RSYNC="config info src templates webroot index.php info.php .htaccess web.config vendor"
 
 echo -e "Rsyncing the following files\nfrom ${BACKEND_DIR} to ${SERVER_DIR}:\n${BACKEND_FILES_TO_RSYNC}"

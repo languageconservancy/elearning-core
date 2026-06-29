@@ -52,15 +52,25 @@ If you have an extra folder, like `elearning` in `htdocs`, then it would look li
 
 ### Local dev variables
 
-`sync-local-backend` reads **`ELEARNING_WWW_PATH`** from `scripts/local-dev-vars.sh` at the language repo root (same folder as `deploy-vars.sh`). The sync script sources this file automatically — no shell profile setup required.
+`sync-local-backend` reads **`ELEARNING_WWW_PATH`** from `scripts/local-dev-vars.sh` at the language repo root. The sync script sources this file automatically — no shell profile setup required.
 
-First-time setup — from your language repo root (`elearning-<app-name>/`):
+**Templates** live in `core/scripts/examples/`. **Your copy** is `scripts/local-dev-vars.sh` (gitignored in the language repo).
+
+Create it if missing:
 
 ```bash
-cp scripts/local-dev-vars.example.sh scripts/local-dev-vars.sh
+npm run core init-language-repo-vars
 ```
 
-Edit `scripts/local-dev-vars.sh` and set `ELEARNING_WWW_PATH` to your Apache document root. `local-dev-vars.sh` is gitignored; `local-dev-vars.example.sh` is committed as a template.
+Or copy manually from the language repo root:
+
+```bash
+cp core/scripts/examples/local-dev-vars.example.sh scripts/local-dev-vars.sh
+```
+
+Edit `scripts/local-dev-vars.sh` and set `ELEARNING_WWW_PATH` to your Apache document root.
+
+Full reference: [language-repo-vars.md](language-repo-vars.md).
 
 **MAMP (macOS):**
 
@@ -226,7 +236,7 @@ Restart Apache from the XAMPP control panel.
 
 Append the `[mysqld]` section from `core/demo/mamp/my.cnf` to your MySQL config file (`my.ini` on Windows, `my.cnf` on Mac/Linux). Restart MySQL.
 
-Set `ELEARNING_WWW_PATH` in `scripts/local-dev-vars.sh` using the document root from the table in [Local dev variables](#local-dev-variables) above.
+Set `ELEARNING_WWW_PATH` in `scripts/local-dev-vars.sh` — see [Local dev variables](#local-dev-variables) and [language-repo-vars.md](language-repo-vars.md).
 
 ### 7. PHP 7.4 in terminal (optional)
 
@@ -285,7 +295,7 @@ Demo DB details: [demo/README.md](../demo/README.md).
 | Problem                        | Things to check                                                                                                                   |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Port 80 in use**             | Another web server (IIS, built-in Apache, Skype). Stop it or reconfigure.                                                         |
-| **`ELEARNING_WWW_PATH` unset** | Copy `scripts/local-dev-vars.example.sh` to `scripts/local-dev-vars.sh` and set your Apache document root. |
+| **`ELEARNING_WWW_PATH` unset** | Run `npm run core init-language-repo-vars` or copy `core/scripts/examples/local-dev-vars.example.sh` → `scripts/local-dev-vars.sh` |
 | **API 404**                    | MAMP/XAMPP running? Ran `sync-local-backend`? Document root is **htdocs**, not **htdocs/backend**?                                |
 | **Database connection errors** | Demo DB imported? MySQL running on 3306? Check `platform/config/demo/.env` and `app_local.php`.                                   |
 | **500 / rewrite errors**       | `mod_rewrite` enabled? `AllowOverride All` on htdocs (XAMPP)?                                                                     |

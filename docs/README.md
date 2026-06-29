@@ -8,6 +8,7 @@ Index for eLearning Core documentation. The [main README](../README.md) is the G
 |-----|-------------|
 | [Developing on a platform](getting-started/developing.md) | Daily workflow, VS Code workspace, tasks, and troubleshooting |
 | [Local server setup](getting-started/local-server-setup.md) | MAMP or XAMPP — Apache, PHP 7.4, MySQL, document root, `ELEARNING_WWW_PATH` |
+| [Language repo vars](getting-started/language-repo-vars.md) | `local-dev-vars.sh`, `deploy-vars.sh` — templates in core, copies in language repo |
 | [Main README](../README.md) | Overview, quick start, npm commands, repo structure |
 
 ## Backend
@@ -51,3 +52,4 @@ Cursor skills with workflow reference (not end-user docs):
 
 - [Daily development](../.cursor/skills/elearning-daily-dev/SKILL.md)
 - [Bootstrap new platform](../.cursor/skills/bootstrap-new-platform/SKILL.md)
+- [Init language repo vars](../.cursor/skills/init-language-repo-vars/SKILL.md)

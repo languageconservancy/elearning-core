@@ -30,7 +30,7 @@
       "label": "eLearning: Apply backend config changes (demo)",
       "dependsOn": [
         "eLearning: Prepare platform (demo)",
-        "eLearning: Sync backend to MAMP"
+        "eLearning: Sync backend to local server"
       ],
       "dependsOrder": "sequence",
       "problemMatcher": [],
@@ -40,11 +40,11 @@
       "label": "eLearning: First-time web setup",
       "dependsOn": [
         "eLearning: Copy demo assets to backend",
-        "eLearning: Sync backend to MAMP"
+        "eLearning: Sync backend to local server"
       ],
       "dependsOrder": "sequence",
       "problemMatcher": [],
-      "detail": "Run once after clone: demo webroot + backend on MAMP"
+      "detail": "Run once after clone: demo webroot + backend on local server"
     },
     {
       "label": "eLearning: Prepare platform (demo)",
@@ -58,7 +58,7 @@
       "detail": "Copy platform assets and generate config for demo"
     },
     {
-      "label": "eLearning: Sync backend to MAMP",
+      "label": "eLearning: Sync backend to local server",
       "type": "shell",
       "command": "npm run sync-local-backend",
       "problemMatcher": [],
@@ -66,7 +66,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "detail": "Push core/backend to $WWW_PATH — run after PHP or backend config changes"
+      "detail": "Push core/backend to $ELEARNING_WWW_PATH — run after PHP or backend config changes (reads scripts/local-dev-vars.sh)"
     },
     {
       "label": "eLearning: Copy demo assets to backend",
@@ -111,6 +111,38 @@
         "panel": "dedicated"
       },
       "detail": "Production build + cap:sync"
+    },
+    {
+      "label": "eLearning: Sync mobile to core (platform → core)",
+      "dependsOn": [
+        "eLearning: Sync Android to core (platform → core)",
+        "eLearning: Sync iOS to core (platform → core)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "detail": "After clone or when platform/android|ios changed — rsync version-controlled projects into core/frontend for builds"
+    },
+    {
+      "label": "eLearning: Sync Android to core (platform → core)",
+      "type": "shell",
+      "command": "npm run copy-android-to-core",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Pull platform/android → core/frontend/android (rsync --delete)"
+    },
+    {
+      "label": "eLearning: Sync iOS to core (platform → core)",
+      "type": "shell",
+      "command": "npm run copy-ios-to-core",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "Pull platform/ios → core/frontend/ios (rsync --delete)"
     },
     {
       "label": "eLearning: Sync mobile to platform (core → platform)",

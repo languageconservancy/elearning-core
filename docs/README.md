@@ -1,13 +1,14 @@
 # Documentation
 
-Index for eLearning Core documentation. The [main README](../README.md) at the repo root covers setup, build commands, and project structure.
+Index for eLearning Core documentation. The [main README](../README.md) is the GitHub landing page — overview, quick start, and links into the guides below.
 
 ## Getting started
 
 | Doc | Description |
 |-----|-------------|
 | [Developing on a platform](getting-started/developing.md) | Daily workflow, VS Code workspace, tasks, and troubleshooting |
-| [Main README](../README.md) | First-time setup, MAMP, demo database, build/serve, mobile apps |
+| [Local server setup](getting-started/local-server-setup.md) | MAMP or XAMPP — Apache, PHP 7.4, MySQL, document root, `ELEARNING_WWW_PATH` |
+| [Main README](../README.md) | Overview, quick start, npm commands, repo structure |
 
 ## Backend
 

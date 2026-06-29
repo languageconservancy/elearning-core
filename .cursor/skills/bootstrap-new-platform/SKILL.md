@@ -84,10 +84,10 @@ Key `app-config.json` fields for mobile:
 
 ## Phase 3 — Local web dev
 
-1. Set server root env var (MAMP example):
+1. Set local dev path in `scripts/local-dev-vars.sh` (language repo root):
    ```bash
-   echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.bash_profile
-   source ~/.bash_profile
+   cp scripts/local-dev-vars.example.sh scripts/local-dev-vars.sh
+   # Edit ELEARNING_WWW_PATH — MAMP default: /Applications/MAMP/htdocs
    ```
 2. Import `core/demo/elearning_demo_db.sql` into phpMyAdmin.
 3. Copy demo webroot assets:
@@ -205,5 +205,5 @@ Bootstrap progress:
 ## Additional resources
 
 - Full mobile file customization list: [mobile-native-files.md](mobile-native-files.md)
-- Authoritative setup docs: `core/README.md` and [docs/README.md](../../docs/README.md)
+- Authoritative setup docs: [developing.md](../../docs/getting-started/developing.md), [local-server-setup.md](../../docs/getting-started/local-server-setup.md), [docs/README.md](../../docs/README.md)
 - Social login: [docs/frontend/social-login.md](../../docs/frontend/social-login.md)

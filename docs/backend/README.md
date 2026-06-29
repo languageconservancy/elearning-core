@@ -1,14 +1,14 @@
 Description
 ===
-This repo contains two features in a single project.
+This backend package contains two features in a single project.
 1. An admin panel interface allowing database manipulation.
-1. An API for the front-end endpoints.
+1. An API for the frontend endpoints.
 
 Configuration
 ===
 
 ### Config/Language Selection
-This repo is used in the E-Learning Platform, which supports multiple languages/sites.
+This package is used in the eLearning Platform core submodule, which supports multiple languages/sites.
 
 Run this command and follow the prompts to select the desired config in ./config/ and have it copied to app.php.
 * `composer run set-config`

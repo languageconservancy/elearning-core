@@ -1,6 +1,6 @@
 # demo
 
-Demo assets and database file for testing frontend lessons and exercises consistently and in a maintainable way.
+Demo assets and database file for testing frontend lessons and exercises consistently and in a maintainable way. The assets and database are version-controlled in `core` so that any eLearning platform project can use them. They should be updated only to add new test cases.
 
 ## Usage
 

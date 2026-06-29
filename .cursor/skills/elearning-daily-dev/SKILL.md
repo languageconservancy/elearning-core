@@ -51,9 +51,9 @@ Use **demo** for everyday local testing, not `local`.
 ### Start of session (once per machine setup)
 
 ```bash
-# MAMP running, WWW_PATH set, demo DB imported into phpMyAdmin as elearning_demo_db
+# MAMP running, scripts/local-dev-vars.sh set, demo DB imported into phpMyAdmin as elearning_demo_db
 npm run core copy-demo-assets        # demo webroot → core/backend/webroot
-npm run core sync-local-backend      # core/backend → $WWW_PATH/backend/
+npm run core sync-local-backend      # core/backend → $ELEARNING_WWW_PATH/backend/
 ```
 
 Create `platform/config/demo/.env` locally if needed (gitignored; copied to backend on build/serve).
@@ -86,7 +86,7 @@ Run after changing:
 - `platform/config/demo/app_local.php` (DB name, AWS, teacher portal settings)
 - `platform/config/demo/.env` (secrets; gitignored, local only)
 
-`prepare-platform:demo` copies backend config into `core/backend/config/`. `sync-local-backend` pushes that to `$WWW_PATH/backend/` on MAMP. Serving alone does not update the running backend.
+`prepare-platform:demo` copies backend config into `core/backend/config/`. `sync-local-backend` pushes that to `$ELEARNING_WWW_PATH/backend/` on MAMP. Serving alone does not update the running backend.
 
 ### Verifying a production-like frontend build
 
@@ -104,7 +104,7 @@ After editing files under `core/backend/`:
 npm run core sync-local-backend
 ```
 
-This rsyncs backend to `$WWW_PATH/backend/` and clears CakePHP caches. Does not copy `.env` (keeps server secrets separate).
+This rsyncs backend to `$ELEARNING_WWW_PATH/backend/` and clears CakePHP caches. Does not copy `.env` (keeps server secrets separate).
 
 ## Environment cheat sheet
 

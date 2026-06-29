@@ -4,507 +4,207 @@
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MPL-2.0)
 ![GitHub contributors](https://img.shields.io/github/contributors/languageconservancy/elearning-core?style=flat-square)
 
-This repo contains the core backend, frontend (web, Android, iOS), and build logic for the eLearning platform main code. It is designed as a submodule to be used by each specific eLearning platform, in order to keep those platforms separate.
-This enables easy transfer of ownership of platform-specific code, database, etc., while keep the main code available for everyone to use.
+Shared backend, frontend (web, Android, iOS), and build tooling for eLearning language apps. Each language project adds this repo as a **git submodule** at `core/` so platform-specific assets, config, and mobile projects stay in the language repo while shared code stays in one place.
+
+**New developer?** Start with [docs/getting-started/developing.md](docs/getting-started/developing.md) and open [elearning-platform.code-workspace](elearning-platform.code-workspace) in Cursor/VS Code (loads the language repo, **core**, and **frontend** roots for tasks and Angular linting).
+
+**Full documentation index:** [docs/README.md](docs/README.md)
+
+## Table of contents
+
+- [Technologies](#technologies)
+- [How the repos fit together](#how-the-repos-fit-together)
+- [Quick start](#quick-start)
+- [Prerequisites](#prerequisites)
+- [npm commands](#npm-commands)
+- [Build, prepare, and serve](#build-prepare-and-serve)
+- [Secrets (`.env`)](#secrets-env)
+- [Mobile apps](#mobile-apps)
+- [Repository structure](#repository-structure)
+- [Language repo layout](#language-repo-layout)
+- [Social login](#social-login)
+- [Adding this repo as a submodule](#adding-this-repo-as-a-submodule)
+- [License](#license)
 
 ## Technologies
 
-See [package.json](https://github.com/languageconservancy/elearning-core/blob/main/frontend/package.json) and [composer.json](https://github.com/languageconservancy/elearning-core/blob/main/backend/composer.json) for current versions.
+See [frontend/package.json](frontend/package.json) and [backend/composer.json](backend/composer.json) for current versions.
 
 - **Frontend**: Angular (TypeScript)
 - **Backend**: CakePHP (PHP)
-- **Mobile Wrapper**: CapacitorJS
+- **Mobile**: CapacitorJS
 - **Styling**: Bootstrap
 - **Tooling**: Node.js, npm, Composer, Prettier
 
-## Overview
+## How the repos fit together
 
-The `elearning-core` submodule provides essential functionality, configuration, and scripts that support the frontend and deployment processes.
-Platform repos, which add the `elearning-core` repo as a submodule, provide the platform specific assets and configuration.
+Every language app repo (e.g. `elearning-nuuwayga/`) has three layers:
+
+| Layer | Path | Contents |
+|-------|------|----------|
+| **Language repo** | `elearning-<app-name>/` | `package.json`, `npm run core`, `scripts/deploy-vars.sh`, `scripts/local-dev-vars.sh` |
+| **Platform-specific files** | `elearning-<app-name>/platform/` | Branding, config, version-controlled Android/iOS projects |
+| **Core submodule** | `elearning-<app-name>/core/` | This repo — shared Angular app, CakePHP API, build scripts |
+
+Day-to-day workflow, VS Code tasks, and architecture diagrams: **[docs/getting-started/developing.md](docs/getting-started/developing.md)**.
+
+## Quick start
+
+From your **language repo root** after cloning:
+
+```bash
+npm run init                              # init core submodule
+npm run core install-dependencies         # npm, composer, cocoapods
+```
+
+Then follow the getting-started guides:
+
+1. **[Local server setup](docs/getting-started/local-server-setup.md)** — MAMP or XAMPP, `scripts/local-dev-vars.sh`, demo DB import
+2. **[Developing on a platform](docs/getting-started/developing.md)** — first-time web setup task, daily serve/sync workflow
+
+Typical daily loop once set up:
+
+```bash
+npm run core serve:demo                   # frontend at http://localhost:4200
+# API at http://localhost/backend/api/ — requires local server + sync-local-backend
+```
+
+Use VS Code task **eLearning: Start demo dev server** when the workspace is open. See [developing.md](docs/getting-started/developing.md) for the full task list.
 
 ## Prerequisites
 
-### Platform repo with submodule
+### Language repo with submodule
 
-- If you haven't already, create your platform repository by following the instruction in the [elearning-template repo](https://github.com/languageconservancy/elearning-template).
-- Before starting the instructions below, you should have your platform repo cloned to your local computer and the `core` submodule is pulled in.
+Create a language repo by forking the [elearning-template](https://github.com/languageconservancy/elearning-template) repo or clone an existing one. The `core/` submodule must be initialized (`npm run init`).
 
-### Local Apache Server
+### GitHub personal access token (Composer)
 
-- You must have a local Apache server to run this project locally.
-- This README assume the use of MAMP.
+`composer install` may prompt for a GitHub token when pulling a private dependency:
 
-#### Installing & Setting Up MAMP
-
-1. Install MAMP from [https://www.mamp.info/en/mac/](https://www.mamp.info/en/mac/). As of January 2026 we are on v7.3.
-1. In MAMP set the following paramters:
-
-    - PHP version: v7.4.33
-    - Ports: Apache: 80, Nginx: 80, MySQL: 3306
-    - MySQL server: v5.7.44
-    - PHP-Cache: OPcache
-
-1. In /Application/MAMP/conf/apache/httpd.conf, make sure this line is uncommented so plugins load properly in the backend.
-    - `LoadModule rewrite_module modules/mod_rewrite.so`
-
-1. Set `sql_mode`. This is to avoid having to change it in phpMyAdmin every time the server is restarted.
-
-    - Copy `core/demo/mamp/my.cnf` to `/Applications/MAMP/conf/`
-    - The contents are:
-```bash
-[mysqld]
-sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
-```
-
-1. Start the server
-    - Click the **Start** button at the top-left of the MAMP window.
-
-### Add Path to Server Root as Environment Variable
-
-**Set the environment variable for your local web server root directory and source it**:
-
-This example points to where MAMP places its web server root. Run one of the following to add the `WWW_PATH` used in the `npm run core sync-local-backend` script.
-
-   For bash shells on Mac
-
-   ```bash
-   echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.bash_profile
-   source ~/.bash_profile
-   ```
-
-   For zsh shells on Mac
-
-   ```bash
-   echo "export WWW_PATH='/Applications/MAMP/htdocs'" >> ~/.zshenv
-   source ~/.zshenv
-   ```
-
-### Demo database
-
-**Open phpMyAdmin**
-
-- With MAMP server started, open **phpMyAdmin** by going to `http://localhost/phpmyadmin`
-
-**Create new elearning_demo_db database**
-- In the left side menu, click **New**
-- Database name: **elearning_demo_db**
-- Collation type: **utf8mb4_general_ci**
-
-**Import the database**
-- Select the newly crated database in the left menu
-- Select the **Import** tab at the top
-- Select **Choose File** and select the database located at `core/demo/elearning_demo_db.sql`
-- You can leave all the other settings alone
-- Click the **Import** button
-
-### Github Personal Access Token
-
-#### Create a Personal Access Token in Github
-
-  - This is required because we are pulling a private repo using composer, since the public one has a bug.
-  1. On github.com go to your user settings (Avatar icon in top right -> Settings)
-  1. Scroll to very bottom of side menu and click on **Developer Settings**
-  1. Under **Personal Access Tokens** dropdown, select **Tokens (classic)**
-  1. Click the dropdown **Generate new token** and select
-  1. Make sure only **public_repo** under **repo** is checked. **repo** should not be checked.
-  1. Create the token and save it somewhere safe. You won't be able to access it again.
+1. GitHub → Settings → Developer settings → Personal access tokens → **Tokens (classic)**
+2. Generate a token with only **public_repo** checked (not full **repo**) in the Read permissions section.
+3. Paste when Composer prompts during `npm run core install-dependencies`
 
 ### Install dependencies
 
-Run to following command to from the parent repo to install the following:
-- frontend NPM packages
-- backend composer packages (this is where you'll paste your Personal Access Token when prompted)
-- cocoapods
+From the language repo root:
 
 ```bash
 npm run core install-dependencies
 ```
 
-### Copy demo assets to core/backend/webroot
+Installs frontend npm packages, backend Composer packages, and CocoaPods (macOS).
 
-```bash
-npm run core copy-demo-assets
-```
+## npm commands
 
-## Prepare Environment
+| Where you are | How to run core scripts |
+|---------------|-------------------------|
+| Language repo root (`elearning-<app-name>/`) | `npm run core <command>` |
+| This repo (`core/`) | `npm run <command>` |
 
-### Notes on running `npm` commands
+The language repo proxies through `scripts/proxy.js`. VS Code tasks run from the **core** root directly.
 
-- If you're in your platform directory, you'll run `npm run core` ...
-- If you're in the core directory, you'll just run `npm run` ...
+## Build, prepare, and serve
 
-The following instructions assume you're in your platform directory, just above the core submodule.
+All commands from the **language repo root** unless noted.
 
-### Prepare Platform (demo)
+| Command | Purpose |
+|---------|---------|
+| `npm run core prepare-platform:<env>` | Copy `platform/assets/` → core, generate `environment.ts` and backend config |
+| `npm run core build:<env>` | Prepare + Angular production build (`demo`, `local`, `staging`, `production`) |
+| `npm run core serve:<env>` | Prepare + dev server at `http://localhost:4200` (`demo` or `local`) |
+| `npm run core sync-local-backend` | Push `core/backend/` → `$ELEARNING_WWW_PATH/backend/` ([local-server-setup.md](docs/getting-started/local-server-setup.md)) |
+| `npm run core copy-demo-assets` | Copy demo lesson media into `core/backend/webroot/` ([demo/README.md](docs/demo/README.md)) |
 
-Run this command so that `environment.ts` is built, which the next step requires.
+**Which command when?** See the tables in [developing.md](docs/getting-started/developing.md#when-you-change-something).
 
-```bash
-npm run core prepare-platform:demo
-```
+Asset copy order (defaults, then platform overrides): [developing.md — Architecture](docs/getting-started/developing.md#architecture-cheat-sheet).
 
-## Build the Web-App
+Platform asset and template details: [docs/scripts/platform-assets.md](docs/scripts/platform-assets.md).
 
-### Build the demo web-app
+## Secrets (`.env`)
 
-This will build the Angular web-app and sync the iOS and Android projects if they exist.
+Backend database credentials and secrets live in `platform/config/<env>/.env`
 
-```bash
-npm run core build:demo
-```
+See `core/backend/config/.env.default` for available keys. Never commit production secrets to a public repo.
 
-## .env file
+Deploy server paths and SSH targets (non-secret) live in the language repo's `scripts/deploy-vars.sh`.
 
-A .env file is required for database and secrets access by the backend.
+## Mobile apps
 
-This file must live on the server (local or production) in `backend/config/`.
-A default file exists at `core/backend/config/env.default`.
+Capacitor projects are **built** under `core/frontend/` but **version-controlled** in `platform/android/` and `platform/ios/`. Copy scripts keep the two in sync:
 
-Where you store this file or the info in it is up to you. Just make sure the staging and production version are secure.
+| Direction | Command |
+|-----------|---------|
+| platform → core (before build / open IDE) | `npm run core copy-android-to-core` / `copy-ios-to-core` |
+| core → platform (after IDE edits, to commit) | `npm run core copy-core-android-to-platform` / `copy-core-ios-to-platform` |
 
-## Serving the demo
+First-time Capacitor setup, native file customization, and release builds: [.cursor/skills/bootstrap-new-platform/SKILL.md](.cursor/skills/bootstrap-new-platform/SKILL.md) and [mobile-native-files.md](.cursor/skills/bootstrap-new-platform/mobile-native-files.md).
 
-To serve the demo web-app you'll need to make sure the backend is copied to the server root, and then serve the Angular app:
+After a fresh clone, run VS Code task **eLearning: Sync mobile to core (platform → core)** before opening Android Studio or Xcode.
 
-### Copy repo backend to server root
+## Repository structure
 
-This will copy the core/backend files in your sandbox to the server root at `$WWW_PATH/backend/`
+| Path | Purpose |
+|------|---------|
+| `backend/` | CakePHP API (`/api/*`) and admin panel (`/admin/*`) |
+| `frontend/` | Angular app; Capacitor `android/` and `ios/` live here during builds |
+| `scripts/` | Build/deploy tooling — asset copy, config generation, `deploy.sh`, `sync-local-backend.sh` |
+| `demo/` | Demo database SQL, webroot media, MAMP `my.cnf` — [demo/README.md](docs/demo/README.md) |
+| `docs/` | Documentation index — [docs/README.md](docs/README.md) |
+| `elearning-platform.code-workspace` | Multi-root VS Code workspace — [developing.md](docs/getting-started/developing.md#open-the-workspace-required-for-tasks-and-linting) |
+| `package.json` | Core npm scripts (invoked via `npm run core` from the language repo) |
 
-```bash
-npm run core sync-local-backend
-```
+## Language repo layout
 
-### Serve
-
-Build and serve the app. The default url is `localhost:4200`
-
-```bash
-npm run core serve:demo
-```
-
-## Android & iOS Apps
-
-### Add Android & iOS Projects
-
-If you need to build Android and iOS apps, add the projects using CapacitorJS.
-These command need to be run after preparing the platform, so that `environment.ts` is already generated (See previous step).
-
-```bash
-npm run core cap:add-android
-npm run core cap:add-ios
-```
-
-### Version control of Mobile Apps
-
-The Android and iOS projects must be built inside the core/frontend directory, but can't be version-controlled there, because that's a submodule and is platform-agnostic.
-
-Two pairs of NPM scripts exist to solve this:
-
-#### Update your version-controlled Android app from the one in `core/frontend/android`
-
-```bash
-npm run core copy-core-android-to-platform
-```
-
-#### Update your version-controlled iOS project from the one in `core/frontend/ios`
-
-```bash
-npm run core copy-core-ios-to-platform
-```
-
-#### Update the buildable Android project from your version-controlled one
-
-```bash
-npm run core copy-android-to-core
-```
-
-#### Update the buildable iOS project from your version-controlled one
-
-```bash
-npm run core copy-ios-to-core
-```
-
-## Syncing the Mobile Apps
-
-If the web-app is built but your need to sync it to the mobile app projects again, you can run the following command:
-
-```bash
-npm run core cap:sync
-```
-
-You should make to the apps are synced before building/running the apps in Android Studio or Xcode.
-
-### Building and running the Android app
-
-You must open and build/run the Android app using Android Studio.
-
-Any time you update the web-app, you need to rebuild so the build web-app in the Android folder is updated.
-
-### Building and running the iOS app
-
-You must open and build/run the iOS app using Xcode.
-
-Any time you update the web-app, you need to rebuild so the build web-app in the iOS folder is updated.
-
-### Running the Android app on a physical device
-
-To run the staging or production Android app on your physical Android device, you'll need to create a signed APK and transfer it to your device.
-
-In Android Studio:
-
-1. **Build** -> **Generate Signed App Bundle or APK**
-1. Select **APK** in the dialog window and click **Next**
-1. Under **Key store path**, click **Choose existing...** to find your staging keystore.
-1. Fill in **Key store password**, **Key alias**, and **Key password**
-1. Click **Next**
-
-#### Ensure your have ADB (Android Debugger command-line tool)
-
-You can install ADB via Android Studio or Homebrew
-
-**Android Studio:**
-
-1. **Android Studio** -> **Settings...**
-1. **Languages & Frameworks** -> **Android SKD**
-1. Select the **SDK Tools** tab
-1. Make sure the following lines are checked:
-    - Android SDK Build-Tools
-    - Android SDK Command-line Tools (latest)
-    - Android SDK Platform-Tools
-1. Click **Apply**
-
-In the terminal, navigate to where `adb` is:
-
-```bash
-cd ~/Library/Android/sdk/platform-tools/
-```
-
-#### Transfer signed APK to device
-
-**Check existing devices**
-
-```bash
-./adb devices
-```
-
-**Transfer APK to device**
-
-```bash
-./adb -s <device_id> install <path-to-apk>
-```
-
-### Running the iOS app
-
-To run the iOS, open Xcode workspace (NOT the project), which is at `core/frontend/ios/App/App.xcworkspace/`
-
-1. In the top bar, select the production or staging app, and the device or simulator to run on
-1. Click the Run icon at the top-left
-
-## Structure
-
-- `backend/`
-  Contains the CakePHP backend Application Programming Interface (API) and Admin panel user interface.
-
-  - API includes two prefixes
-    - `/api/*`: used by the web, Android, and iOS apps used by general users.
-    - `/admin/*`: used by the Admin panel web interface used by curriculum developers and admins.
-
-- `frontend/`
-  Contains the Angular frontend application source code and assets. This is where the ios and android projects are placed by Capacitor.
-
-- `scripts/`
-  Includes build scripts, template generators, and utilities for managing the frontend and deployment.
-
-- `demo/`
-  A pre-filled database and assets, meant to include all the various lesson and exercise types, for thorough manual testing via the frontend apps. New exercises and lessons that confirm bugfixes will be added to this database.
-  To use this, import the database into your local phpMyAdmin and copy the webroot assets to your www/backend/webroot directory.
-
-- `README.md`
-  This file.
-
-- `LICENSE`
-  Terms of use of this repository.
-
-- `package.json`
-  NPM packages and scripts. From the project repo, you can run `npm run core <command>` if it contains the `scripts/proxy.js` script and its `package.json` file includes the script `"core": "node scripts/proxy.js"`.
-
-## Incorporating this repo as a submodule
-
-This submodule is typically included as a Git submodule in the main repository. To initialize and update submodules, run:
-
-`git submodule add git@github.com:languageconservancy/elearning-core.git core`
-
-## Preparing your project
-
-Your project will contain the **assets** and **configuration** for each environment that you need. Not all environments are required. A complete project setup looks like this:
-
-#### High-level structure
+A complete language repo typically looks like:
 
 ```text
-platform/
-├── core/   # elearning-core submodule
-├── assets/ # platform-specific assets (used as or replace defaults)
-├── config/ # platform-specific configuration (used to generate files from templates)
-├── package.json # platform project manifest
-└── README.md # platform readme
+elearning-<app-name>/
+├── core/                    # this submodule
+├── platform/
+│   ├── assets/              # branding (overrides core default-assets)
+│   ├── config/
+│   │   ├── demo/
+│   │   ├── local/
+│   │   ├── staging/
+│   │   └── production/
+│   ├── android/
+│   └── ios/
+├── scripts/
+│   ├── deploy-vars.sh       # deploy targets (version controlled)
+│   ├── local-dev-vars.sh    # local Apache root (gitignored; see .example.sh)
+│   └── local-dev-vars.example.sh
+└── package.json             # "core": "node scripts/proxy.js"
 ```
 
-#### Detailed structure
+### What goes where
 
-```text
-platform/
-├── core/ # elearning-core submodule
-├── assets/
-│   ├── fonts/
-│   ├── images/ # UI image overrides
-│   ├── keyboard/
-│   │   └── keyboard.json # keyboard/chars config
-│   ├── scss/
-│   │   └── _theme.scss # color theme override
-│   ├── translations/
-│   │   ├── translations-en.json # English reference
-│   │   └── translations.json # translations for popups
-│   └── favicon.ico # favorite icon
-├── config/
-│   ├── demo
-│   │   ├── app_local.php
-│   │   └── app-config.json
-│   ├── local
-│   │   ├── app_local.php
-│   │   └── app-config.json
-│   ├── production
-│   │   ├── app_local.php
-│   │   └── app-config.json
-│   └── staging
-│   │   ├── app_local.php
-│   │   └── app-config.json
-├── android/ # Android project
-├── ios/ # iOS project
-├── package.json # project manifest file
-└── README.md
-```
+Most assets and config feed the **frontend**. Exceptions:
 
-### Frontend vs Backend Assets & Configs
+| Files | Used by |
+|-------|---------|
+| `platform/config/<env>/app_local.php`, `.env` | Backend only |
+| `platform/assets/keyboard/keyboard.json` | Frontend and backend |
+| Everything else under `platform/assets/` | Frontend (via copy into `core/frontend/src/assets/`) |
 
-Most of the asssets/configs are used in the `frontend`. The following are exceptions:
+Platform files **replace whole files** at the same path — there is no partial merge (e.g. you override all of `_theme.scss`, not individual colors). Details: [developing.md](docs/getting-started/developing.md#architecture-cheat-sheet).
 
-Files used only for the `backend`:
+## Social login
 
-- `config/<environment>/app_local.php`
-- `config/<environment/.env>`
+Apple, Google, and Facebook login are supported on web and mobile to varying degrees. Setup is per-platform (credentials in `platform/config/`, native Android/iOS files).
 
-Files used for both the `frontend` & `backend`:
+**Full setup guide:** [docs/frontend/social-login.md](docs/frontend/social-login.md)
 
-- `assets/keyboard/keyboard.json`
-
-## Preparing an environment for building
-
-To prepare a specific environment you run the high-level NPM script below from your platform repo root directory, where `<local|staging|...` are the options that you choose from depending on which environment want to prepare, such as `local`, `staging`, `production`, or `demo`.
+## Adding this repo as a submodule
 
 ```bash
-npm run core prepare-platform:<demo|local|staging|production>
+git submodule add git@github.com:languageconservancy/elearning-core.git core
+git submodule update --init --recursive
 ```
 
-This will both copy assets and generate files from templates and your config values.
-
-## Building for an environment
-
-To prepare and build for a specific environment you run a similar NPM script, as below. This prepare the platform, compiles the code, and syncs capacitor files to the Android and iOS projects.
-
-```bash
-npm run core build:<demo|local|staging|production>
-```
-
-## Deploying
-
-Deployment is handled by `core/scripts/deploy.sh` from your platform repo root. The script builds the selected environment, then copies the frontend and/or backend to the remote server over SSH.
-
-### Configure deployment variables
-
-Create `scripts/deploy-vars.sh` in your platform repo (one level above `core/`). The deploy script sources this file automatically. Set the SSH and server paths for each environment you deploy to:
-
-```bash
-export STAGING_SERVER_USER="elearnresource"
-export STAGING_DOCUMENT_ROOT="/home/elearnresource/example.elearnresource.com/public_html"
-export STAGING_DOMAIN_ROOT="/home/elearnresource/example.elearnresource.com"
-export STAGING_SSH_IDENTITY_FILE="$HOME/.ssh/TLC.pem"
-export STAGING_SSH_USER="centos"
-export STAGING_SSH_HOST="ec2-example.us-west-2.compute.amazonaws.com"
-
-export PRODUCTION_SERVER_USER="example"
-export PRODUCTION_DOCUMENT_ROOT="/home/example/public_html"
-export PRODUCTION_DOMAIN_ROOT="/home/example"
-export PRODUCTION_SSH_IDENTITY_FILE="$HOME/.ssh/TLC.pem"
-export PRODUCTION_SSH_USER="centos"
-export PRODUCTION_SSH_HOST="ec2-example.us-west-2.compute.amazonaws.com"
-```
-
-### Configure the environment
-
-Before deploying, update the files in `config/<staging|production>/` for that environment. Values in `app-config.json` (such as `apiUrl`, `webUrl`, and `ogImage`) are written into the built frontend during `prepare-platform`. The matching `app_local.php` and a `.env` file must already exist on the server in `backend/config/`.
-
-### Deploy commands
-
-Run these from your platform repo root (the directory that contains `core/`):
-
-```bash
-# Build and install frontend and backend to staging
-./core/scripts/deploy.sh -t staging -c install -f -b
-
-# Frontend only
-./core/scripts/deploy.sh -t staging -c install -f
-
-# Backend only
-./core/scripts/deploy.sh -t staging -c install -b
-
-# Preview commands without making changes
-./core/scripts/deploy.sh -t staging -c install -f -b --dryrun
-
-# Create a GitHub release (production only, requires a tagged commit on main)
-./core/scripts/deploy.sh -t production -c createrelease
-```
-
-Production installs prompt for confirmation before proceeding. Use `-k` to skip that prompt.
-
-Other useful flags:
-
-- `--backup` — back up `public_html` on the server before installing
-- `-s` — fix ownership and permissions on `public_html` and backups
-- `-i <path>` — override the SSH identity file from `deploy-vars.sh`
-
-Run `./core/scripts/deploy.sh -h` for the full option list.
-
-## Serving for local testing
-
-To run the code locally, for testing in a web browser, you can use the serve command below. This will allow you to test the web-app at `http://localhost:4200`.
-
-```bash
-npm run core serve:<demo|local>
-```
-
-These will we create `core/frontend/ios` and `core/frontend/android`.
-
-## Social Logins
-
-### Overview
-
-Apple, Google, and Facebook login are supported to varying degrees. Social logins are handled by two separate packages:
-
-- [Cap-go/capacitor-social-login](https://github.com/Cap-go/capacitor-social-login) for Android and iOS
-- [angularx-social-login](https://github.com/abacritt/angularx-social-login) for web
-
-### Web
-
-Supported social logins on web are Apple, Google, and Facebook.
-
-### Android
-
-Supported social logins on Android are Google and Facebook.
-
-### iOS
-
-Supported social logins on iOS are Apple, Google, and Facebook.
+Or from an existing language repo: `npm run init`.
 
 ## License
 
-Mozilla Public License - see LICENSE file for details.
+Mozilla Public License 2.0 — see [LICENSE](LICENSE).

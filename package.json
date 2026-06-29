@@ -39,7 +39,7 @@
     "cap:add-ios": "cd ./frontend && npx cap add ios",
     "cap:add-android": "cd ./frontend && npx cap add android",
     "cap:sync": "cd ./frontend && npx cap sync",
-    "sync-local-backend": "cd ./backend && ./scripts/sync_local_backend.sh",
+    "sync-local-backend": "./scripts/sync-local-backend.sh",
     "copy-demo-assets": "mkdir -p ./backend/webroot && cp -r ./demo/webroot/* ./backend/webroot/",
     "copy-ios-to-core": "mkdir -p ./frontend/ios && rsync -a --delete ../platform/ios/ ./frontend/ios/",
     "copy-android-to-core": "mkdir -p ./frontend/android && rsync -a --delete ../platform/android/ ./frontend/android/",

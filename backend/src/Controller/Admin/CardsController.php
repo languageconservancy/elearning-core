@@ -691,7 +691,7 @@ class CardsController extends AppController
      */
     private function hasErrors($cards): bool
     {
-        return array_key_exists('error', $cards) || array_key_exists('duplicates', $cards);
+        return property_exists('error', $cards) || property_exists('duplicates', $cards);
     }
 
     /**
@@ -702,7 +702,7 @@ class CardsController extends AppController
     {
         $errCount = 0;
 
-        if (array_key_exists('error', $cards)) {
+        if (property_exists('error', $cards)) {
             foreach ($cards['error'] as $error) {
                 $this->displayError($error);
                 if (++$errCount > 5) break;

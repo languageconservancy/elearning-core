@@ -1,8 +1,8 @@
 <?php
 
-use Cake\Datasource\ConnectionManager;
-
 namespace App\Lib;
+
+use Cake\Datasource\ConnectionManager;
 
 class UtilLibrary
 {
@@ -156,7 +156,7 @@ class UtilLibrary
 
         foreach ($params as $p) {
             if (
-                !is_array($data) || !array_key_exists($p, $data)
+                !is_array($data) || !property_exists($p, $data)
                 || !$data[$p] || $data[$p] == ""
             ) {
                 if ($msg != '') {

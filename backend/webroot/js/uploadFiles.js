@@ -78,16 +78,28 @@ function createFileStatusesTable(files) {
 			<th style="width: 150px">Overwrite?</th>
 		</tr>`;
 	for (let i = 0; i < files.length; ++i) {
+		let rowClass = '';
+		let statusText = 'New';
+		if (files[i].validationError) {
+			rowClass = 'hasError';
+			statusText = 'Invalid filename';
+		} else if (files[i].exists) {
+			rowClass = 'hasError';
+			statusText = 'Exists';
+		}
 		html += `
-			<tr id="row_${i}" ${files[i].exists ? 'class="hasError"' : ''}>
-				<td id="status_${i}">${files[i].exists ? "Exists" : "New"}</td>`
+			<tr id="row_${i}" ${rowClass ? `class="${rowClass}"` : ''}>
+				<td id="status_${i}">${statusText}</td>`
 		const originalFilename = getFilenamesMethod() == 'constants' ? `
 				<td>${files[i].originalFilename}</td>` : '';
+		const validationNote = files[i].validationError
+			? `<br><small>${files[i].validationError}</small>`
+			: '';
 		html += `
 				${originalFilename}
-				<td>${files[i].uploadFilename}</td>
+				<td>${files[i].uploadFilename}${validationNote}</td>
 				<td>${getFileLinks(files[i].awsFilepaths)}</td>
-				<td>${files[i].exists ? `<input type="checkbox" id="checkbox_${i}" name="checkbox_${i}">` : ''}</td>
+				<td>${files[i].exists && !files[i].validationError ? `<input type="checkbox" id="checkbox_${i}" name="checkbox_${i}">` : ''}</td>
 			</tr>`;
 		$('#file-statuses-table tbody').html(html);
 	}
@@ -103,8 +115,9 @@ function showSubmitBtn(show) {
 }
 
 function handleCheckFilesResult(data) {
-	showSubmitBtn(true);
+	const hasInvalid = data.response.some(file => file.validationError);
 	createFileStatusesTable(data.response);
+	showSubmitBtn(!hasInvalid);
 }
 
 function handleCheckFilesError(error) {

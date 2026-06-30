@@ -9,16 +9,24 @@ use Cake\Core\Configure;
 use Cake\Log\Log;
 use FFMpeg;
 use Gumlet\ImageResize;
+use InvalidArgumentException;
 
 class FilesCommonComponent extends Component
 {
+    /**
+     * ASCII characters allowed in curriculum asset filenames (basename only).
+     * Matches the set previously kept by stripping everything else.
+     */
+    private const FILENAME_BASE_PATTERN = '/^[A-Za-z0-9._\- (),;\[\]~]+$/';
+
+    private const FILENAME_EXTENSION_PATTERN = '/^[A-Za-z0-9]+$/';
     public function initialize(array $config): void
     {
         ini_set('extension', 'php_fileinfo.so');
         ini_set('memory_limit', '100M');
     }
 
-    //clean up incompatible characters from a filename before saving
+    // Check whether a remote curriculum asset URL responds successfully.
     public static function fileExists($link)
     {
         if (empty($link)) {
@@ -32,9 +40,9 @@ class FilesCommonComponent extends Component
         }
 
         if (
-            $fileHeaders[0] != 'HTTP/1.1 200 OK'
-            || $fileHeaders[0] == 'HTTP/1.1 404 Not Found'
-            || $fileHeaders[0] == 'HTTP/1.1 403 Forbidden'
+            !str_contains($fileHeaders[0], '200')
+            || str_contains($fileHeaders[0], '404')
+            || str_contains($fileHeaders[0], '403')
         ) {
             return false;
         } else {
@@ -73,8 +81,10 @@ class FilesCommonComponent extends Component
         //new filename = uploaded filename + timestamp, md5 hashed
         $hashedFilename = md5(pathinfo($filename, PATHINFO_FILENAME) . time());
 
-        //sanitize filename for admin uploads
-        $adminFilename = $this->filenameSanitize($filename);
+        $adminFilename = null;
+        if ($FileType === 'FILE' || $FileType === 'FTPFILEUPLOAD') {
+            $adminFilename = $this->validateFilename($filename);
+        }
 
         switch ($FileType) {
             // Case, Admin has uploaded a file or files from the backend UI. Preserve filename for clarity.
@@ -266,22 +276,56 @@ class FilesCommonComponent extends Component
         }
     }
 
-    private function filenameSanitize($orig): array
+    /**
+     * Validates admin/curriculum upload filenames. Rejects non-ASCII and unsupported
+     * characters instead of silently stripping them.
+     *
+     * @return array{name: string, ext: string}
+     * @throws InvalidArgumentException
+     */
+    public function validateFilename(string $orig): array
     {
-        $ext = pathinfo($orig, PATHINFO_EXTENSION);
-        $name = basename($orig, '.' . $ext);
+        $basename = basename($orig);
+        if ($basename !== $orig || str_contains($orig, '/') || str_contains($orig, '\\')) {
+            throw new InvalidArgumentException('Filename cannot include path segments.');
+        }
 
-        // Remove anything which isn't a word, whitespace, number
-        // or any of the following characters -_~,;[]().
-        // If you don't need to handle multi-byte characters
-        // you can use preg_replace rather than mb_ereg_replace
-        $name = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $name);
-        // Remove any runs of periods
-        $name = mb_ereg_replace("([\.]{2,})", '', $name);
+        $ext = pathinfo($orig, PATHINFO_EXTENSION);
+        $name = pathinfo($orig, PATHINFO_FILENAME);
+
+        if ($ext === '' || $name === '') {
+            throw new InvalidArgumentException(
+                'Filename must include a name and extension (for example, lesson_audio.mp3).'
+            );
+        }
+
+        if (!preg_match(self::FILENAME_EXTENSION_PATTERN, $ext)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'File extension "%s" is invalid. Use ASCII letters and numbers only.',
+                    $ext
+                )
+            );
+        }
+
+        if (preg_match('/\.\./', $name)) {
+            throw new InvalidArgumentException('Filename cannot contain consecutive periods.');
+        }
+
+        if (!preg_match(self::FILENAME_BASE_PATTERN, $name)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Filename "%s" contains invalid characters. '
+                    . 'Use ASCII letters, numbers, spaces, and . _ - ( ) , ; [ ] ~ only. '
+                    . 'Use the Name/Description fields for display text in other languages.',
+                    $orig
+                )
+            );
+        }
 
         return [
             'name' => $name,
-            'ext' => $ext
+            'ext' => strtolower($ext),
         ];
     }
 

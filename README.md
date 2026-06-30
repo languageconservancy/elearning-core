@@ -155,7 +155,7 @@ After a fresh clone, run VS Code task **eLearning: Sync mobile to core (platform
 |------|---------|
 | `backend/` | CakePHP API (`/api/*`) and admin panel (`/admin/*`) |
 | `frontend/` | Angular app; Capacitor `android/` and `ios/` live here during builds |
-| `scripts/` | Build/deploy tooling — asset copy, config generation, `deploy.sh`, `sync-local-backend.sh`, `examples/` (var templates) |
+| `scripts/` | Build/deploy tooling — asset copy, config generation, `deploy.sh`, `sync-local-backend.sh`, `examples/` (var templates); [`sql/`](scripts/sql/) ([docs](docs/scripts/sql/README.md)); [`php/`](scripts/php/) ([docs](docs/scripts/php/README.md)) |
 | `demo/` | Demo database SQL, webroot media, MAMP `my.cnf` — [demo/README.md](docs/demo/README.md) |
 | `docs/` | Documentation index — [docs/README.md](docs/README.md) |
 | `elearning-platform.code-workspace` | Multi-root VS Code workspace — [developing.md](docs/getting-started/developing.md#open-the-workspace-required-for-tasks-and-linting) |

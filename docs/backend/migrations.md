@@ -6,7 +6,7 @@ This directory contains CakePHP migration files for database schema changes.
 
 ### 20250121000000_ComprehensiveDatabaseUpdates.php
 
-This migration implements all the database changes defined in the `core/backend/sql-scripts/` directory:
+This migration implements all the database changes defined in the reference SQL files under [`core/scripts/sql/`](../../scripts/sql/) — see [docs/scripts/sql/README.md](../scripts/sql/README.md) for a per-file index.
 
 1. **add_coppa_fields** - Adds COPPA-related site settings for managing minor user access
 2. **users_add_approximate_age** - Adds `approximate_age` column to users table for privacy compliance
@@ -17,6 +17,8 @@ This migration implements all the database changes defined in the `core/backend/
 7. **roles_add_developer_and_student** - Adds new 'content developer' and 'student' roles
 8. **users_school_users_to_student** - Updates school users to use the new student role
 9. **sitesettings_insert_version_fields** - Adds app version tracking settings
+
+Content migration between databases is documented in [docs/scripts/php/README.md](../scripts/php/README.md).
 
 ## Running Migrations
 

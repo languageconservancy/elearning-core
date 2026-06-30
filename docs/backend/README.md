@@ -18,6 +18,13 @@ or
 ### Language-Specificity
 Configuration files in config/app.\*php contain settings and constants specific to each language or environment.
 
+Scripts
+===
+
+Reference SQL and ad-hoc database helpers live in [`core/scripts/sql/`](../scripts/sql/) — see [sql/README.md](../scripts/sql/README.md). Those files informed [migrations.md](migrations.md); use CakePHP migrations for production schema changes.
+
+Server-side PHP utilities (card export, content migration) live in [`core/scripts/php/`](../scripts/php/) — see [php/README.md](../scripts/php/README.md).
+
 Tests
 ===
 

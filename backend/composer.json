@@ -35,7 +35,7 @@
     "cakephp/debug_kit": "~4.0",
     "cakephp/bake": "^2.9",
     "squizlabs/php_codesniffer": "^3.0",
-    "phpunit/phpunit": "^8.0",
+    "phpunit/phpunit": "^9.0",
     "brainmaestro/composer-git-hooks": "^2.8",
     "phpstan/phpstan": "^1.12",
     "cakedc/cakephp-phpstan": "^2.0"

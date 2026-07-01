@@ -17,6 +17,7 @@ Index for eLearning Core documentation. The [main README](../README.md) is the G
 |-----|-------------|
 | [Backend overview](backend/README.md) | Admin panel, API, config, tests, coding standards, git hooks |
 | [Database migrations](backend/migrations.md) | CakePHP migrations — run, rollback; reference SQL in [scripts/sql/](scripts/sql/README.md) |
+| [Database charset migration](backend/database-charset-migration.md) | MySQL 8 utf8mb4 audit, migrate, and verify procedure |
 
 ## Frontend
 

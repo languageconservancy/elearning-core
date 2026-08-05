@@ -328,7 +328,7 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
                                     school_id: this.teacherSchoolUser.school.id,
                                     student_id: form.value.new_users[i].studentid,
                                     f_name: form.value.new_users[i].fname,
-                                    l_name: form.value.new_users[i].lname,
+                                    l_name: form.value.new_users[i].lname[0],
                                     classroom_id: classroomId,
                                     existing_user_email: existingUserEmail,
                                     registered_user_id: registeredUserId,

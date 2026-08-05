@@ -475,7 +475,20 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
                     school_id: this.teacherSchoolUser.school_id,
                 })
                 .then((res) => {
-                    this.schoolStudents = res.data.results.schoolStudents;
+                    // Sort students with no l_name to the top alphabetically, then sort the rest of the students by l_name alphabetically.
+                    const lNameMissing = [];
+                    const lNamePresent = [];
+                    res.data.results.schoolStudents.forEach((student) => {
+                        if (!student.l_name || student.l_name.trim() === "") {
+                            lNameMissing.push(student);
+                        } else {
+                            lNamePresent.push(student);
+                        }
+                    });
+                    this.schoolStudents = [
+                        ...lNameMissing.sort((a, b) => a.user.name.localeCompare(b.user.name)),
+                        ...lNamePresent.sort((a, b) => a.l_name.localeCompare(b.l_name)),
+                    ];
                     this.schoolTeachers = res.data.results.schoolTeachers;
                 });
         }

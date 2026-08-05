@@ -121,7 +121,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
 
         // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
         return (sortedStudents = [
-            ...lNameMissing.sort((a, b) => a.user.name.localeCompare(b.user.name)),
+            ...lNameMissing.sort((a, b) => a.name.localeCompare(b.name)),
             ...lNamePresent.sort((a, b) => a.l_name.localeCompare(b.l_name)),
         ]);
     }

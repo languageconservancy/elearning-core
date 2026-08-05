@@ -175,6 +175,10 @@ class ClassroomsController extends AppController
                 ->find()
                 ->select(['level_id'])
                 ->where(['id IN' => $classroomIds]);
+            $schoolIds = $this->getClassroomsTable()
+                ->find()
+                ->select(['school_id'])
+                ->where(['id IN' => $classroomIds]);
             $unitIds = $this->getLevelUnitsTable()
                 ->find()
                 ->select(['unit_id'])
@@ -192,7 +196,39 @@ class ClassroomsController extends AppController
                     'Usersetting'
                 )
             );
-            $unitProgress = $this->getUsersTable()->find('all', $studentProgressOptions);
+            $unitProgressEntities = $this->getUsersTable()->find('all', $studentProgressOptions)
+                ->all()
+                ->toList();
+
+            $unitProgress = array_map(function ($student) {
+                return $student->toArray();
+            }, $unitProgressEntities);
+
+            $studentSchoolUsers = $this->getSchoolUsersTable()
+                ->find()
+                ->select(['user_id', 'f_name', 'l_name'])
+                ->where([
+                    'user_id IN' => $studentIds,
+                    'school_id IN' => $schoolIds,
+                    'role_id' => $studentSchoolRoleId
+                ])
+                ->enableHydration(false)
+                ->toArray();
+
+            $schoolUserById = [];
+            foreach ($studentSchoolUsers as $schoolUser) {
+                $schoolUserById[(int)$schoolUser['user_id']] = [
+                    'f_name' => $schoolUser['f_name'] ?? null,
+                    'l_name' => $schoolUser['l_name'] ?? null,
+                ];
+            }
+
+            foreach ($unitProgress as &$student) {
+                $studentId = (int)$student['id'];
+                $student['f_name'] = $schoolUserById[$studentId]['f_name'] ?? null;
+                $student['l_name'] = $schoolUserById[$studentId]['l_name'] ?? null;
+            }
+            unset($student);
             //gather recent activity from students for class levels
 
             $studentActivitiesOptions = array(
@@ -210,7 +246,21 @@ class ClassroomsController extends AppController
                     'Usersetting'
                 )
             );
-            $activities = $this->getUsersTable()->find('all', $studentActivitiesOptions);
+            $activityEntities = $this->getUsersTable()->find('all', $studentActivitiesOptions)
+                ->all()
+                ->toList();
+
+            $activities = array_map(function ($student) {
+                return $student->toArray();
+            }, $activityEntities);
+
+            foreach ($activities as &$activity) {
+                $studentId = (int)$activity['id'];
+                $activity['f_name'] = $schoolUserById[$studentId]['f_name'] ?? null;
+                $activity['l_name'] = $schoolUserById[$studentId]['l_name'] ?? null;
+            }
+            unset($activity);
+
             $response = ['studentActivities' => $activities, 'studentProgress' => $unitProgress];
             $this->sendApiData(true, 'Student Activities Data.', $response);
         } else {
@@ -758,7 +808,13 @@ class ClassroomsController extends AppController
 
         // Check if user already exists in school
         $schoolUserAlreadyExists = false;
-        $schoolUserEntity = $this->getSchoolUserEntity($userId, $params['school_id'], $roleId, $schoolUserAlreadyExists);
+        $schoolUserEntity = $this->getSchoolUserEntity(
+            $userId,
+            $params['school_id'],
+            $roleId,
+            $schoolUserAlreadyExists,
+            $params
+        );
 
         if ($schoolUserAlreadyExists) {
             return ['status' => true, 'msg' => 'User already exists in school'];
@@ -771,7 +827,7 @@ class ClassroomsController extends AppController
         if ($savedSuccessfully && !empty($params['classroom_id'])) {
             $userAddedToClassroom = $this->addClassroomUser($params['classroom_id'], $userId, $roleId);
             return [
-                'status' => $classroomUserResult,
+                'status' => $userAddedToClassroom,
                 'msg' => $userAddedToClassroom
                     ? 'User added to school and classroom'
                     : 'User added to school. Failed to add user to classroom',
@@ -781,7 +837,7 @@ class ClassroomsController extends AppController
         return ['status' => true, 'msg' => 'User added to school'];
     }
 
-    private function getSchoolUserEntity($userId, $schoolId, $roleId, &$schoolUserAlreadyExists)
+    private function getSchoolUserEntity($userId, $schoolId, $roleId, &$schoolUserAlreadyExists, $params = [])
     {
         $preexistingSchoolUser = $this->getSchoolUsersTable()
             ->find()
@@ -799,7 +855,9 @@ class ClassroomsController extends AppController
         $params = [
             'user_id' => $userId,
             'school_id' => $schoolId,
-            'role_id' => $roleId
+            'role_id' => $roleId,
+            'f_name' => $params['f_name'] ?? null,
+            'l_name' => $params['l_name'] ?? null,
         ];
         $schoolUserEntity = $this->getSchoolUsersTable()->newEmptyEntity();
         return $this->getSchoolUsersTable()->patchEntity($schoolUserEntity, $params);

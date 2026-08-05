@@ -94,6 +94,22 @@ From the language repo root:
 npm run core install-dependencies
 ```
 
+If you are using a newer npm release that warns about pending install scripts in `core/frontend`, approve them from that directory with:
+
+```bash
+npm run approve-scripts
+```
+
+That script passes `--workspaces=false`, which is required because this repository declares `core/frontend` as an npm workspace and `npm approve-scripts` does not support workspace mode.
+
+If you are using a newer npm release that warns about pending install scripts in `core/frontend`, approve them from that directory with:
+
+```bash
+npm run approve-scripts
+```
+
+That script passes `--workspaces=false`, which is required because this repository declares `core/frontend` as an npm workspace and `npm approve-scripts` does not support workspace mode.
+
 Installs frontend npm packages, backend Composer packages, and CocoaPods (macOS).
 
 ## npm commands

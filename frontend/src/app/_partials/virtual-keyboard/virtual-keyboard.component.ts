@@ -39,10 +39,7 @@ type LayoutName = "default" | "shift";
     selector: "app-virtual-keyboard",
     encapsulation: ViewEncapsulation.None,
     templateUrl: "./virtual-keyboard.component.html",
-    styleUrls: [
-        "./virtual-keyboard.component.scss",
-        "../../../../node_modules/simple-keyboard/build/css/index.css",
-    ],
+    styleUrls: ["./virtual-keyboard.component.scss"],
 })
 /**
  * Inputs:

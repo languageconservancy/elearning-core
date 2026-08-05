@@ -14,6 +14,7 @@
         "lint": "eslint ./src --ext .ts,.html",
         "lint:fix": "eslint ./src --ext .ts,.html --fix",
         "format": "prettier --write \"./src/**/*.{ts,html,scss,json}\"",
+        "approve-scripts": "npm approve-scripts --allow-scripts-pending --workspaces=false",
         "e2e": "ng e2e",
         "cypress:open": "cypress open",
         "cypress:run": "cypress run"

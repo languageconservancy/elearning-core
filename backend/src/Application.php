@@ -32,6 +32,7 @@ use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Identifier\IdentifierInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Routing\Router;
+use Cake\Routing\RouteBuilder;
 use Cake\Utility\Security;
 use Psr\Http\Message\ServerRequestInterface;
 use Authorization\AuthorizationService;
@@ -109,6 +110,18 @@ class Application extends BaseApplication implements
          * Admin theme for backend administrator access
          */
         $this->addPlugin('AdminLTE', ['bootstrap' => true, 'routes' => true]);
+    }
+
+    /**
+     * Load application routes.
+     *
+     * @param \Cake\Routing\RouteBuilder $routes Route builder.
+     * @return void
+     */
+    public function routes(RouteBuilder $routes): void
+    {
+        $routesFile = require $this->configDir . 'routes.php';
+        $routesFile($routes);
     }
 
     /**

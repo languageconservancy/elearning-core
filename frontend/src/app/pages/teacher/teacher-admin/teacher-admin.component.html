@@ -148,7 +148,8 @@
                                     >
                                         <img
                                             src="{{ student.user.usersetting.FullProfileImageUrl }}"
-                                        />{{ student.user.name }} - {{ student.user.email }}
+                                        />
+                                        {{ student.l_name ? student.l_name + ', ' + student.f_name + ' -' : student.user.name + ' -' }} {{ student.user.email }}
                                         <!--<div *ngIf="student.user.fb_id==null && student.user.google_id==null && student.user.clever_id==null" class="editStudent"><i fa fa-caret-down" data-toggle="tooltip" data-placement="top" (click)="getEditUser(i)" title="Edit User"></i><div>-->
                                         <div
                                             *ngIf="

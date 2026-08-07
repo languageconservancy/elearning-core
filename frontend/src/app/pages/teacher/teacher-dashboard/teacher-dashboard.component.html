@@ -151,7 +151,7 @@
                                 <td>
                                     <div class="td-img-left">
                                         <img src="{{ studentProgress.usersetting.aws_profile_link }}" />{{
-                                            studentProgress.name
+                                            studentProgress.l_name ? studentProgress.l_name + ', ' + studentProgress.f_name : studentProgress.name
                                         }}
                                     </div>
                                 </td>
@@ -213,7 +213,7 @@
                         [value]="i"
                         [attr.selected]="currentStudentActivityIndex === i ? true : null"
                     >
-                        {{ studentActivity.name }}
+                        {{ getDisplayName(studentActivity) }}
                     </option>
                 </select>
                 <br />

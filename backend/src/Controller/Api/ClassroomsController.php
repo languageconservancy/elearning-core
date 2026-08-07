@@ -852,7 +852,7 @@ class ClassroomsController extends AppController
             $schoolUserAlreadyExists = true;
             return null;
         }
-        $params = [
+        $data = [
             'user_id' => $userId,
             'school_id' => $schoolId,
             'role_id' => $roleId,
@@ -860,7 +860,7 @@ class ClassroomsController extends AppController
             'l_name' => $params['l_name'] ?? null,
         ];
         $schoolUserEntity = $this->getSchoolUsersTable()->newEmptyEntity();
-        return $this->getSchoolUsersTable()->patchEntity($schoolUserEntity, $params);
+        return $this->getSchoolUsersTable()->patchEntity($schoolUserEntity, $data);
     }
 
     private function generateAndSaveWordlink($params)

@@ -35,16 +35,16 @@
                         "polyfills": "src/polyfills.ts",
                         "assets": ["src/assets", "src/.htaccess", "src/favicon.ico"],
                         "styles": [
-                            "node_modules/ng-drag-drop/style.css",
+                            "ng-drag-drop/style.css",
                             "src/styles.scss",
-                            "node_modules/simple-keyboard/build/css/index.css"
+                            "simple-keyboard/build/css/index.css"
                         ],
                         "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js",
-                            "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-                            "node_modules/wavesurfer.js/dist/wavesurfer.min.js",
-                            "node_modules/wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js",
-                            "node_modules/bootbox/bootbox.js"
+                            "jquery/dist/jquery.min.js",
+                            "bootstrap/dist/js/bootstrap.bundle.min.js",
+                            "wavesurfer.js/dist/wavesurfer.min.js",
+                            "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js",
+                            "bootbox/bootbox.js"
                         ],
                         "vendorChunk": true,
                         "extractLicenses": false,
@@ -147,13 +147,13 @@
                         "polyfills": ["src/polyfills.ts", "zone.js", "zone.js/testing"],
                         "tsConfig": "src/tsconfig.spec.json",
                         "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js",
-                            "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-                            "node_modules/wavesurfer.js/dist/wavesurfer.min.js",
-                            "node_modules/wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js",
-                            "node_modules/bootbox/bootbox.js"
+                            "jquery/dist/jquery.min.js",
+                            "bootstrap/dist/js/bootstrap.bundle.min.js",
+                            "wavesurfer.js/dist/wavesurfer.min.js",
+                            "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js",
+                            "bootbox/bootbox.js"
                         ],
-                        "styles": ["node_modules/ng-drag-drop/style.css", "src/styles.scss"],
+                        "styles": ["ng-drag-drop/style.css", "src/styles.scss"],
                         "assets": ["src/assets", "src/.htaccess", "src/favicon.ico"]
                     }
                 },

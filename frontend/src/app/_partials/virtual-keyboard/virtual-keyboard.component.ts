@@ -41,7 +41,7 @@ type LayoutName = "default" | "shift";
     templateUrl: "./virtual-keyboard.component.html",
     styleUrls: [
         "./virtual-keyboard.component.scss",
-        "../../../../node_modules/simple-keyboard/build/css/index.css",
+        "../../../../../../node_modules/simple-keyboard/build/css/index.css",
     ],
 })
 /**

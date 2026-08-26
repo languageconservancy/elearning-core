@@ -35,7 +35,16 @@ class SitesettingController extends AppController
                     return $this->redirect($this->referer());
                 }
                 $param = array();
-                $uploadResult = $this->FilesCommon->uploadFile($this->request->getData()['file'][0], $param, 'FILE');
+                try {
+                    $uploadResult = $this->FilesCommon->uploadFile(
+                        $this->request->getData()['file'][0],
+                        $param,
+                        'FILE'
+                    );
+                } catch (\InvalidArgumentException $e) {
+                    $this->Flash->error(__($e->getMessage()));
+                    return $this->redirect($this->referer());
+                }
 
                 $element = array('value' => $uploadResult['filename']);
                 $setting = $this->getSitesettingsTable()->find()->where(['Sitesettings.key' => 'login_logo'])->first();

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Sep 22, 2025 at 06:07 PM
--- Server version: 5.7.39
--- PHP Version: 7.4.33
+-- Generation Time: Jul 01, 2026 at 12:27 AM
+-- Server version: 8.0.44
+-- PHP Version: 8.3.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -84,22 +84,22 @@ DELIMITER ;
 --
 
 CREATE TABLE `activity_types` (
-  `id` int(11) NOT NULL,
-  `type` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `type` int NOT NULL,
   `specific_skill` enum('reading','listening (comprehension)','listening (phonemic awareness)','phonemic','listening / spelling','spelling') NOT NULL COMMENT 'Skill type according to Jan''s document on google drive',
   `global_skill` enum('reading','listening','writing','speaking') NOT NULL COMMENT 'Skill type in software, since these are what exist in the database, like in ReviewQueues table',
   `prompt_response_pairs_words` set('a-i','a-l','a-e','i-a','i-l','i-e','l-a','l-i','l-e','e-a','e-i','e-l') NOT NULL COMMENT 'Which prompt-response pairs are valid for the activity type',
-  `prompt_response_pairs_patterns` set('a-i','a-l','a-e','i-a','i-l','i-e','l-a','l-i','l-e','e-a','e-i','e-l') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `prompt_response_pairs_patterns` set('a-i','a-l','a-e','i-a','i-l','i-e','l-a','l-i','l-e','e-a','e-i','e-l') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `exercise_type_words` set('match-the-pair','anagram','fill_in_the_blanks_typing','fill_in_the_blanks_mcq','Word Search','Crossword','truefalse','multiple-choice','recording','Type Answer','Rearrange words','Building Blocks','Word Fill (Type)','Word Fill (Multiple Choice)') NOT NULL COMMENT 'Which exercise types are allowed for the activity type. These must correspond to point references table''s exercise column',
   `exercise_type_patterns` set('match-the-pair','multiple-choice','Word Fill (Multiple Choice)','Building Blocks','Type Answer','Word Fill (Type)') NOT NULL COMMENT 'Exercise types for Pattern card activities',
-  `learning_percentage_words` int(11) NOT NULL COMMENT 'Percentage of word cards that will be presented to the user using this activity type during learning session exercises',
-  `learning_percentage_patterns` int(11) NOT NULL COMMENT 'Percentage of pattern cards that will be presented to the user using this activity type during learning session exercise',
-  `review_percentage_words` int(11) NOT NULL COMMENT 'Percentage of word cards that will be presented to the user using this activity type during review session exercises',
-  `review_percentage_patterns` int(11) NOT NULL COMMENT 'Percentage of pattern cards that will be presented to the user using this activity type during review session exercises',
+  `learning_percentage_words` int NOT NULL COMMENT 'Percentage of word cards that will be presented to the user using this activity type during learning session exercises',
+  `learning_percentage_patterns` int NOT NULL COMMENT 'Percentage of pattern cards that will be presented to the user using this activity type during learning session exercise',
+  `review_percentage_words` int NOT NULL COMMENT 'Percentage of word cards that will be presented to the user using this activity type during review session exercises',
+  `review_percentage_patterns` int NOT NULL COMMENT 'Percentage of pattern cards that will be presented to the user using this activity type during review session exercises',
   `learning_style` enum('passive','active','active_aided','passive_to_active') NOT NULL COMMENT 'Style of learning that this activity involves. Active_aided implies a combo, passive_to_active implies passive prompt with active response',
   `exclude_words` bit(1) NOT NULL DEFAULT b'0' COMMENT 'Whether the activity type for word cards should be excluded from the algorithm that uses it',
   `exclude_patterns` bit(1) NOT NULL DEFAULT b'0' COMMENT 'Whether the activity type for pattern cards should be excluded from the algorithm that uses it'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `activity_types`
@@ -128,10 +128,10 @@ INSERT INTO `activity_types` (`id`, `type`, `specific_skill`, `global_skill`, `p
 --
 
 CREATE TABLE `banned_words` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `word` varchar(255) NOT NULL,
   `isolated_only` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `banned_words`
@@ -1159,10 +1159,10 @@ INSERT INTO `banned_words` (`id`, `word`, `isolated_only`) VALUES
 --
 
 CREATE TABLE `bonus_points` (
-  `id` int(10) UNSIGNED NOT NULL COMMENT 'Primary Key',
-  `bonus_key` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `points` int(10) UNSIGNED DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `id` int UNSIGNED NOT NULL COMMENT 'Primary Key',
+  `bonus_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `points` int UNSIGNED DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `bonus_points`
@@ -1183,13 +1183,13 @@ INSERT INTO `bonus_points` (`id`, `bonus_key`, `points`) VALUES
 --
 
 CREATE TABLE `cards` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `inflection_id` int(11) UNSIGNED DEFAULT NULL,
-  `reference_dictionary_id` int(11) UNSIGNED DEFAULT NULL,
-  `image_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Link to image file in form of an id',
-  `video_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Link to video file in form of an id',
+  `id` int UNSIGNED NOT NULL,
+  `inflection_id` int UNSIGNED DEFAULT NULL,
+  `reference_dictionary_id` int UNSIGNED DEFAULT NULL,
+  `image_id` int UNSIGNED DEFAULT NULL COMMENT 'Link to image file in form of an id',
+  `video_id` int UNSIGNED DEFAULT NULL COMMENT 'Link to video file in form of an id',
   `audio` varchar(100) DEFAULT NULL COMMENT 'Link to audio file in form of an id',
-  `card_type_id` int(11) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Type of card (Word, Verb or Pattern). This changes what type of exercises is possible, etc.',
+  `card_type_id` int UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Type of card (Word, Verb or Pattern). This changes what type of exercises is possible, etc.',
   `lakota` varchar(255) NOT NULL COMMENT 'Lakota text of the word or pattern',
   `english` varchar(255) NOT NULL COMMENT 'English text of the word or pattern',
   `gender` varchar(255) NOT NULL COMMENT 'Gender of the word, if applicable',
@@ -1198,15 +1198,15 @@ CREATE TABLE `cards` (
   `alt_english` varchar(255) DEFAULT NULL COMMENT 'Alternative English text for this word/pattern',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
-  `is_active` tinyint(3) NOT NULL DEFAULT '1' COMMENT 'TODO'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `is_active` tinyint NOT NULL DEFAULT '1' COMMENT 'TODO'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `cards`
 --
 
 INSERT INTO `cards` (`id`, `inflection_id`, `reference_dictionary_id`, `image_id`, `video_id`, `audio`, `card_type_id`, `lakota`, `english`, `gender`, `include_review`, `alt_lakota`, `alt_english`, `created`, `modified`, `is_active`) VALUES
-(1, NULL, NULL, 3, 7, '6', 1, 'Lakota <b><color=red>bold red</color></b> and <u><color=blue>underlined blue</color></u> and <i><color=orange>italic orange</color></i>', 'English <b><color=red>bold red</color></b> and <u><color=blue>underlined blue</color></u> and <i><color=orange>italic orange</color></i>', 'default', '1', '', '', '2024-09-15 10:43:50', '2024-09-15 10:43:50', 1),
+(1, NULL, NULL, 3, 7, '6', 1, 'Lakota <b><color=red>bold red</color></b> and <u><color=blue>underlined blue</color></u> and <i><color=orange>italic orange</color></i>', 'English <b><color=red>bold red</color></b> and <u><color=blue>underlined blue</color></u> and <i><color=orange>italic orange</color></i>', 'default', '1', '', '', '2024-09-15 10:43:50', '2026-06-30 23:06:45', 1),
 (2, NULL, NULL, 10, 12, '8', 1, 'Lakota <b><color=green>bold green</color></b> and <u><color=violet>underlined violet</color></u> and <i><color=brown>italic brown</color></i>', 'English <b><color=green>bold green</color></b> and <u><color=violet>underlined violet</color></u> and <i><color=brown>italic brown</color></i>', 'default', '1', '', '', '2024-09-16 12:49:44', '2024-09-16 12:49:44', 1),
 (3, NULL, NULL, 14, 15, '9', 1, 'Lakota <b><color=brown>bold brown</color></b> and <u><color=pink>underlined pink</color></u> and <i><color=gray>italic gray</color></i>', 'English <b><color=brown>bold brown</color></b> and <u><color=pink>underlined pink</color></u> and <i><color=gray>italic gray</color></i>', 'default', '1', '', '', '2024-09-16 12:58:45', '2024-09-16 18:09:01', 1),
 (4, NULL, NULL, 17, 18, '16', 1, 'Lakota <b><color=#8927d9>bold purple</color></b> and <u><color=#b32469>underlined magenta</color></u> and <i><color=#178a1d>italic green</color></i>', 'English <b><color=#8927d9>bold purple</color></b> and <u><color=#b32469>underlined magenta</color></u> and <i><color=#178a1d>italic green</color></i>', 'default', '1', '', '', '2024-09-18 07:37:44', '2024-09-18 07:58:59', 1),
@@ -1225,12 +1225,12 @@ INSERT INTO `cards` (`id`, `inflection_id`, `reference_dictionary_id`, `image_id
 --
 
 CREATE TABLE `card_card_groups` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `card_id` int(11) UNSIGNED NOT NULL,
-  `card_group_id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `card_id` int UNSIGNED NOT NULL,
+  `card_group_id` int UNSIGNED NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `card_card_groups`
@@ -1257,12 +1257,12 @@ INSERT INTO `card_card_groups` (`id`, `card_id`, `card_group_id`, `created`, `mo
 --
 
 CREATE TABLE `card_groups` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `card_group_type_id` int(11) UNSIGNED NOT NULL,
+  `card_group_type_id` int UNSIGNED NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `card_groups`
@@ -1279,11 +1279,11 @@ INSERT INTO `card_groups` (`id`, `name`, `card_group_type_id`, `created`, `modif
 --
 
 CREATE TABLE `card_group_types` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `card_group_types`
@@ -1302,11 +1302,11 @@ INSERT INTO `card_group_types` (`id`, `title`, `created`, `modified`) VALUES
 --
 
 CREATE TABLE `card_types` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `card_types`
@@ -1324,10 +1324,10 @@ INSERT INTO `card_types` (`id`, `title`, `created`, `modified`) VALUES
 --
 
 CREATE TABLE `card_units` (
-  `id` int(11) NOT NULL,
-  `card_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'ID of the card in question',
-  `unit_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Unit to which it belongs'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `id` int NOT NULL,
+  `card_id` int UNSIGNED DEFAULT NULL COMMENT 'ID of the card in question',
+  `unit_id` int UNSIGNED DEFAULT NULL COMMENT 'Unit to which it belongs'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `card_units`
@@ -1416,17 +1416,17 @@ INSERT INTO `card_units` (`id`, `card_id`, `unit_id`) VALUES
 --
 
 CREATE TABLE `classrooms` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `school_id` int(11) NOT NULL,
-  `level_id` int(11) NOT NULL,
-  `teacher_message` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `id` int NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `school_id` int NOT NULL,
+  `level_id` int NOT NULL,
+  `teacher_message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `start_date` date NOT NULL,
   `end_date` date DEFAULT NULL,
-  `created_by` int(11) NOT NULL,
+  `created_by` int NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `classrooms`
@@ -1444,16 +1444,16 @@ INSERT INTO `classrooms` (`id`, `name`, `school_id`, `level_id`, `teacher_messag
 --
 
 CREATE TABLE `classroom_level_units` (
-  `id` int(11) NOT NULL,
-  `level_units_id` int(11) NOT NULL,
-  `classroom_id` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `level_units_id` int NOT NULL,
+  `classroom_id` int NOT NULL,
   `optional` tinyint(1) NOT NULL DEFAULT '0',
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `no_repeat` tinyint(1) NOT NULL DEFAULT '0',
   `release_date` date DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `classroom_level_units`
@@ -1476,11 +1476,11 @@ INSERT INTO `classroom_level_units` (`id`, `level_units_id`, `classroom_id`, `op
 --
 
 CREATE TABLE `classroom_users` (
-  `id` int(11) NOT NULL,
-  `classroom_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id` int NOT NULL,
+  `classroom_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `role_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `classroom_users`
@@ -1498,20 +1498,20 @@ INSERT INTO `classroom_users` (`id`, `classroom_id`, `user_id`, `role_id`) VALUE
 --
 
 CREATE TABLE `contents` (
-  `id` int(11) NOT NULL,
-  `keyword` mediumtext NOT NULL,
+  `id` int NOT NULL,
+  `keyword` longtext NOT NULL,
   `title` varchar(255) NOT NULL,
-  `text` text NOT NULL,
-  `text_mobile` text NOT NULL,
+  `text` mediumtext NOT NULL,
+  `text_mobile` mediumtext NOT NULL,
   `img_mobile` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `contents`
 --
 
 INSERT INTO `contents` (`id`, `keyword`, `title`, `text`, `text_mobile`, `img_mobile`) VALUES
-(1, 'project', 'About Demo eLearning', '<p>Demo eLearning is a platform and database that act as a centralized environment for all the available lessons and exercises. Any new lessons or exercises that need to be tested due to new features or bugs should be added to this database, in order to keep our test set as complete as possible.&nbsp;&nbsp;</p>\n<p>If this database is updated, it should be exported and the version stored in the elearning-core git repo should be updated to reflect the changes.</p>', '', ''),
+(1, 'project', 'About Demo eLearning', '<p>Demo eLearning is a platform and database that act as a centralized environment for all the available lessons and exercises. Any new lessons or exercises that need to be tested due to new features or bugs should be added to this database, in order to keep our test set as complete as possible.&nbsp;&nbsp;</p>\r\n<p>If this database is updated, it should be exported and the version stored in the elearning-core git repo should be updated to reflect the changes.</p>', '', ''),
 (7, 'about', 'About Us', '<p>The Language Conservancy (TLC) is a 501c3 non-profit working to revitalize the endangered languages and support a new generation of “Language Warriors” through language materials, teacher trainings, and media/advocacy projects, in partnership with the Native communities.</p>', '', ''),
 (9, 'privacy', 'Privacy Policy', '<h1>PRIVACY NOTICE</h1>\n<p>Last updated March 18, 2024</p>\n<div><br></div>\n<p>This privacy notice for The Language Conservancy, Inc. (\"Company,\" \"we,\" \"us,\" or \"our\"), describes how and why we might collect, store, use, and/or share (\"process\") your information when you use our services (\"Services\"), such as when you:</p>\n<ul>\n    <li>Visit our website, or any website of ours that links to this privacy notice.</li>\n    <li>Download and use our mobile application (eLearning Demo), our Facebook application (eLearning Demo), or any other application of ours that links to this privacy notice </li>\n    <li>Engage with us in other related ways, including any sales, marketing, or events</li>\n</ul>\n<p><strong>Questions or concerns? </strong>Reading this privacy notice will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please contact us at <a href=\"mailto:tech@languageconservancy.org\">tech@languageconservancy.org</a></p>\n<h2>SUMMARY OF KEY POINTS</h2>\n<p><strong><i>This summary provides key points from our privacy notice, but you can find out more details about any of these topics by clicking the link following each key point or by using our table of contents below to find the section you are looking for. You can also click <a href=\"#table-of-contents\">here</a> to go directly to our table of contents.</i></strong></p>\n<p><strong>What personal information do we process?</strong> When you visit, use, or navigate our Services, we may process personal information depending on how you interact with The Language Conservancy, Inc. and the Services, the choices you make, and the products and features you use. Click <a href=\"#what-information-do-we-collect\">here</a> to learn more.</p>\n<p><strong>Do we process any sensitive personal information?</strong> We do not process sensitive personal information.</p>\n<p><strong>Do we receive any information from third parties? </strong> We do not receive any information from third parties.</p>\n<p><strong>How do we process your information?</strong> We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent. We process your information only when we have a valid legal reason to do so. Click <a href=\"#how-we-process-your-info\">here</a> to learn more.</p>\n<p><strong>In what situations and with which types of parties do we share personal information?</strong> We may share information in specific situations and with specific categories of third parties. Click <a href=\"#sharing-personal-info\">here</a> to learn more.</p>\n<p><strong>How do we keep your information safe?</strong> We have organizational and technical processes and procedures in place to protect your personal information. However, no electronic transmission over the internet or information storage technology can be guaranteed to be 100% secure, so we cannot promise or guarantee that hackers, cybercriminals, or other unauthorized third parties will not be able to defeat our security and improperly collect, access, steal, or modify your information.</p>\n<p><strong>What are your rights? </strong> Depending on where you are located geographically, the applicable privacy law may mean you have certain rights regarding your personal information. Click <a href=\"#our-privacy-rights\">here</a> to learn more.</p>\n\n<a id=\"table-of-contents\"></a>\n<h1>TABLE OF CONTENTS</h1>\n<ol>\n    <li><a href=\"#what-info-we-collect\">WHAT INFORMATION DO WE COLLECT?</a></li>\n    <li><a href=\"#how-we-process-your-info\">HOW DO WE PROCESS YOUR INFORMATION?</a></li>\n    <li><a href=\"#what-legal-bases\">WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR PERSONAL INFORMATION?</a></li>\n    <li><a href=\"#sharing-personal-info\">WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</a></li>\n    <li><a href=\"#do-we-use-cookies\">DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</a></li>\n    <li><a href=\"#social-logins\">HOW DO WE HANDLE YOUR SOCIAL LOGINS?</a></li>\n    <li><a href=\"#how-long-we-keep-your-info\">HOW LONG DO WE KEEP YOUR INFORMATION?</a></li>\n    <li><a href=\"#how-we-keep-your-info-safe\">HOW DO WE KEEP YOUR INFORMATION SAFE?</a></li>\n    <li><a href=\"#how-we-process-your-info\">HOW DO WE PROCESS YOUR INFORMATION?</a></li>\n    <li><a href=\"#your-privacy-rights\">WHAT ARE YOUR PRIVACY RIGHTS?</a></li>\n    <li><a href=\"#controls-for-do-not-track\">CONTROLS FOR DO-NOT-TRACK FEATURES</a></li>\n    <li><a href=\"#california-residents\">DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?</a></li>\n    <li><a href=\"#updates-to-this-notice\">DO WE MAKE UPDATES TO THIS NOTICE?</a></li>\n    <li><a href=\"#contacting-us\">HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</a></li>\n    <li><a href=\"#review-update-delete-your-data\">HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?</a></li>\n</ol>\n\n<a id=\"what-information-do-we-collect\"></a>\n<h1>1. WHAT INFORMATION DO WE COLLECT?</h1>\n<h2>Personal information you disclose to us</h2>\n<p><i><b>In short:</b></i> We collect personal information that you provide to us.</p>\n<p>We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>\n<p><b>Personal Information Provided by You.</b> The personal information that we collect depends on the context of your interactions with us and the Services, the choices you make, and the products and features you use. The personal information we collect may include the following:</p>\n<ul>\n    <li>names</li>\n    <li>email addresses</li>\n    <li>usernames</li>\n    <li>user IDs</li>\n    <li>passwords</li>\n    <li>birthdays</li>\n</ul>\n<p><strong>Sensitive Information.</strong> We do not process sensitive information.</p>\n<p>Social Media Login Data. We may provide you with the option to register with us using your existing social media account details, like your Facebook, Twitter, or other social media account. If you choose to register in this way, we will collect the information described in the section called <a href=\"#social-logins\">\"HOW DO WE HANDLE YOUR SOCIAL LOGINS?\"</a> below.</p>\n<p><strong>Application Data.</strong> If you use our application(s), we also may collect the following information if you choose to provide us with access or permission:</p>\n<ul>\n    <li> <i>Mobile Device Data.</i> We automatically collect device information (such as your mobile device ID, model, and manufacturer), operating system, version information and system configuration information, device and application identification numbers, browser type and version, hardware model Internet service provider and/or mobile carrier, and Internet Protocol (IP) address (or proxy server). If you are using our application(s), we may also collect information about the phone network associated with your mobile device, your mobile device\'s operating system or platform, the type of mobile device you use, your mobile device\'s unique device ID, and information about the features of our application(s) you accessed. </li>\n    <li> <i>Push Notifications.</i> We may request to send you push notifications regarding your account or certain features of the application(s). If you wish to opt out from receiving these types of communications, you may turn them off in your device\'s settings. </li>\n</ul>\n<p>This information is primarily needed to maintain the security and operation of our application(s), for troubleshooting, and for our internal analytics and reporting purposes.</p>\n<p>All personal information that you provide to us must be true, complete, and accurate, and you must notify us of any changes to such personal information.</p>\n<h2>Information automatically collected</h2>\n<p><strong>In Short:</strong> Some information - such as your Internet Protocol (IP) address and/or browser and device characteristics is collected automatically when you visit our Services.</p>\n<p>We automatically collect certain information when you visit, use, or navigate the Services. This information does not reveal your specific identity (like your name or contact information) but may include device and usage information, such as your IP address, browser and device characteristics, operating system, language preferences, referring URLs, device name, country, location, information about how and when you use our Services, and other technical information. This information is primarily needed to maintain the security and operation of our Services, and for our internal analytics and reporting purposes.</p>\n<p>Like many businesses, we also collect information through cookies and similar technologies.</p> <br>\n<p>The information we collect includes:</p>\n<ul>\n    <li><i>Log and Usage Data.</i> Log and usage data is service-related, diagnostic, usage, and performance information our servers automatically collect when you access or use our Services and which we record in log files. Depending on how you interact with us, this log data may include your IP address, device information, browser type, and settings and information about your activity in the Services (such as the date/time stamps associated with your usage, pages and files viewed, searches, and other actions you take such as which features you use), device event information (such as system activity, error reports (sometimes called \"crash dumps\"), and hardware settings). </li>\n    <li><i>Device Data.</i> We collect device data such as information about your computer, phone, tablet, or other device you use to access the Services. Depending on the device used, this device data may include information such as your IP address (or proxy server), device and application identification numbers, location, browser type, hardware model, Internet service provider and/or mobile carrier, operating system, and system configuration information. </li>\n</ul>\n<p>Information collected when you use our Facebook application(s). We by default access your Facebook basic account information, including your name, email, gender, birthday, current city, and profile picture URL, as well as other information that you choose to make public. We may also request access to other permissions related to your account, such as friends, check-ins, and likes, and you may choose to grant or deny us access to each individual permission. For more information regarding Facebook permissions, refer to the <a target=\"_blank\" rel=\"nofollow\" href=\"https://developers.facebook.com/docs/facebook-login/permissions\">Facebook Permissions Reference</a> page.</p>\n\n<a id=\"how-we-process-your-info\"></a>\n<h1>2. HOW DO WE PROCESS YOUR INFORMATION?</h1>\n<p><strong>In Short:</strong> We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent.</p>\n<p><strong>We process your personal information for a variety of reasons, depending on how you interact with our Services, including:</strong></p>\n<ul>\n    <li><strong>To facilitate account creation and authentication and otherwise manage user accounts.</strong> We may process your information so you can create and log in to your account, as well as keep your account in working order. </li>\n    <li><strong>To deliver and facilitate delivery of services to the user.</strong> We may process your information to provide you with the requested service. </li>\n    <li><strong>To send administrative information to you.</strong> We may process your information to send you details about our products and services, changes to our terms and policies, and other similar information. </li>\n    <li><strong>To save or protect an individual\'s vital interest.</strong> We may process your information when necessary to save or protect an individual\'s vital interest, such as to prevent harm. </li>\n</ul>\n\n<a id=\"what-legal-bases\"></a>\n<h1>3. WHAT LEGAL BASES DO WE RELY ON TO PROCESS YOUR INFORMATION?</h1>\n<p><strong>In Short:</strong> We only process your personal information when we believe it is necessary and we have a valid legal reason (i.e., legal basis) to do so under applicable law, like with your consent, to comply with laws, to provide you with services to enter into or fulfill our contractual obligations, to protect your rights, or to fulfill our legitimate business interests.</p>\n<p><b><i><u>If you are located in the EU or UK, this section applies to you.</u></i></b></p>\n<ul>\n    <li><strong>Consent.</strong> We may process your information if you have given us permission (i.e., consent) to use your personal information for a specific purpose. You can withdraw your consent at any time. </li>\n    <li><strong>Performance of a Contract.</strong> We may process your personal information when we believe it is necessary to fulfill our contractual obligations to you, including providing our Services or at your request prior to entering into a contract with you. </li>\n    <li><strong>Legal Obligations.</strong> We may process your information where we believe it is necessary for compliance with our legal obligations, such as to cooperate with a law enforcement body or regulatory agency, exercise or defend our legal rights, or disclose your information as evidence in litigation in which we are involved. </li>\n    <li><strong>Vital Interests.</strong> We may process your information where we believe it is necessary to protect your vital interests or the vital interests of a third party, such as situations involving potential threats to the safety of any person. </li>\n</ul>\n<p><b><i><u>If you are located in Canada, this section applies to you.</u></i></b></p>\n<p>We may process your information if you have given us specific permission (i.e., express consent) to use your personal information for a specific purpose, or in situations where your permission can be inferred (i.e., implied consent). You can withdraw your consent at any time.</p>\n<p>In some exceptional cases, we may be legally permitted under applicable law to process your information without your consent, including, for example:</p>\n<ul>\n    <li>If collection is clearly in the interests of an individual and consent cannot be obtained in a timely way </li>\n    <li>For investigations and fraud detection and prevention</li>\n    <li>For business transactions provided certain conditions are met</li>\n    <li>If it is contained in a witness statement and the collection is necessary to assess, process, or settle an insurance claim </li>\n    <li>For identifying injured, ill, or deceased persons and communicating with next of kin</li>\n    <li>If we have reasonable grounds to believe an individual has been, is, or may be victim of financial abuse </li>\n    <li>If disclosure is required to comply with a subpoena, warrant, court order, or rules of the court relating to the production of records </li>\n    <li>If it was produced by an individual in the course of their employment, business, or profession and the collection is consistent with the purposes for which the information was produced </li>\n    <li>If the collection is solely for journalistic, artistic, or literary purposes</li>\n    <li>If the information is publicly available and is specified by the regulations</li>\n</ul>\n\n<a id=\"sharing-personal-info\"></a>\n<h1>4. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?</h1>\n<p><strong>In Short:</strong> We may share information in specific situations described in this section and/or with the following categories of third parties.</p>\n<p><strong>Vendors, Consultants, and Other Third-Party Service Providers.</strong> We may share your data with third-party vendors, service providers, contractors, or agents (\"<strong>third parties</strong>\") who perform services for us or on our behalf and require access to such information to do that work. We have contracts in place with our third parties, which are designed to help safeguard your personal information. This means that they cannot do anything with your personal information unless we have instructed them to do it. They will also not share your personal information with any organization apart from us. They also commit to protect the data they hold on our behalf and to retain it for the period we instruct. The categories of third parties we may share personal information with are as follows:</p>\n<ul>\n    <li>Data Analytics Services</li>\n    <li>User Account Registration &amp; Authentication Services</li>\n</ul>\n<p>We also may need to share your personal information in the following situations:</p>\n<ul>\n    <li><strong>Business Transfers.</strong> We may share or transfer your information in connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business to another company. </li>\n    <li><strong>Affiliates.</strong> We may share your information with our affiliates, in which case we will require those affiliates to honor this privacy notice. Affiliates include our parent company and any subsidiaries, joint venture partners, or other companies that we control or that are under common control with us. </li>\n</ul>\n\n<a id=\"do-we-use-cookies\"></a>\n<h1>5. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</h1>\n<p><strong>In Short:</strong> We may use cookies and other tracking technologies to collect and store your information.</p>\n<p>We may use cookies to keep your session authenticated and secure, as well as to store user information for use in the application.</p>\n\n<a id=\"social-logins\"></a>\n<h1>6. HOW DO WE HANDLE YOUR SOCIAL LOGINS?</h1>\n<p><strong>In Short:</strong> If you choose to register or log in to our services using a social media account, we may have access to certain information about you.</p>\n<p>Our Services offer you the ability to register and log in using your third-party social media account details (like your Facebook or Twitter logins). Where you choose to do this, we will receive certain profile information about you from your social media provider. The profile information we receive may vary depending on the social media provider concerned, but will often include your name, email address, friends list, and profile picture, as well as other information you choose to make public on such a social media platform. If you log in using Facebook, we may also request access to other permissions related to your account, such as your friends, check-ins, and likes, and you may choose to grant or deny us access to each individual permission.</p>\n<p>We will use the information we receive only for the purposes that are described in this privacy notice or that are otherwise made clear to you on the relevant Services. Please note that we do not control, and are not responsible for, other uses of your personal information by your third-party social media provider. We recommend that you review their privacy notice to understand how they collect, use, and share your personal information, and how you can set your privacy preferences on their sites and apps.</p>\n\n<a id=\"how-long-we-keep-your-info\"></a>\n<h1>7. HOW LONG DO WE KEEP YOUR INFORMATION?</h1>\n<p><strong>In Short:</strong> We keep your information for as long as necessary to fulfill the purposes outlined in this privacy notice unless otherwise required by law.</p>\n<p> We will only keep your personal information for as long as it is necessary for the purposes set out in this privacy notice, unless a longer retention period is required or permitted by law (such as tax, accounting, or other legal requirements). No purpose in this notice will require us keeping your personal information for longer than the period of time in which users have an account with us.</p>\n<p>When we have no ongoing legitimate business need to process your personal information, we will either delete or anonymize such information, or, if this is not possible (for example, because your personal information has been stored in backup archives), then we will securely store your personal information and isolate it from any further processing until deletion is possible.</p>\n\n<a id=\"how-we-keep-your-info-safe\"></a>\n<h1>8. HOW DO WE KEEP YOUR INFORMATION SAFE?</h1>\n<p><strong>In Short:</strong> We aim to protect your personal information through a system of organizational and technical security measures.</p>\n<p>We have implemented appropriate and reasonable technical and organizational security measures designed to protect the security of any personal information we process. However, despite our safeguards and efforts to secure your information, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure, so we cannot promise or guarantee that hackers, cybercriminals, or other unauthorized third parties will not be able to defeat our security and improperly collect, access, steal, or modify your information. Although we will do our best to protect your personal information, transmission of personal information to and from our Services is at your own risk. You should only access the Services within a secure environment.</p>\n\n<a id=\"your-privacy-rights\"></a>\n<h1>9. WHAT ARE YOUR PRIVACY RIGHTS?</h1>\n<p><strong>In Short:</strong> In some regions, such as the European Economic Area (EEA), United Kingdom (UK), and Canada, you have rights that allow you greater access to and control over your personal information. You may review, change, or terminate your account at any time.</p>\n<p>In some regions (like the EEA, UK, and Canada), you have certain rights under applicable data protection laws. These may include the right (i) to request access and obtain a copy of your personal information, (ii) to request rectification or erasure; (iii) to restrict the processing of your personal information; and (iv) if applicable, to data portability. In certain circumstances, you may also have the right to object to the processing of your personal information. You can make such a request by contacting us by using the contact details provided in the section <a href=\"#contacting-us\">\"HOW CAN YOU CONTACT US ABOUT THIS NOTICE?\"</a> below.</p>\n<p>We will consider and act upon any request in accordance with applicable data protection laws.</p>\n<p>If you are located in the EEA or UK and you believe we are unlawfully processing your personal information, you also have the right to complain to your local data protection supervisory authority. You can find their contact details <a target=\"_blank\" rel=\"nofollow\" href=\"https://ec.europa.eu/justice/data-protection/bodies/authorities/index_en.htm.\">here.</a></p>\n<p>If you are located in Switzerland, the contact details for the data protection authorities are available <a target=\"_blank\" rel=\"nofollow\" href=\"https://www.edoeb.admin.ch/edoeb/en/home.html\">here</a></p>\n<p>Withdrawing your consent: If we are relying on your consent to process your personal information, which may be express and/or implied consent depending on the applicable law, you have the right to withdraw your consent at any time. You can withdraw your consent at any time by contacting us by using the contact details provided in the section <a href=\"#contacting-us\">\"HOW CAN YOU CONTACT US ABOUT THIS NOTICE?\"</a> below. </p>\n<p>However, please note that this will not affect the lawfulness of the processing before its withdrawal, nor when applicable law allows, will it affect the processing of your personal information conducted in reliance on lawful processing grounds other than consent.</p>\n<h2>Account Information</h2>\n<p>If you would at any time like to review or change the information in your account or terminate your account, you can:</p>\n<ul>\n    <li>Contact us using the contact information provided.</li>\n</ul>\n<p>Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, we may retain some information in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our legal terms and/or comply with applicable legal requirements.</p>\n<p><strong><u>Cookies and similar technologies:</u></strong> Most Web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove cookies and to reject cookies. If you choose to remove cookies or reject cookies, this could affect certain features or services of our Services. To opt out of interest-based advertising by advertisers on our Services visit <a target=\"_blank\" rel=\"nofollow\" href=\"https://www.aboutads.info/choices/\">https://www.aboutads.info/choices/</a></p>\n<p>If you have questions or comments about your privacy rights, you may email us at <a href=\"mailto:tech@languageconservancy.org\">tech@languageconservancy.org</a>.</p>\n\n<a id=\"controls-for-do-not-track\"></a>\n<h1>10. CONTROLS FOR DO-NOT-TRACK FEATURES </h1>\n<p>Most web browsers and some mobile operating systems and mobile applications include a Do-Not-Track (\"DNT\") feature or setting you can activate to signal your privacy preference not to have data about your online browsing activities monitored and collected. At this stage no uniform technology standard for recognizing and implementing DNT signals has been finalized. As such, we do not currently respond to DNT browser signals or any other mechanism that automatically communicates your choice not to be tracked online. If a standard for online tracking is adopted that we must follow in the future, we will inform you about that practice in a revised version of this privacy notice.</p>\n\n<a id=\"california-residents\"></a>\n<h1>11. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS? </h1>\n<p><strong>In Short:</strong> Yes, if you are a resident of California, you are granted specific rights regarding access to your personal information.</p>\n<p>California Civil Code Section 1798.83, also known as the \"Shine The Light\" law, permits our users who are California residents to request and obtain from us, once a year and free of charge, information about categories of personal information (if any) we disclosed to third parties for direct marketing purposes and the names and addresses of all third parties with which we shared personal information in the immediately preceding calendar year. If you are a California resident and would like to make such a request, please submit your request in writing to us using the contact information provided below.</p>\n<p> If you are under 18 years of age, reside in California, and have a registered account with Services, you have the right to request removal of unwanted data that you publicly post on the Services. To request removal of such data, please contact us using the contact information provided below and include the email address associated with your account and a statement that you reside in California. We will make sure the data is not publicly displayed on the Services, but please be aware that the data may not be completely or comprehensively removed from all our systems (e.g., backups, etc.).</p>\n<h2>CCPA Privacy Notice</h2>\n<p>The California Code of Regulations defines a \"resident\" as:</p>\n<div>\n    <p>(1) every individual who is in the State of California for other than a temporary or transitory purpose and</p>\n    <p>(2) every individual who is domiciled in the State of California who is outside the State of California for a temporary or transitory purpose</p>\n</div>\n<p>All other individuals are defined as \"non-residents.\"</p>\n<p> If this definition of \"resident\" applies to you, we must adhere to certain rights and obligations regarding your personal information.</p>\n<p><strong>What categories of personal information do we collect?</strong></p>\n<p>We have collected the following categories of personal information in the past twelve (12) months:</p> Category Examples Collected A. Identifiers Contact details, such as real name, alias, postal address, telephone or mobile contact number, unique personal identifier, online identifier, Internet Protocol address, email address, and account name YES B. Personal information categories listed in the California Customer Records statute Name, contact information, education, employment, employment history, and financial information YES C. Protected classification characteristics under California or federal law Gender and date of birth YES D. Commercial information Transaction information, purchase history, financial details, and payment information NO E. Biometric information Fingerprints and voiceprints NO F. Internet or other similar network activity Browsing history, search history, online behavior, interest data, and interactions with our and other websites, applications, systems, and advertisements NO G. Geolocation data Device location NO H. Audio, electronic, visual, thermal, olfactory, or similar information Images and audio, video or call recordings created in connection with our business activities NO I. Professional or employment-related information Business contact details in order to provide you our services at a business level or job title, work history, and professional qualifications if you apply for a job with us NO J. Education Information Student records and directory information NO K. Inferences drawn from other personal information Inferences drawn from any of the collected personal information listed above to create a profile or summary about, for example, an individual’s preferences and characteristics NO <p>We may also collect other personal information outside of these categories instances where you interact with us in person, online, or by phone or mail in the context of:</p>\n<ul>\n    <li>Receiving help through our customer support channels;</li>\n    <li>Participation in customer surveys or contests; and</li>\n    <li>Facilitation in the delivery of our Services and to respond to your inquiries. </li>\n</ul>\n<p><strong>How do we use and share your personal information?</strong></p>\n<p>The Language Conservancy, Inc. collects and shares your personal information through:</p>\n<ul>\n    <li>Social media plugins: Facebook Login , Google Login and Clever Login. We use social media features, such as a \"Like\" button, and widgets, such as a \"Share\" button, in our Services. Such features may process your Internet Protocol (IP) address and track which page you are visiting on our website. We may place a cookie to enable the feature to work correctly. If you are logged in on a certain social media platform and you interact with a widget or button belonging to that social media platform, this information may be recorded to your profile of such social media platform. To avoid this, you should log out from that social media platform before accessing or using the Services. Social media features and widgets may be hosted by a third party or hosted directly on our Services. Your interactions with these features are governed by the privacy notices of the companies that provide them. By clicking on one of these buttons, you agree to the use of this plugin and consequently the transfer of personal information to the corresponding social media service. We have no control over the essence and extent of these transmitted data or their additional processing. </li>\n</ul>\n<p>More information about our data collection and sharing practices can be found in this privacy notice. </p>\n<p>You may contact us by visiting <a target=\"_blank\" rel=\"nofollow\" href=\"https://languageconservancy.org/contact-us\">https://languageconservancy.org/contact-us</a>, or by referring to the contact details at the bottom of this document.</p>\n<p>If you are using an authorized agent to exercise your right to opt out we may deny a request if the authorized agent does not submit proof that they have been validly authorized to act on your behalf.</p>\n<p><strong>Will your information be shared with anyone else? </strong></p>\n<p>We may disclose your personal information with our service providers pursuant to a written contract between us and each service provider. Each service provider is a for-profit entity that processes the information on our behalf.</p>\n<p> We may use your personal information for our own business purposes, such as for undertaking internal research for technological development and demonstration. This is not considered to be \"selling\" of your personal information.</p>\n<p>The Language Conservancy, Inc. has not sold any personal information to third parties for a business or commercial purpose in the preceding twelve (12) months. The Language Conservancy, Inc. has disclosed the following categories of personal information to third parties for a business or commercial purpose in the preceding twelve (12) months:</p>\n<ul>\n    <li>Category A. Identifiers, such as contact details like your real name, alias, postal address, telephone or mobile contact number, unique personal identifier, online identifier, Internet Protocol address, email address, and account name. </li>\n    <li>Category B. Personal information, as defined in the California Customer Records law, such as your name, contact information, education, employment, employment history, and financial information. </li>\n</ul>\n<p>The categories of third parties to whom we disclosed personal information for a business or commercial purpose can be found under \"WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?\".</p>\n<p><strong>Your rights with respect to your personal data</strong></p>\n<p><u>Right to request deletion of the data — Request to delete</u></p>\n<p>You can ask for the deletion of your personal information. If you ask us to delete your personal information, we will respect your request and delete your personal information, subject to certain exceptions provided by law, such as (but not limited to) the exercise by another consumer of his or her right to free speech, our compliance requirements resulting from a legal obligation, or any processing that may be required to protect against illegal activities.</p>\n<p>You may also delete your account in the Account Settings page of the application.\n<p><u>Right to be informed — Request to know</u></p>\n<p>Depending on the circumstances, you have a right to know:</p>\n<ul>\n    <li>whether we collect and use your personal information;</li>\n    <li>the categories of personal information that we collect;</li>\n    <li>the purposes for which the collected personal information is used;</li>\n    <li>whether we sell your personal information to third parties;</li>\n    <li>the categories of personal information that we sold or disclosed for a business purpose;</li>\n    <li>the categories of third parties to whom the personal information was sold or disclosed for a business purpose; and </li>\n    <li>the business or commercial purpose for collecting or selling personal information.</li>\n</ul>\n<p>In accordance with applicable law, we are not obligated to provide or delete consumer information that is de-identified in response to a consumer request or to re-identify individual data to verify a consumer request.</p>\n<p><u>Right to Non-Discrimination for the Exercise of a Consumer’s Privacy Rights</u></p>\n<p>We will not discriminate against you if you exercise your privacy rights.</p>\n<p><u>Verification process</u></p>\n<p>Upon receiving your request, we will need to verify your identity to determine you are the same person about whom we have the information in our system. These verification efforts require us to ask you to provide information so that we can match it with information you have previously provided us. For instance, depending on the type of request you submit, we may ask you to provide certain information so that we can match the information you provide with the information we already have on file, or we may contact you through a communication method (e.g., phone or email) that you have previously provided to us. We may also use other verification methods as the circumstances dictate. </p>\n<p>We will only use personal information provided in your request to verify your identity or authority to make the request. To the extent possible, we will avoid requesting additional information from you for the purposes of verification. However, if we cannot verify your identity from the information already maintained by us, we may request that you provide additional information for the purposes of verifying your identity and for security or fraud-prevention purposes. We will delete such additionally provided information as soon as we finish verifying you.</p>\n<p><u>Other privacy rights</u></p>\n<ul>\n    <li>You may object to the processing of your personal information.</li>\n    <li>You may request correction of your personal data if it is incorrect or no longer relevant, or ask to restrict the processing of the information. </li>\n    <li>You can designate an authorized agent to make a request under the CCPA on your behalf. We may deny a request from an authorized agent that does not submit proof that they have been validly authorized to act on your behalf in accordance with the CCPA. </li>\n    <li>You may request to opt out from future selling of your personal information to third parties. Upon receiving an opt-out request, we will act upon the request as soon as feasibly possible, but no later than fifteen (15) days from the date of the request submission. </li>\n</ul>\n<p>To exercise these rights, you can contact us by visiting <a target=\"_blank\" rel=\"nofollow\" href=\"https://hoitewoiperes.com/contact-us\">https://hoitewoiperes.com/contact-us</a>, or by referring to the contact details at the bottom of this document. If you have a complaint about how we handle your data, we would like to hear from you.</p>\n\n<a id=\"updates-to-this-notice\"></a>\n<h1>12. DO WE MAKE UPDATES TO THIS NOTICE?</h1>\n<p><strong>In Short:</strong> Yes, we will update this notice as necessary to stay compliant with relevant laws.</p>\n<p>We may update this privacy notice from time to time. The updated version will be indicated by an updated \"Revised\" date and the updated version will be effective as soon as it is accessible. If we make material changes to this privacy notice, we may notify you either by prominently posting a notice of such changes or by directly sending you a notification. We encourage you to review this privacy notice frequently to be informed of how we are protecting your information.</p>\n\n<a id=\"contacting-us\"></a>\n<h1>13. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</h1>\n<p>If you have questions or comments about this notice, you may email us at <a href=\"mailto:tech@languageconservancy.org\">tech@languageconservancy.org</a> or by post to:</p>\n<p>The Language Conservancy, Inc.<br> 1720 N Kinser Pike<br> Ste 100<br> Bloomington, IN 47404<br> United States </p>\n\n<a id=\"review-update-delete-your-data\"></a>\n<h1>14. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?</h1>\n<p> Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, change that information, or delete it. To request to review, update, or delete your personal information, please submit a request by contacting <a href=\"mailto:tech@languageconservancy.org\">tech@languageconservancy.org</a>, or go to your account settings page and click the button next to \'Delete Account\'.</p>', '', ''),
 (10, 'terms', 'Terms of Service', '<p>By accessing this Website, accessible from localhost, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this site. The materials contained in this Website are protected by copyright and trademark law.</p>\n\n<h2>2. Use License</h2>\n\n<p>Permission is granted to temporarily download one copy of the materials on The Language Conservancy\'s website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>\n\n<ul>\n  <li>modify or copy the materials;</li>\n  <li>use the materials for any commercial purpose or for any public display;</li>\n  <li>attempt to reverse engineer any software contained on The Language Conservancy\'s website;</li>\n  <li>remove any copyright or other proprietary notations from the materials; or</li>\n  <li>transfer the materials to another person or \"mirror\" the materials on any other server.</li>\n</ul>\n\n<p>This will lead The Language Conservancy to terminate access upon violations of any of these restrictions. Upon termination, your viewing right will also be terminated and you should destroy any downloaded materials in your possession whether it is printed or electronic format. These Terms of Service has been created with the help of the <a target=\"_blank\" rel=\"nofollow\" href=\"https://www.termsofservicegenerator.net\">Terms Of Service Generator</a>.</p>\n\n<h2>3. Disclaimer</h2>\n\n<p>All the materials on The Language Conservancy\'s website are provided \"as is\". The Language Conservancy makes no warranties, may it be expressed or implied, therefore negates all other warranties. Furthermore, The Language Conservancy does not make any representations concerning the accuracy or reliability of the use of the materials on its Website or otherwise relating to such materials or any sites linked to this Website.</p>\n\n<h2>4. Limitations</h2>\n\n<p>The Language Conservancy or its suppliers will not be hold accountable for any damages that will arise with the use or inability to use the materials on The Language Conservancy\'s website, even if The Language Conservancy or an authorized representative of this Website has been notified, orally or written, of the possibility of such damage. Some jurisdiction does not allow limitations on implied warranties or limitations of liability for incidental damages, these limitations may not apply to you.</p>\n\n<h2>5. Revisions and Errata</h2>\n\n<p>The materials appearing on The Language Conservancy\'s website may include technical, typographical, or photographic errors. The Language Conservancy will not promise that any of the materials in this Website are accurate, complete, or current. The Language Conservancy may change the materials contained on its Website at any time without notice. The Language Conservancy does not make any commitment to update the materials.</p>\n\n<h2>6. Links</h2>\n\n<p>The Language Conservancy has not reviewed all of the sites linked to its Website and is not responsible for the contents of any such linked site. The presence of any link does not imply endorsement by The Language Conservancy of the site. The use of any linked website is at the user\'s own risk.</p>\n\n<h2>7. Site Terms of Use Modifications</h2>\n\n<p>The Language Conservancy may revise these Terms of Use for its Website at any time without prior notice. By using this Website, you are agreeing to be bound by the current version of these Terms and Conditions of Use.</p>\n\n<h2>8. Your Privacy</h2>\n\n<p>Please read our <a target=\"_blank\" rel=\"nofollow\" href=\"http://localhost/info/privacy.php\">Privacy Policy</a>.</p>\n\n<h2>9. Governing Law</h2>\n\n<p>Any claim related to The Language Conservancy\'s website shall be governed by the laws of us without regards to its conflict of law provisions.</p>', '', ''),
@@ -1524,12 +1524,12 @@ INSERT INTO `contents` (`id`, `keyword`, `title`, `text`, `text_mobile`, `img_mo
 --
 
 CREATE TABLE `emailcontents` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `display_name` varchar(255) DEFAULT NULL,
   `key` varchar(255) DEFAULT NULL,
   `subject` varchar(255) DEFAULT NULL,
-  `content` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `content` mediumtext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `emailcontents`
@@ -1549,11 +1549,11 @@ INSERT INTO `emailcontents` (`id`, `display_name`, `key`, `subject`, `content`) 
 --
 
 CREATE TABLE `exercises` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `name` varchar(500) NOT NULL COMMENT 'Admin-given name to the Exercise. Not used in software',
   `exercise_type` varchar(255) DEFAULT NULL COMMENT 'Type of exercise, written out (multiple-choice, truefalse, etc)',
   `card_type` varchar(255) DEFAULT NULL COMMENT 'Type of card, card, custom, card_group, etc',
-  `noofcard` int(11) DEFAULT NULL COMMENT 'Number of cards used, TODO',
+  `noofcard` int DEFAULT NULL COMMENT 'Number of cards used, TODO',
   `instruction` varchar(500) DEFAULT NULL COMMENT 'Sentence explaining to user what to do in the exercise',
   `bonus` float(11,2) NOT NULL DEFAULT '0.00' COMMENT 'TODO',
   `promteresponsetype` varchar(255) DEFAULT NULL COMMENT 'Required',
@@ -1561,7 +1561,7 @@ CREATE TABLE `exercises` (
   `responsetype` varchar(255) DEFAULT NULL COMMENT 'Which data to display. Match-pair puts this info in exercise options since there are multiple cards each with their own data settings',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `exercises`
@@ -1677,18 +1677,18 @@ INSERT INTO `exercises` (`id`, `name`, `exercise_type`, `card_type`, `noofcard`,
 --
 
 CREATE TABLE `exercise_custom_options` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `exercise_id` int(11) UNSIGNED DEFAULT NULL,
-  `exercise_option_id` int(11) UNSIGNED DEFAULT NULL,
-  `prompt_audio_id` int(11) UNSIGNED DEFAULT NULL,
-  `prompt_image_id` int(11) UNSIGNED DEFAULT NULL,
-  `prompt_html` text CHARACTER SET utf8,
-  `response_audio_id` int(11) UNSIGNED DEFAULT NULL,
-  `response_image_id` int(11) UNSIGNED DEFAULT NULL,
-  `response_html` text CHARACTER SET utf8,
+  `id` int UNSIGNED NOT NULL,
+  `exercise_id` int UNSIGNED DEFAULT NULL,
+  `exercise_option_id` int UNSIGNED DEFAULT NULL,
+  `prompt_audio_id` int UNSIGNED DEFAULT NULL,
+  `prompt_image_id` int UNSIGNED DEFAULT NULL,
+  `prompt_html` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `response_audio_id` int UNSIGNED DEFAULT NULL,
+  `response_image_id` int UNSIGNED DEFAULT NULL,
+  `response_html` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `exercise_custom_options`
@@ -1721,20 +1721,20 @@ INSERT INTO `exercise_custom_options` (`id`, `exercise_id`, `exercise_option_id`
 --
 
 CREATE TABLE `exercise_options` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `type` enum('card','group') DEFAULT NULL,
   `card_type` enum('P','R','O') DEFAULT NULL COMMENT 'P=Promote,R=Response,O=Option',
-  `exercise_id` int(11) UNSIGNED NOT NULL,
-  `card_id` int(11) UNSIGNED DEFAULT NULL,
-  `group_id` int(11) UNSIGNED DEFAULT NULL,
-  `responce_card_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'this coloum is for match the pair question',
+  `exercise_id` int UNSIGNED NOT NULL,
+  `card_id` int UNSIGNED DEFAULT NULL,
+  `group_id` int UNSIGNED DEFAULT NULL,
+  `responce_card_id` int UNSIGNED DEFAULT NULL COMMENT 'this coloum is for match the pair question',
   `prompt_preview_option` varchar(50) DEFAULT NULL COMMENT 'this coloum is for match the pair question',
   `responce_preview_option` varchar(50) DEFAULT NULL,
   `response_true_false` enum('Y','N') DEFAULT NULL,
   `fill_in_the_blank_type` enum('mcq','typing') DEFAULT NULL,
   `text_option` varchar(255) DEFAULT NULL,
-  `option_position` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+  `option_position` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `exercise_options`
@@ -2101,17 +2101,17 @@ INSERT INTO `exercise_options` (`id`, `type`, `card_type`, `exercise_id`, `card_
 --
 
 CREATE TABLE `files` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `upload_user_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
-  `description` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `upload_user_id` int UNSIGNED DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `format` varchar(255) DEFAULT NULL,
-  `type` varchar(50) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
-  `file_name` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
-  `aws_link` varchar(500) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
+  `type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `aws_link` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `files`
@@ -2142,15 +2142,15 @@ INSERT INTO `files` (`id`, `upload_user_id`, `name`, `description`, `format`, `t
 --
 
 CREATE TABLE `forums` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `path_id` int(10) UNSIGNED DEFAULT NULL,
-  `level_id` int(10) UNSIGNED DEFAULT NULL,
-  `unit_id` int(10) UNSIGNED DEFAULT NULL,
-  `title` varchar(255) COLLATE latin1_general_ci NOT NULL,
-  `subtitle` text COLLATE latin1_general_ci NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `path_id` int UNSIGNED DEFAULT NULL,
+  `level_id` int UNSIGNED DEFAULT NULL,
+  `unit_id` int UNSIGNED DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `subtitle` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `forums`
@@ -2227,15 +2227,15 @@ INSERT INTO `forums` (`id`, `path_id`, `level_id`, `unit_id`, `title`, `subtitle
 --
 
 CREATE TABLE `forum_flags` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT NULL,
-  `post_id` int(11) UNSIGNED DEFAULT NULL,
-  `flag` enum('R') COLLATE latin1_general_ci DEFAULT 'R',
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  `post_id` int UNSIGNED DEFAULT NULL,
+  `flag` enum('R') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'R',
   `entry_time` datetime DEFAULT NULL,
-  `report_type` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+  `report_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -2244,11 +2244,11 @@ CREATE TABLE `forum_flags` (
 --
 
 CREATE TABLE `forum_flag_reasons` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `reason` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `forum_flag_reasons`
@@ -2268,20 +2268,20 @@ INSERT INTO `forum_flag_reasons` (`id`, `reason`, `created`, `modified`) VALUES
 --
 
 CREATE TABLE `forum_posts` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `parent_id` int(11) UNSIGNED DEFAULT NULL,
-  `forum_id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `flag_id` int(11) UNSIGNED DEFAULT NULL,
-  `title` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
-  `content` text CHARACTER SET utf8,
-  `audio` int(11) UNSIGNED DEFAULT NULL,
-  `sticky` enum('Y','N') COLLATE latin1_general_ci NOT NULL DEFAULT 'N',
-  `is_hide` enum('Y','N') COLLATE latin1_general_ci NOT NULL DEFAULT 'N',
+  `id` int UNSIGNED NOT NULL,
+  `parent_id` int UNSIGNED DEFAULT NULL,
+  `forum_id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
+  `flag_id` int UNSIGNED DEFAULT NULL,
+  `title` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `audio` int UNSIGNED DEFAULT NULL,
+  `sticky` enum('Y','N') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'N',
+  `is_hide` enum('Y','N') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'N',
   `entry_time` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -2290,12 +2290,12 @@ CREATE TABLE `forum_posts` (
 --
 
 CREATE TABLE `forum_post_viewers` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `post_id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `post_id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -2304,13 +2304,13 @@ CREATE TABLE `forum_post_viewers` (
 --
 
 CREATE TABLE `friends` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT NULL,
-  `friend_id` int(11) UNSIGNED DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  `friend_id` int UNSIGNED DEFAULT NULL,
   `status` enum('R','A') DEFAULT 'A' COMMENT 'R= request, A=Approve',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -2319,14 +2319,14 @@ CREATE TABLE `friends` (
 --
 
 CREATE TABLE `global_fires` (
-  `id` int(11) NOT NULL,
-  `user_id` int(10) UNSIGNED DEFAULT '0',
-  `fire_days` int(11) DEFAULT '0',
-  `streak_days` int(11) DEFAULT '0',
+  `id` int NOT NULL,
+  `user_id` int UNSIGNED DEFAULT '0',
+  `fire_days` int DEFAULT '0',
+  `streak_days` int DEFAULT '0',
   `last_day` date DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `global_fires`
@@ -2344,9 +2344,9 @@ INSERT INTO `global_fires` (`id`, `user_id`, `fire_days`, `streak_days`, `last_d
 --
 
 CREATE TABLE `grades` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `grade` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -2355,17 +2355,17 @@ CREATE TABLE `grades` (
 --
 
 CREATE TABLE `inflections` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `headword` varchar(255) NOT NULL,
-  `reference_dictionary_id` int(11) UNSIGNED DEFAULT NULL,
-  `inflection_full_entry` text,
+  `reference_dictionary_id` int UNSIGNED DEFAULT NULL,
+  `inflection_full_entry` mediumtext,
   `FSTR_INEXACT` varchar(255) NOT NULL,
-  `FSTR_HTML` text NOT NULL,
+  `FSTR_HTML` mediumtext NOT NULL,
   `GSTR` varchar(255) NOT NULL,
   `PS` varchar(255) NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -2374,16 +2374,16 @@ CREATE TABLE `inflections` (
 --
 
 CREATE TABLE `learningpaths` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `label` varchar(255) CHARACTER SET ucs2 DEFAULT NULL,
-  `description` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `admin_access` enum('1','0') COLLATE latin1_general_ci NOT NULL DEFAULT '1',
-  `user_access` enum('1','0') COLLATE latin1_general_ci NOT NULL DEFAULT '1',
-  `image_id` int(11) UNSIGNED DEFAULT NULL,
-  `owner_id` int(11) UNSIGNED DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `admin_access` enum('1','0') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '1',
+  `user_access` enum('1','0') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '1',
+  `image_id` int UNSIGNED DEFAULT NULL,
+  `owner_id` int UNSIGNED DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `learningpaths`
@@ -2400,13 +2400,13 @@ INSERT INTO `learningpaths` (`id`, `label`, `description`, `admin_access`, `user
 --
 
 CREATE TABLE `learningspeed` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `label` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `minutes` int(11) DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `minutes` int DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `learningspeed`
@@ -2425,12 +2425,12 @@ INSERT INTO `learningspeed` (`id`, `label`, `description`, `minutes`, `created`,
 --
 
 CREATE TABLE `lessons` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `lessons`
@@ -2538,17 +2538,17 @@ INSERT INTO `lessons` (`id`, `name`, `type`, `created`, `modified`) VALUES
 --
 
 CREATE TABLE `lesson_frames` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `lesson_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
-  `audio_id` int(11) UNSIGNED DEFAULT NULL,
-  `duration` int(11) DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL,
-  `number_of_block` int(11) DEFAULT '1',
+  `id` int UNSIGNED NOT NULL,
+  `lesson_id` int UNSIGNED NOT NULL DEFAULT '0',
+  `audio_id` int UNSIGNED DEFAULT NULL,
+  `duration` int DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `number_of_block` int DEFAULT '1',
   `frame_preview` enum('landscape','portrait') DEFAULT 'landscape',
-  `frameorder` int(11) DEFAULT '1',
+  `frameorder` int DEFAULT '1',
   `modified` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `lesson_frames`
@@ -2657,23 +2657,23 @@ INSERT INTO `lesson_frames` (`id`, `lesson_id`, `audio_id`, `duration`, `name`, 
 --
 
 CREATE TABLE `lesson_frame_blocks` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `lesson_frame_id` int(11) UNSIGNED DEFAULT NULL,
-  `card_id` int(11) UNSIGNED DEFAULT NULL,
-  `audio_id` int(11) UNSIGNED DEFAULT NULL,
-  `image_id` int(11) UNSIGNED DEFAULT NULL,
-  `video_id` int(11) UNSIGNED DEFAULT NULL,
-  `block_no` int(11) DEFAULT NULL,
-  `type` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_ci DEFAULT NULL COMMENT 'card,custom HTML,Audio file,Image file,Video file',
+  `id` int UNSIGNED NOT NULL,
+  `lesson_frame_id` int UNSIGNED DEFAULT NULL,
+  `card_id` int UNSIGNED DEFAULT NULL,
+  `audio_id` int UNSIGNED DEFAULT NULL,
+  `image_id` int UNSIGNED DEFAULT NULL,
+  `video_id` int UNSIGNED DEFAULT NULL,
+  `block_no` int DEFAULT NULL,
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'card,custom HTML,Audio file,Image file,Video file',
   `is_card_lakota` enum('Y','N') DEFAULT 'N',
   `is_card_english` enum('Y','N') DEFAULT 'N',
   `is_card_audio` enum('Y','N') DEFAULT 'N',
   `is_card_video` enum('Y','N') DEFAULT 'N',
   `is_card_image` enum('Y','N') DEFAULT 'N',
-  `custom_html` text,
+  `custom_html` mediumtext,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `lesson_frame_blocks`
@@ -2875,13 +2875,13 @@ INSERT INTO `lesson_frame_blocks` (`id`, `lesson_frame_id`, `card_id`, `audio_id
 --
 
 CREATE TABLE `levels` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `description` text,
-  `image_id` int(11) UNSIGNED DEFAULT NULL,
+  `description` mediumtext,
+  `image_id` int UNSIGNED DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `levels`
@@ -2908,15 +2908,15 @@ INSERT INTO `levels` (`id`, `name`, `description`, `image_id`, `created`, `modif
 --
 
 CREATE TABLE `level_units` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `learningpath_id` int(11) UNSIGNED NOT NULL,
-  `level_id` int(11) UNSIGNED NOT NULL,
-  `unit_id` int(11) UNSIGNED NOT NULL,
-  `optional` tinyint(3) NOT NULL DEFAULT '0',
-  `sequence` smallint(6) NOT NULL DEFAULT '1',
+  `id` int UNSIGNED NOT NULL,
+  `learningpath_id` int UNSIGNED NOT NULL,
+  `level_id` int UNSIGNED NOT NULL,
+  `unit_id` int UNSIGNED NOT NULL,
+  `optional` tinyint NOT NULL DEFAULT '0',
+  `sequence` smallint NOT NULL DEFAULT '1',
   `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `level_units`
@@ -2976,12 +2976,12 @@ INSERT INTO `level_units` (`id`, `learningpath_id`, `level_id`, `unit_id`, `opti
 --
 
 CREATE TABLE `passwordreset` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -2990,13 +2990,13 @@ CREATE TABLE `passwordreset` (
 --
 
 CREATE TABLE `path_levels` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `learningpath_id` int(11) UNSIGNED NOT NULL,
-  `level_id` int(11) UNSIGNED NOT NULL,
-  `sequence` smallint(6) NOT NULL DEFAULT '1',
+  `id` int UNSIGNED NOT NULL,
+  `learningpath_id` int UNSIGNED NOT NULL,
+  `level_id` int UNSIGNED NOT NULL,
+  `sequence` smallint NOT NULL DEFAULT '1',
   `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `path_levels`
@@ -3023,7 +3023,7 @@ INSERT INTO `path_levels` (`id`, `learningpath_id`, `level_id`, `sequence`, `cre
 --
 
 CREATE TABLE `point_references` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `exercise` varchar(50) NOT NULL,
   `exercise_type` varchar(50) DEFAULT NULL,
   `card_type` varchar(50) DEFAULT NULL,
@@ -3037,7 +3037,7 @@ CREATE TABLE `point_references` (
   `is_review_included` enum('0','1') NOT NULL DEFAULT '1',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `point_references`
@@ -3171,17 +3171,17 @@ INSERT INTO `point_references` (`id`, `exercise`, `exercise_type`, `card_type`, 
 --
 
 CREATE TABLE `progress_timers` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `path_id` int(10) UNSIGNED DEFAULT NULL,
-  `level_id` int(10) UNSIGNED DEFAULT NULL,
-  `user_id` int(10) UNSIGNED DEFAULT NULL,
-  `unit_id` int(10) UNSIGNED DEFAULT NULL,
-  `timer_type` enum('review','path') COLLATE latin1_general_ci DEFAULT NULL,
-  `minute_spent` int(10) UNSIGNED DEFAULT '0',
+  `id` int UNSIGNED NOT NULL,
+  `path_id` int UNSIGNED DEFAULT NULL,
+  `level_id` int UNSIGNED DEFAULT NULL,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  `unit_id` int UNSIGNED DEFAULT NULL,
+  `timer_type` enum('review','path') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `minute_spent` int UNSIGNED DEFAULT '0',
   `entry_date` date DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `progress_timers`
@@ -3357,14 +3357,14 @@ INSERT INTO `progress_timers` (`id`, `path_id`, `level_id`, `user_id`, `unit_id`
 --
 
 CREATE TABLE `recording_audios` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED DEFAULT NULL,
-  `exercise_id` int(11) UNSIGNED DEFAULT NULL,
-  `file_name` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `aws_link` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `type` enum('exercise','review') COLLATE latin1_general_ci DEFAULT 'exercise',
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  `exercise_id` int UNSIGNED DEFAULT NULL,
+  `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `aws_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `type` enum('exercise','review') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'exercise',
   `created` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -3373,17 +3373,17 @@ CREATE TABLE `recording_audios` (
 --
 
 CREATE TABLE `reference_dictionary` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `audio` int(11) UNSIGNED DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `audio` int UNSIGNED DEFAULT NULL,
   `lakota` varchar(255) NOT NULL,
   `english` varchar(255) NOT NULL,
   `morphology` varchar(255) DEFAULT NULL,
   `reference` varchar(255) DEFAULT NULL,
-  `full_entry` text,
+  `full_entry` mediumtext,
   `part_of_speech` varchar(255) NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -3392,14 +3392,14 @@ CREATE TABLE `reference_dictionary` (
 --
 
 CREATE TABLE `review_counters` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `level_id` int(11) UNSIGNED DEFAULT NULL,
-  `unit_id` int(11) UNSIGNED DEFAULT NULL,
-  `counter` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
+  `level_id` int UNSIGNED DEFAULT NULL,
+  `unit_id` int UNSIGNED DEFAULT NULL,
+  `counter` int NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `review_counters`
@@ -3416,20 +3416,20 @@ INSERT INTO `review_counters` (`id`, `user_id`, `level_id`, `unit_id`, `counter`
 --
 
 CREATE TABLE `review_queues` (
-  `id` int(11) NOT NULL,
-  `user_id` int(10) UNSIGNED DEFAULT NULL,
-  `card_id` int(11) UNSIGNED DEFAULT NULL,
-  `skill_type` enum('reading','writing','speaking','listening') COLLATE latin1_general_ci DEFAULT NULL,
+  `id` int NOT NULL,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  `card_id` int UNSIGNED DEFAULT NULL,
+  `skill_type` enum('reading','writing','speaking','listening') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `xp_1` float(11,2) DEFAULT NULL,
   `xp_2` float(11,2) DEFAULT NULL,
   `xp_3` float(11,2) DEFAULT NULL,
   `xp_4` float(11,2) DEFAULT NULL,
-  `sort` int(11) NOT NULL DEFAULT '0',
-  `num_times` int(11) NOT NULL DEFAULT '0',
-  `daystamp` int(11) DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `sort` int NOT NULL DEFAULT '0',
+  `num_times` int NOT NULL DEFAULT '0',
+  `daystamp` int DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `review_queues`
@@ -3460,10 +3460,10 @@ INSERT INTO `review_queues` (`id`, `user_id`, `card_id`, `skill_type`, `xp_1`, `
 --
 
 CREATE TABLE `review_vars` (
-  `id` int(11) NOT NULL,
-  `key` varchar(50) COLLATE latin1_general_ci DEFAULT NULL,
-  `value` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `id` int NOT NULL,
+  `key` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `value` int NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `review_vars`
@@ -3481,9 +3481,9 @@ INSERT INTO `review_vars` (`id`, `key`, `value`) VALUES
 --
 
 CREATE TABLE `roles` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `role` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `roles`
@@ -3504,12 +3504,12 @@ INSERT INTO `roles` (`id`, `role`) VALUES
 --
 
 CREATE TABLE `schools` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `image_id` int(11) DEFAULT NULL COMMENT 'image file link',
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `image_id` int DEFAULT NULL COMMENT 'image file link',
   `grade_low` varchar(255) DEFAULT NULL,
   `grade_high` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `schools`
@@ -3526,11 +3526,11 @@ INSERT INTO `schools` (`id`, `name`, `image_id`, `grade_low`, `grade_high`) VALU
 --
 
 CREATE TABLE `school_levels` (
-  `id` int(11) NOT NULL,
-  `school_id` int(11) NOT NULL,
-  `level_id` int(11) NOT NULL,
-  `owner_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id` int NOT NULL,
+  `school_id` int NOT NULL,
+  `level_id` int NOT NULL,
+  `owner_id` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `school_levels`
@@ -3548,9 +3548,9 @@ INSERT INTO `school_levels` (`id`, `school_id`, `level_id`, `owner_id`) VALUES
 --
 
 CREATE TABLE `school_roles` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8mb4 NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` int NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `school_roles`
@@ -3568,14 +3568,14 @@ INSERT INTO `school_roles` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `school_users` (
-  `id` int(11) NOT NULL,
-  `student_id` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
-  `f_name` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
-  `l_name` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
-  `school_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id` int NOT NULL,
+  `student_id` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `f_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `l_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `school_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `role_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `school_users`
@@ -3591,11 +3591,11 @@ INSERT INTO `school_users` (`id`, `student_id`, `f_name`, `l_name`, `school_id`,
 --
 
 CREATE TABLE `sitesettings` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
   `display_name` varchar(250) DEFAULT NULL,
   `key` varchar(250) DEFAULT ' ',
-  `value` text
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `value` mediumtext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `sitesettings`
@@ -3627,13 +3627,13 @@ INSERT INTO `sitesettings` (`id`, `display_name`, `key`, `value`) VALUES
 --
 
 CREATE TABLE `units` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `description` text CHARACTER SET utf8,
-  `type` tinyint(2) DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `description` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `type` tinyint DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `units`
@@ -3685,15 +3685,15 @@ INSERT INTO `units` (`id`, `name`, `description`, `type`, `created`, `modified`)
 --
 
 CREATE TABLE `unit_details` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `learningpath_id` int(11) UNSIGNED NOT NULL,
-  `unit_id` int(11) UNSIGNED NOT NULL,
-  `lesson_id` int(11) UNSIGNED DEFAULT NULL,
-  `exercise_id` int(11) UNSIGNED DEFAULT NULL,
-  `sequence` tinyint(3) NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `learningpath_id` int UNSIGNED NOT NULL,
+  `unit_id` int UNSIGNED NOT NULL,
+  `lesson_id` int UNSIGNED DEFAULT NULL,
+  `exercise_id` int UNSIGNED DEFAULT NULL,
+  `sequence` tinyint NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `unit_details`
@@ -3890,15 +3890,15 @@ INSERT INTO `unit_details` (`id`, `learningpath_id`, `unit_id`, `lesson_id`, `ex
 --
 
 CREATE TABLE `unit_fires` (
-  `id` int(11) NOT NULL,
-  `user_id` int(10) UNSIGNED DEFAULT NULL,
-  `unit_id` int(10) UNSIGNED DEFAULT NULL,
-  `reading_persantage` int(10) UNSIGNED DEFAULT NULL,
-  `writing_percentage` int(10) UNSIGNED DEFAULT NULL,
-  `listening_percentage` int(10) UNSIGNED DEFAULT NULL,
-  `speaking_percentage` int(10) UNSIGNED DEFAULT NULL,
-  `all_persentage` int(10) UNSIGNED DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  `id` int NOT NULL,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  `unit_id` int UNSIGNED DEFAULT NULL,
+  `reading_persantage` int UNSIGNED DEFAULT NULL,
+  `writing_percentage` int UNSIGNED DEFAULT NULL,
+  `listening_percentage` int UNSIGNED DEFAULT NULL,
+  `speaking_percentage` int UNSIGNED DEFAULT NULL,
+  `all_persentage` int UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `unit_fires`
@@ -3941,38 +3941,38 @@ INSERT INTO `unit_fires` (`id`, `user_id`, `unit_id`, `reading_persantage`, `wri
 --
 
 CREATE TABLE `users` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `email` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `password` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `dob` date DEFAULT NULL,
-  `approximate_age` tinyint(3) UNSIGNED DEFAULT NULL COMMENT 'Approximate age to reduce sensitive data. Null if not updated.',
-  `google_id` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `google_status` enum('1','0') COLLATE latin1_general_ci DEFAULT '0',
-  `fb_id` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `fb_status` enum('1','0') COLLATE latin1_general_ci DEFAULT '0',
-  `apple_id` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
-  `apple_status` enum('1','0') COLLATE latin1_general_ci DEFAULT NULL,
-  `clever_id` varchar(255) COLLATE latin1_general_ci DEFAULT NULL COMMENT ' 	User''s Clever ID if they use Clever to sign in ',
-  `role_id` int(11) UNSIGNED DEFAULT '3',
-  `learningspeed_id` int(11) UNSIGNED DEFAULT NULL,
-  `learningpath_id` int(11) UNSIGNED DEFAULT NULL,
+  `approximate_age` tinyint UNSIGNED DEFAULT NULL COMMENT 'Approximate age to reduce sensitive data. Null if not updated.',
+  `google_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `google_status` enum('1','0') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '0',
+  `fb_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `fb_status` enum('1','0') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '0',
+  `apple_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `apple_status` enum('1','0') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `clever_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT ' 	User''s Clever ID if they use Clever to sign in ',
+  `role_id` int UNSIGNED DEFAULT '3',
+  `learningspeed_id` int UNSIGNED DEFAULT NULL,
+  `learningpath_id` int UNSIGNED DEFAULT NULL,
   `agreements_accepted` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'User accepted agreements',
   `last_logged` datetime DEFAULT NULL,
-  `is_active` enum('1','0') COLLATE latin1_general_ci DEFAULT '1',
-  `complete_findfriend_page` enum('1','0') COLLATE latin1_general_ci DEFAULT '0',
-  `is_delete` enum('1','0') COLLATE latin1_general_ci DEFAULT '0',
+  `is_active` enum('1','0') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '1',
+  `complete_findfriend_page` enum('1','0') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '0',
+  `is_delete` enum('1','0') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '0',
   `registered` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `name`, `dob`, `approximate_age`, `google_id`, `google_status`, `fb_id`, `fb_status`, `apple_id`, `apple_status`, `clever_id`, `role_id`, `learningspeed_id`, `learningpath_id`, `agreements_accepted`, `last_logged`, `is_active`, `complete_findfriend_page`, `is_delete`, `registered`, `created`, `modified`) VALUES
-(1, 'admin@demo.org', '$2y$10$KhKWnLf4kLobzc4LeR58FO7TAzszTxxKL9j0ZMkHZ.kD9SsbBoWjS', 'admin', '2000-01-01', 25, NULL, '0', NULL, '0', NULL, NULL, NULL, 1, 1, 1, 1, '2025-09-02 18:45:05', '1', '0', '0', '2024-09-14 19:33:48', '2024-09-14 19:33:48', '2025-09-02 18:45:05'),
+(1, 'admin@demo.org', '$2y$10$KhKWnLf4kLobzc4LeR58FO7TAzszTxxKL9j0ZMkHZ.kD9SsbBoWjS', 'admin', '2000-01-01', 25, NULL, '0', NULL, '0', NULL, NULL, NULL, 1, 1, 1, 1, '2025-09-02 18:45:05', '1', '0', '0', '2024-09-14 19:33:48', '2024-09-14 19:33:48', '2026-06-30 23:06:33'),
 (2, 'user@demo.org', '$2y$10$dE2U.5tWU/QNv1DL97j2vuwvm/ta7LZb5p5B29nWgcJxp/K4/s/ZS', 'user', '2000-12-12', 24, NULL, '0', NULL, '0', NULL, NULL, NULL, 3, 1, 1, 1, '2025-07-10 22:24:17', '1', '0', '0', '2024-10-09 16:56:18', '2024-10-09 16:56:18', '2025-07-10 22:24:27'),
 (3, 'teacher@demo.org', '$2y$10$LsH3RfE9d7y0PQGOQJzgCuGwXYHWnkWVcycp9kd8Bk/0SFvRUbzqq', 'teacher', '1985-01-01', 40, NULL, '0', NULL, '0', NULL, NULL, NULL, 2, 1, 1, 1, '2025-09-22 15:52:06', '1', '0', '0', '2025-07-08 17:53:33', '2025-07-08 17:53:33', '2025-09-22 15:52:07');
 
@@ -3983,21 +3983,21 @@ INSERT INTO `users` (`id`, `email`, `password`, `name`, `dob`, `approximate_age`
 --
 
 CREATE TABLE `user_activities` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
   `activity_type` enum('lesson','forumpost','exercise','test','unit','level','card','badge','review') DEFAULT NULL,
   `type` enum('wrong','right') DEFAULT NULL,
-  `level_id` int(11) UNSIGNED DEFAULT NULL,
-  `unit_id` int(11) UNSIGNED DEFAULT NULL,
-  `exercise_id` int(11) UNSIGNED DEFAULT NULL,
+  `level_id` int UNSIGNED DEFAULT NULL,
+  `unit_id` int UNSIGNED DEFAULT NULL,
+  `exercise_id` int UNSIGNED DEFAULT NULL,
   `exercise_type` varchar(255) DEFAULT NULL,
-  `lesson_id` int(11) UNSIGNED DEFAULT NULL,
-  `lessonframe_id` int(11) UNSIGNED DEFAULT NULL,
-  `card_id` int(11) UNSIGNED DEFAULT NULL,
-  `user_unit_activity_id` int(11) UNSIGNED DEFAULT NULL,
-  `test_id` int(11) UNSIGNED DEFAULT NULL,
-  `badge_id` int(11) UNSIGNED DEFAULT NULL,
-  `forumpost_id` int(11) UNSIGNED DEFAULT NULL,
+  `lesson_id` int UNSIGNED DEFAULT NULL,
+  `lessonframe_id` int UNSIGNED DEFAULT NULL,
+  `card_id` int UNSIGNED DEFAULT NULL,
+  `user_unit_activity_id` int UNSIGNED DEFAULT NULL,
+  `test_id` int UNSIGNED DEFAULT NULL,
+  `badge_id` int UNSIGNED DEFAULT NULL,
+  `forumpost_id` int UNSIGNED DEFAULT NULL,
   `path_score` float(11,2) UNSIGNED ZEROFILL NOT NULL DEFAULT '00000000.00',
   `review_score` float(11,2) UNSIGNED ZEROFILL NOT NULL DEFAULT '00000000.00',
   `social_score` float(11,2) UNSIGNED ZEROFILL NOT NULL DEFAULT '00000000.00',
@@ -4008,7 +4008,7 @@ CREATE TABLE `user_activities` (
   `is_temporary` enum('Y','N') NOT NULL DEFAULT 'Y',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `user_activities`
@@ -4555,13 +4555,13 @@ DELIMITER ;
 --
 
 CREATE TABLE `user_images` (
-  `id` int(12) UNSIGNED NOT NULL,
-  `user_id` int(12) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
   `image` varchar(255) NOT NULL,
   `aws_link` varchar(500) DEFAULT NULL,
   `feature` enum('Y','N') NOT NULL DEFAULT 'N',
   `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -4570,13 +4570,13 @@ CREATE TABLE `user_images` (
 --
 
 CREATE TABLE `user_level_badges` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `level_id` int(11) UNSIGNED NOT NULL,
-  `path_id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
+  `level_id` int UNSIGNED NOT NULL,
+  `path_id` int UNSIGNED NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `user_level_badges`
@@ -4597,8 +4597,8 @@ INSERT INTO `user_level_badges` (`id`, `user_id`, `level_id`, `path_id`, `create
 --
 
 CREATE TABLE `user_points` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
   `path_score` float NOT NULL,
   `review_score` float NOT NULL,
   `social_score` float NOT NULL,
@@ -4609,7 +4609,7 @@ CREATE TABLE `user_points` (
   `total_score` float NOT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=COMPACT;
 
 --
 -- Dumping data for table `user_points`
@@ -4625,16 +4625,16 @@ INSERT INTO `user_points` (`id`, `user_id`, `path_score`, `review_score`, `socia
 --
 
 CREATE TABLE `user_progress` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `learningpath_id` int(11) UNSIGNED NOT NULL,
-  `level_id` int(11) UNSIGNED NOT NULL,
-  `unit_id` int(11) UNSIGNED NOT NULL,
-  `lesson_id` int(11) UNSIGNED DEFAULT NULL,
-  `exercise_id` int(11) UNSIGNED DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
+  `learningpath_id` int UNSIGNED NOT NULL,
+  `level_id` int UNSIGNED NOT NULL,
+  `unit_id` int UNSIGNED NOT NULL,
+  `lesson_id` int UNSIGNED DEFAULT NULL,
+  `exercise_id` int UNSIGNED DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -4643,13 +4643,13 @@ CREATE TABLE `user_progress` (
 --
 
 CREATE TABLE `user_settings` (
-  `id` int(12) UNSIGNED NOT NULL,
-  `user_id` int(12) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
   `display_name` varchar(100) NOT NULL DEFAULT '',
   `profile_picture` varchar(256) NOT NULL DEFAULT '',
   `aws_profile_link` varchar(500) DEFAULT NULL,
   `location` varchar(500) NOT NULL DEFAULT '',
-  `profile_desc` text,
+  `profile_desc` mediumtext,
   `push_notification` enum('0','1') NOT NULL DEFAULT '0',
   `email_notification` enum('0','1') NOT NULL DEFAULT '0',
   `news_event` enum('0','1') NOT NULL DEFAULT '0',
@@ -4664,7 +4664,7 @@ CREATE TABLE `user_settings` (
   `audio_archive` enum('0','1') NOT NULL DEFAULT '0',
   `hearing` enum('0','1') NOT NULL DEFAULT '0',
   `lastupdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `user_settings`
@@ -4682,15 +4682,15 @@ INSERT INTO `user_settings` (`id`, `user_id`, `display_name`, `profile_picture`,
 --
 
 CREATE TABLE `user_unit_activities` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `path_id` int(10) UNSIGNED DEFAULT NULL,
-  `level_id` int(10) UNSIGNED DEFAULT NULL,
-  `unit_id` int(10) UNSIGNED DEFAULT NULL,
-  `user_id` int(10) UNSIGNED DEFAULT NULL,
-  `percent` int(11) DEFAULT NULL,
+  `id` int UNSIGNED NOT NULL,
+  `path_id` int UNSIGNED DEFAULT NULL,
+  `level_id` int UNSIGNED DEFAULT NULL,
+  `unit_id` int UNSIGNED DEFAULT NULL,
+  `user_id` int UNSIGNED DEFAULT NULL,
+  `percent` int DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `user_unit_activities`
@@ -4743,11 +4743,11 @@ INSERT INTO `user_unit_activities` (`id`, `path_id`, `level_id`, `unit_id`, `use
 --
 
 CREATE TABLE `wordlinks` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `wordlink` varchar(30) NOT NULL,
-  `classroom_id` int(11) DEFAULT NULL,
-  `school_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `classroom_id` int DEFAULT NULL,
+  `school_id` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `wordlinks`
@@ -5227,361 +5227,361 @@ ALTER TABLE `wordlinks`
 -- AUTO_INCREMENT for table `banned_words`
 --
 ALTER TABLE `banned_words`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1014;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1014;
 
 --
 -- AUTO_INCREMENT for table `bonus_points`
 --
 ALTER TABLE `bonus_points`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=7;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cards`
 --
 ALTER TABLE `cards`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `card_card_groups`
 --
 ALTER TABLE `card_card_groups`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `card_groups`
 --
 ALTER TABLE `card_groups`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `card_group_types`
 --
 ALTER TABLE `card_group_types`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `card_types`
 --
 ALTER TABLE `card_types`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `card_units`
 --
 ALTER TABLE `card_units`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=353;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=353;
 
 --
 -- AUTO_INCREMENT for table `classrooms`
 --
 ALTER TABLE `classrooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `classroom_level_units`
 --
 ALTER TABLE `classroom_level_units`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `classroom_users`
 --
 ALTER TABLE `classroom_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `contents`
 --
 ALTER TABLE `contents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `emailcontents`
 --
 ALTER TABLE `emailcontents`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `exercises`
 --
 ALTER TABLE `exercises`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `exercise_custom_options`
 --
 ALTER TABLE `exercise_custom_options`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `exercise_options`
 --
 ALTER TABLE `exercise_options`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=783;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=783;
 
 --
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `forums`
 --
 ALTER TABLE `forums`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `forum_flags`
 --
 ALTER TABLE `forum_flags`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `forum_flag_reasons`
 --
 ALTER TABLE `forum_flag_reasons`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `forum_posts`
 --
 ALTER TABLE `forum_posts`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `forum_post_viewers`
 --
 ALTER TABLE `forum_post_viewers`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `friends`
 --
 ALTER TABLE `friends`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `global_fires`
 --
 ALTER TABLE `global_fires`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `inflections`
 --
 ALTER TABLE `inflections`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `learningpaths`
 --
 ALTER TABLE `learningpaths`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `learningspeed`
 --
 ALTER TABLE `learningspeed`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `lessons`
 --
 ALTER TABLE `lessons`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `lesson_frames`
 --
 ALTER TABLE `lesson_frames`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=188;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=188;
 
 --
 -- AUTO_INCREMENT for table `lesson_frame_blocks`
 --
 ALTER TABLE `lesson_frame_blocks`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=491;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=491;
 
 --
 -- AUTO_INCREMENT for table `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `level_units`
 --
 ALTER TABLE `level_units`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `passwordreset`
 --
 ALTER TABLE `passwordreset`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `path_levels`
 --
 ALTER TABLE `path_levels`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `point_references`
 --
 ALTER TABLE `point_references`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT for table `progress_timers`
 --
 ALTER TABLE `progress_timers`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
 
 --
 -- AUTO_INCREMENT for table `recording_audios`
 --
 ALTER TABLE `recording_audios`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `reference_dictionary`
 --
 ALTER TABLE `reference_dictionary`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `review_counters`
 --
 ALTER TABLE `review_counters`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `review_queues`
 --
 ALTER TABLE `review_queues`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `review_vars`
 --
 ALTER TABLE `review_vars`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `schools`
 --
 ALTER TABLE `schools`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `school_levels`
 --
 ALTER TABLE `school_levels`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `school_roles`
 --
 ALTER TABLE `school_roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `school_users`
 --
 ALTER TABLE `school_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sitesettings`
 --
 ALTER TABLE `sitesettings`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `units`
 --
 ALTER TABLE `units`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `unit_details`
 --
 ALTER TABLE `unit_details`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT for table `unit_fires`
 --
 ALTER TABLE `unit_fires`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_activities`
 --
 ALTER TABLE `user_activities`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=528;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=528;
 
 --
 -- AUTO_INCREMENT for table `user_images`
 --
 ALTER TABLE `user_images`
-  MODIFY `id` int(12) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user_level_badges`
 --
 ALTER TABLE `user_level_badges`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user_points`
 --
 ALTER TABLE `user_points`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user_progress`
 --
 ALTER TABLE `user_progress`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user_settings`
 --
 ALTER TABLE `user_settings`
-  MODIFY `id` int(12) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_unit_activities`
 --
 ALTER TABLE `user_unit_activities`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `wordlinks`
 --
 ALTER TABLE `wordlinks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -5591,59 +5591,59 @@ ALTER TABLE `wordlinks`
 -- Constraints for table `cards`
 --
 ALTER TABLE `cards`
-  ADD CONSTRAINT `FK_cards_card_types` FOREIGN KEY (`card_type_id`) REFERENCES `card_types` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_cards_dictionary` FOREIGN KEY (`reference_dictionary_id`) REFERENCES `reference_dictionary` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_cards_files` FOREIGN KEY (`image_id`) REFERENCES `files` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_cards_inflections` FOREIGN KEY (`inflection_id`) REFERENCES `inflections` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_cards_video` FOREIGN KEY (`video_id`) REFERENCES `files` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_cards_card_types` FOREIGN KEY (`card_type_id`) REFERENCES `card_types` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_cards_dictionary` FOREIGN KEY (`reference_dictionary_id`) REFERENCES `reference_dictionary` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_cards_files` FOREIGN KEY (`image_id`) REFERENCES `files` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `FK_cards_inflections` FOREIGN KEY (`inflection_id`) REFERENCES `inflections` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `FK_cards_video` FOREIGN KEY (`video_id`) REFERENCES `files` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `card_card_groups`
 --
 ALTER TABLE `card_card_groups`
-  ADD CONSTRAINT `FK_card_card_groups_card_groups` FOREIGN KEY (`card_group_id`) REFERENCES `card_groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_card_card_groups_cards` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_card_card_groups_card_groups` FOREIGN KEY (`card_group_id`) REFERENCES `card_groups` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_card_card_groups_cards` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `card_groups`
 --
 ALTER TABLE `card_groups`
-  ADD CONSTRAINT `FK_card_group_type` FOREIGN KEY (`card_group_type_id`) REFERENCES `card_group_types` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_card_group_type` FOREIGN KEY (`card_group_type_id`) REFERENCES `card_group_types` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `card_units`
 --
 ALTER TABLE `card_units`
-  ADD CONSTRAINT `FK_card_units_cards` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_card_units_units` FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_card_units_cards` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_card_units_units` FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `exercise_custom_options`
 --
 ALTER TABLE `exercise_custom_options`
-  ADD CONSTRAINT `FK_exercise_custom_options_exercise_options` FOREIGN KEY (`exercise_option_id`) REFERENCES `exercise_options` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_exercise_custom_options_exercises` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_exercise_custom_options_files` FOREIGN KEY (`prompt_audio_id`) REFERENCES `files` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_exercise_custom_options_files_2` FOREIGN KEY (`prompt_image_id`) REFERENCES `files` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_exercise_custom_options_files_3` FOREIGN KEY (`response_audio_id`) REFERENCES `files` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_exercise_custom_options_files_4` FOREIGN KEY (`response_image_id`) REFERENCES `files` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_exercise_custom_options_exercise_options` FOREIGN KEY (`exercise_option_id`) REFERENCES `exercise_options` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_exercise_custom_options_exercises` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_exercise_custom_options_files` FOREIGN KEY (`prompt_audio_id`) REFERENCES `files` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `FK_exercise_custom_options_files_2` FOREIGN KEY (`prompt_image_id`) REFERENCES `files` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `FK_exercise_custom_options_files_3` FOREIGN KEY (`response_audio_id`) REFERENCES `files` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `FK_exercise_custom_options_files_4` FOREIGN KEY (`response_image_id`) REFERENCES `files` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `exercise_options`
 --
 ALTER TABLE `exercise_options`
-  ADD CONSTRAINT `FK_exercise_options_card_groups` FOREIGN KEY (`group_id`) REFERENCES `card_groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_exercise_options_cards` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_exercise_options_cards_2` FOREIGN KEY (`responce_card_id`) REFERENCES `cards` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_exercise_options_exercises` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_exercise_options_card_groups` FOREIGN KEY (`group_id`) REFERENCES `card_groups` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_exercise_options_cards` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_exercise_options_cards_2` FOREIGN KEY (`responce_card_id`) REFERENCES `cards` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_exercise_options_exercises` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `forums`
 --
 ALTER TABLE `forums`
-  ADD CONSTRAINT `FK_forums_learningpaths` FOREIGN KEY (`path_id`) REFERENCES `learningpaths` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_forums_levels` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_forums_units` FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_forums_learningpaths` FOREIGN KEY (`path_id`) REFERENCES `learningpaths` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_forums_levels` FOREIGN KEY (`level_id`) REFERENCES `levels` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_forums_units` FOREIGN KEY (`unit_id`) REFERENCES `units` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

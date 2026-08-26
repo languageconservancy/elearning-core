@@ -1,0 +1,14 @@
+-- Charset / collation audit for elearning database
+--
+-- Full procedure: docs/backend/database-charset-migration.md
+--
+-- Run as TWO separate scripts in phpMyAdmin (do not paste all at once):
+--   1. charset_audit_metadata.sql  — table/column charset inventory
+--   2. charset_audit_data.sql      — Lakota / mojibake spot-checks
+--
+-- Combining both in one batch can trigger phpMyAdmin/MySQL error:
+--   #1109 Unknown table 'CARDS' in information_schema
+-- because the default database is lost after information_schema queries.
+--
+-- Target state (MySQL 8): utf8mb4 + utf8mb4_0900_ai_ci
+-- After migration: backend/config/app.php -> 'encoding' => 'utf8mb4'

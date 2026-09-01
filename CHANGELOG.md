@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.1.0](https://github.com/languageconservancy/elearning-core/compare/v2.0.3...v2.1.0) (2026-09-01)
+
+
+### Features
+
+* create script to migrate path from one db to another. ([#66](https://github.com/languageconservancy/elearning-core/issues/66)) ([4e3f58e](https://github.com/languageconservancy/elearning-core/commit/4e3f58e35868ca5b161dc77521ffcd2f29aa44ce))
+* **teacher-admin:** students listed alphabetically by lastname ([8d1c35b](https://github.com/languageconservancy/elearning-core/commit/8d1c35b51ddbfaee88f9d832e1aeb047ec27b371))
+* **teacher-dashboard:** students listed alphabetically by last name ([2f90188](https://github.com/languageconservancy/elearning-core/commit/2f901882482ef39ff37ec90a6977befe31cabff3))
+* **teacher-portal:** students listed alphabetically by last initial ([cd18c17](https://github.com/languageconservancy/elearning-core/commit/cd18c17449284cd0e60a96afe6df8afbac76280e))
+
+
+### Bug Fixes
+
+* alphabetization function was using incorrect attribute ([c0949d3](https://github.com/languageconservancy/elearning-core/commit/c0949d36913f44f5615c0987c8df5b64f6724652))
+* **classroomsController:** student's f_name and l_name now populate when created by teachers ([b443d25](https://github.com/languageconservancy/elearning-core/commit/b443d254e2a8c2d1aeee607c7f430d2442cb178c))
+* **classroomsController:** student's l_name now populates with single initial ([53d7dc5](https://github.com/languageconservancy/elearning-core/commit/53d7dc5bd26258cf02b3b52cd76fb1d879c93515))
+* copy all demo assets in webroot over to core/backend/webroot/ ([#65](https://github.com/languageconservancy/elearning-core/issues/65)) ([c03b20d](https://github.com/languageconservancy/elearning-core/commit/c03b20d108419d571f1f9789e6004e8f6374dd6f))
+* make social toggles explicit. capacitor-config fixed ([#60](https://github.com/languageconservancy/elearning-core/issues/60)) ([16d0c60](https://github.com/languageconservancy/elearning-core/commit/16d0c6060256aba8a2540be85b663e483385fb3e))
+* migration file now prevents duplications ([#69](https://github.com/languageconservancy/elearning-core/issues/69)) ([15a44dd](https://github.com/languageconservancy/elearning-core/commit/15a44ddcb8d6ce33639154348c1d63ecfebb38f5))
+* teacher-portal, html tags in student activity Card column ([#62](https://github.com/languageconservancy/elearning-core/issues/62)) ([fce586e](https://github.com/languageconservancy/elearning-core/commit/fce586ea4435178455ffbb35c46f4c185e88a2f4))
+* teacher-portal, missing dropdown arrow on new lesson plan starting units dropdown ([#63](https://github.com/languageconservancy/elearning-core/issues/63)) ([5fa4ee7](https://github.com/languageconservancy/elearning-core/commit/5fa4ee7f30a9eed307597fb58677468437e02c25))
+* version file writing on deploy ([#70](https://github.com/languageconservancy/elearning-core/issues/70)) ([fd2743f](https://github.com/languageconservancy/elearning-core/commit/fd2743fb62c7d6db8c7375315bd275f9078ab59d))
+* virt keyboard not working on subsequent uses ([#68](https://github.com/languageconservancy/elearning-core/issues/68)) ([ebb1759](https://github.com/languageconservancy/elearning-core/commit/ebb17593f71ebe72468c00152546ffc459ab1d9f))
+
 ## [2.0.3](https://github.com/languageconservancy/elearning-core/compare/v2.0.2...v2.0.3) (2025-12-01)
 
 

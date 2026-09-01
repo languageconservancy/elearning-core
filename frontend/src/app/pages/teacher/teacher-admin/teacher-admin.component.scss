@@ -3,14 +3,14 @@
 .col-lg-3,
 .col-lg-12 {
     padding-right: 0;
-}
+} 
 
-#class-overview {
-    margin-top: 0;
-}
 #teacher-info {
     height: 100%;
-    padding: 10px;
+}
+
+.fa-question-circle {
+    margin-bottom: 4.5px;
 }
 
 .panel-body {
@@ -25,7 +25,7 @@
 .label-w-155 {
     width: 155px;
 }
-.overview-levels ul {
+.overview-levels {
     list-style-type: none;
     margin-left: 0;
     padding-left: 0;
@@ -36,8 +36,9 @@
     scrollbar-width: thin;
 }
 
-.level-container li {
-    display: inline;
+.level-container {
+    display: flex;
+    gap: 1rem;
 }
 
 .active-level a {
@@ -45,30 +46,30 @@
     color: white !important;
 }
 
-.level-container li a {
+.level-container a {
+    border: 2px solid theme.$primary-color;
+    border-radius: .5rem;
     color: black;
     background: white;
-    display: inline-block;
-    height: 110px;
-    width: 160px;
-    border: 2px solid theme.$primary-color;
-    border-radius: 10px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
     font-size: 16px;
+    height: 110px;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
     text-decoration: none;
-    margin: 5px;
-    padding-top: 10px;
-    display: inline-block;
+    width: 160px;
 }
 
-.level-container li a:hover {
+.level-container a:hover {
     background: theme.$primary-color;
     color: white;
     & > i {
         color: white;
     }
 }
-.level-container li a i:hover {
+.level-container a i:hover {
     color: white;
 }
 

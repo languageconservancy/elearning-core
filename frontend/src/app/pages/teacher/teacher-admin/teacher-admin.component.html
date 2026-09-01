@@ -1,171 +1,110 @@
-<div class="col-xs-5 col-sm-8 col-lg-12 l-speed">
-    <div class="row justify-content-start">
-        <div class="col-xs-3 col-sm-4 col-lg-3">
-            <div id="teacher-info" class="logo-container-box col-lg-12">
-                <h5>School Administration</h5>
-                <p>
-                    From this page, you can add students and teachers to your school and change
-                    school settings and information.
-                </p>
-                <h5>
-                    <a href="/contact-us"
-                        ><i
-                            class="fa fa-question-circle"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Ask a question"
-                        ></i
-                    ></a>
-                </h5>
-            </div>
+<div class="tlc-card tlc-width-whole tlc-width-third-lg-up">
+    <div class="tlc-column tlc-gap-xs" id="teacher-info">
+        <div class="tlc-flex tlc-align-items-center tlc-gap-xs">
+            <h2 class="tlc-ts-22">School Administration</h2>
+            <a href="/contact-us">
+                <i class="fa fa-question-circle"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Ask a question">
+                </i>
+            </a>
         </div>
-        <div id="class-overview" class="logo-container-box col-9">
-            <h5>
-                Add Students and Teachers
-                <!--<i class="fa fa-edit" data-toggle="tooltip" data-placement="top" title="Edit Levels"></i>-->
-            </h5>
-            <div class="overview-levels">
-                <div>
-                    <ul class="level-container">
-                        <!--<li (click)="openModal('googleClassroom')"><a>From Google Classroom<br><img src="https://upload.wikimedia.org/wikipedia/commons/5/59/Google_Classroom_Logo.png"><br></a></li>-->
-                        <li>
-                            <a (click)="openModal('getLink')"
-                                >Create<br />Invitation Link<br />
-                                <i (click)="openModal('getLink')" class="fa fa-link"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a (click)="openModal('addUsers')"
-                                >Create<br />New Accounts<br />
-                                <i (click)="openModal('addUsers')" class="fa fa-plus"></i>
-                            </a>
-                        </li>
-                    </ul>
+        <p>
+            From this page, you can add students and teachers to your school and change
+            school settings and information.
+        </p>
+    </div>
+</div>
+<div id="class-overview" class="tlc-card tlc-width-whole tlc-width-two-thirds-lg-up">
+    <h3 class="tlc-ts-22">
+        Add Students and Teachers
+        <!--<i class="fa fa-edit" data-toggle="tooltip" data-placement="top" title="Edit Levels"></i>-->
+    </h3>
+    <div class="overview-levels">
+        <div class="level-container">
+            <a (click)="openModal('getLink')">
+                Create Invitation Link
+                <i (click)="openModal('getLink')" class="fa fa-link"></i>
+            </a>
+            <a (click)="openModal('addUsers')">
+                Create New Accounts
+                <i (click)="openModal('addUsers')" class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="tlc-card tlc-width-whole">
+    <div id="student-overview">
+        <div class="row">
+            <div class="col-xs-2 col-sm-2 col-lg-12">
+                <h3 class="tlc-ts-22">
+                    {{ teacherSchoolUser.school.name }} Teachers
+                    <!--<i class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download Roster"></i>-->
+                </h3>
+
+                <div class="panel panel-warning teacher-dnd teacher-dnd-left">
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li
+                                *ngFor="let teacher of schoolTeachers; let i = index"
+                                class="list-group-item"
+                            >
+                                <img
+                                    src="{{ teacher.user.usersetting.FullProfileImageUrl }}"
+                                />{{ teacher.user.name }} - {{ teacher.user.email }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-3 col-sm-4 col-lg-12">
-            <div id="student-overview" class="logo-container-box">
+</div>
+<div class="tlc-card tlc-width-whole">
+    <div id="student-overview">
+        <div class="row">
+            <div class="col-xs-2 col-sm-2 col-lg-12">
                 <div class="row">
-                    <div class="col-xs-2 col-sm-2 col-lg-12">
-                        <h5>
-                            {{ teacherSchoolUser.school.name }} Teachers
-                            <!--<i class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download Roster"></i>-->
-                        </h5>
-
+                    <div class="col-lg-6">
+                        <h3 class="tlc-ts-22">Classrooms</h3>
                         <div class="panel panel-warning teacher-dnd teacher-dnd-left">
                             <div class="panel-body">
                                 <ul class="list-group">
                                     <li
-                                        *ngFor="let teacher of schoolTeachers; let i = index"
+                                        *ngFor="let classroom of classrooms; let i = index"
                                         class="list-group-item"
                                     >
-                                        <img
-                                            src="{{ teacher.user.usersetting.FullProfileImageUrl }}"
-                                        />{{ teacher.user.name }} - {{ teacher.user.email }}
+                                        <p>{{ classroom.name }}</p>
+                                        <a
+                                            href="javascript:void(0)"
+                                            (click)="deleteClassroom(classroom.id)"
+                                            >Delete classroom</a
+                                        >
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-3 col-sm-4 col-lg-12">
-            <div id="student-overview" class="logo-container-box">
-                <div class="row">
-                    <div class="col-xs-2 col-sm-2 col-lg-12">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <h5>Classrooms</h5>
-                                <div class="panel panel-warning teacher-dnd teacher-dnd-left">
-                                    <div class="panel-body">
-                                        <ul class="list-group">
-                                            <li
-                                                *ngFor="let classroom of classrooms; let i = index"
-                                                class="list-group-item"
-                                            >
-                                                <p>{{ classroom.name }}</p>
-                                                <a
-                                                    href="javascript:void(0)"
-                                                    (click)="deleteClassroom(classroom.id)"
-                                                    >Delete classroom</a
-                                                >
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <h5>Archived Classrooms</h5>
-                                <div class="panel panel-warning teacher-dnd teacher-dnd-left">
-                                    <div class="panel-body">
-                                        <ul class="list-group">
-                                            <li
-                                                *ngFor="
-                                                    let classroom of archivedClassrooms;
-                                                    let i = index
-                                                "
-                                                class="list-group-item"
-                                            >
-                                                <p>{{ classroom.name }}</p>
-                                                <a
-                                                    href="javascript:void(0)"
-                                                    (click)="deleteClassroom(classroom.id)"
-                                                    >Delete classroom</a
-                                                >
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-3 col-sm-4 col-lg-12">
-            <div id="student-overview" class="logo-container-box">
-                <div class="row">
-                    <div class="col-xs-2 col-sm-2 col-lg-12">
-                        <h5>
-                            {{ teacherSchoolUser.school.name }} Students
-                            <!--<i class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download Roster"></i>-->
-                        </h5>
-
-                        <div class="panel panel-warning teacher-dnd teacher-dnd-right">
+                    <div class="col-lg-6">
+                        <h3 class="tlc-ts-22">Archived Classrooms</h3>
+                        <div class="panel panel-warning teacher-dnd teacher-dnd-left">
                             <div class="panel-body">
                                 <ul class="list-group">
                                     <li
-                                        *ngFor="let student of schoolStudents; let i = index"
+                                        *ngFor="
+                                            let classroom of archivedClassrooms;
+                                            let i = index
+                                        "
                                         class="list-group-item"
                                     >
-                                        <img
-                                            src="{{ student.user.usersetting.FullProfileImageUrl }}"
-                                        />
-                                        {{ student.l_name ? student.l_name + ', ' + student.f_name + ' -' : student.user.name + ' -' }} {{ student.user.email }}
-                                        <!--<div *ngIf="student.user.fb_id==null && student.user.google_id==null && student.user.clever_id==null" class="editStudent"><i fa fa-caret-down" data-toggle="tooltip" data-placement="top" (click)="getEditUser(i)" title="Edit User"></i><div>-->
-                                        <div
-                                            *ngIf="
-                                                (!student.user.fb_id || student.user.fb_id === 0) &&
-                                                (!student.user.google_id ||
-                                                    student.user.google_id === 0) &&
-                                                (!student.user.clever_id ||
-                                                    student.user.clever_id === 0)
-                                            "
+                                        <p>{{ classroom.name }}</p>
+                                        <a
+                                            href="javascript:void(0)"
+                                            (click)="deleteClassroom(classroom.id)"
+                                            >Delete classroom</a
                                         >
-                                            <a
-                                                href="javascript:void(0)"
-                                                (click)="changePasswordModal(i)"
-                                                >reset password</a
-                                            >
-                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -176,11 +115,58 @@
         </div>
     </div>
 </div>
+
+
+<div class="tlc-card tlc-width-whole">
+    <div id="student-overview">
+        <div class="row">
+            <div class="col-xs-2 col-sm-2 col-lg-12">
+                <h3 class="tlc-ts-22">
+                    {{ teacherSchoolUser.school.name }} Students
+                    <!--<i class="fa fa-download" data-toggle="tooltip" data-placement="top" title="Download Roster"></i>-->
+                </h3>
+
+                <div class="panel panel-warning teacher-dnd teacher-dnd-right">
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li
+                                *ngFor="let student of schoolStudents; let i = index"
+                                class="list-group-item"
+                            >
+                                <img
+                                    src="{{ student.user.usersetting.FullProfileImageUrl }}"
+                                />
+                                {{ student.l_name ? student.l_name + ', ' + student.f_name + ' -' : student.user.name + ' -' }} {{ student.user.email }}
+                                <!--<div *ngIf="student.user.fb_id==null && student.user.google_id==null && student.user.clever_id==null" class="editStudent"><i fa fa-caret-down" data-toggle="tooltip" data-placement="top" (click)="getEditUser(i)" title="Edit User"></i><div>-->
+                                <div
+                                    *ngIf="
+                                        (!student.user.fb_id || student.user.fb_id === 0) &&
+                                        (!student.user.google_id ||
+                                            student.user.google_id === 0) &&
+                                        (!student.user.clever_id ||
+                                            student.user.clever_id === 0)
+                                    "
+                                >
+                                    <a
+                                        href="javascript:void(0)"
+                                        (click)="changePasswordModal(i)"
+                                        >reset password</a
+                                    >
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div #formModal class="modal fade">
     <div class="modal-dialog show" [ngClass]="{ 'modal-lg': modalType === 'addUsers' }">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ modalHeader }}</h5>
+                <h4 class="modal-title">{{ modalHeader }}</h4>
                 <button type="button" class="close" (click)="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -331,7 +317,7 @@
                     You may connect your account and add students to classes using your existing
                     Google Classroom account.
                 </p>
-                <h3>Coming Soon!</h3>
+                <p>Coming Soon!</p>
             </div>
             <div *ngIf="modalType === 'changePassword'" class="modal-body">
                 <form

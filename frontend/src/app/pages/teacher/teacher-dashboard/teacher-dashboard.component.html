@@ -61,204 +61,192 @@
     <app-classroom-select></app-classroom-select>
 </div>
 
-<div *ngIf="!noClassrooms" class="col-xs-5 col-sm-8 col-lg-12 l-speed">
-    <div class="row justify-content-start">
-        <div class="col-xs-3 col-sm-4 col-lg-4">
-            <div id="teacher-info" class="logo-container-box col-lg-12">
-                <h5>Welcome</h5>
-                <h6>{{ teacher.name }}</h6>
-                <app-classroom-select></app-classroom-select>
-                <h5>
-                    <a href="/contact-us"
-                        ><i
-                            class="fa fa-question-circle"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Ask a question"
-                        ></i
-                    ></a>
-                </h5>
-            </div>
+<div class="tlc-card tlc-width-whole tlc-width-third-lg-up" *ngIf="!!classroom">
+    <div id="teacher-info" class="tlc-column tlc-gap-xs">
+        <div class="tlc-flex tlc-align-items-center tlc-gap-xs">
+            <h2 class="tlc-ts-22">Welcome, {{ teacher.name | titlecase }}</h2>
+            <a href="/contact-us">
+                <i class="fa fa-question-circle"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Ask a question">
+                </i>
+            </a>
         </div>
-        <div *ngIf="!!classroom" id="class-overview" class="logo-container-box col-8">
-            <h5>
-                Classroom Message<a *ngIf="messageIsDirty" href="javascript:void(0)"
-                    ><i
-                        class="fa fa-save"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        (click)="updateClassroomMessage(classroom)"
-                        title="Save Message"
-                    ></i
-                ></a>
-            </h5>
-            <div class="row">
-                <div class="col-12">
-                    <div class="higlightbox">
-                        <ngx-wig (contentChange)="markMessageDirty()" [(ngModel)]="classroom.teacher_message"></ngx-wig>
-                        <!--<textarea class="form-control" [(ngModel)]="classroom.teacher_message" rows="1">{{classroom.teacher_message}}</textarea>-->
-                    </div>
-                </div>
-            </div>
-        </div>
+        <app-classroom-select></app-classroom-select>
     </div>
-    <div class="row justify-content-start">
-        <div class="col-xs-3 col-sm-4 col-lg-12">
-            <div *ngIf="!!!classroom" id="student-overview" class="logo-container-box col-12">
-                <h5>Please Create a Classroom</h5>
-            </div>
-            <div *ngIf="!!classroom" id="student-progress" class="logo-container-box col-12 container-fluid">
-                <h5>
-                    Student Progress Overview
-                    <a href="javascript:void(0)"
-                        ><i
-                            class="fa fa-refresh"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            (click)="updateStudentActivities(teacher.id, classroom.id, null)"
-                            title="Update Activities Table"
-                        ></i></a
-                    ><a href="javascript:void(0)"
-                        ><i
-                            class="fa fa-download"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            (click)="exportProgressToExcel()"
-                            title="Download All Class Data"
-                        ></i
-                    ></a>
-                </h5>
-                <div class="row progress-scroll">
-                    <table #progresstable class="table-header-rotated table-striped table-hover table-striped-column">
-                        <thead>
-                            <tr>
-                                <th class="row-header"></th>
-                                <!-- Following headers are rotated -->
-                                <th *ngFor="let classroomUnit of classroomUnits; let i = index" class="rotate-45">
-                                    <div>
-                                        <span
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="{{ classroomUnit.level_unit.unit.description }}"
-                                            >{{ classroomUnit.level_unit.unit.name }}</span
-                                        >
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let studentProgress of studentProgresses; let i = index">
-                                <td>
-                                    <div class="td-img-left">
-                                        <img src="{{ studentProgress.usersetting.aws_profile_link }}" />{{
-                                            studentProgress.l_name ? studentProgress.l_name + ', ' + studentProgress.f_name : studentProgress.name
-                                        }}
-                                    </div>
-                                </td>
-                                <td *ngFor="let percent of studentProgress.percents; let j = index">
-                                    <span
-                                        [ngClass]="{
-                                            'label complete': percent === 100,
-                                            'label attempted': percent > 0 && percent < 100,
-                                            'label incomplete': percent === 0,
-                                        }"
-                                        ><i
-                                            class="fa fa-circle"
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            title="{{ percent }}%"
-                                        ></i>
-                                    </span>
-                                    <div class="hidden">{{ percent }}</div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+</div>
+<div *ngIf="!!classroom" id="class-overview" class="tlc-card tlc-width-whole tlc-width-two-thirds-lg-up tlc-column tlc-gap-xs">
+    <h2 class="tlc-ts-22">
+        Classroom Message<a *ngIf="messageIsDirty" href="javascript:void(0)"
+            ><i
+                class="fa fa-save"
+                data-toggle="tooltip"
+                data-placement="top"
+                (click)="updateClassroomMessage(classroom)"
+                title="Save Message"
+            ></i
+        ></a>
+    </h2>
+    <div class="higlightbox">
+        <ngx-wig (contentChange)="markMessageDirty()" [(ngModel)]="classroom.teacher_message"></ngx-wig>
+        <!--<textarea class="form-control" [(ngModel)]="classroom.teacher_message" rows="1">{{classroom.teacher_message}}</textarea>-->
     </div>
+</div>
 
-    <div class="row justify-content-start">
-        <div class="col-xs-3 col-sm-4 col-lg-12">
-            <div id="student-activity" class="logo-container-box col-lg-12">
-                <h5>
-                    Student Activity
-                    <a href="javascript:void(0)"
-                        ><i
-                            class="fa fa-refresh"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            (click)="updateStudentActivities(teacher.id, classroom.id, null)"
-                            title="Update Activities Table"
-                        ></i></a
-                    ><a href="javascript:void(0)"
-                        ><i
-                            class="fa fa-download"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            (click)="exportActivitiesToExcel()"
-                            title="Download All Student Data"
-                        ></i
-                    ></a>
-                </h5>
-                <select
-                    id="studentSelect"
-                    name="studentSelect"
-                    [(ngModel)]="currentStudentActivityIndex"
-                    (change)="repopulateStudentActivities()"
+<div *ngIf="!!!classroom" id="student-overview" class="tlc-card tlc-width-whole">
+    <h2 class="tlc-ts-22">Please Create a Classroom</h2>
+</div>
+<div *ngIf="!!classroom" id="student-progress" class="tlc-card tlc-column tlc-width-whole tlc-gap-xs">
+    <div class="tlc-flex tlc-align-items-center tlc-gap-xxs">
+        <h2 class="tlc-ts-22">
+            Student Progress Overview
+        </h2>
+            <a href="javascript:void(0)">
+                <i class="fa fa-refresh"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    (click)="updateStudentActivities(teacher.id, classroom.id, null)"
+                    title="Update Activities Table">
+                </i>
+            </a>
+            <a href="javascript:void(0)">
+                <i class="fa fa-download"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    (click)="exportProgressToExcel()"
+                    title="Download All Class Data">
+                </i>
+            </a>
+        </div>
+    <div>
+        <table #progresstable class="table-header-rotated table-striped table-hover table-striped-column tlc-width-whole">
+            <thead>
+                <tr>
+                    <th class="row-header"></th>
+                    <!-- Following headers are rotated -->
+                    <th *ngFor="let classroomUnit of classroomUnits; let i = index" class="rotate-45">
+                        <div>
+                            <span
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="{{ classroomUnit.level_unit.unit.description }}"
+                                >{{ classroomUnit.level_unit.unit.name }}</span
+                            >
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let studentProgress of studentProgresses; let i = index">
+                    <td>
+                        <div class="td-img-left">
+                            <img src="{{ studentProgress.usersetting.aws_profile_link }}" />{{
+                                studentProgress.l_name ? studentProgress.l_name + ', ' + studentProgress.f_name : studentProgress.name
+                            }}
+                        </div>
+                    </td>
+                    <td *ngFor="let percent of studentProgress.percents; let j = index">
+                        <span
+                            [ngClass]="{
+                                'label complete': percent === 100,
+                                'label attempted': percent > 0 && percent < 100,
+                                'label incomplete': percent === 0,
+                            }"
+                            ><i
+                                class="fa fa-circle"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="{{ percent }}%"
+                            ></i>
+                        </span>
+                        <div class="hidden">{{ percent }}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="student-activity" class="tlc-card tlc-column tlc-width-whole tlc-gap-xs">
+    <div class="tlc-row tlc-justify-content-between">
+        <div class="tlc-flex tlc-align-items-center tlc-gap-xxs">
+            <h2 class="tlc-ts-22">
+                Student Activity
+            </h2>
+            <a href="javascript:void(0)">
+                <i class="fa fa-refresh"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    (click)="updateStudentActivities(teacher.id, classroom.id, null)"
+                    title="Update Activities Table">
+                </i>
+            </a>
+            <a href="javascript:void(0)">
+                <i class="fa fa-download"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    (click)="exportActivitiesToExcel()"
+                    title="Download All Student Data">
+                </i>
+            </a>
+        </div>
+        <div class="tlc-flex tlc-gap-xs" *ngIf="studentProgresses.length">
+            <select
+                id="studentSelect"
+                name="studentSelect"
+                [(ngModel)]="currentStudentActivityIndex"
+                (change)="repopulateStudentActivities()"
+            >
+                <option
+                    *ngFor="let studentActivity of studentActivities; let i = index"
+                    [value]="i"
+                    [attr.selected]="currentStudentActivityIndex === i ? true : null"
                 >
-                    <option
-                        *ngFor="let studentActivity of studentActivities; let i = index"
-                        [value]="i"
-                        [attr.selected]="currentStudentActivityIndex === i ? true : null"
-                    >
-                        {{ getDisplayName(studentActivity) }}
-                    </option>
-                </select>
-                <br />
-                <input matInput (keyup)="applyFilter($event)" placeholder="Filter" />
-
-                <div class="overview-table">
-                    <table mat-table #table [dataSource]="studentActivitiesItems" matSort class="mat-elevation-z8">
-                        <!-- Position Column -->
-                        <ng-container matColumnDef="student">
-                            <th mat-header-cell *matHeaderCellDef>Student</th>
-                            <td mat-cell *matCellDef="let element">
-                                <div class="td-img-left">
-                                    <img src="{{ element.studentImg }}" />{{ element.student }}
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- Name Column -->
-                        <ng-container matColumnDef="card">
-                            <th mat-header-cell *matHeaderCellDef>Card</th>
-                            <td mat-cell *matCellDef="let element" [innerHTML]="element.card | safeHtml"></td>
-                        </ng-container>
-
-                        <!-- Weight Column -->
-                        <ng-container matColumnDef="response">
-                            <th mat-header-cell *matHeaderCellDef>Response</th>
-                            <td mat-cell *matCellDef="let element">{{ element.response }}</td>
-                        </ng-container>
-
-                        <!-- Symbol Column -->
-                        <ng-container matColumnDef="exercise">
-                            <th mat-header-cell *matHeaderCellDef>Exercise</th>
-                            <td mat-cell *matCellDef="let element">{{ element.exercise }}</td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="time">
-                            <th mat-header-cell *matHeaderCellDef>Time</th>
-                            <td mat-cell *matCellDef="let element">{{ element.time | date: "MM-dd-yyyy HH:MM:ss" }}</td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-                    </table>
-                </div>
-            </div>
+                    {{ getDisplayName(studentActivity) }}
+                </option>
+            </select>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Filter" />
         </div>
+    </div>
+
+    <div class="overview-table">
+        <table mat-table #table [dataSource]="studentActivitiesItems" matSort class="mat-elevation-z8">
+            <!-- Position Column -->
+            <ng-container matColumnDef="student">
+                <th mat-header-cell *matHeaderCellDef>Student</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="td-img-left">
+                        <img src="{{ element.studentImg }}" />{{ element.student }}
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="card">
+                <th mat-header-cell *matHeaderCellDef>Card</th>
+                <td mat-cell *matCellDef="let element" [innerHTML]="element.card | safeHtml"></td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="response">
+                <th mat-header-cell *matHeaderCellDef>Response</th>
+                <td mat-cell *matCellDef="let element">{{ element.response }}</td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="exercise">
+                <th mat-header-cell *matHeaderCellDef>Exercise</th>
+                <td mat-cell *matCellDef="let element">{{ element.exercise }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef>Time</th>
+                <td mat-cell *matCellDef="let element">{{ element.time | date: "MM-dd-yyyy HH:MM:ss" }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
     </div>
 </div>

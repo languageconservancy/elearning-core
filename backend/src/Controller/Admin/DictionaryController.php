@@ -142,7 +142,12 @@ class DictionaryController extends AppController
                         array('mpeg', 'ogg', 'wav', 'x-matroska', 'mp3', 'mp4', 'aac')
                     )
                 ) {
-                    $uploadResult = $this->FilesCommon->uploadFile($postData['file'], array(), 'FILE');
+                    try {
+                        $uploadResult = $this->FilesCommon->uploadFile($postData['file'], array(), 'FILE');
+                    } catch (\InvalidArgumentException $e) {
+                        $this->Flash->error(__($e->getMessage()));
+                        return $this->redirect($this->referer());
+                    }
                     $refData['audio'] = $uploadResult['filename'];
                 } else {
                     $this->Flash->error(__('Incorrect audio file format'));

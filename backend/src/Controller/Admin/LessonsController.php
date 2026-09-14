@@ -583,7 +583,7 @@ class LessonsController extends AppController
 
         $row = 2; //start the row at 2, since sheet ordering starts at 1 and 1 is the header row
         foreach ($lessons as $lesson) {
-            if (array_key_exists('errors', $lesson)) {
+            if (property_exists('errors', $lesson)) {
                 foreach ($lesson['errors'] as $error) {
                     $this->Flash->error(__(
                         'Error on Lesson "' . $lesson['lesson']['name']
@@ -593,7 +593,7 @@ class LessonsController extends AppController
                 }
             } else {
                 foreach ($lesson['frames'] as $frame) {
-                    if (array_key_exists('errors', $lesson['frames'])) {
+                    if (property_exists('errors', $lesson['frames'])) {
                         foreach ($lesson['frames']['errors'] as $error) {
                             $this->Flash->error(__(
                                 'Error on Lesson "' . $lesson['lesson']['name']
@@ -603,7 +603,7 @@ class LessonsController extends AppController
                         }
                     } else {
                         foreach ($frame['blocks'] as $block) {
-                            if (array_key_exists('errors', $block)) {
+                            if (property_exists('errors', $block)) {
                                 foreach ($block['errors'] as $err) {
                                     $this->Flash->error(__(
                                         'Error on Lesson "' . $lesson['lesson']['name']
@@ -611,8 +611,8 @@ class LessonsController extends AppController
                                     ));
                                     return false;
                                 }
-                            } elseif (array_key_exists('card', $block)) {
-                                if ($block['card'] && array_key_exists('errors', $block['card'])) {
+                            } elseif (property_exists('card', $block)) {
+                                if ($block['card'] && property_exists('errors', $block['card'])) {
                                     foreach ($block['card']['errors'] as $error) {
                                         $this->Flash->error(__(
                                             'Error on Lesson "'
@@ -995,7 +995,7 @@ class LessonsController extends AppController
             //save pressed, make the cards
             if (
                 isset($this->request->getData()['savebtn'])
-                && array_key_exists('datastring', $this->request->getData())
+                && property_exists('datastring', $this->request->getData())
             ) {
                 //decode the data string into an array
                 $data = json_decode($this->request->getData()['datastring'], true);
@@ -1037,7 +1037,7 @@ class LessonsController extends AppController
                             $cardData = $data[$lid]['frames'][$fid]['blocks'][$bid]['card'];
                             //if weve got card data
                             if (!empty($cardData)) {
-                                if (array_key_exists('id', $cardData) && $cardData['id'] > 0) {
+                                if (property_exists('id', $cardData) && $cardData['id'] > 0) {
                                     //card was listed as a duplicate, even going into the verification page
                                     $card = $this->getCardTable()->findById($cardData['id']);
                                     if (!$card) {

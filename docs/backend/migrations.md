@@ -20,6 +20,8 @@ This migration implements all the database changes defined in the reference SQL 
 
 Content migration between databases is documented in [docs/scripts/php/README.md](../scripts/php/README.md).
 
+MySQL 8 charset standardization (`latin1` / `utf8` → `utf8mb4`) is a separate manual procedure — see [Database charset migration](../backend/database-charset-migration.md).
+
 ## Running Migrations
 
 To run all pending migrations:

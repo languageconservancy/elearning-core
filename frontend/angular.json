@@ -123,20 +123,20 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "elearning-ng:build"
+                      "buildTarget": "elearning-ng:build"
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "elearning-ng:build:production"
+                          "buildTarget": "elearning-ng:build:production"
                         },
                         "staging": {
-                            "browserTarget": "elearning-ng:build:staging"
+                          "buildTarget": "elearning-ng:build:staging"
                         },
                         "local": {
-                            "browserTarget": "elearning-ng:build:local"
+                          "buildTarget": "elearning-ng:build:local"
                         },
                         "demo": {
-                            "browserTarget": "elearning-ng:build:demo"
+                          "buildTarget": "elearning-ng:build:demo"
                         }
                     }
                 },

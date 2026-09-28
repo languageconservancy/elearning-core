@@ -1,3 +1,5 @@
-<div class="loader" *ngIf="showLoader">
+@if (showLoader) {
+  <div class="loader">
     <img src="./assets/images/loader.gif" alt="" />
-</div>
+  </div>
+}

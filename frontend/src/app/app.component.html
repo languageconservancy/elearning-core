@@ -1,13 +1,19 @@
 <app-loader></app-loader>
 <app-snackbar></app-snackbar>
-<app-navbar *ngIf="!maintenanceFlag"></app-navbar>
+@if (!maintenanceFlag) {
+  <app-navbar></app-navbar>
+}
 <div class="welcome-box pb-4" id="main-app-container">
-    <div class="container-lg mt-5 mt-lg-2">
-        <app-breadcrumbs></app-breadcrumbs>
-        <router-outlet></router-outlet>
-    </div>
+  <div class="container-lg mt-5 mt-lg-2">
+    <app-breadcrumbs></app-breadcrumbs>
+    <router-outlet></router-outlet>
+  </div>
 </div>
-<app-info-space *ngIf="isDesktop && !isMobileOrTablet"></app-info-space>
-<app-footer *ngIf="isDesktop && !isMobileOrTablet"></app-footer>
+@if (isDesktop && !isMobileOrTablet) {
+  <app-info-space></app-info-space>
+}
+@if (isDesktop && !isMobileOrTablet) {
+  <app-footer></app-footer>
+}
 
 <app-agreements-acceptance></app-agreements-acceptance>

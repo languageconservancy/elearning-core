@@ -1,6 +1,18 @@
-<app-mcq *ngIf="exercise.exercise_type === 'multiple-choice'" [sessionType]="'exercise'"></app-mcq>
-<app-match-pair *ngIf="exercise.exercise_type === 'match-the-pair'" [sessionType]="'exercise'"></app-match-pair>
-<app-true-false *ngIf="exercise.exercise_type === 'truefalse'" [sessionType]="'exercise'"></app-true-false>
-<app-anagram *ngIf="exercise.exercise_type === 'anagram'" [sessionType]="'exercise'"></app-anagram>
-<app-fillin *ngIf="exercise.exercise_type === 'fill_in_the_blanks'" [sessionType]="'exercise'"></app-fillin>
-<app-recording *ngIf="exercise.exercise_type === 'recording'" [sessionType]="'exercise'"></app-recording>
+@if (exercise.exercise_type === 'multiple-choice') {
+  <app-mcq [sessionType]="'exercise'"></app-mcq>
+}
+@if (exercise.exercise_type === 'match-the-pair') {
+  <app-match-pair [sessionType]="'exercise'"></app-match-pair>
+}
+@if (exercise.exercise_type === 'truefalse') {
+  <app-true-false [sessionType]="'exercise'"></app-true-false>
+}
+@if (exercise.exercise_type === 'anagram') {
+  <app-anagram [sessionType]="'exercise'"></app-anagram>
+}
+@if (exercise.exercise_type === 'fill_in_the_blanks') {
+  <app-fillin [sessionType]="'exercise'"></app-fillin>
+}
+@if (exercise.exercise_type === 'recording') {
+  <app-recording [sessionType]="'exercise'"></app-recording>
+}

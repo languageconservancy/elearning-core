@@ -1,39 +1,40 @@
 <!--
 Card design is as follows, with the audio section being a button:
-           _______
- _________/ Audio \_________
- |        --------         |
- |      Language|HTML      |
- |         Image           |
- |         Video           |
- |        English          |
- |_________________________|
+_______
+_________/ Audio \_________
+|        --------         |
+|      Language|HTML      |
+|         Image           |
+|         Video           |
+|        English          |
+|_________________________|
 -->
 
 <!-- Audio speaker icon -->
-<a
+@if (isActive(DataType.Audio) && (card.FullAudioUrl || card.audio?.FullUrl)) {
+  <a
     href="javascript:void(0)"
     class="rounded-circle position-absolute w-4 h-4 bg-default-opaque transX-50 top-n-1p3 right-50-p mx-auto my-auto d-flex align-items-center justify-content-center border-option-default"
     [ngClass]="{
         'disabled-link': isDisabled,
     }"
-    *ngIf="isActive(DataType.Audio) && (card.FullAudioUrl || card.audio?.FullUrl)"
     (click)="playPauseAudio()"
->
+    >
     <img
-        [ngClass]="!audioIsPlaying() ? 'd-block' : 'd-none'"
-        src="./assets/images/audio-large-mute.png"
-        class="p-2"
-    />
+      [ngClass]="!audioIsPlaying() ? 'd-block' : 'd-none'"
+      src="./assets/images/audio-large-mute.png"
+      class="p-2"
+      />
     <img
-        [ngClass]="audioIsPlaying() ? 'd-block' : 'd-none'"
-        src="./assets/images/audio-large.png"
-        class="p-2"
-    />
-</a>
+      [ngClass]="audioIsPlaying() ? 'd-block' : 'd-none'"
+      src="./assets/images/audio-large.png"
+      class="p-2"
+      />
+  </a>
+}
 
 <div
-    class="d-flex border-option-default-no-hover minwrem-10 cursor-pointer shadow flex-column align-items-center justify-content-center text-center prompt-font-size h-100"
+  class="d-flex border-option-default-no-hover minwrem-10 cursor-pointer shadow flex-column align-items-center justify-content-center text-center prompt-font-size h-100"
     [ngClass]="{
         'active-answer': selectedCardId === card.id,
         'bg-option-correct border-option-correct': userAnswer === AnswerType.CORRECT,
@@ -48,48 +49,51 @@ Card design is as follows, with the audio section being a button:
             enabledDataTypes.length === 1,
         'bg-option-default border-option-default': isHovered && !isVideoHovered,
     }"
-    (mouseenter)="onMouseEnterCard()"
-    (mouseleave)="onMouseLeaveCard()"
-    (click)="onCardClick()"
->
-    <!-- Card language text -->
+  (mouseenter)="onMouseEnterCard()"
+  (mouseleave)="onMouseLeaveCard()"
+  (click)="onCardClick()"
+  >
+  <!-- Card language text -->
+  @if (isActive(DataType.Language) && card.lakota) {
     <div
-        class="prompt-font-size white-space-normal px-2 py-4 text-break child-p-mb-0 font-language h-100 d-flex align-items-center justify-content-center"
-        *ngIf="isActive(DataType.Language) && card.lakota"
-        [innerHTML]="card.lakota | safeHtml"
+      class="prompt-font-size white-space-normal px-2 py-4 text-break child-p-mb-0 font-language h-100 d-flex align-items-center justify-content-center"
+      [innerHTML]="card.lakota | safeHtml"
     ></div>
+  }
 
-    <!-- HTML Response -->
+  <!-- HTML Response -->
+  @if (
+    (optionType === 'prompt' && card.PromptType === 'html') ||
+    (optionType === 'response' && card.ResponseType === 'html')
+    ) {
     <div
-        *ngIf="
-            (optionType === 'prompt' && card.PromptType === 'html') ||
-            (optionType === 'response' && card.ResponseType === 'html')
-        "
-        [innerHTML]="(optionType === 'prompt' ? card.prompt_html : card.response_html) | safeHtml"
-        class="font-language white-space-normal h-100 py-4 d-flex align-items-center justify-content-center prompt-font-size prompt-line-height"
+      [innerHTML]="(optionType === 'prompt' ? card.prompt_html : card.response_html) | safeHtml"
+      class="font-language white-space-normal h-100 py-4 d-flex align-items-center justify-content-center prompt-font-size prompt-line-height"
     ></div>
+  }
 
-    <!-- Card image (popup zoomable) -->
+  <!-- Card image (popup zoomable) -->
+  @if (isActive(DataType.Image) && card.image?.FullUrl) {
     <a
-        class="mnp-prompt"
-        href="javascript:void(0)"
-        [ngClass]="{ 'disabled-link': isDisabled }"
-        *ngIf="isActive(DataType.Image) && card.image?.FullUrl"
-    >
-        <img class="rounded-3 py-1 mw-100 maxhrem-8" [src]="card.image.FullUrl" alt="" />
+      class="mnp-prompt"
+      href="javascript:void(0)"
+      [ngClass]="{ 'disabled-link': isDisabled }"
+      >
+      <img class="rounded-3 py-1 mw-100 maxhrem-8" [src]="card.image.FullUrl" alt="" />
     </a>
+  }
 
-    <!-- Card video -->
+  <!-- Card video -->
+  @if (isActive(DataType.Video) && card.video?.FullUrl) {
     <div
-        *ngIf="isActive(DataType.Video) && card.video?.FullUrl"
-        class="video-container position-relative h-auto w-100"
-    >
-        <video
-            #video
-            controls
-            controlslist="nodownload"
-            preload="auto"
-            class="w-100"
+      class="video-container position-relative h-auto w-100"
+      >
+      <video
+        #video
+        controls
+        controlslist="nodownload"
+        preload="auto"
+        class="w-100"
             [ngClass]="{
                 'rounded-top-left-3 rounded-top-right-3':
                     enabledDataTypes.length === 1 ||
@@ -98,28 +102,31 @@ Card design is as follows, with the audio section being a button:
                         !isActive(DataType.Image) &&
                         card.ResponseType !== 'html'),
             }"
-            (click)="videoClicked($event)"
-            (mouseenter)="onMouseEnterVideo()"
-            (mouseleave)="onMouseLeaveVideo()"
+        (click)="videoClicked($event)"
+        (mouseenter)="onMouseEnterVideo()"
+        (mouseleave)="onMouseLeaveVideo()"
         >
-            <source [src]="card.video.FullUrl" />
-        </video>
+        <source [src]="card.video.FullUrl" />
+      </video>
     </div>
+  }
 
-    <!-- Card english text -->
+  <!-- Card english text -->
+  @if (isActive(DataType.English) && card.english) {
     <div
-        class="prompt-font-size white-space-normal px-2 py-4 text-break child-p-mb-0 font-language h-100 d-flex align-items-center justify-content-center"
-        *ngIf="isActive(DataType.English) && card.english"
-        [innerHTML]="card.english | safeHtml"
+      class="prompt-font-size white-space-normal px-2 py-4 text-break child-p-mb-0 font-language h-100 d-flex align-items-center justify-content-center"
+      [innerHTML]="card.english | safeHtml"
     ></div>
+  }
 
-    <!-- Select button text for when video or only audio is present to guide users -->
-    <div class="w-100 d-flex flex-fill flex-column align-items-center justify-content-center">
-        <div
-            class="border-0 w-100 header-font-size py-4 bg-transparent rounded-top-left-0 rounded-top-right-0 font-weight-bold font-secondary text-primary text-center"
-            *ngIf="showSelectButton"
+  <!-- Select button text for when video or only audio is present to guide users -->
+  <div class="w-100 d-flex flex-fill flex-column align-items-center justify-content-center">
+    @if (showSelectButton) {
+      <div
+        class="border-0 w-100 header-font-size py-4 bg-transparent rounded-top-left-0 rounded-top-right-0 font-weight-bold font-secondary text-primary text-center"
         >
-            Select
-        </div>
-    </div>
+        Select
+      </div>
+    }
+  </div>
 </div>

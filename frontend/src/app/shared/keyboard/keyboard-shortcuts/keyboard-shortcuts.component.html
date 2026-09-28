@@ -1,85 +1,94 @@
 <div class="keyboard-shortcuts-popout ml-3 mt-2 ">
-    <a class="keyboard-icon" (click)="toggleKeyboardShortcutsPopoutVisibility()">
-        <img src="./assets/images/keyboard-icon.png" width="50" />
-    </a>
+  <a class="keyboard-icon" (click)="toggleKeyboardShortcutsPopoutVisibility()">
+    <img src="./assets/images/keyboard-icon.png" width="50" />
+  </a>
 
-    <div class="keyboard-shortcuts-popout" *ngIf="showKeyboardShortcuts">
-        <div class="keyboard-shortcuts-symbol-text">&#9654;</div>
-
-        <!-- Space to play/pause audio -->
-        <div *ngIf="showPlayAudio" class="keyboard-shortcut">
-            <div id="space-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Space') > -1 }">Space</div>
-            <div class="keyboard-shortcuts-text">Play Audio</div>
+  @if (showKeyboardShortcuts) {
+    <div class="keyboard-shortcuts-popout">
+      <div class="keyboard-shortcuts-symbol-text">&#9654;</div>
+      <!-- Space to play/pause audio -->
+      @if (showPlayAudio) {
+        <div class="keyboard-shortcut">
+          <div id="space-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Space') > -1 }">Space</div>
+          <div class="keyboard-shortcuts-text">Play Audio</div>
         </div>
-
-        <!-- Tab to select next option -->
-        <div *ngIf="showSelectNext" class="keyboard-shortcut">
-            <div
-                id="tab-key"
-                class="key"
-                [ngClass]="{ keydown: keysPressed.indexOf('Tab') > -1 && keysPressed.indexOf('Shift') === -1 }"
+      }
+      <!-- Tab to select next option -->
+      @if (showSelectNext) {
+        <div class="keyboard-shortcut">
+          <div
+            id="tab-key"
+            class="key"
+            [ngClass]="{ keydown: keysPressed.indexOf('Tab') > -1 && keysPressed.indexOf('Shift') === -1 }"
             >
-                Tab
-            </div>
-            <div class="keyboard-shortcuts-text">Select Next</div>
+            Tab
+          </div>
+          <div class="keyboard-shortcuts-text">Select Next</div>
         </div>
-
-        <!-- Shift+Tab to select previous option -->
-        <div *ngIf="showSelectPrevious" class="keyboard-shortcut">
-            <div id="shift-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Shift') > -1 }">Shift</div>
-            <div class="keyboard-shortcuts-symbol-text">+</div>
-            <div
-                id="tab-key"
-                class="key"
-                [ngClass]="{ keydown: keysPressed.indexOf('Tab') > -1 && keysPressed.indexOf('Shift') > -1 }"
+      }
+      <!-- Shift+Tab to select previous option -->
+      @if (showSelectPrevious) {
+        <div class="keyboard-shortcut">
+          <div id="shift-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Shift') > -1 }">Shift</div>
+          <div class="keyboard-shortcuts-symbol-text">+</div>
+          <div
+            id="tab-key"
+            class="key"
+            [ngClass]="{ keydown: keysPressed.indexOf('Tab') > -1 && keysPressed.indexOf('Shift') > -1 }"
             >
-                Tab
-            </div>
-            <div class="keyboard-shortcuts-text">Select Previous</div>
+            Tab
+          </div>
+          <div class="keyboard-shortcuts-text">Select Previous</div>
         </div>
-
-        <!-- Enter to submit selection -->
-        <div *ngIf="showSubmit" class="keyboard-shortcut">
-            <div
-                id="enter-key"
-                class="key"
-                [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') === -1 }"
+      }
+      <!-- Enter to submit selection -->
+      @if (showSubmit) {
+        <div class="keyboard-shortcut">
+          <div
+            id="enter-key"
+            class="key"
+            [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') === -1 }"
             >
-                Enter
-            </div>
-            <div class="keyboard-shortcuts-text">Submit</div>
+            Enter
+          </div>
+          <div class="keyboard-shortcuts-text">Submit</div>
         </div>
-
-        <!-- Enter to go to next -->
-        <div *ngIf="showGotoNext" class="keyboard-shortcut">
-            <div
-                id="enter-key"
-                class="key"
-                [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') === -1 }"
+      }
+      <!-- Enter to go to next -->
+      @if (showGotoNext) {
+        <div class="keyboard-shortcut">
+          <div
+            id="enter-key"
+            class="key"
+            [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') === -1 }"
             >
-                Enter
-            </div>
-            <div class="keyboard-shortcuts-text">Goto Next</div>
+            Enter
+          </div>
+          <div class="keyboard-shortcuts-text">Goto Next</div>
         </div>
-
-        <!-- Shift+Enter to go to previous -->
-        <div *ngIf="showGotoPrevious" class="keyboard-shortcut">
-            <div id="shift-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Shift') > -1 }">Shift</div>
-            <div class="keyboard-shortcuts-symbol-text">+</div>
-            <div
-                id="enter-key"
-                class="key"
-                [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') > -1 }"
+      }
+      <!-- Shift+Enter to go to previous -->
+      @if (showGotoPrevious) {
+        <div class="keyboard-shortcut">
+          <div id="shift-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Shift') > -1 }">Shift</div>
+          <div class="keyboard-shortcuts-symbol-text">+</div>
+          <div
+            id="enter-key"
+            class="key"
+            [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') > -1 }"
             >
-                Enter
-            </div>
-            <div class="keyboard-shortcuts-text">Goto Previous</div>
+            Enter
+          </div>
+          <div class="keyboard-shortcuts-text">Goto Previous</div>
         </div>
-
-        <!-- Typing -->
-        <div *ngIf="showTyping" class="keyboard-shortcut">
-            <div class="key">abc</div>
-            <div class="keyboard-shortcuts-text">Typing</div>
+      }
+      <!-- Typing -->
+      @if (showTyping) {
+        <div class="keyboard-shortcut">
+          <div class="key">abc</div>
+          <div class="keyboard-shortcuts-text">Typing</div>
         </div>
+      }
     </div>
+  }
 </div>

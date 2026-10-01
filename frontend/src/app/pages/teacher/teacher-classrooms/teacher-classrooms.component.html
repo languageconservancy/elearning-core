@@ -147,7 +147,7 @@
                                         data-toggle="tooltip"
                                         data-placement="top"
                                         title="Click or Drag to Move"
-                                        (click)="moveStudentToClassroom(i)">
+                                        (click)="moveStudentToClassroom($index)">
                                     </i>
                                 </div>
                             }
@@ -169,7 +169,7 @@
                                         data-toggle="tooltip"
                                         data-placement="top"
                                         title="Click or Drag to Move"
-                                        (click)="moveStudentToSchool(i)">
+                                        (click)="moveStudentToSchool($index)">
                                         </i>
                                         <img src="{{ student.user.usersetting.FullProfileImageUrl }}" />
                                         <span>{{ student.user.name}} - {{ student.user.email }}</span>

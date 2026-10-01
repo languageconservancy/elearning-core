@@ -129,55 +129,57 @@
         </i>
       </a>
     </div>
-    <table #progresstable class="table-header-rotated table-striped table-hover table-striped-column tlc-width-whole">
-      <thead>
-        <tr>
-          <th class="row-header">
-            @for (classroomUnit of classroomUnits; track $index) {
-              <th class="rotate-45">
-                <div>
-                  <span
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="{{ classroomUnit.level_unit.unit.description }}">
-                    {{ classroomUnit.level_unit.unit.name }}
-                  </span>
-                </div>
-              </th>
-            }
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (studentProgress of studentProgresses; track $index) {
+    <div class="progress-scroll">
+      <table #progresstable class="table-header-rotated table-striped table-hover table-striped-column tlc-width-whole">
+        <thead>
           <tr>
-            <td>
-              <div class="td-img-left">
-                <img src="{{ studentProgress.usersetting.aws_profile_link }}" />{{
-                  studentProgress.l_name ? studentProgress.l_name + ', ' + studentProgress.f_name : studentProgress.name
-                }}
-              </div>
-            </td>
-            @for (percent of studentProgress.percents; track $index) {
-              <td>
-                <span [ngClass]="{
-                  'label complete': percent === 100,
-                  'label attempted': percent > 0 && percent < 100,
-                  'label incomplete': percent === 0,
-                }">
-                  <i
-                    class="fa fa-circle"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="{{ percent }}%"></i>
-                </span>
-                <div class="hidden">{{ percent }}</div>
-              </td>
-            }
+            <th class="row-header">
+              @for (classroomUnit of classroomUnits; track $index) {
+                <th class="rotate-45">
+                  <div>
+                    <span
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{ classroomUnit.level_unit.unit.description }}">
+                      {{ classroomUnit.level_unit.unit.name }}
+                    </span>
+                  </div>
+                </th>
+              }
+            </th>
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (studentProgress of studentProgresses; track $index) {
+            <tr>
+              <td>
+                <div class="td-img-left">
+                  <img src="{{ studentProgress.usersetting.aws_profile_link }}" />{{
+                    studentProgress.l_name ? studentProgress.l_name + ', ' + studentProgress.f_name : studentProgress.name
+                  }}
+                </div>
+              </td>
+              @for (percent of studentProgress.percents; track $index) {
+                <td>
+                  <span [ngClass]="{
+                    'label complete': percent === 100,
+                    'label attempted': percent > 0 && percent < 100,
+                    'label incomplete': percent === 0,
+                  }">
+                    <i
+                      class="fa fa-circle"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="{{ percent }}%"></i>
+                  </span>
+                  <div class="hidden">{{ percent }}</div>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
 }
 

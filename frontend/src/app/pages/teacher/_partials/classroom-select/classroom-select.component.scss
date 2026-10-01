@@ -1,3 +1,55 @@
 .dropdown-selected {
     display: inherit;
 }
+
+.dropdown-menu.show {
+    border: none;
+    border-radius: 4px !important;
+    box-shadow: 0 .25rem .5rem rgb(36, 49, 66, .16);
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    width: 100%;
+}
+
+.teacherportal-drop  {
+    .dropdown-menu-wrap{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+.teacher-check {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    dl {
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+
+    .custom-control-indicator {
+        border: 1px solid transparent;
+        box-shadow: none;
+        display: flex;
+        height: 2rem;
+        left: unset;
+        position: relative;
+        top: unset;
+        width: .5rem;
+    }
+}
+
+.teacher-drop {
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}

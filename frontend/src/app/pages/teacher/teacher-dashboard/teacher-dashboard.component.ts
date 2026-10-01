@@ -43,9 +43,11 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     public teacher: any = [];
     public activities: any = [];
     public progresses: any = [];
+    public initialStudentProgresses: any = [];
     public studentProgresses: any = [];
     public classOverview: any = [];
     public continuousActivityUpdate = false;
+    public initialStudentActivities: any = [];
     public studentActivities: any = [];
     public activitiesItems: any = [];
     public retrievedInitialActivities = false;
@@ -104,13 +106,36 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         this.studentActivitiesItems.filter = filterValue.trim().toLowerCase();
     }
 
+    alphabetizeStudents(unsortedStudents: Array<any>) {
+        const lNameMissing = [];
+        const lNamePresent = [];
+        let sortedStudents = [];
+
+        unsortedStudents.forEach((student) => {
+            if (!student.l_name || student.l_name.trim() === "") {
+                lNameMissing.push(student);
+            } else {
+                lNamePresent.push(student);
+            }
+        });
+
+        // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
+        return (sortedStudents = [
+            ...lNameMissing.sort((a, b) => a.name.localeCompare(b.name)),
+            ...lNamePresent.sort((a, b) => a.l_name.localeCompare(b.l_name)),
+        ]);
+    }
+
     ngOnInit() {
         this.studentActivitiesItems.sort = this.sort;
     }
     getUnitsAndStudentsThenUpdateActivities() {
         if (!!this.teacher.id && !!this.classroom.id) {
             this.classroomService
-                .getTeacherClassroomUnitsAndStudents({ user_id: this.teacher.id, classroom_id: this.classroom.id })
+                .getTeacherClassroomUnitsAndStudents({
+                    user_id: this.teacher.id,
+                    classroom_id: this.classroom.id,
+                })
                 .then((res) => {
                     this.classroomStudents = res.data.results.students;
                     this.classroomUnits = res.data.results.units;
@@ -135,7 +160,9 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         xlsx.utils.book_append_sheet(wb, ws, "StudentActivities");
         xlsx.writeFile(
             wb,
-            "StudentActivities - " + this.studentActivities[this.currentStudentActivityIndex].name + ".xlsx",
+            "StudentActivities - " +
+                this.studentActivities[this.currentStudentActivityIndex].name +
+                ".xlsx",
         );
     }
     ngOnDestroy() {
@@ -182,6 +209,17 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         this.messageIsDirty = true;
     }
 
+    getDisplayName(student: any): string {
+        const lName = student?.l_name ?? student?.user?.l_name;
+        const fName = student?.f_name ?? student?.user?.f_name;
+
+        if (!!lName && !!fName) {
+            return `${lName}, ${fName}`;
+        }
+
+        return student?.name ?? "";
+    }
+
     repopulateStudentActivities() {
         this.currentStudentActivity = this.studentActivities[this.currentStudentActivityIndex];
         this.studentActivitiesItems.data = [];
@@ -192,7 +230,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
             this.studentActivitiesItems.data.unshift({
                 id: studentActivity.id,
                 studentImg: this.currentStudentActivity.usersetting.aws_profile_link,
-                student: this.currentStudentActivity.name,
+                student: this.getDisplayName(this.currentStudentActivity),
                 card: studentActivity.card.lakota,
                 response: studentActivity.type,
                 exercise: studentActivity.exercise_type,
@@ -211,43 +249,68 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         this.loader.setLoader(true);
         this.lastModified = lastModified;
         this.classroomService
-            .getStudentActivities({ user_id: userId, classroom_id: classroomId, last_modified: this.lastModified })
+            .getStudentActivities({
+                user_id: userId,
+                classroom_id: classroomId,
+                last_modified: this.lastModified,
+            })
             .then((res) => {
-                this.studentActivities = res.data.results["studentActivities"];
-                this.studentProgresses = res.data.results["studentProgress"];
-                for (let studentIndex = 0; studentIndex < this.studentProgresses.length; studentIndex++) {
+                this.initialStudentActivities = (res.data.results["studentActivities"] || []).map(
+                    (activity) => ({
+                        ...activity,
+                        f_name: activity.f_name ?? activity.user?.f_name ?? null,
+                        l_name: activity.l_name ?? activity.user?.l_name ?? null,
+                    }),
+                );
+                this.initialStudentProgresses = res.data.results["studentProgress"];
+                for (
+                    let studentIndex = 0;
+                    studentIndex < this.initialStudentProgresses.length;
+                    studentIndex++
+                ) {
                     if (this.lastModified == null) {
-                        this.studentProgresses[studentIndex].percents = [];
+                        this.initialStudentProgresses[studentIndex].percents = [];
                     }
                     for (let unitIndex = 0; unitIndex < this.classroomUnits.length; unitIndex++) {
                         let currentUnitPercent = 0;
                         for (
                             let progressIndex = 0;
-                            progressIndex < this.studentProgresses[studentIndex].user_unit_activities.length;
+                            progressIndex <
+                            this.initialStudentProgresses[studentIndex].user_unit_activities.length;
                             progressIndex++
                         ) {
                             if (
-                                this.studentProgresses[studentIndex].user_unit_activities[progressIndex].unit_id ==
-                                    this.classroomUnits[unitIndex].level_unit.unit.id &&
-                                !!this.studentProgresses[studentIndex].user_unit_activities[progressIndex].percent
+                                // eslint-disable-next-line prettier/prettier
+                                this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].unit_id == this.classroomUnits[unitIndex].level_unit.unit.id &&
+                                // eslint-disable-next-line prettier/prettier
+                                !!this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].percent
                             ) {
                                 currentUnitPercent =
-                                    this.studentProgresses[studentIndex].user_unit_activities[progressIndex].percent;
+                                    // eslint-disable-next-line prettier/prettier
+                                    this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].percent;
                             }
                         }
                         if (this.lastModified == null) {
-                            this.studentProgresses[studentIndex].percents.push(currentUnitPercent);
+                            this.initialStudentProgresses[studentIndex].percents.push(
+                                currentUnitPercent,
+                            );
                         } else {
-                            this.studentProgresses[studentIndex].percents[unitIndex] = currentUnitPercent;
+                            this.initialStudentProgresses[studentIndex].percents[unitIndex] =
+                                currentUnitPercent;
                         }
                     }
                 }
+                this.studentProgresses = this.alphabetizeStudents(this.initialStudentProgresses);
+
                 //save most recent modified for next query
                 //construct or update activities table
+                this.studentActivities = this.alphabetizeStudents(this.initialStudentActivities);
+
                 if (this.studentActivities.length > 0) {
                     if (this.currentStudentActivityIndex == -1) {
                         this.currentStudentActivityIndex = 0;
                     }
+
                     this.repopulateStudentActivities();
                 }
             })

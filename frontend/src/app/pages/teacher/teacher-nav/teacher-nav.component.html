@@ -1,138 +1,140 @@
+
 @if (currentSchoolIndex !== -1) {
-  <div class="padd-box">
-    <div class="text-center text-white"></div>
-    <nav class="navbar-expand-lg navbar-dark pb-1">
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item left-menu">
-            <a
-              href="javascript:void(0)"
-              [ngClass]="{ active: tabName === 'teacher-dashboard' }"
-              (click)="setTab('teacher-dashboard')"
-              class="nav-link mrgn-right5"
-              >Dashboard</a
-              >
-            </li>
-            <li class="nav-item left-menu">
-              <a
-                href="javascript:void(0)"
-                [ngClass]="{ active: tabName === 'teacher-classrooms' }"
-                (click)="setTab('teacher-classrooms')"
-                class="nav-link mrgn-right5"
-                >Classrooms</a
-                >
-              </li>
-              <li class="nav-item left-menu">
-                <a
-                  href="javascript:void(0)"
-                  [ngClass]="{ active: tabName === 'teacher-lessons' }"
-                  (click)="setTab('teacher-lessons')"
-                  class="nav-link mrgn-right5"
-                  >Lessons</a
-                  >
-                </li>
-                @if (currentSchool.role_id === 1) {
-                  <li class="nav-item left-menu">
-                    <a
-                      href="javascript:void(0)"
-                      [ngClass]="{ active: tabName === 'teacher-admin' }"
-                      (click)="setTab('teacher-admin')"
-                      class="nav-link mrgn-right5"
-                      >Admin</a
-                      >
-                    </li>
-                  }
-                </ul>
-                <ul class="navbar-nav ml-auto">
-                  @if (schools.length > 1) {
-                    <div class="teacherportal-drop">
-                      <div class="dropdown">
-                        <button
-                          class="teacher-drop dropdown-toggle"
-                          type="button"
-                          id="schoolDropdownBtn"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                          >
-                          {{ currentSchool.school.name }}
-                          <!--<span *ngIf="!currentClassroomIndex">Select Classroom</span>-->
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="schoolDropdownBtn">
-                          <div class="dropdown-menu-wrap">
-                            @for (school of schools; track school; let j = $index) {
-                              <div class="teacher-check">
-                                <div class="form-row" (click)="setCurrentSchool(j)">
-                                  <div class="col-xs-12 col-sm-9 col-lg-2">
-                                    <img src="{{ school.school.FullImageUrl }}" />
-                                  </div>
-                                  <div class="col-xs-12 col-sm-9 col-lg-8">
-                                    <dl>
-                                      <dt>{{ school.school.name }}</dt>
-                                      <dd>{{ school.school.grade_low }} - {{ school.school.grade_high }}</dd>
-                                    </dl>
-                                  </div>
-                                  <div class="col-xs-12 col-sm-3 col-lg-2">
-                                    <label class="custom-control custom-radio">
-                                      <input
-                                        id="school-{{ j }}"
-                                        name="radio-stacked-school"
-                                        type="radio"
-                                        [value]="school.school.id"
-                                        class="custom-control-input"
-                                        required=""
-                                        [checked]="currentSchoolIndex === j"
-                                        />
-                                      <span class="custom-control-indicator"></span>
-                                    </label>
-                                  </div>
+    <div class="tlc-column tlc-gap-sm">
+        @if (currentSchoolIndex !== -1) {
+            <nav class="navbar-expand-lg navbar-dark pb-1">
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav mr-auto tlc-align-items-center">
+                        <li class="nav-item left-menu">
+                            <a href="javascript:void(0)"
+                                [ngClass]="{ active: tabName === 'teacher-dashboard' }"
+                                (click)="setTab('teacher-dashboard')"
+                                class="nav-link mrgn-right5">
+                                @if (this.tabName === 'teacher-dashboard') {
+                                    <h1 class="tlc-ts-18">Dashboard</h1>
+                                } @else {
+                                    <ng-template #normalDash><span class="tlc-ts-18">Dashboard</span></ng-template>
+                                }
+                            </a>
+                        </li>
+                        <li class="nav-item left-menu">
+                            <a href="javascript:void(0)"
+                                [ngClass]="{ active: tabName === 'teacher-classrooms' }"
+                                (click)="setTab('teacher-classrooms')"
+                                class="nav-link mrgn-right5">
+                                @if (this.tabName === 'teacher-classrooms') {
+                                    <h1 class="tlc-ts-18">Classrooms</h1>
+                                } @else {
+                                    <ng-template #normalClass><span class="tlc-ts-18">Classrooms</span></ng-template>
+                                }
+                            </a>
+                        </li>
+                        <li class="nav-item left-menu">
+                            <a href="javascript:void(0)"
+                                [ngClass]="{ active: tabName === 'teacher-lessons' }"
+                                (click)="setTab('teacher-lessons')"
+                                class="nav-link mrgn-right5">
+                                @if (this.tabName === 'teacher-lessons') {
+                                    <h1 class="tlc-ts-18">Lessons</h1>
+                                } @else {
+                                    <ng-template #normalLessons><span class="tlc-ts-18">Lessons</span></ng-template>
+                                }
+                            </a>
+                        </li>
+                        @if (currentSchool.role_id === 1) {
+                            <li class="nav-item left-menu">
+                                <a href="javascript:void(0)"
+                                    [ngClass]="{ active: tabName === 'teacher-admin' }"
+                                    (click)="setTab('teacher-admin')"
+                                    class="nav-link mrgn-right5">
+                                    @if (this.tabName === 'teacher-admin') {
+                                        <h1 class="tlc-ts-18">Admin</h1>
+                                    } @else {
+                                        <ng-template #normalAdmin><span class="tlc-ts-18">Admin</span></ng-template>
+                                    }
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        @if (schools.length > 1) {
+                            <div class="teacherportal-drop">
+                                <div class="dropdown">
+                                    <button
+                                        class="teacher-drop dropdown-toggle"
+                                        type="button"
+                                        id="schoolDropdownBtn"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        {{ currentSchool.school.name }}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="schoolDropdownBtn">
+                                        <div class="dropdown-menu-wrap">
+                                            @for (school of schools; track $index) {
+                                                <div class="teacher-check">
+                                                    <div class="form-row" (click)="setCurrentSchool($index)">
+                                                        <div class="col-xs-12 col-sm-9 col-lg-2">
+                                                            <img src="{{ school.school.FullImageUrl }}" />
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-9 col-lg-8">
+                                                            <dl>
+                                                                <dt>{{ school.school.name }}</dt>
+                                                                <dd>{{ school.school.grade_low }} - {{ school.school.grade_high }}</dd>
+                                                            </dl>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-3 col-lg-2">
+                                                            <label class="custom-control custom-radio">
+                                                                <input
+                                                                    id="school-{{ $index }}"
+                                                                    name="radio-stacked-school"
+                                                                    type="radio"
+                                                                    [value]="school.school.id"
+                                                                    class="custom-control-input"
+                                                                    required=""
+                                                                    [checked]="currentSchoolIndex === $index"
+                                                                />
+                                                                <span class="custom-control-indicator"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <hr class="mt-0 mb-0" />
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
-                                <hr class="mt-0 mb-0" />
-                              </div>
-                            }
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </ul>
-              </div>
-            </nav>
-            <!--start teacher components here-->
-            @if (this.tabName === 'teacher-dashboard') {
-              <div class="row justify-content-center text-center">
-                <app-teacher-dashboard></app-teacher-dashboard>
-              </div>
-            }
-            @if (this.tabName === 'teacher-classrooms') {
-              <div class="row justify-content-center text-center">
-                <app-teacher-classrooms></app-teacher-classrooms>
-              </div>
-            }
-            @if (this.tabName === 'teacher-lessons') {
-              <div class="row justify-content-center text-center">
-                <app-teacher-lessons></app-teacher-lessons>
-              </div>
-            }
-            @if (this.tabName === 'teacher-admin') {
-              <div class="row justify-content-center text-center">
-                <app-teacher-admin></app-teacher-admin>
-              </div>
-            }
-            <!--end teacher components-->
-          </div>
-        }
-        @if (currentSchoolIndex === -1) {
-          <div class="padd-box">
-            <div class="mt-3 mb-4 text-center text-white"></div>
-            <div class="col-xs-5 col-sm-8 col-lg-12 l-speed">
-              <div class="row justify-content-start">
-                <div class="col-xs-3 col-sm-8 col-lg-12">
-                  <div id="teacher-info" class="logo-container-box col-lg-12">
-                    <app-request-quote></app-request-quote>
-                  </div>
+                            </div>
+                        }
+                    </ul>
                 </div>
-              </div>
-            </div>
-          </div>
+            </nav>
         }
+        <!--start teacher components here-->
+        @if (this.tabName === 'teacher-dashboard') {
+            <app-teacher-dashboard  class="tlc-row tlc-gap-xs"></app-teacher-dashboard>
+        } @else if (this.tabName === 'teacher-classrooms') {
+            <app-teacher-classrooms class="tlc-row tlc-gap-xs"></app-teacher-classrooms>
+        } @else if (this.tabName === 'teacher-lessons') {
+            <app-teacher-lessons class="tlc-row tlc-gap-xs"></app-teacher-lessons>
+        } @else if (this.tabName === 'teacher-admin') {
+            <app-teacher-admin class="tlc-row tlc-gap-xs"></app-teacher-admin>
+        }
+        <!--end teacher components-->
+    </div>
+}
+@if (currentSchoolIndex !== -1) {
+    <div class="padd-box">
+        <div class="mt-3 mb-4 text-center text-white"></div>
+        <div class="col-xs-5 col-sm-8 col-lg-12 l-speed">
+            <div class="row justify-content-start">
+                <div class="col-xs-3 col-sm-8 col-lg-12">
+                    <div id="teacher-info" class="logo-container-box col-lg-12">
+                        <app-request-quote></app-request-quote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -16,6 +16,7 @@ import { BaseService } from "app/_services/base.service";
 import { AgreementsService } from "app/_services/agreements.service";
 import { Routes } from "app/shared/utils/elearning-types";
 import { RegionPolicyService } from "app/_services/region-policy.service";
+import { RecaptchaCheckboxComponent } from "app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
 
 @Component({
     selector: "app-registration",
@@ -23,6 +24,9 @@ import { RegionPolicyService } from "app/_services/region-policy.service";
     styleUrls: ["./registration.component.scss"],
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
+    @ViewChild(RecaptchaCheckboxComponent)
+    private recaptchaCheckbox?: RecaptchaCheckboxComponent;
+
     private userSubscription: Subscription;
     public userId: string;
     public registrationForm: any;
@@ -163,15 +167,24 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         }
     }
 
-    captchaResolved(data) {
+    captchaResolved(token: string | null) {
+        this.captchaResponse = false;
+        if (!token) {
+            return;
+        }
+
         this.loader.setLoader(true);
         this.registrationService
-            .getCaptchaResponse({ token: data })
+            .getCaptchaResponse({ token: token })
             .then((res: any) => {
-                this.captchaResponse = res.data.results.success;
+                this.captchaResponse = res?.data?.results?.success === true;
+                if (!this.captchaResponse) {
+                    this.recaptchaCheckbox?.reset();
+                }
             })
             .catch((err) => {
                 console.error(err);
+                this.recaptchaCheckbox?.reset();
             })
             .finally(() => {
                 this.loader.setLoader(false);

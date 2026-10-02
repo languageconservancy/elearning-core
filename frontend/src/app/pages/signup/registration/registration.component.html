@@ -167,11 +167,11 @@
           </form>
           <div class="d-flex flex-wrap flex-row justify-content-between align-items-center">
             @if (!this.runningOnLocalhost()) {
-              <re-captcha
+              <app-recaptcha-checkbox
                 class="mr-auto"
                 (resolved)="captchaResolved($event)"
-                siteKey="{{ captchaSiteKey }}"
-              ></re-captcha>
+                [siteKey]="captchaSiteKey"
+              ></app-recaptcha-checkbox>
             }
             <button type="submit" class="btn btn-white ml-auto" (click)="register(registrationForm)">Next</button>
           </div>

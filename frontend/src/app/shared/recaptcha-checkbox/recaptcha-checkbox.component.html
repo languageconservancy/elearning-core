@@ -1,0 +1,7 @@
+<div #captchaHost></div>
+@if (loadFailed) {
+    <div class="text-danger mt-2" role="alert">
+        CAPTCHA could not load. Check your connection and retry.
+        <button class="btn btn-link p-0" type="button" (click)="retry()">Retry</button>
+    </div>
+}

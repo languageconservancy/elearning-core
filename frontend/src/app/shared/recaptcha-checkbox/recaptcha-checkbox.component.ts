@@ -37,7 +37,7 @@ function loadRecaptchaApi(): Promise<GoogleRecaptchaApi> {
     }
 
     if (recaptchaApiPromise === undefined) {
-        recaptchaApiPromise = new Promise((resolve, reject) => {
+        recaptchaApiPromise = new Promise<GoogleRecaptchaApi>((resolve, reject) => {
             let script = document.getElementById(RECAPTCHA_SCRIPT_ID) as HTMLScriptElement | null;
             if (!script) {
                 script = document.createElement("script");

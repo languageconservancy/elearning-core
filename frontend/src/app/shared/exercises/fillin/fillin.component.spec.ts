@@ -1,7 +1,7 @@
 /// <reference types="jasmine" />
 import { ComponentFixture, tick, fakeAsync, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { of } from "rxjs";
@@ -19,6 +19,7 @@ import { BaseService } from "app/_services/base.service";
 import { FillinComponent } from "./fillin.component";
 import { VirtualKeyboardComponent } from "app/_partials/virtual-keyboard/virtual-keyboard.component";
 import { AnswerType } from "app/shared/utils/elearning-types";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("FillinComponent", () => {
     let component: FillinComponent;
@@ -99,6 +100,7 @@ describe("FillinComponent", () => {
 
         TestBed.configureTestingModule({
             declarations: [FillinComponent, VirtualKeyboardComponent],
+            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule],
             providers: [
                 { provide: BaseService, useValue: mockBaseService },
                 { provide: CookieService, useValue: mockCookieService },
@@ -111,12 +113,8 @@ describe("FillinComponent", () => {
                 { provide: DeviceDetectorService, useValue: mockDeviceDetectorService },
                 { provide: SnackbarService, useValue: mockSnackbarService },
                 SettingsService,
-            ],
-            imports: [
-                RouterTestingModule,
-                HttpClientTestingModule,
-                ReactiveFormsModule,
-                FormsModule,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         });
 

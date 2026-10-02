@@ -2,7 +2,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { APP_INITIALIZER, NgModule } from "@angular/core";
 
 // Third Party Addons
@@ -109,13 +109,13 @@ export function initializeApp(
         InfoSpaceComponent,
         AppAutoFocusDirective,
     ],
+    bootstrap: [AppComponent],
     imports: [
         AppRoutingModule,
         BrowserModule,
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientModule,
         DragDropModule,
         MatTableModule,
         MatSortModule,
@@ -170,7 +170,7 @@ export function initializeApp(
         BadgeService,
         AudioService,
         VirtualKeyboardService,
+        provideHttpClient(withInterceptorsFromDi()),
     ],
-    bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,6 +1,7 @@
 import { TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { KeyboardConfigService, KeyboardConfig } from "./keyboard-config.service";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 fdescribe("KeyboardConfigService", () => {
     let service: KeyboardConfigService;
@@ -74,8 +75,12 @@ fdescribe("KeyboardConfigService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [KeyboardConfigService],
+            imports: [],
+            providers: [
+                KeyboardConfigService,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         });
         service = TestBed.inject(KeyboardConfigService);
         httpMock = TestBed.inject(HttpTestingController);

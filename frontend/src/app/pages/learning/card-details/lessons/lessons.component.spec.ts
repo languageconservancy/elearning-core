@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 import {
     SocialAuthServiceConfig,
@@ -143,6 +143,7 @@ describe("LessonsComponent", () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [LessonsComponent],
+            imports: [RouterTestingModule, PartialsModule, PipesModule],
             providers: [
                 CookieService,
                 LessonsService,
@@ -170,8 +171,8 @@ describe("LessonsComponent", () => {
                         ],
                     } as SocialAuthServiceConfig,
                 },
+                provideHttpClient(withInterceptorsFromDi()),
             ],
-            imports: [RouterTestingModule, HttpClientModule, PartialsModule, PipesModule],
         }).compileComponents();
     }));
 

@@ -2,7 +2,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from "@angular/router";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 import {
     SocialAuthServiceConfig,
@@ -29,6 +29,7 @@ describe("NavbarComponent", () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [NavbarComponent],
+            imports: [RouterTestingModule],
             providers: [
                 CookieService,
                 NgCookieService,
@@ -57,8 +58,8 @@ describe("NavbarComponent", () => {
                         ],
                     } as SocialAuthServiceConfig,
                 },
+                provideHttpClient(withInterceptorsFromDi()),
             ],
-            imports: [RouterTestingModule, HttpClientModule],
         }).compileComponents();
     }));
 

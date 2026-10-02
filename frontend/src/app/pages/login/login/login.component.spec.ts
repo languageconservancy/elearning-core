@@ -1,6 +1,6 @@
 import { fakeAsync, tick, ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 
 import { CookieService } from "app/_services/cookie.service";
@@ -42,6 +42,7 @@ describe("LoginComponent", () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [LoginComponent],
+            imports: [RouterTestingModule, SocialLoginModule, PartialsModule, ReactiveFormsModule],
             providers: [
                 CookieService,
                 NgCookieService,
@@ -75,13 +76,7 @@ describe("LoginComponent", () => {
                         ],
                     } as SocialAuthServiceConfig,
                 },
-            ],
-            imports: [
-                RouterTestingModule,
-                HttpClientModule,
-                SocialLoginModule,
-                PartialsModule,
-                ReactiveFormsModule,
+                provideHttpClient(withInterceptorsFromDi()),
             ],
         }).compileComponents();
     }));

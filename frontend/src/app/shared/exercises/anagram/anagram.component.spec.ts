@@ -1,7 +1,7 @@
 import { fakeAsync, ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { CookieService } from "app/_services/cookie.service";
 import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 import {
     SocialAuthServiceConfig,
@@ -27,6 +27,7 @@ describe("AnagramComponent", () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [AnagramComponent, NonSelectableCardComponent],
+            imports: [RouterTestingModule],
             providers: [
                 CookieService,
                 LessonsService,
@@ -57,8 +58,8 @@ describe("AnagramComponent", () => {
                         ],
                     } as SocialAuthServiceConfig,
                 },
+                provideHttpClient(withInterceptorsFromDi()),
             ],
-            imports: [RouterTestingModule, HttpClientModule],
         }).compileComponents();
     }));
 

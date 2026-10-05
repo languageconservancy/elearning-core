@@ -28,6 +28,7 @@ type Card = {
 
 @Component({
     selector: "app-non-selectable-card",
+    standalone: true,
     imports: [CommonModule, PipesModule, PartialsModule],
     templateUrl: "./non-selectable-card.component.html",
     styleUrls: ["./non-selectable-card.component.scss"],

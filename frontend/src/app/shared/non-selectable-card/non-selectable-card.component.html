@@ -9,7 +9,7 @@
         @if (enabledDataTypes.length > 1) {
           <i
             class="fa-solid fa-2xl"
-            [ngClass]="audioIsPlaying() ? 'fa-volume-high' : 'fa-volume-off'"
+            [class]="audioIsPlaying() ? 'fa-volume-high' : 'fa-volume-off'"
           ></i>
         }
       </a>
@@ -21,7 +21,7 @@
     <div class="text-center my-4 font-language">
       <div
         class="prompt-font-size prompt-line-height w-100 d-block"
-        [innerHTML]="card.lakota | safeHtml"
+        [innerHTML]="card.lakota"
       ></div>
     </div>
   }
@@ -33,7 +33,7 @@
     ) {
     <div
       class="text-center my-4 font-language prompt-font-size prompt-line-height"
-      [innerHTML]="(optionType === 'prompt' ? card.prompt_html : card.response_html) | safeHtml"
+      [innerHTML]="(optionType === 'prompt' ? card.prompt_html : card.response_html)"
     ></div>
   }
 
@@ -67,7 +67,7 @@
         >
         <i
           class="fa-solid font-size-3p5"
-          [ngClass]="audioIsPlaying() ? 'fa-volume-high' : 'fa-volume-off'"
+          [class]="audioIsPlaying() ? 'fa-volume-high' : 'fa-volume-off'"
         ></i>
         <!-- <img [src]="getAudioIconUrl()" class="" /> -->
       </a>
@@ -79,7 +79,7 @@
     <div class="text-center my-4 font-language">
       <div
         class="prompt-font-size prompt-line-height d-block w-100"
-        [innerHTML]="card.english | safeHtml"
+        [innerHTML]="card.english"
       ></div>
     </div>
   }

@@ -11,7 +11,7 @@ import { TrueFalseComponent } from "./true-false/true-false.component";
 import { FillinComponent } from "./fillin/fillin.component";
 import { AnagramComponent } from "./anagram/anagram.component";
 import { RecordingComponent } from "./recording/recording.component";
-import { SelectableCardComponent } from "../selectable-card/selectable-card.component";
+import { SelectableCardComponent } from "app/shared/selectable-card/selectable-card.component";
 import { NonSelectableCardComponent } from "../non-selectable-card/non-selectable-card.component";
 import { DirectivesModule } from "app/_directives/directives.module";
 

@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from "@angular/common
 import { KeyboardConfigService, KeyboardConfig } from "./keyboard-config.service";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
-fdescribe("KeyboardConfigService", () => {
+describe("KeyboardConfigService", () => {
     let service: KeyboardConfigService;
     let httpMock: HttpTestingController;
 
@@ -95,7 +95,7 @@ fdescribe("KeyboardConfigService", () => {
         expect(service).toBeTruthy();
     });
 
-    fit("should load config from HTTP", (done) => {
+    it("should load config from HTTP", (done) => {
         service.loadConfig().subscribe((config) => {
             // ensure config has expected keys
             expect(config.defaultLayoutObject).toBeDefined();

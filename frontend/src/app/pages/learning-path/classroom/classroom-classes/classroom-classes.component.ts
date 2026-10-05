@@ -20,6 +20,7 @@ import { BaseService } from "app/_services/base.service";
     selector: "app-classroom-classes",
     templateUrl: "./classroom-classes.component.html",
     styleUrls: ["./classroom-classes.component.scss"],
+    standalone: false,
 })
 export class ClassroomClassesComponent implements OnInit, OnDestroy {
     // Levels component properties duplicated here

@@ -14,6 +14,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     selector: "app-notifications",
     templateUrl: "./notifications.component.html",
     styleUrls: ["./notifications.component.scss"],
+    standalone: false,
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
     public environment = environment;
@@ -42,7 +43,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("notifications");
     }
 

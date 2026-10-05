@@ -34,7 +34,6 @@ type Card = {
 };
 
 @Component({
-    standalone: true,
     selector: "app-selectable-card",
     imports: [CommonModule, PipesModule],
     templateUrl: "./selectable-card.component.html",

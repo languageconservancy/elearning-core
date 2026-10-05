@@ -3,6 +3,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 
 @Pipe({
     name: "youtube",
+    standalone: false,
 })
 /**
  * Pipe to allow youtube video HTML markup to pass through Angular's

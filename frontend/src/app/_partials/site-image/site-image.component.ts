@@ -5,6 +5,7 @@ import { environment } from "environments/environment";
     selector: "app-site-image",
     templateUrl: "./site-image.component.html",
     styleUrls: ["./site-image.component.scss"],
+    standalone: false,
 })
 export class SiteImageComponent implements OnInit {
     public environment = environment;

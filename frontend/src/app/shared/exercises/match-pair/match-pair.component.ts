@@ -18,6 +18,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     templateUrl: "./match-pair.component.html",
     styleUrls: ["./match-pair.component.scss"],
     providers: [ExerciseService],
+    standalone: false,
 })
 export class MatchPairComponent implements OnInit, OnDestroy {
     public questions: any = [];

@@ -7,6 +7,7 @@ import { LessonsService } from "app/_services/lessons.service";
     selector: "app-exercise",
     templateUrl: "./exercise.component.html",
     styleUrls: ["./exercise.component.scss"],
+    standalone: false,
 })
 export class ExerciseComponent implements OnDestroy {
     public exercise: any = {};

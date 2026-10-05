@@ -18,6 +18,7 @@ import * as App from "app/_constants/app.constants";
     templateUrl: "./true-false.component.html",
     styleUrls: ["./true-false.component.scss"],
     providers: [ExerciseService],
+    standalone: false,
 })
 export class TrueFalseComponent implements OnInit, OnDestroy {
     public type: string = "";

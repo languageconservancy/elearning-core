@@ -19,6 +19,7 @@ declare let jQuery: any;
     templateUrl: "./anagram.component.html",
     styleUrls: ["./anagram.component.scss"],
     providers: [ExerciseService],
+    standalone: false,
 })
 export class AnagramComponent implements OnInit, OnDestroy {
     public answerSubmitted: boolean = false;

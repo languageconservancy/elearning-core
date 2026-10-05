@@ -4,6 +4,7 @@ import { Subscription } from "rxjs";
 
 @Directive({
     selector: "[appAdjustModalForKeyboard]",
+    standalone: false,
 })
 export class AdjustModalForKeyboardDirective implements OnInit, OnDestroy {
     private keyboardHeightSubscription: Subscription;

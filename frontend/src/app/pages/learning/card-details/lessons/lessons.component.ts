@@ -15,6 +15,7 @@ declare let jQuery: any;
     selector: "app-lessons",
     templateUrl: "./lessons.component.html",
     styleUrls: ["./lessons.component.scss"],
+    standalone: false,
 })
 export class LessonsComponent implements OnDestroy {
     public frame: any = {};
@@ -106,7 +107,10 @@ export class LessonsComponent implements OnDestroy {
             switch (element.type) {
                 case "card":
                     if (element.is_card_audio == "Y") {
-                        this.audioService.addToPlaylist(element.CardDetails.FullAudioUrl, `block-${index}`);
+                        this.audioService.addToPlaylist(
+                            element.CardDetails.FullAudioUrl,
+                            `block-${index}`,
+                        );
                     }
                     break;
                 case "audio":
@@ -137,39 +141,49 @@ export class LessonsComponent implements OnDestroy {
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
             // Only subscribe if not already subscribed
-            if (!!this.keyboardToggleSelectionSubscription && !this.keyboardToggleSelectionSubscription.closed) {
+            if (
+                !!this.keyboardToggleSelectionSubscription &&
+                !this.keyboardToggleSelectionSubscription.closed
+            ) {
                 return;
             }
             // Toggle highlighted lesson frame block
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (event.shiftKey) {
-                    this.keyboardHighlightedBlockIndex = OwoksapeUtils.decrementWrap(
-                        this.keyboardHighlightedBlockIndex,
-                        0,
-                        this.frame.number_of_block - 1,
-                    );
-                } else {
-                    this.keyboardHighlightedBlockIndex = OwoksapeUtils.incrementWrap(
-                        this.keyboardHighlightedBlockIndex,
-                        0,
-                        this.frame.number_of_block - 1,
-                    );
-                }
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (event.shiftKey) {
+                        this.keyboardHighlightedBlockIndex = OwoksapeUtils.decrementWrap(
+                            this.keyboardHighlightedBlockIndex,
+                            0,
+                            this.frame.number_of_block - 1,
+                        );
+                    } else {
+                        this.keyboardHighlightedBlockIndex = OwoksapeUtils.incrementWrap(
+                            this.keyboardHighlightedBlockIndex,
+                            0,
+                            this.frame.number_of_block - 1,
+                        );
+                    }
+                });
             // Play/pause audio
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (
-                    this.keyboardHighlightedBlockIndex > -1 &&
-                    this.keyboardHighlightedBlockIndex < this.frame.number_of_block
-                ) {
-                    this.checkAudio(this.frame.lesson_frame_blocks[this.keyboardHighlightedBlockIndex]);
-                } else {
-                    this.autoPlayAudio();
-                }
-            });
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (
+                        this.keyboardHighlightedBlockIndex > -1 &&
+                        this.keyboardHighlightedBlockIndex < this.frame.number_of_block
+                    ) {
+                        this.checkAudio(
+                            this.frame.lesson_frame_blocks[this.keyboardHighlightedBlockIndex],
+                        );
+                    } else {
+                        this.autoPlayAudio();
+                    }
+                },
+            );
         } else {
-            if (!!this.keyboardToggleSelectionSubscription) this.keyboardToggleSelectionSubscription.unsubscribe();
-            if (!!this.keyboardToggleMediaSubscription) this.keyboardToggleMediaSubscription.unsubscribe();
+            if (!!this.keyboardToggleSelectionSubscription)
+                this.keyboardToggleSelectionSubscription.unsubscribe();
+            if (!!this.keyboardToggleMediaSubscription)
+                this.keyboardToggleMediaSubscription.unsubscribe();
         }
     }
 

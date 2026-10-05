@@ -23,6 +23,7 @@ declare let bootbox: any;
     selector: "app-post-details",
     templateUrl: "./post-details.component.html",
     styleUrls: ["./post-details.component.scss"],
+    standalone: false,
 })
 export class PostDetailsComponent implements OnInit, OnDestroy {
     public environment = environment;

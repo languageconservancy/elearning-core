@@ -13,6 +13,7 @@ import { ReviewType } from "app/shared/utils/elearning-types";
     selector: "app-review-cards",
     templateUrl: "./review-cards.component.html",
     styleUrls: ["./review-cards.component.scss"],
+    standalone: false,
 })
 export class ReviewCardsComponent implements OnDestroy {
     public numCompletedReviewActivitiesToUnlockNextUnit: number = 25;
@@ -59,7 +60,10 @@ export class ReviewCardsComponent implements OnDestroy {
 
                 this.popupSubscription = this.reviewService.popup.subscribe((res) => {
                     if (res.popUpClosed) {
-                        if (this.reviewDetails[this.currentExercise].exercise_type != "match-the-pair") {
+                        if (
+                            this.reviewDetails[this.currentExercise].exercise_type !=
+                            "match-the-pair"
+                        ) {
                             this.next();
                         }
                     }
@@ -147,7 +151,10 @@ export class ReviewCardsComponent implements OnDestroy {
             console.debug("Setting exercise", this.reviewDetails[this.currentExercise]);
             this.reviewService.setExercise(this.reviewDetails[this.currentExercise]);
             if (this.newSet) {
-                this.reviewService.startTimer({ user_id: this.user.id, path_id: this.user.learningpath_id });
+                this.reviewService.startTimer({
+                    user_id: this.user.id,
+                    path_id: this.user.learningpath_id,
+                });
                 this.newSet = false;
             }
         }
@@ -197,7 +204,9 @@ export class ReviewCardsComponent implements OnDestroy {
                         review: ans.card_id != null,
                         data: res.data.results,
                     });
-                } else if (this.reviewDetails[this.currentExercise].exercise_type == "match-the-pair") {
+                } else if (
+                    this.reviewDetails[this.currentExercise].exercise_type == "match-the-pair"
+                ) {
                     const params: any = {};
                     this.reviewService.nextSubExercise(params);
                 } else {
@@ -224,7 +233,8 @@ export class ReviewCardsComponent implements OnDestroy {
             this.review_counter_arr &&
             this.review_counter_arr.showModal &&
             this.review_counter_arr.review_counter &&
-            this.review_counter_arr.review_counter == this.numCompletedReviewActivitiesToUnlockNextUnit
+            this.review_counter_arr.review_counter ==
+                this.numCompletedReviewActivitiesToUnlockNextUnit
         ) {
             return true;
         } else if (
@@ -232,7 +242,8 @@ export class ReviewCardsComponent implements OnDestroy {
             ex.exercise_type == "match-the-pair" &&
             this.review_counter_arr.review_counter - ex.choices.length <
                 this.numCompletedReviewActivitiesToUnlockNextUnit &&
-            this.review_counter_arr.review_counter > this.numCompletedReviewActivitiesToUnlockNextUnit
+            this.review_counter_arr.review_counter >
+                this.numCompletedReviewActivitiesToUnlockNextUnit
         ) {
             /* if the just-completed exercises is a match-the-pair exercise, check to see if this activity, with each of its cards,
 				 caused the review counter to reach 25. */

@@ -11,6 +11,7 @@ import { SiteSettingsService } from "app/_services/site-settings.service";
     selector: "app-leader-board",
     templateUrl: "./leader-board.component.html",
     styleUrls: ["./leader-board.component.scss"],
+    standalone: false,
 })
 export class LeaderBoardComponent implements OnInit {
     public topUsers: any = [];

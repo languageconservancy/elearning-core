@@ -61,6 +61,7 @@ export type ExerciseBlockMap = {
     selector: "app-unit-progress-nav",
     templateUrl: "./unit-progress-nav.component.html",
     styleUrls: ["./unit-progress-nav.component.css"],
+    standalone: false,
 })
 export class UnitProgressNavComponent implements OnInit {
     @Input() unit: Unit;

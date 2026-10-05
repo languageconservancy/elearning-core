@@ -6,6 +6,7 @@ import { environment } from "../../environments/environment";
 @Directive({
     // Apply to all input/textarea elements with this directive
     selector: "[appScrollIntoView]",
+    standalone: false,
 })
 export class ScrollIntoViewDirective implements OnInit, OnDestroy {
     private keyboardHeightSubscription: Subscription;

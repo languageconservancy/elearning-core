@@ -19,6 +19,7 @@ interface DropdownItem {
     templateUrl: "./progress-left-panel.component.html",
     styleUrls: ["./progress-left-panel.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false,
 })
 export class ProgressLeftPanelComponent implements OnInit, OnChanges {
     @Input() userCanAccessLeaderboard: boolean = false;

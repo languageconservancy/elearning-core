@@ -8,6 +8,7 @@ import { LessonsService } from "app/_services/lessons.service";
     selector: "app-single-card",
     templateUrl: "./single-card.component.html",
     styleUrls: ["./single-card.component.scss"],
+    standalone: false,
 })
 export class SingleCardComponent implements OnDestroy {
     public type: any = "";

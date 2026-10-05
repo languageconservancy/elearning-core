@@ -32,6 +32,7 @@ declare let jQuery: any;
     selector: "app-agreements-acceptance",
     templateUrl: "./agreements-acceptance.component.html",
     styleUrls: ["./agreements-acceptance.component.scss"],
+    standalone: false,
 })
 export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
     @ViewChild("termsScrollContainer") termsScrollContainer: ElementRef;

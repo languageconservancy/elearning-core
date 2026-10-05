@@ -9,6 +9,7 @@ import { SettingsService } from "app/_services/settings.service";
     selector: "app-maintenance-mode",
     templateUrl: "./maintenance-mode.component.html",
     styleUrls: ["./maintenance-mode.component.scss"],
+    standalone: false,
 })
 export class MaintenanceModeComponent implements OnInit {
     public maintenance: any;
@@ -28,9 +29,10 @@ export class MaintenanceModeComponent implements OnInit {
                 this.setLoader(false);
                 if (res.data.status && res.data.results.is_under_construction == "Y") {
                     this.maintenance = res.data.results;
-                    this.maintenance.under_construction_html = this.sanitizer.bypassSecurityTrustHtml(
-                        this.maintenance.under_construction_html,
-                    );
+                    this.maintenance.under_construction_html =
+                        this.sanitizer.bypassSecurityTrustHtml(
+                            this.maintenance.under_construction_html,
+                        );
                     this.settingsService.setMaintenanceMode(true);
                 } else {
                     // this.router.navigate(['']);

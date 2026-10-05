@@ -76,6 +76,7 @@ interface FlatIndex {
     templateUrl: "./fillin.component.html",
     styleUrls: ["./fillin.component.scss"],
     providers: [ExerciseService],
+    standalone: false,
 })
 /**
  * Fill-in-the-blanks exercise component

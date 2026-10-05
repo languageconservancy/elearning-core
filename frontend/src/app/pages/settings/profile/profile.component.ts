@@ -14,6 +14,7 @@ import { BaseService } from "app/_services/base.service";
     selector: "app-profile",
     templateUrl: "./profile.component.html",
     styleUrls: ["./profile.component.scss"],
+    standalone: false,
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     private lockSubscription: Subscription;
@@ -44,7 +45,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("profile");
     }
 

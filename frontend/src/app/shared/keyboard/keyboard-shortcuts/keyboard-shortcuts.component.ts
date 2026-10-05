@@ -9,6 +9,7 @@ import { KeyboardService } from "../keyboard.service";
     selector: "app-keyboard-shortcuts",
     templateUrl: "./keyboard-shortcuts.component.html",
     styleUrls: ["./keyboard-shortcuts.component.scss"],
+    standalone: false,
 })
 /**
  * @class KeyboardShortuctsComponent

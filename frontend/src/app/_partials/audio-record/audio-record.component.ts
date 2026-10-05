@@ -12,6 +12,7 @@ import { ReviewService } from "app/_services/review.service";
     selector: "app-audio-record",
     templateUrl: "./audio-record.component.html",
     styleUrls: ["./audio-record.component.scss"],
+    standalone: false,
 })
 export class AudioRecordComponent implements AfterViewInit {
     public audio: any;
@@ -103,7 +104,10 @@ export class AudioRecordComponent implements AfterViewInit {
             bufferSize: 16384,
         };
 
-        if (navigator.platform && navigator.platform.toString().toLowerCase().indexOf("win") === -1) {
+        if (
+            navigator.platform &&
+            navigator.platform.toString().toLowerCase().indexOf("win") === -1
+        ) {
             options.sampleRate = 44100; // or 44100 or remove this line for default
         }
 

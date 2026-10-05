@@ -7,6 +7,7 @@ import { Loader } from "app/_services/loader.service";
     selector: "app-loader",
     templateUrl: "./loader.component.html",
     styleUrls: ["./loader.component.scss"],
+    standalone: false,
 })
 export class LoaderComponent implements OnDestroy {
     private loaderSubscription: Subscription;

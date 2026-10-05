@@ -26,6 +26,7 @@ declare let bootbox: any;
     selector: "app-forum-list",
     templateUrl: "./forum-list.component.html",
     styleUrls: ["./forum-list.component.scss"],
+    standalone: false,
 })
 export class ForumListComponent implements OnInit, OnDestroy, AfterViewInit {
     public environment = environment;

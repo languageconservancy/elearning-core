@@ -18,6 +18,7 @@ declare let bootbox: any;
     selector: "app-forum-general-discussion",
     templateUrl: "./forum-general-discussion.component.html",
     styleUrls: ["./forum-general-discussion.component.scss"],
+    standalone: false,
 })
 export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, AfterViewInit {
     public pagenumber = 1;
@@ -83,8 +84,14 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
             })
             .catch(() => {});
         this.postForm = new UntypedFormGroup({
-            title: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            content: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            title: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            content: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             postStatus: new UntypedFormControl("R"),
         });
     }
@@ -113,7 +120,8 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
             page: page,
             forum_id: this.activeForum,
             type: "postbyuser",
-            timestamp_offset: timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset),
+            timestamp_offset:
+                timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset),
         };
         this.loader.setLoader(true);
         if (this.searchPost && this.searchTxt.trim() != "" && this.searchTxt != undefined) {
@@ -345,7 +353,10 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
                     title: form.value.title,
                     content: form.value.content,
                 };
-                if ((this.user.role_id == 4 || this.user.role_id == 1) && this.activeForum == null) {
+                if (
+                    (this.user.role_id == 4 || this.user.role_id == 1) &&
+                    this.activeForum == null
+                ) {
                     params.status = form.value.postStatus;
                 }
                 this.updatePostApiCall(params);

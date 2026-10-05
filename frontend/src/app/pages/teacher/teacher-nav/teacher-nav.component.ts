@@ -14,6 +14,7 @@ import { Loader } from "app/_services/loader.service";
     selector: "app-teacher-nav",
     templateUrl: "./teacher-nav.component.html",
     styleUrls: ["./teacher-nav.component.scss"],
+    standalone: false,
 })
 export class TeacherNavComponent implements OnInit {
     public schools: any = [];

@@ -11,6 +11,7 @@ import { RegionPolicyService } from "app/_services/region-policy.service";
     selector: "app-your-progress",
     templateUrl: "./your-progress.component.html",
     styleUrls: ["./your-progress.component.scss"],
+    standalone: false,
 })
 export class YourProgressComponent implements OnInit {
     public user: any = [];

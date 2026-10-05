@@ -71,6 +71,7 @@ import { BadgeService } from "app/_services/badge.service";
             ),
         ]),
     ],
+    standalone: false,
 })
 export class PublicProfileComponent implements OnDestroy, AfterViewInit {
     public publicUser: any = {};

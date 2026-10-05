@@ -12,6 +12,7 @@ import { SettingsService } from "app/_services/settings.service";
     selector: "app-add-friends",
     templateUrl: "./add-friends.component.html",
     styleUrls: ["./add-friends.component.scss"],
+    standalone: false,
 })
 export class AddFriendsComponent implements AfterViewInit {
     public user: any = {};
@@ -92,7 +93,10 @@ export class AddFriendsComponent implements AfterViewInit {
         }
 
         this.friends = Object.assign([], this.allUsers).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            );
         });
     }
     clear() {

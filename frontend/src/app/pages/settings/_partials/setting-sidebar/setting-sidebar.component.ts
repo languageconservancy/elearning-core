@@ -7,6 +7,7 @@ import { SettingsService } from "app/_services/settings.service";
     selector: "app-setting-sidebar",
     templateUrl: "./setting-sidebar.component.html",
     styleUrls: ["./setting-sidebar.component.scss"],
+    standalone: false,
 })
 export class SettingSidebarComponent implements OnDestroy {
     private tabSubscription: Subscription;

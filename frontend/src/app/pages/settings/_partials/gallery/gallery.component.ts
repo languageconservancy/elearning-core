@@ -69,6 +69,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
             ),
         ]),
     ],
+    standalone: false,
 })
 export class GalleryComponent implements OnDestroy {
     private gallerySubscription: Subscription;

@@ -33,14 +33,16 @@ import { LocalizeService } from "app/_services/localize.service";
                     ]),
                 ),
             ]),
-
             transition(":enter", [style({ opacity: 0 })]),
-
             transition(":leave", [
-                animate(App.Animation.EXERCISE_POPUP_FADE_OUT_TIME_MS, style({ opacity: 0, transform: "scale(0)" })),
+                animate(
+                    App.Animation.EXERCISE_POPUP_FADE_OUT_TIME_MS,
+                    style({ opacity: 0, transform: "scale(0)" }),
+                ),
             ]),
         ]),
     ],
+    standalone: false,
 })
 export class ReviewRewardPopupComponent implements OnDestroy {
     public popupSubscription: Subscription;
@@ -117,41 +119,48 @@ export class ReviewRewardPopupComponent implements OnDestroy {
 
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
-            if (!!this.keyboardSubmitOrCloseSubscription && !this.keyboardSubmitOrCloseSubscription.closed) {
+            if (
+                !!this.keyboardSubmitOrCloseSubscription &&
+                !this.keyboardSubmitOrCloseSubscription.closed
+            ) {
                 return;
             }
 
-            this.keyboardSubmitOrCloseSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                switch (this.popupType) {
-                    case "exercise":
-                        if (this.showPopup) {
-                            this.closePopup();
-                        }
-                        break;
-                    case "reviewScore":
-                        this.closePopupReview();
-                        break;
-                    default:
-                        console.warn("Oops! Unhandled popupType.");
-                        break;
-                }
-            });
-
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (this.popupType == "exercise" && this.reviewCards.length > 1) {
-                    if (event.shiftKey) {
-                        this.previous();
-                    } else {
-                        this.next();
+            this.keyboardSubmitOrCloseSubscription =
+                this.keyboardService.submitOrCloseEvent.subscribe(() => {
+                    switch (this.popupType) {
+                        case "exercise":
+                            if (this.showPopup) {
+                                this.closePopup();
+                            }
+                            break;
+                        case "reviewScore":
+                            this.closePopupReview();
+                            break;
+                        default:
+                            console.warn("Oops! Unhandled popupType.");
+                            break;
                     }
-                }
-            });
+                });
 
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (!!this.activeCard && !!this.activeCard.FullAudioUrl) {
-                    this.audioService.playPauseAudio(this.activeCard.FullAudioUrl);
-                }
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (this.popupType == "exercise" && this.reviewCards.length > 1) {
+                        if (event.shiftKey) {
+                            this.previous();
+                        } else {
+                            this.next();
+                        }
+                    }
+                });
+
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (!!this.activeCard && !!this.activeCard.FullAudioUrl) {
+                        this.audioService.playPauseAudio(this.activeCard.FullAudioUrl);
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitOrCloseSubscription) {
                 this.keyboardSubmitOrCloseSubscription.unsubscribe();

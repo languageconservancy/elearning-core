@@ -17,6 +17,7 @@ import { SiteSettingsService } from "app/_services/site-settings.service";
     selector: "app-levels",
     templateUrl: "./levels.component.html",
     styleUrls: ["./levels.component.scss"],
+    standalone: false,
 })
 export class LevelsComponent implements OnInit, OnDestroy {
     public user: any = {};

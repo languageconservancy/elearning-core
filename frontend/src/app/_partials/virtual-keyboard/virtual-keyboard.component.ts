@@ -43,6 +43,7 @@ type LayoutName = "default" | "shift";
         "./virtual-keyboard.component.scss",
         "../../../../node_modules/simple-keyboard/build/css/index.css",
     ],
+    standalone: false,
 })
 /**
  * Inputs:

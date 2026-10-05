@@ -28,6 +28,7 @@ declare let jQuery: any;
     selector: "app-recording",
     templateUrl: "./recording.component.html",
     styleUrls: ["./recording.component.scss"],
+    standalone: false,
 })
 export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
     public disableBtn: boolean = false;

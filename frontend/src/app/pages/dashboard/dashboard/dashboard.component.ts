@@ -17,6 +17,7 @@ import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
     selector: "app-dashboard",
     templateUrl: "./dashboard.component.html",
     styleUrls: ["./dashboard.component.scss"],
+    standalone: false,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
     private userSubscription: Subscription;

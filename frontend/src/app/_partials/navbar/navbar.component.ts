@@ -22,6 +22,7 @@ declare let jQuery: any;
     selector: "app-navbar",
     templateUrl: "./navbar.component.html",
     styleUrls: ["./navbar.component.scss"],
+    standalone: false,
 })
 export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     public environment = environment;

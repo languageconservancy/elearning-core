@@ -12,6 +12,7 @@ import { environment } from "environments/environment";
     selector: "app-learning-speed",
     templateUrl: "./learning-speed.component.html",
     styleUrls: ["./learning-speed.component.scss"],
+    standalone: false,
 })
 export class LearningSpeedComponent implements OnInit, OnDestroy {
     public environment = environment;
@@ -38,7 +39,9 @@ export class LearningSpeedComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.userSubscription = this.registrationService.currentUser.subscribe((userId) => (this.userId = userId.id));
+        this.userSubscription = this.registrationService.currentUser.subscribe(
+            (userId) => (this.userId = userId.id),
+        );
     }
 
     ngOnInit() {

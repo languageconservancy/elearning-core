@@ -28,6 +28,7 @@ type AllocatedDailyTimeCountdownTimer = {
     selector: "app-timer",
     templateUrl: "./timer.component.html",
     styleUrls: ["./timer.component.scss"],
+    standalone: false,
 })
 /**
  * Timer Component
@@ -105,12 +106,14 @@ export class TimerComponent implements OnInit, OnDestroy {
     }
 
     subscribeToStopTimerEvents() {
-        this.stopAllocatedDailyTimerSubscription = this.lessonService.stopTimerVar.subscribe((params: any) => {
-            if (params.stopTimer) {
-                this.stopAllocatedDailyTimeCountdownTimer();
-                this.stopIdleTimer();
-            }
-        });
+        this.stopAllocatedDailyTimerSubscription = this.lessonService.stopTimerVar.subscribe(
+            (params: any) => {
+                if (params.stopTimer) {
+                    this.stopAllocatedDailyTimeCountdownTimer();
+                    this.stopIdleTimer();
+                }
+            },
+        );
     }
 
     subscribeToTimerEvents() {
@@ -141,7 +144,8 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     handleUserHasntReachedAllocatedDailyTime() {
         this.showAllocatedDailyTimeCountdownTimer = true;
-        this.timeRemainingSec = this.allocatedDailyTimeCountdownTimer.time_remaining /*min*/ * 60 /*sec/min*/;
+        this.timeRemainingSec =
+            this.allocatedDailyTimeCountdownTimer.time_remaining /*min*/ * 60; /*sec/min*/
         this.resetIdleTimer();
         this.createAndStartTimer();
         this.subscribeToTimer();
@@ -177,13 +181,15 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     private setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
-            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                if (this.currentModal == ModalType.IdleModal) {
-                    this.closeIdleTimeoutModal();
-                } else if (this.currentModal == ModalType.TimeUpModal) {
-                    this.closeAllocatedDailyTimeReachedModal();
-                }
-            });
+            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(
+                () => {
+                    if (this.currentModal == ModalType.IdleModal) {
+                        this.closeIdleTimeoutModal();
+                    } else if (this.currentModal == ModalType.TimeUpModal) {
+                        this.closeAllocatedDailyTimeReachedModal();
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitSubscription) this.keyboardSubmitSubscription.unsubscribe();
         }
@@ -191,7 +197,8 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     async fetchAllocatedDailyTimerData(params: any): Promise<any> {
         const timeZoneOffset = new Date().getTimezoneOffset() * 60;
-        this.timeZoneOffset = timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset);
+        this.timeZoneOffset =
+            timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset);
         this.pathID = parseInt(params.path_id);
         this.levelID = parseInt(this.localStorage.getItem("LevelID"));
         this.unitID = parseInt(this.localStorage.getItem("unitID"));
@@ -215,7 +222,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     }
 
     private subscribeToTimer() {
-        if (!!this.allocatedDailyTimerSubscription && !this.allocatedDailyTimerSubscription.closed) {
+        if (
+            !!this.allocatedDailyTimerSubscription &&
+            !this.allocatedDailyTimerSubscription.closed
+        ) {
             return;
         }
         this.allocatedDailyTimerSubscription = this.countDown.subscribe((t: number) => {
@@ -267,7 +277,10 @@ export class TimerComponent implements OnInit, OnDestroy {
     }
 
     private stopAllocatedDailyTimeCountdownTimer() {
-        if (!!this.allocatedDailyTimerSubscription && !this.allocatedDailyTimerSubscription.closed) {
+        if (
+            !!this.allocatedDailyTimerSubscription &&
+            !this.allocatedDailyTimerSubscription.closed
+        ) {
             // stop the allocated daily time countdown timer
             this.allocatedDailyTimerSubscription.unsubscribe();
         }

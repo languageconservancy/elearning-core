@@ -83,6 +83,7 @@ function loadRecaptchaApi(): Promise<GoogleRecaptchaApi> {
 @Component({
     selector: "app-recaptcha-checkbox",
     templateUrl: "./recaptcha-checkbox.component.html",
+    standalone: false,
 })
 export class RecaptchaCheckboxComponent implements AfterViewInit, OnDestroy {
     @Input() siteKey: string;

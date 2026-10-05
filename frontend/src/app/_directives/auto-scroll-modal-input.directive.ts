@@ -4,6 +4,7 @@ import { Subscription } from "rxjs";
 
 @Directive({
     selector: "[appAutoScrollModalInput]",
+    standalone: false,
 })
 export class AutoScrollModalInputDirective implements OnInit, OnDestroy {
     private keyboardHeightSubscription: Subscription;

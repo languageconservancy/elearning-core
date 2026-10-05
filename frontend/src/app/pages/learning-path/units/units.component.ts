@@ -18,6 +18,7 @@ import { BaseService } from "app/_services/base.service";
     selector: "app-units",
     templateUrl: "./units.component.html",
     styleUrls: ["./units.component.scss"],
+    standalone: false,
 })
 export class UnitsComponent implements OnInit, OnDestroy {
     @Input() path: any = {};

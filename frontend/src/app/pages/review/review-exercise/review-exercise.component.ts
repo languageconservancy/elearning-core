@@ -8,6 +8,7 @@ import { DeviceDetectorService } from "ngx-device-detector";
     selector: "app-review-exercise",
     templateUrl: "./review-exercise.component.html",
     styleUrls: ["./review-exercise.component.scss"],
+    standalone: false,
 })
 export class ReviewExerciseComponent implements OnInit, OnDestroy {
     public exercise: any = {};
@@ -36,12 +37,15 @@ export class ReviewExerciseComponent implements OnInit, OnDestroy {
             if (progressValue?.showModal) {
                 this.reviewCompletionDataFetched = !!progressValue?.review_counter;
                 this.reviewCompletionPercentage =
-                    this.reviewCompletionDataFetched && progressValue?.num_correct_review_answers_to_unlock_unit
+                    this.reviewCompletionDataFetched &&
+                    progressValue?.num_correct_review_answers_to_unlock_unit
                         ? (parseInt(progressValue?.review_counter) /
                               progressValue?.num_correct_review_answers_to_unlock_unit) *
                           100
                         : 100;
-                this.reviewCompletionPercentage = Math.ceil(Math.min(this.reviewCompletionPercentage, 100));
+                this.reviewCompletionPercentage = Math.ceil(
+                    Math.min(this.reviewCompletionPercentage, 100),
+                );
             } else {
                 this.reviewCompletionDataFetched = false;
             }

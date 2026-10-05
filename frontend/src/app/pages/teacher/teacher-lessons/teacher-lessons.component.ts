@@ -63,6 +63,7 @@ type Path = {
     selector: "app-teacher-lessons",
     templateUrl: "./teacher-lessons.component.html",
     styleUrls: ["./teacher-lessons.component.scss"],
+    standalone: false,
 })
 export class TeacherLessonsComponent implements OnInit, OnDestroy {
     private teacherSubscription: Subscription;

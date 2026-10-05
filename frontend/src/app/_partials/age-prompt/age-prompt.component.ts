@@ -15,6 +15,7 @@ import { BaseService } from "app/_services/base.service";
     selector: "app-age-prompt",
     templateUrl: "./age-prompt.component.html",
     styleUrls: ["./age-prompt.component.css"],
+    standalone: false,
 })
 export class AgePromptComponent implements OnInit {
     public Routes = Routes;

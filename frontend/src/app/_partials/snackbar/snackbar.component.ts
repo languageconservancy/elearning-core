@@ -6,6 +6,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     selector: "app-snackbar",
     templateUrl: "./snackbar.component.html",
     styleUrls: ["./snackbar.component.scss"],
+    standalone: false,
 })
 
 /**

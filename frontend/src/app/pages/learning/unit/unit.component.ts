@@ -290,6 +290,7 @@ export declare type StateMachine = {
     selector: "app-unit-component",
     templateUrl: "./unit.component.html",
     styleUrls: ["./unit.component.css"],
+    standalone: false,
 })
 export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     // A Rxjs subscriptions for conveniently managing multiple subscriptions

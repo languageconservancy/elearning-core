@@ -7,6 +7,7 @@ import { SettingsService } from "app/_services/settings.service";
     selector: "app-event-promo",
     templateUrl: "./event-promo.component.html",
     styleUrls: ["./event-promo.component.scss"],
+    standalone: false,
 })
 export class EventPromoComponent implements OnInit, OnDestroy {
     public eventPromo: any = {};

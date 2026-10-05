@@ -20,6 +20,7 @@ declare let jQuery: any;
     selector: "app-account",
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
+    standalone: false,
 })
 export class AccountComponent implements OnInit, OnDestroy {
     private lockSubscription: Subscription;
@@ -83,7 +84,9 @@ export class AccountComponent implements OnInit, OnDestroy {
                 });
         }
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("account");
     }
 
@@ -153,7 +156,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     private validatePasswordConfirmation(control: UntypedFormControl): any {
         if (this.changeForm) {
-            return control.value === this.changeForm.get("password").value ? null : { notSame: true };
+            return control.value === this.changeForm.get("password").value
+                ? null
+                : { notSame: true };
         }
     }
 
@@ -185,7 +190,10 @@ export class AccountComponent implements OnInit, OnDestroy {
         }
 
         this.googleContactsFiltered = Object.assign([], this.mailingList).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchContact.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchContact.search.toLowerCase()) > -1
+            );
         });
     }
 
@@ -195,7 +203,10 @@ export class AccountComponent implements OnInit, OnDestroy {
                 this.setLoader(true);
                 const fbData = this.socialModel.facebook ? "1" : "0";
                 try {
-                    const res = await this.settingsService.updateUserData({ id: this.user.id, fb_status: fbData });
+                    const res = await this.settingsService.updateUserData({
+                        id: this.user.id,
+                        fb_status: fbData,
+                    });
                     this.setLoader(false);
                     this.user = res.data.results[0];
                     try {
@@ -305,7 +316,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     googleInvite() {
         if (this.googleContacts.length > 0) {
             this.setLoader(true);
-            const data = { google_data: JSON.stringify({ entry: this.googleContacts }), id: this.user.id };
+            const data = {
+                google_data: JSON.stringify({ entry: this.googleContacts }),
+                id: this.user.id,
+            };
             this.friendsService
                 .getGoogleInvitees(data)
                 .then((res) => {
@@ -336,7 +350,11 @@ export class AccountComponent implements OnInit, OnDestroy {
         });
 
         setTimeout(() => {
-            const data = { email: this.mailModel.list, user_id: this.user.id, message: this.mailModel.body };
+            const data = {
+                email: this.mailModel.list,
+                user_id: this.user.id,
+                message: this.mailModel.body,
+            };
             this.friendsService
                 .sendInvites(data)
                 .then((res) => {

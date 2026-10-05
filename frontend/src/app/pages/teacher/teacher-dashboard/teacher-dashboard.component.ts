@@ -27,6 +27,7 @@ const ELEMENT_DATA: StudentActivitiesTable[] = [];
     selector: "app-teacher-dashboard",
     templateUrl: "./teacher-dashboard.component.html",
     styleUrls: ["./teacher-dashboard.component.scss"],
+    standalone: false,
 })
 export class TeacherDashboardComponent implements OnInit, OnDestroy {
     @ViewChild("table", { static: false }) private table: any;
@@ -281,13 +282,18 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
                         ) {
                             if (
                                 // eslint-disable-next-line prettier/prettier
-                                this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].unit_id == this.classroomUnits[unitIndex].level_unit.unit.id &&
+                                this.initialStudentProgresses[studentIndex].user_unit_activities[
+                                    progressIndex
+                                ].unit_id == this.classroomUnits[unitIndex].level_unit.unit.id &&
                                 // eslint-disable-next-line prettier/prettier
-                                !!this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].percent
+                                !!this.initialStudentProgresses[studentIndex].user_unit_activities[
+                                    progressIndex
+                                ].percent
                             ) {
                                 currentUnitPercent =
                                     // eslint-disable-next-line prettier/prettier
-                                    this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].percent;
+                                    this.initialStudentProgresses[studentIndex]
+                                        .user_unit_activities[progressIndex].percent;
                             }
                         }
                         if (this.lastModified == null) {

@@ -22,6 +22,7 @@ enum ModalType {
     selector: "app-review-timer",
     templateUrl: "./review-timer.component.html",
     styleUrls: ["./review-timer.component.scss"],
+    standalone: false,
 })
 export class ReviewTimerComponent implements OnDestroy {
     public countDown: any;
@@ -92,12 +93,16 @@ export class ReviewTimerComponent implements OnDestroy {
                     const numCorrectReviewAnswersToUnlockUnit =
                         res.progressValue?.num_correct_review_answers_to_unlock_unit;
                     this.numCorrectlyAnsweredReviewQuestions = res.progressValue.review_counter;
-                    if (this.numCorrectlyAnsweredReviewQuestions > numCorrectReviewAnswersToUnlockUnit) {
+                    if (
+                        this.numCorrectlyAnsweredReviewQuestions >
+                        numCorrectReviewAnswersToUnlockUnit
+                    ) {
                         this.unitPercentageFlag = false;
                     } else {
                         this.unitPercentageFlag = true;
                         this.numRemainingReviewQuestionsToAnswerCorrectly =
-                            numCorrectReviewAnswersToUnlockUnit - parseInt(this.numCorrectlyAnsweredReviewQuestions);
+                            numCorrectReviewAnswersToUnlockUnit -
+                            parseInt(this.numCorrectlyAnsweredReviewQuestions);
                     }
                 } else {
                     this.unitPercentageFlag = false;
@@ -129,13 +134,15 @@ export class ReviewTimerComponent implements OnDestroy {
 
     private setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
-            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                if (this.currentModal == ModalType.IdleModal) {
-                    this.closeTimeOutModal();
-                } else if (this.currentModal == ModalType.TimeUpModal) {
-                    this.closeTimeUpModal();
-                }
-            });
+            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(
+                () => {
+                    if (this.currentModal == ModalType.IdleModal) {
+                        this.closeTimeOutModal();
+                    } else if (this.currentModal == ModalType.TimeUpModal) {
+                        this.closeTimeUpModal();
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitSubscription) this.keyboardSubmitSubscription.unsubscribe();
         }
@@ -159,7 +166,8 @@ export class ReviewTimerComponent implements OnDestroy {
 
     private setUpTimer(params) {
         const timeZoneOffset = new Date().getTimezoneOffset() * 60;
-        this.timeZoneOffset = timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset);
+        this.timeZoneOffset =
+            timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset);
         this.pathID = parseInt(params.path_id) || null;
         this.levelID = parseInt(this.localStorage.getItem("LevelID")) || null;
         this.unitID = parseInt(this.localStorage.getItem("unitID")) || null;

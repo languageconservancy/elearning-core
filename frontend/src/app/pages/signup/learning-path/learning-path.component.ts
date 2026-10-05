@@ -12,6 +12,7 @@ import { environment } from "environments/environment";
     selector: "app-learning-path",
     templateUrl: "./learning-path.component.html",
     styleUrls: ["./learning-path.component.scss"],
+    standalone: false,
 })
 export class LearningPathComponent implements OnInit, OnDestroy {
     public environment = environment;
@@ -40,7 +41,9 @@ export class LearningPathComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.userSubscription = this.registrationService.currentUser.subscribe((userId) => (this.userId = userId.id));
+        this.userSubscription = this.registrationService.currentUser.subscribe(
+            (userId) => (this.userId = userId.id),
+        );
     }
 
     ngOnInit() {

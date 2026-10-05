@@ -18,6 +18,7 @@ declare let gapi: any;
     selector: "app-find-friends",
     templateUrl: "./find-friends.component.html",
     styleUrls: ["./find-friends.component.scss"],
+    standalone: false,
 })
 export class FindFriendsComponent implements OnInit, OnDestroy {
     private userSubscription: Subscription;
@@ -73,7 +74,9 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
                 console.warn(error);
             });
 
-        this.userSubscription = this.registrationService.currentUser.subscribe((userId) => (this.userId = userId.id));
+        this.userSubscription = this.registrationService.currentUser.subscribe(
+            (userId) => (this.userId = userId.id),
+        );
     }
 
     ngOnInit() {
@@ -187,10 +190,16 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
             return;
         }
         this.facebookFriendsFiltered = Object.assign([], this.facebookFriends).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            );
         });
         this.googleFriendsFiltered = Object.assign([], this.googleFriends).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            );
         });
         this.allUsersFiltered = Object.assign([], this.allUsers).filter((item) => {
             const googleFriendIdList = [];
@@ -202,7 +211,10 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
             this.facebookFriends.forEach((element) => {
                 fbFriendIdList.push(element.fbId);
             });
-            if (item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1) {
+            if (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            ) {
                 if (this.socialModel.google) {
                     if (this.socialModel.facebook) {
                         return (
@@ -216,7 +228,10 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     if (this.socialModel.facebook) {
-                        return typeof item.fbId != "undefined" && fbFriendIdList.indexOf(item.fbId) == -1;
+                        return (
+                            typeof item.fbId != "undefined" &&
+                            fbFriendIdList.indexOf(item.fbId) == -1
+                        );
                     }
                 }
                 return true;
@@ -233,7 +248,10 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
         }
 
         this.googleContactsFiltered = Object.assign([], this.mailingList).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchContact.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchContact.search.toLowerCase()) > -1
+            );
         });
     }
 
@@ -272,7 +290,9 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
             .signInWithFacebook()
             .then((response) => {
                 this.socialWebService
-                    .api("/" + response.authResponse.userID + "?fields=friends.fields(name,picture)")
+                    .api(
+                        "/" + response.authResponse.userID + "?fields=friends.fields(name,picture)",
+                    )
                     .then(async (res) => {
                         await this.checkIfFriends(res, "facebook");
                     })
@@ -297,7 +317,11 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
     authorize() {
         this.setLoader(true);
         gapi.auth.authorize(
-            { client_id: environment.GOOGLE_CLIENT_ID_WEB, scope: environment.GOOGLE_CONTACT_SCOPE, immediate: false },
+            {
+                client_id: environment.GOOGLE_CLIENT_ID_WEB,
+                scope: environment.GOOGLE_CONTACT_SCOPE,
+                immediate: false,
+            },
             (authorizationResult) => {
                 this.handleAuthorization(authorizationResult);
             },
@@ -460,7 +484,10 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
     async googleInvite() {
         this.setLoader(true);
         await this.friendsService
-            .getGoogleInvitees({ google_data: JSON.stringify({ entry: this.googleContacts }), id: this.userId })
+            .getGoogleInvitees({
+                google_data: JSON.stringify({ entry: this.googleContacts }),
+                id: this.userId,
+            })
             .then((res) => {
                 this.mailingList = res.data.results;
                 this.googleContactsFiltered = Object.assign([], this.mailingList);
@@ -479,7 +506,11 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
 
         setTimeout(() => {
             void this.friendsService
-                .sendInvites({ email: this.mailModel.list, userid: this.userId, message: this.mailModel.body })
+                .sendInvites({
+                    email: this.mailModel.list,
+                    userid: this.userId,
+                    message: this.mailModel.body,
+                })
                 .then((res: any) => {
                     this.setLoader(false);
                     this.snackbarService.showSnackbar({ status: true, msg: res.data.message });

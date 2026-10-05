@@ -49,6 +49,7 @@ import { SocialLoginError } from "app/_exceptions/social-login.errors";
     selector: "app-login",
     templateUrl: "./login.component.html",
     styleUrls: ["./login.component.scss"],
+    standalone: false,
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     public loginForm: UntypedFormGroup;
@@ -116,7 +117,10 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         // Set up query params handling
         this.subscribeToQueryParams();
 
-        if (this.environment.ENABLE_FACEBOOK_LOGIN && this.facebookConfigValid || this.environment.ENABLE_GOOGLE_LOGIN && this.googleConfigValid) {
+        if (
+            (this.environment.ENABLE_FACEBOOK_LOGIN && this.facebookConfigValid) ||
+            (this.environment.ENABLE_GOOGLE_LOGIN && this.googleConfigValid)
+        ) {
             // Set up callback for Facebook and Google login on web
             this.setUpSocialAuthSubscriber();
         }

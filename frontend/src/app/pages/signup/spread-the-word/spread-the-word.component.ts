@@ -14,6 +14,7 @@ import { RegionPolicyService } from "app/_services/region-policy.service";
     selector: "app-spread-the-word",
     templateUrl: "./spread-the-word.component.html",
     styleUrls: ["./spread-the-word.component.scss"],
+    standalone: false,
 })
 export class SpreadTheWordComponent implements OnInit, OnDestroy {
     public environment = environment;

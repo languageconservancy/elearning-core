@@ -9,6 +9,7 @@ import { BreadcrumbsService, Breadcrumb } from "app/_services/breadcrumbs.servic
     selector: "app-breadcrumbs",
     templateUrl: "./breadcrumbs.component.html",
     styleUrls: ["./breadcrumbs.component.scss"],
+    standalone: false,
 })
 export class BreadcrumbsComponent implements OnDestroy {
     public breadcrumbs: Breadcrumb[] = [];

@@ -16,6 +16,7 @@ import { BaseService } from "app/_services/base.service";
     selector: "app-classroom-units",
     templateUrl: "./classroom-units.component.html",
     styleUrls: ["./classroom-units.component.scss"],
+    standalone: false,
 })
 export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, OnDestroy {
     protected villageImageUrl: string;

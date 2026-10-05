@@ -18,6 +18,7 @@ declare let jQuery: any;
     selector: "app-privacy",
     templateUrl: "./privacy.component.html",
     styleUrls: ["./privacy.component.scss"],
+    standalone: false,
 })
 export class PrivacyComponent implements OnInit, OnDestroy {
     public environment = environment;
@@ -50,7 +51,9 @@ export class PrivacyComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("privacy");
     }
 
@@ -64,7 +67,10 @@ export class PrivacyComponent implements OnInit, OnDestroy {
         this.getSettings();
         this.parentalEditForm = new UntypedFormGroup({
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            parentalLockOld: new UntypedFormControl("", [Validators.required, this.validateParentalLock.bind(this)]),
+            parentalLockOld: new UntypedFormControl("", [
+                Validators.required,
+                this.validateParentalLock.bind(this),
+            ]),
             // eslint-disable-next-line @typescript-eslint/unbound-method
             parentalLockNew: new UntypedFormControl("", Validators.required),
         });
@@ -98,7 +104,8 @@ export class PrivacyComponent implements OnInit, OnDestroy {
                             const parentalLock = this.localStorage.getItem("parentalLockCode");
                             if (this.user.usersetting.parental_lock_on == "1") {
                                 this.lockFlag = this.user.usersetting.parental_lock
-                                    ? parentalLock && parentalLock == this.user.usersetting.parental_lock
+                                    ? parentalLock &&
+                                      parentalLock == this.user.usersetting.parental_lock
                                         ? false
                                         : true
                                     : false;
@@ -220,7 +227,9 @@ export class PrivacyComponent implements OnInit, OnDestroy {
 
     changeParentalLock(form) {
         if (form.valid) {
-            this.privacy.parental_lock = this.lockEditFlag ? form.value.parentalLockNew : form.value.parentalLock;
+            this.privacy.parental_lock = this.lockEditFlag
+                ? form.value.parentalLockNew
+                : form.value.parentalLock;
             this.setPrivacy("parentalLock");
             jQuery("#parentalLockModal").modal("hide");
             form.reset();

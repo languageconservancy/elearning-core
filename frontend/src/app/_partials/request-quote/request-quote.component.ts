@@ -12,6 +12,7 @@ import { environment } from "environments/environment";
     selector: "app-request-quote",
     templateUrl: "./request-quote.component.html",
     styleUrls: ["./request-quote.component.scss"],
+    standalone: false,
 })
 export class RequestQuoteComponent implements OnInit {
     public environment = environment;
@@ -60,7 +61,10 @@ export class RequestQuoteComponent implements OnInit {
         const phoneRegex = `^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$`;
 
         this.quoteForm = new UntypedFormGroup({
-            adminName: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            adminName: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             adminPhone: new UntypedFormControl("", [
                 Validators.required,
                 Validators.pattern(phoneRegex),
@@ -71,7 +75,10 @@ export class RequestQuoteComponent implements OnInit {
                 Validators.pattern(emailRegex),
                 this.validateBlankValue.bind(this),
             ]),
-            techName: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            techName: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             techPhone: new UntypedFormControl("", [
                 Validators.required,
                 Validators.pattern(phoneRegex),
@@ -82,7 +89,10 @@ export class RequestQuoteComponent implements OnInit {
                 Validators.pattern(emailRegex),
                 this.validateBlankValue.bind(this),
             ]),
-            schoolName: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            schoolName: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             schoolPhone: new UntypedFormControl("", [
                 Validators.required,
                 Validators.pattern(phoneRegex),
@@ -93,13 +103,34 @@ export class RequestQuoteComponent implements OnInit {
                 Validators.pattern(emailRegex),
                 this.validateBlankValue.bind(this),
             ]),
-            schoolAddress: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            schoolCity: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            schoolState: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            numSchools: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            numStudents: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            numTeachers: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            startDate: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            schoolAddress: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            schoolCity: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            schoolState: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            numSchools: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            numStudents: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            numTeachers: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            startDate: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
         });
     }
     private validateBlankValue(control: UntypedFormControl): any {

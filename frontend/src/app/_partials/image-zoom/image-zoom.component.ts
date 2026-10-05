@@ -4,6 +4,7 @@ import { Component, Input } from "@angular/core";
     selector: "app-image-zoom",
     templateUrl: "./image-zoom.component.html",
     styleUrls: ["./image-zoom.component.scss"],
+    standalone: false,
 })
 export class ImageZoomComponent {
     @Input() src: string;

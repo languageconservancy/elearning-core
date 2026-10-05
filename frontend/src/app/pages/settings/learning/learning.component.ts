@@ -16,6 +16,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     selector: "app-learning",
     templateUrl: "./learning.component.html",
     styleUrls: ["./learning.component.scss"],
+    standalone: false,
 })
 export class LearningComponent implements OnInit, OnDestroy {
     private lockSubscription: Subscription;
@@ -50,7 +51,9 @@ export class LearningComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("learning");
     }
 

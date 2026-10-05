@@ -13,6 +13,7 @@ declare let jQuery: any;
     selector: "app-parental-lock",
     templateUrl: "./parental-lock.component.html",
     styleUrls: ["./parental-lock.component.scss"],
+    standalone: false,
 })
 export class ParentalLockComponent implements OnInit {
     public parentalLockInputForm: UntypedFormGroup;
@@ -39,14 +40,19 @@ export class ParentalLockComponent implements OnInit {
 
     ngOnInit() {
         this.parentalLockInputForm = new UntypedFormGroup({
-            parentalLock: new UntypedFormControl("", [Validators.required, this.validateParentalCode.bind(this)]),
+            parentalLock: new UntypedFormControl("", [
+                Validators.required,
+                this.validateParentalCode.bind(this),
+            ]),
         });
         jQuery("#parentalLockInput").modal("show");
     }
 
     private validateParentalCode(control: UntypedFormControl): any {
         if (this.parentalLockInputForm) {
-            return control.value === this.user.usersetting.parental_lock ? null : { wrongCode: true };
+            return control.value === this.user.usersetting.parental_lock
+                ? null
+                : { wrongCode: true };
         }
     }
 

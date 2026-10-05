@@ -27,6 +27,7 @@ import { SettingsService } from "app/_services/settings.service";
             transition("1 => 0", animate(".5s")),
         ]),
     ],
+    standalone: false,
 })
 export class FriendSidebarComponent implements OnInit {
     public friendsListArray: any = [];
@@ -126,7 +127,10 @@ export class FriendSidebarComponent implements OnInit {
         //     this.noFriends = false;
         // }
         this.friendsList = Object.assign([], this.friendsListArray).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            );
         });
     }
 }

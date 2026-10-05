@@ -7,6 +7,7 @@ import { ActivatedRoute } from "@angular/router";
     selector: "app-settings",
     templateUrl: "./settings.component.html",
     styleUrls: ["./settings.component.scss"],
+    standalone: false,
 })
 export class SettingsComponent implements OnInit, OnDestroy {
     private tabSubscription: Subscription;

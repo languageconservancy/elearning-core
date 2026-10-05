@@ -4,6 +4,7 @@ import { KeyboardService } from "./keyboard.service";
 @Component({
     selector: "app-keyboard",
     template: "",
+    standalone: false,
 })
 export class KeyboardComponent {
     constructor(private keyboardService: KeyboardService) {}

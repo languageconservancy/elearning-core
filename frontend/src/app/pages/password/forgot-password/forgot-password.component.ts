@@ -10,6 +10,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     selector: "app-forgot-password",
     templateUrl: "./forgot-password.component.html",
     styleUrls: ["./forgot-password.component.scss"],
+    standalone: false,
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
     public resetForm: UntypedFormGroup;
@@ -25,7 +26,10 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const emailRegex = `[A-Za-z0-9_]+([\.-]?[A-Za-z0-9_]+)*@[A-Za-z0-9_]+([\.-]?[A-Za-z0-9_]+)*(\.[A-Za-z_]{2,3})+`;
         this.resetForm = new UntypedFormGroup({
-            email: new UntypedFormControl("", [Validators.required, Validators.pattern(emailRegex)]),
+            email: new UntypedFormControl("", [
+                Validators.required,
+                Validators.pattern(emailRegex),
+            ]),
         });
 
         //hide the mobile overlay and always allow reset password functionality

@@ -12,6 +12,7 @@ import { VirtualKeyboardComponent } from "app/_partials/virtual-keyboard/virtual
     selector: "app-contact-us",
     templateUrl: "./contact-us.component.html",
     styleUrls: ["./contact-us.component.scss"],
+    standalone: false,
 })
 export class ContactUsComponent implements OnInit {
     public contactUsForm: any;

@@ -3,7 +3,8 @@ import { Component, Output, EventEmitter } from "@angular/core";
 @Component({
     selector: "app-signup-suggestion",
     templateUrl: "./signup-suggestion.component.html",
-    styleUrls: ["./signup-suggestion.component.css"]
+    styleUrls: ["./signup-suggestion.component.css"],
+    standalone: false,
 })
 export class SignupSuggestionComponent {
     // Event emitter for continuing with trial

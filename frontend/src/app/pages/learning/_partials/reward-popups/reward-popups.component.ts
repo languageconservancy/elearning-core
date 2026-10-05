@@ -22,7 +22,6 @@ import * as App from "app/_constants/app.constants";
         trigger("fadeScaleBounceAnimation", [
             // static state after enter
             state("initial", style({ opacity: 1, transform: "translateY(0)" })),
-
             // Start small and grow to normal size
             transition(":enter", [
                 animate(
@@ -37,14 +36,16 @@ import * as App from "app/_constants/app.constants";
                     ]),
                 ),
             ]),
-
             transition(":enter", [style({ opacity: 0 })]),
-
             transition(":leave", [
-                animate(App.Animation.EXERCISE_POPUP_FADE_OUT_TIME_MS, style({ opacity: 0, transform: "scale(0)" })),
+                animate(
+                    App.Animation.EXERCISE_POPUP_FADE_OUT_TIME_MS,
+                    style({ opacity: 0, transform: "scale(0)" }),
+                ),
             ]),
         ]),
     ],
+    standalone: false,
 })
 export class RewardPopupsComponent implements OnDestroy {
     public popupSubscription: Subscription;
@@ -114,7 +115,10 @@ export class RewardPopupsComponent implements OnDestroy {
                                 this.showPopup = true;
                             } else if (!res.popup_status) {
                                 this.showPopup = false;
-                                if (this.popupType == "exerciseSetPerfect" || this.popupType == "exerciseSet") {
+                                if (
+                                    this.popupType == "exerciseSetPerfect" ||
+                                    this.popupType == "exerciseSet"
+                                ) {
                                     this.closePopupExSet();
                                 } else {
                                     this.closePopup("exercise question");
@@ -136,7 +140,11 @@ export class RewardPopupsComponent implements OnDestroy {
                     }
 
                     // Hide correct popup after a bit, if a timeout isn't already set
-                    if (this.showPopup && this.popupStatus && !this.closeCorrectAnswerPopupTimeoutId) {
+                    if (
+                        this.showPopup &&
+                        this.popupStatus &&
+                        !this.closeCorrectAnswerPopupTimeoutId
+                    ) {
                         this.closeCorrectAnswerPopupTimeoutId = setTimeout(() => {
                             if (this.showPopup != false) {
                                 this.closePopup("exercise question");
@@ -159,73 +167,80 @@ export class RewardPopupsComponent implements OnDestroy {
 
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
-            if (!!this.keyboardSubmitOrCloseSubscription && !this.keyboardSubmitOrCloseSubscription.closed) {
+            if (
+                !!this.keyboardSubmitOrCloseSubscription &&
+                !this.keyboardSubmitOrCloseSubscription.closed
+            ) {
                 return;
             }
             this.keyboardUnitPopupHighlightIndex = -1;
-            this.keyboardSubmitOrCloseSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                switch (this.popupType) {
-                    case "lesson":
-                        if (this.showPopup) {
-                            this.closePopup("lesson");
-                        }
-                    case "exercise":
-                        if (this.showPopup) {
-                            this.closePopup("exercise question");
-                        }
-                        break;
-                    case "exerciseSetPerfect":
-                    case "exerciseSet":
-                        this.closePopupExSet();
-                        break;
-                    case "unit":
-                        if (this.keyboardUnitPopupHighlightIndex == 1) {
-                            this.closeUnitPopup("lessons-and-exercises");
-                        } else {
-                            if (this.isClassroom) {
-                                this.closeUnitPopup("classroom");
-                            } else {
-                                this.closeUnitPopup("review");
+            this.keyboardSubmitOrCloseSubscription =
+                this.keyboardService.submitOrCloseEvent.subscribe(() => {
+                    switch (this.popupType) {
+                        case "lesson":
+                            if (this.showPopup) {
+                                this.closePopup("lesson");
                             }
-                        }
-                        break;
-                    default:
-                        if (this.showPopup) {
-                            console.warn("Oops! Got unhandled popupType");
-                        }
-                        break;
-                }
-            });
-
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (this.popupType != "unit" && this.reviewCards.length > 1) {
-                    if (event.shiftKey) {
-                        this.previous();
-                    } else {
-                        this.next();
+                        case "exercise":
+                            if (this.showPopup) {
+                                this.closePopup("exercise question");
+                            }
+                            break;
+                        case "exerciseSetPerfect":
+                        case "exerciseSet":
+                            this.closePopupExSet();
+                            break;
+                        case "unit":
+                            if (this.keyboardUnitPopupHighlightIndex == 1) {
+                                this.closeUnitPopup("lessons-and-exercises");
+                            } else {
+                                if (this.isClassroom) {
+                                    this.closeUnitPopup("classroom");
+                                } else {
+                                    this.closeUnitPopup("review");
+                                }
+                            }
+                            break;
+                        default:
+                            if (this.showPopup) {
+                                console.warn("Oops! Got unhandled popupType");
+                            }
+                            break;
                     }
-                } else if (this.popupType == "unit") {
-                    if (event.shiftKey) {
-                        this.keyboardUnitPopupHighlightIndex = OwoksapeUtils.decrementWrap(
-                            this.keyboardUnitPopupHighlightIndex,
-                            0,
-                            1,
-                        );
-                    } else {
-                        this.keyboardUnitPopupHighlightIndex = OwoksapeUtils.incrementWrap(
-                            this.keyboardUnitPopupHighlightIndex,
-                            0,
-                            1,
-                        );
-                    }
-                }
-            });
+                });
 
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (!!this.activeCard && !!this.activeCard.FullAudioUrl) {
-                    this.audioService.playPauseAudio(this.activeCard.FullAudioUrl);
-                }
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (this.popupType != "unit" && this.reviewCards.length > 1) {
+                        if (event.shiftKey) {
+                            this.previous();
+                        } else {
+                            this.next();
+                        }
+                    } else if (this.popupType == "unit") {
+                        if (event.shiftKey) {
+                            this.keyboardUnitPopupHighlightIndex = OwoksapeUtils.decrementWrap(
+                                this.keyboardUnitPopupHighlightIndex,
+                                0,
+                                1,
+                            );
+                        } else {
+                            this.keyboardUnitPopupHighlightIndex = OwoksapeUtils.incrementWrap(
+                                this.keyboardUnitPopupHighlightIndex,
+                                0,
+                                1,
+                            );
+                        }
+                    }
+                });
+
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (!!this.activeCard && !!this.activeCard.FullAudioUrl) {
+                        this.audioService.playPauseAudio(this.activeCard.FullAudioUrl);
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitOrCloseSubscription) {
                 this.keyboardSubmitOrCloseSubscription.unsubscribe();
@@ -494,7 +509,12 @@ export class RewardPopupsComponent implements OnDestroy {
     closePopupExSet() {
         // this.lessonService.setPopup({ popUpClosed: true, exSet: true, containsWrong: (this.popupType == 'exerciseSet') });
         this.cancelClosePopupTimeout();
-        this.lessonService.setPopup({ popUpClosed: true, type: "exercise set", exSet: true, containsWrong: false });
+        this.lessonService.setPopup({
+            popUpClosed: true,
+            type: "exercise set",
+            exSet: true,
+            containsWrong: false,
+        });
         this.clearAll();
     }
 

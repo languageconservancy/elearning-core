@@ -26,6 +26,7 @@ import { ErrorCode } from "app/shared/utils/error-code";
     selector: "app-teacher-admin",
     templateUrl: "./teacher-admin.component.html",
     styleUrls: ["./teacher-admin.component.scss"],
+    standalone: false,
 })
 export class TeacherAdminComponent implements OnInit, OnDestroy {
     private teacherSubscription: Subscription;

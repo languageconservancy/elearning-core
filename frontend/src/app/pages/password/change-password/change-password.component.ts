@@ -12,6 +12,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     selector: "app-change-password",
     templateUrl: "./change-password.component.html",
     styleUrls: ["./change-password.component.scss"],
+    standalone: false,
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
     private tokenSubscription: Subscription;
@@ -64,7 +65,9 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
     private validatePasswordConfirmation(control: UntypedFormControl): any {
         if (this.changeForm) {
-            return control.value === this.changeForm.get("password").value ? null : { notSame: true };
+            return control.value === this.changeForm.get("password").value
+                ? null
+                : { notSame: true };
         }
     }
 

@@ -14,6 +14,7 @@ import { KeyboardService } from "app/shared/keyboard/keyboard.service";
     selector: "app-review-next-popup",
     templateUrl: "./review-next-popup.component.html",
     styleUrls: ["./review-next-popup.component.scss"],
+    standalone: false,
 })
 export class ReviewNextPopupComponent {
     @Output() abcd: EventEmitter<any> = new EventEmitter();
@@ -79,31 +80,35 @@ export class ReviewNextPopupComponent {
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
             // Turn on toggling of option keyboard shortcut
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (event.shiftKey) {
-                    this.activeButtonIndex = OwoksapeUtils.decrementWrap(
-                        this.activeButtonIndex,
-                        0,
-                        this.BUTTON_CHOICES.length - 1,
-                    );
-                } else {
-                    this.activeButtonIndex = OwoksapeUtils.incrementWrap(
-                        this.activeButtonIndex,
-                        0,
-                        this.BUTTON_CHOICES.length - 1,
-                    );
-                }
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (event.shiftKey) {
+                        this.activeButtonIndex = OwoksapeUtils.decrementWrap(
+                            this.activeButtonIndex,
+                            0,
+                            this.BUTTON_CHOICES.length - 1,
+                        );
+                    } else {
+                        this.activeButtonIndex = OwoksapeUtils.incrementWrap(
+                            this.activeButtonIndex,
+                            0,
+                            this.BUTTON_CHOICES.length - 1,
+                        );
+                    }
+                });
             // Turn on submit keyboard shortcut
-            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                if (this.activeButtonIndex < 0) {
-                    this.activeButtonIndex = 0;
-                }
-                this.gotoContinue(this.BUTTON_CHOICES[this.activeButtonIndex]);
-            });
+            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(
+                () => {
+                    if (this.activeButtonIndex < 0) {
+                        this.activeButtonIndex = 0;
+                    }
+                    this.gotoContinue(this.BUTTON_CHOICES[this.activeButtonIndex]);
+                },
+            );
         } else {
             // Turn on keyboard listeners
-            if (this.keyboardToggleSelectionSubscription) this.keyboardToggleSelectionSubscription.unsubscribe();
+            if (this.keyboardToggleSelectionSubscription)
+                this.keyboardToggleSelectionSubscription.unsubscribe();
             if (this.keyboardSubmitSubscription) this.keyboardSubmitSubscription.unsubscribe();
         }
     }

@@ -22,6 +22,7 @@ import { RecaptchaCheckboxComponent } from "app/shared/recaptcha-checkbox/recapt
     selector: "app-registration",
     templateUrl: "./registration.component.html",
     styleUrls: ["./registration.component.scss"],
+    standalone: false,
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
     @ViewChild(RecaptchaCheckboxComponent)

@@ -8,6 +8,7 @@ import { environment } from "environments/environment";
     selector: "app-about",
     templateUrl: "./about.component.html",
     styleUrls: ["./about.component.scss"],
+    standalone: false,
 })
 export class AboutComponent implements OnInit {
     public environment = environment;

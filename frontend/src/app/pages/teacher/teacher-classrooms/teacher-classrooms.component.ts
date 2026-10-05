@@ -14,6 +14,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     selector: "app-teacher-classrooms",
     templateUrl: "./teacher-classrooms.component.html",
     styleUrls: ["./teacher-classrooms.component.scss"],
+    standalone: false,
 })
 export class TeacherClassroomsComponent implements OnDestroy {
     private schoolSubscription: Subscription;
@@ -119,7 +120,13 @@ export class TeacherClassroomsComponent implements OnDestroy {
         this.updateClassroomUnit(classroomUnit);
     }
 
-    updateClassroomUnit(classroomUnit: { id: any; optional: any; active: any; no_repeat: any; release_date: any }) {
+    updateClassroomUnit(classroomUnit: {
+        id: any;
+        optional: any;
+        active: any;
+        no_repeat: any;
+        release_date: any;
+    }) {
         if (!!classroomUnit) {
             this.loader.setLoader(true);
             const params = {
@@ -329,7 +336,10 @@ export class TeacherClassroomsComponent implements OnDestroy {
                 if (!!this.classroomUnits) {
                     this.classroomUnits.forEach((classroomUnit) => {
                         if (!!classroomUnit.release_date) {
-                            classroomUnit.release_date = classroomUnit.release_date.substring(0, 10);
+                            classroomUnit.release_date = classroomUnit.release_date.substring(
+                                0,
+                                10,
+                            );
                         }
                     });
                 }

@@ -14,6 +14,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     selector: "app-accessibility",
     templateUrl: "./accessibility.component.html",
     styleUrls: ["./accessibility.component.scss"],
+    standalone: false,
 })
 export class AccessibilityComponent implements OnInit, OnDestroy {
     private lockSubscription: Subscription;
@@ -43,7 +44,9 @@ export class AccessibilityComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("accessibility");
     }
 
@@ -71,7 +74,8 @@ export class AccessibilityComponent implements OnInit, OnDestroy {
                                         : true
                                     : false;
                             }
-                            this.hearing.checked = this.user.usersetting.hearing == "0" ? false : true;
+                            this.hearing.checked =
+                                this.user.usersetting.hearing == "0" ? false : true;
                         } else {
                             console.error("[accessibility] Error with user settings result. ", res);
                             await this.alreadyDeleted();

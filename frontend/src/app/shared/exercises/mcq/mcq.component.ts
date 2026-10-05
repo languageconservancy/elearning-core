@@ -19,6 +19,7 @@ import { AudioService } from "app/_services/audio.service";
     templateUrl: "./mcq.component.html",
     styleUrls: ["./mcq.component.scss"],
     providers: [ExerciseService],
+    standalone: false,
 })
 export class McqComponent implements OnInit, OnDestroy {
     @Input() sessionType: string;

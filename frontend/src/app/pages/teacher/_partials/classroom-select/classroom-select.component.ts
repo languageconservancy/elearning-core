@@ -11,6 +11,7 @@ import { SnackbarService } from "app/_services/snackbar.service";
     selector: "app-classroom-select",
     templateUrl: "./classroom-select.component.html",
     styleUrls: ["./classroom-select.component.scss"],
+    standalone: false,
 })
 export class ClassroomSelectComponent implements OnInit, OnDestroy {
     private schoolSubscription: Subscription;
@@ -60,9 +61,15 @@ export class ClassroomSelectComponent implements OnInit, OnDestroy {
         this.getTeacherLevels();
         this.ClassroomForm = new UntypedFormGroup({
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            name: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            name: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            startDate: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            startDate: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             level: new UntypedFormControl("0"),
             endDate: new UntypedFormControl("0"),
         });
@@ -170,11 +177,14 @@ export class ClassroomSelectComponent implements OnInit, OnDestroy {
                     Validators.required,
                     this.validateBlankValue.bind(this),
                 ]),
-                startDate: new UntypedFormControl(this.currentClassroom.start_date.substring(0, 10), [
-                    // eslint-disable-next-line @typescript-eslint/unbound-method
-                    Validators.required,
-                    this.validateBlankValue.bind(this),
-                ]),
+                startDate: new UntypedFormControl(
+                    this.currentClassroom.start_date.substring(0, 10),
+                    [
+                        // eslint-disable-next-line @typescript-eslint/unbound-method
+                        Validators.required,
+                        this.validateBlankValue.bind(this),
+                    ],
+                ),
                 endDate: new UntypedFormControl(this.currentClassroom.end_date.substring(0, 10)),
             });
         }

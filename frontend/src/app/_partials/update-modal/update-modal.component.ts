@@ -6,6 +6,7 @@ import { environment } from "environments/environment";
     selector: "app-update-modal",
     templateUrl: "./update-modal.component.html",
     styleUrls: ["./update-modal.component.css"],
+    standalone: false,
 })
 /**
  * UpdateModalComponent is responsible for displaying a modal that prompts the user to update the

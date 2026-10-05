@@ -3,7 +3,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { APP_INITIALIZER, NgModule } from "@angular/core";
+import { NgModule, inject, provideAppInitializer } from "@angular/core";
 
 // Third Party Addons
 import { CookieService as NgCookieService } from "ngx-cookie-service";
@@ -139,12 +139,13 @@ export function initializeApp(
         PublicProfileModule,
     ],
     providers: [
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeApp,
-            deps: [SiteSettingsService, PlatformRolesService],
-            multi: true,
-        },
+        provideAppInitializer(() => {
+            const initializerFn = initializeApp(
+                inject(SiteSettingsService),
+                inject(PlatformRolesService),
+            );
+            return initializerFn();
+        }),
         AuthGuard,
         RegProgGuard,
         MaintenanceModeGuard,

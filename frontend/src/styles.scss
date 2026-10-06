@@ -1,19 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 
 // Angular Material theme
-@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@use "@angular/material/prebuilt-themes/indigo-pink.css";
 
 // Option A: Include all of Bootstrap
 
 // Include any default variable overrides here (though functions won't be available)
-@import "./assets/scss/modules/variables";
+@use "./assets/scss/modules/variables";
 
-@import "./node_modules/bootstrap/scss/bootstrap";
+@use "./node_modules/bootstrap/scss/bootstrap";
 
 // Then add additional custom code here
-@import "./assets/css/all.min";
-@import "./assets/css/datepicker.min";
-@import "./assets/scss/partials";
+@use "./assets/css/all.min";
+@use "./assets/css/datepicker.min";
+@use "./assets/scss/partials";
 
 
 

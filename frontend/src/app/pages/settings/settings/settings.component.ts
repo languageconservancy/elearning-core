@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { SettingsService } from "app/_services/settings.service";
+import { SettingsService } from "@app/_services/settings.service";
 import { ActivatedRoute } from "@angular/router";
 
 @Component({

@@ -9,10 +9,10 @@ import { LearningPathComponent } from "./learning-path/learning-path.component";
 import { LearningSpeedComponent } from "./learning-speed/learning-speed.component";
 import { RegistrationComponent } from "./registration/registration.component";
 import { SpreadTheWordComponent } from "./spread-the-word/spread-the-word.component";
-import { PartialsModule } from "app/_partials/partials.module";
-import { PipesModule } from "app/_pipes/pipes.module";
-import { RecaptchaCheckboxComponent } from "app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
-
+import { PartialsModule } from "@app/_partials/partials.module";
+import { PipesModule } from "@app/_pipes/pipes.module";
+import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
+    
 @NgModule({
     declarations: [
         FindFriendsComponent,

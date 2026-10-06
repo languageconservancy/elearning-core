@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { LocalizeService } from "app/_services/localize.service";
-import { environment } from "environments/environment";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { RegionPolicyService } from "app/_services/region-policy.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { LocalizeService } from "@app/_services/localize.service";
+import { environment } from "@environments/environment";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
 
 @Component({
     selector: "app-spread-the-word",

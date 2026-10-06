@@ -3,11 +3,11 @@ import { Router } from "@angular/router";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
 
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { Loader } from "app/_services/loader.service";
-import { ForumService } from "app/_services/forum.service";
-import { BadgeService } from "app/_services/badge.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { Loader } from "@app/_services/loader.service";
+import { ForumService } from "@app/_services/forum.service";
+import { BadgeService } from "@app/_services/badge.service";
 
 @Component({
     selector: "app-public-profile",

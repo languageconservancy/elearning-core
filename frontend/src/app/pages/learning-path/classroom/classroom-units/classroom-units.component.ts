@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ReviewService } from "app/_services/review.service";
-import { ForumService } from "app/_services/forum.service";
-import { UnitsComponent } from "app/pages/learning-path/units/units.component";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { BaseService } from "app/_services/base.service";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ForumService } from "@app/_services/forum.service";
+import { UnitsComponent } from "@app/pages/learning-path/units/units.component";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-classroom-units",

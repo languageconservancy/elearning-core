@@ -4,7 +4,7 @@ import { CapacitorCookies } from "@capacitor/core";
 import { Preferences as CapacitorPreferences } from "@capacitor/preferences";
 import { DeviceDetectorService } from "ngx-device-detector";
 
-import { environment } from "environments/environment";
+import { environment } from "@environments/environment";
 
 @Injectable({
     providedIn: "root",

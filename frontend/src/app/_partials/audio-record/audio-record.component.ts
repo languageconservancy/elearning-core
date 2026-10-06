@@ -5,8 +5,8 @@ import WaveSurfer from "wavesurfer.js";
 import Microphone from "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js";
 import { Subscription } from "rxjs";
 
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
 
 @Component({
     selector: "app-audio-record",

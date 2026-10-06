@@ -2,16 +2,16 @@ import { Component, OnDestroy } from "@angular/core";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 import { Subscription } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { ReviewService } from "app/_services/review.service";
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { AudioService } from "app/_services/audio.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { LocalizeService } from "app/_services/localize.service";
-import * as App from "app/_constants/app.constants";
+import { CookieService } from "@app/_services/cookie.service";
+import { ReviewService } from "@app/_services/review.service";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { AudioService } from "@app/_services/audio.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { LocalizeService } from "@app/_services/localize.service";
+import * as App from "@app/_constants/app.constants";
 
 @Component({
     selector: "app-reward-popups",

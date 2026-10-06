@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
-import { PipesModule } from "app/_pipes/pipes.module";
-import { CardDataType } from "app/shared/utils/elearning-types";
-import { AudioService } from "app/_services/audio.service";
-import { PartialsModule } from "app/_partials/partials.module";
+import { PipesModule } from "@app/_pipes/pipes.module";
+import { CardDataType } from "@app/shared/utils/elearning-types";
+import { AudioService } from "@app/_services/audio.service";
+import { PartialsModule } from "@app/_partials/partials.module";
 
 type Video = {
     FullUrl: string;

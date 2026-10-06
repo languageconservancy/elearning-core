@@ -3,12 +3,12 @@ import { take, map } from "rxjs/operators";
 import { Subscription, timer, interval } from "rxjs";
 import { Router } from "@angular/router";
 
-import { LessonsService } from "app/_services/lessons.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { CookieService } from "app/_services/cookie.service";
-import { ReviewService } from "app/_services/review.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { ReviewService } from "@app/_services/review.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 
 declare let jQuery: any;
 

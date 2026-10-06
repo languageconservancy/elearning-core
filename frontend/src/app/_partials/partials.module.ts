@@ -13,7 +13,7 @@ import { SiteImageComponent } from "./site-image/site-image.component";
 import { EventPromoComponent } from "./event-promo/event-promo.component";
 import { PageTitleComponent } from "./page-title/page-title.component";
 import { VirtualKeyboardComponent } from "./virtual-keyboard/virtual-keyboard.component";
-import { PipesModule } from "app/_pipes/pipes.module";
+import { PipesModule } from "@app/_pipes/pipes.module";
 import { UnitProgressNavComponent } from "./unit-progress-nav/unit-progress-nav.component";
 import { TimerComponent } from "./timer/timer.component";
 import { AgreementsAcceptanceComponent } from "./agreements-acceptance/agreements-acceptance.component";

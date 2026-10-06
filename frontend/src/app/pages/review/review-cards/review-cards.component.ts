@@ -1,13 +1,13 @@
 import { Component, OnDestroy, ElementRef, ChangeDetectorRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
-
-import { ReviewService } from "app/_services/review.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewType } from "app/shared/utils/elearning-types";
+import { CookieService } from "@app/_services/cookie.service";
+    
+import { ReviewService } from "@app/_services/review.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewType } from "@app/shared/utils/elearning-types";
 
 @Component({
     selector: "app-review-cards",

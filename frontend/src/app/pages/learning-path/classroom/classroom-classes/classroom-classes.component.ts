@@ -1,20 +1,20 @@
 import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import Swal from "sweetalert2";
 
-import { Loader } from "app/_services/loader.service";
-import { LearningPathService } from "app/_services/learning-path.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { ReviewService } from "app/_services/review.service";
-import { ClassroomService } from "app/_services/classroom.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { BaseService } from "app/_services/base.service";
+import { Loader } from "@app/_services/loader.service";
+import { LearningPathService } from "@app/_services/learning-path.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-classroom-classes",

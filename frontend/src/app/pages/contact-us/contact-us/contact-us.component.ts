@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { Loader } from "app/_services/loader.service";
-import { RegistrationService } from "app/_services/registration.service";
+import { Loader } from "@app/_services/loader.service";
+import { RegistrationService } from "@app/_services/registration.service";
 import { Router } from "@angular/router";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
-import { VirtualKeyboardComponent } from "app/_partials/virtual-keyboard/virtual-keyboard.component";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
+import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
 
 @Component({
     selector: "app-contact-us",

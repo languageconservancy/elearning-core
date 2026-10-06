@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { take, map } from "rxjs/operators";
 import { Subscription, timer, interval } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { LessonsService } from "app/_services/lessons.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ReviewService } from "app/_services/review.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { environment } from "environments/environment";
+import { LessonsService } from "@app/_services/lessons.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ReviewService } from "@app/_services/review.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { environment } from "@environments/environment";
 
 declare let jQuery: any;
 const OneMinuteMs: number = 1000 * 60;

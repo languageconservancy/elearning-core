@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { ReviewService } from "app/_services/review.service";
+import { ReviewService } from "@app/_services/review.service";
 import { DeviceDetectorService } from "ngx-device-detector";
 
 @Component({

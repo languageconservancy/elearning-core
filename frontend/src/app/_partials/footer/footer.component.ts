@@ -1,12 +1,12 @@
 import { Component } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ForumService } from "app/_services/forum.service";
-import { ReviewService } from "app/_services/review.service";
-import { environment } from "environments/environment";
-import { SiteSettingsService } from "app/_services/site-settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ForumService } from "@app/_services/forum.service";
+import { ReviewService } from "@app/_services/review.service";
+import { environment } from "@environments/environment";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 @Component({
     selector: "app-footer",

@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 
-import { ClassroomService } from "app/_services/classroom.service";
-import { TeacherService } from "app/_services/teacher.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { TeacherService } from "@app/_services/teacher.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-classroom-select",

@@ -10,10 +10,10 @@ import {
     GoogleSigninButtonModule,
 } from "@abacritt/angularx-social-login";
 
-import { PipesModule } from "app/_pipes/pipes.module";
-import { PartialsModule } from "app/_partials/partials.module";
+import { PipesModule } from "@app/_pipes/pipes.module";
+import { PartialsModule } from "@app/_partials/partials.module";
 import { LoginComponent } from "./login/login.component";
-import { environment } from "environments/environment";
+import { environment } from "@environments/environment";
 
 @NgModule({
     declarations: [LoginComponent],

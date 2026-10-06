@@ -6,9 +6,9 @@ import { BaseService } from "./base.service";
 import { CookieService } from "./cookie.service";
 import { LocalStorageService } from "./local-storage.service";
 import { ForumService } from "./forum.service";
-import * as API from "app/_constants/api.constants";
-import { ApiResponse } from "app/shared/utils/elearning-types";
-
+import * as API from "@app/_constants/api.constants";
+import { ApiResponse } from "@app/shared/utils/elearning-types";
+    
 @Injectable()
 export class LearningPathService extends BaseService {
     constructor(

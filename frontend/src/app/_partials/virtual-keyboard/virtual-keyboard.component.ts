@@ -14,9 +14,9 @@ import {
     OnDestroy,
 } from "@angular/core";
 import Keyboard, { KeyboardInput, KeyboardLayoutObject } from "simple-keyboard";
-import { VirtualKeyboardService } from "app/_services/virtual-keyboard.service";
-import { KeyboardConfigService, KeyboardConfig } from "app/_services/keyboard-config.service";
-import { environment } from "environments/environment";
+import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
+import { KeyboardConfigService, KeyboardConfig } from "@app/_services/keyboard-config.service";
+import { environment } from "@environments/environment";
 
 const DEBUG = !environment.production;
 

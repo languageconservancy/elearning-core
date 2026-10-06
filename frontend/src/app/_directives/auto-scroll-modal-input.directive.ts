@@ -33,8 +33,8 @@ export class AutoScrollModalInputDirective implements OnInit, OnDestroy {
         }
     }
 
-    @HostListener("focus", ["$event.target"])
-    @HostListener("click", ["$event.target"])
+    @HostListener("focus")
+    @HostListener("click")
     onFocus() {
         this.adjustScrollPosition();
     }

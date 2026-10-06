@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-
-import { Loader } from "app/_services/loader.service";
-import { LearningPathService } from "app/_services/learning-path.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { ReviewService } from "app/_services/review.service";
-import { RegionPolicyService } from "app/_services/region-policy.service";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
+    
+import { Loader } from "@app/_services/loader.service";
+import { LearningPathService } from "@app/_services/learning-path.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { ReviewService } from "@app/_services/review.service";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 @Component({
     selector: "app-levels",

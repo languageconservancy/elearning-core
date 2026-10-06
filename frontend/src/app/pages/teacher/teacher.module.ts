@@ -13,8 +13,8 @@ import { TeacherClassroomsComponent } from "./teacher-classrooms/teacher-classro
 import { TeacherLessonsComponent } from "./teacher-lessons/teacher-lessons.component";
 import { ClassroomSelectComponent } from "./_partials/classroom-select/classroom-select.component";
 import { TeacherAdminComponent } from "./teacher-admin/teacher-admin.component";
-import { PartialsModule } from "app/_partials/partials.module";
-import { PipesModule } from "app/_pipes/pipes.module";
+import { PartialsModule } from "@app/_partials/partials.module";
+import { PipesModule } from "@app/_pipes/pipes.module";
 
 @NgModule({
     imports: [

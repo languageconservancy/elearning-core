@@ -10,17 +10,17 @@ import { Subscription } from "rxjs";
 import * as WaveSurfer from "wavesurfer.js";
 import Microphone from "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js";
 
-import { CookieService } from "app/_services/cookie.service";
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { ExerciseService } from "app/_services/exercise.service";
-import { AnswerType } from "app/shared/utils/elearning-types";
-import { AudioService } from "app/_services/audio.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { SocialWebService } from "app/_services/social-web.service";
-import { environment } from "environments/environment";
+import { CookieService } from "@app/_services/cookie.service";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ExerciseService } from "@app/_services/exercise.service";
+import { AnswerType } from "@app/shared/utils/elearning-types";
+import { AudioService } from "@app/_services/audio.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { SocialWebService } from "@app/_services/social-web.service";
+import { environment } from "@environments/environment";
 
 declare let jQuery: any;
 

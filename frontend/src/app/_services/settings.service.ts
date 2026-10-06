@@ -1,9 +1,9 @@
 import { BehaviorSubject } from "rxjs";
 import { Injectable } from "@angular/core";
 import { BaseService } from "./base.service";
-import * as API from "app/_constants/api.constants";
-import { ApiResponse } from "app/shared/utils/elearning-types";
-
+import * as API from "@app/_constants/api.constants";
+import { ApiResponse } from "@app/shared/utils/elearning-types";
+    
 @Injectable()
 export class SettingsService extends BaseService {
     private tabSubject = new BehaviorSubject<any>("");

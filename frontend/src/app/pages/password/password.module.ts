@@ -5,7 +5,7 @@ import { RouterModule } from "@angular/router";
 
 import { ChangePasswordComponent } from "./change-password/change-password.component";
 import { ForgotPasswordComponent } from "./forgot-password/forgot-password.component";
-import { PartialsModule } from "app/_partials/partials.module";
+import { PartialsModule } from "@app/_partials/partials.module";
 
 @NgModule({
     declarations: [ChangePasswordComponent, ForgotPasswordComponent],

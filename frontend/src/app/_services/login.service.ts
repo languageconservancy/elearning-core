@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { BaseService } from "./base.service";
 import { RegistrationService } from "./registration.service";
-import * as API from "app/_constants/api.constants";
+import * as API from "@app/_constants/api.constants";
 import { CookieService } from "./cookie.service";
 import { LocalStorageService } from "./local-storage.service";
 import { Router } from "@angular/router";

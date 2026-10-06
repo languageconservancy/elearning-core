@@ -7,15 +7,15 @@ import {
     Output,
     EventEmitter,
 } from "@angular/core";
-import { environment } from "environments/environment";
-import { Settings } from "app/_constants/app.constants";
+import { environment } from "@environments/environment";
+import { Settings } from "@app/_constants/app.constants";
 import {
     Answer,
     Unit,
     Question,
     QuestionQuestion,
     Exercise,
-} from "app/pages/learning/unit/unit.component";
+} from "@app/pages/learning/unit/unit.component";
 
 export enum ActivityState {
     NotAttempted = "Not Attempted",

@@ -10,10 +10,10 @@ import {
     OnInit,
     OnChanges,
 } from "@angular/core";
-import { PipesModule } from "app/_pipes/pipes.module";
-import { AudioService } from "app/_services/audio.service";
+import { PipesModule } from "@app/_pipes/pipes.module";
+import { AudioService } from "@app/_services/audio.service";
 import { DeviceDetectorService } from "ngx-device-detector";
-import { AnswerType, CardDataType } from "app/shared/utils/elearning-types";
+import { AnswerType, CardDataType } from "@app/shared/utils/elearning-types";
 
 type Media = {
     FullUrl: string;

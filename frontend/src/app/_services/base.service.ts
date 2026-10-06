@@ -4,9 +4,9 @@ import { HttpStatusCode } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Capacitor, CapacitorHttp, HttpResponse } from "@capacitor/core";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
-import { ForbidenResponseReasons } from "app/shared/utils/elearning-types";
+import { ForbidenResponseReasons } from "@app/shared/utils/elearning-types";
 
-import * as API from "app/_constants/api.constants";
+import * as API from "@app/_constants/api.constants";
 import { CookieService } from "./cookie.service";
 import { LocalStorageService } from "./local-storage.service";
 import { SocialLogin } from "@capgo/capacitor-social-login";

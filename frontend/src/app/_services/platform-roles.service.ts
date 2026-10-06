@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { BaseService } from "app/_services/base.service";
-import { Settings } from "app/_constants/api.constants";
+import { BaseService } from "@app/_services/base.service";
+import { Settings } from "@app/_constants/api.constants";
 
 export const PlatformRoles = {
     Admin: "superadmin",

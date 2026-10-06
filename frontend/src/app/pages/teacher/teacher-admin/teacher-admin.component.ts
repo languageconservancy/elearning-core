@@ -9,18 +9,18 @@ import {
     Validators,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { TeacherService } from "app/_services/teacher.service";
-import { ClassroomService } from "app/_services/classroom.service";
-import { Loader } from "app/_services/loader.service";
-import { ExcelService } from "app/_services/excel.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { ResetPasswordService } from "app/_services/reset-password.service";
-import { RegexConsts } from "app/_constants/app.constants";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
-import { ErrorCode } from "app/shared/utils/error-code";
+import { TeacherService } from "@app/_services/teacher.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { Loader } from "@app/_services/loader.service";
+import { ExcelService } from "@app/_services/excel.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { ResetPasswordService } from "@app/_services/reset-password.service";
+import { RegexConsts } from "@app/_constants/app.constants";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
+import { ErrorCode } from "@app/shared/utils/error-code";
 
 @Component({
     selector: "app-teacher-admin",

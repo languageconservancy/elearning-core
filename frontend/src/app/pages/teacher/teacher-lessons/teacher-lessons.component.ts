@@ -4,13 +4,13 @@ import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { TeacherService } from "app/_services/teacher.service";
-import { ClassroomService } from "app/_services/classroom.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
+import { TeacherService } from "@app/_services/teacher.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
 
 type Unit = {
     id: number;

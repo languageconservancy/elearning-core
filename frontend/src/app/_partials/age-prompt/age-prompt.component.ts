@@ -1,15 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { RegexConsts } from "app/_constants/app.constants";
-import { AgePromptService } from "app/_services/age-prompt.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { SettingsService } from "app/_services/settings.service";
-import { Routes } from "app/shared/utils/elearning-types";
-import { ModalService } from "app/_services/modal.service";
-import { RegionPolicyService } from "app/_services/region-policy.service";
-import { PlatformRolesService } from "app/_services/platform-roles.service";
-import { CookieService } from "app/_services/cookie.service";
-import { BaseService } from "app/_services/base.service";
+import { RegexConsts } from "@app/_constants/app.constants";
+import { AgePromptService } from "@app/_services/age-prompt.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { ModalService } from "@app/_services/modal.service";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
+import { PlatformRolesService } from "@app/_services/platform-roles.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-age-prompt",

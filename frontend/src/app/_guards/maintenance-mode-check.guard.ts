@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { SettingsService } from "app/_services/settings.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Injectable()
 export class MaintenanceModeCheckGuard {

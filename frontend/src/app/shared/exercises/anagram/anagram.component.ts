@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { ExerciseService } from "app/_services/exercise.service";
-import { AnswerType } from "app/shared/utils/elearning-types";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { KeyboardConfigService } from "app/_services/keyboard-config.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { AudioService } from "app/_services/audio.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ExerciseService } from "@app/_services/exercise.service";
+import { AnswerType } from "@app/shared/utils/elearning-types";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { KeyboardConfigService } from "@app/_services/keyboard-config.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { AudioService } from "@app/_services/audio.service";
 
 declare let jQuery: any;
 

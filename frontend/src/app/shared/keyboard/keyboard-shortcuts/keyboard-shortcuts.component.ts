@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
 import { KeyboardService } from "../keyboard.service";
 
 @Component({

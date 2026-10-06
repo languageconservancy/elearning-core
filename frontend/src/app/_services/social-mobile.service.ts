@@ -6,10 +6,10 @@ import {
     SocialLogin,
     InitializeOptions,
 } from "@capgo/capacitor-social-login";
-import { BaseService } from "app/_services/base.service";
+import { BaseService } from "@app/_services/base.service";
 
-import { environment } from "environments/environment";
-import { SocialLoginError, SocialLoginErrorType } from "app/_exceptions/social-login.errors";
+import { environment } from "@environments/environment";
+import { SocialLoginError, SocialLoginErrorType } from "@app/_exceptions/social-login.errors";
 
 interface LimitedLoginClaims {
     sub: number;

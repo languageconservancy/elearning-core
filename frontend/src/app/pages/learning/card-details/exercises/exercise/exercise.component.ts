@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { LessonsService } from "app/_services/lessons.service";
+import { LessonsService } from "@app/_services/lessons.service";
 
 @Component({
     selector: "app-exercise",

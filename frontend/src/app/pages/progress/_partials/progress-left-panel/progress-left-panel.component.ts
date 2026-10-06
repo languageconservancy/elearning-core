@@ -7,7 +7,7 @@ import {
     OnChanges,
 } from "@angular/core";
 import { Router } from "@angular/router";
-import { Routes } from "app/shared/utils/elearning-types";
+import { Routes } from "@app/shared/utils/elearning-types";
 
 interface DropdownItem {
     title: string;

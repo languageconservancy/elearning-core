@@ -1,14 +1,14 @@
 import { Component, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import Swal from "sweetalert2";
 
-import { ClassroomService } from "app/_services/classroom.service";
-import { TeacherService } from "app/_services/teacher.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { TeacherService } from "@app/_services/teacher.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-teacher-classrooms",

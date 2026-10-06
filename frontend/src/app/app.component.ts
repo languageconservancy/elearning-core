@@ -1,7 +1,7 @@
 import { Component, ApplicationRef, createComponent } from "@angular/core";
 import { SettingsService } from "./_services/settings.service";
 import { DeviceDetectorService } from "ngx-device-detector";
-import { environment } from "../environments/environment";
+import { environment } from "@environments/environment";
 import { App } from "@capacitor/app";
 import { Location } from "@angular/common";
 import { VersionCheckService } from "./_services/version-check.service";

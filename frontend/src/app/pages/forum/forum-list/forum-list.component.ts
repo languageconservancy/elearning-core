@@ -1,21 +1,21 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { BadgeService } from "app/_services/badge.service";
-import { environment } from "environments/environment";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { VirtualKeyboardComponent } from "app/_partials/virtual-keyboard/virtual-keyboard.component";
-import { VirtualKeyboardService } from "app/_services/virtual-keyboard.service";
-import { AudioService } from "app/_services/audio.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { RegionPolicyService } from "app/_services/region-policy.service";
+import { ForumService } from "@app/_services/forum.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { BadgeService } from "@app/_services/badge.service";
+import { environment } from "@environments/environment";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
+import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
+import { AudioService } from "@app/_services/audio.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
 
 declare let jQuery: any;
 

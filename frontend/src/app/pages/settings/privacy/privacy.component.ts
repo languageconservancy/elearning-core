@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 
-import { SettingsService } from "app/_services/settings.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { environment } from "environments/environment";
-import { RegionPolicyService } from "app/_services/region-policy.service";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { environment } from "@environments/environment";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
+import { BaseService } from "@app/_services/base.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 declare let jQuery: any;
 

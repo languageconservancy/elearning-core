@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { AnswerType } from "app/shared/utils/elearning-types";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { AnswerType } from "@app/shared/utils/elearning-types";
 
 @Injectable()
 export class ExerciseService {

@@ -20,11 +20,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { ApiResponse } from "app/shared/utils/elearning-types";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { AgreementsService } from "app/_services/agreements.service";
-import { ModalService } from "app/_services/modal.service";
+import { ApiResponse } from "@app/shared/utils/elearning-types";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { AgreementsService } from "@app/_services/agreements.service";
+import { ModalService } from "@app/_services/modal.service";
 
 declare let jQuery: any;
 

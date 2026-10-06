@@ -1,13 +1,13 @@
 import { Component, OnDestroy } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { AudioService } from "app/_services/audio.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { AudioService } from "@app/_services/audio.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
 
 declare let jQuery: any;
 

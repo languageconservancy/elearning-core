@@ -2,18 +2,18 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from "@angular
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 
-import { Settings } from "app/_constants/app.constants";
-import { CookieService } from "app/_services/cookie.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ReviewService } from "app/_services/review.service";
-import { UnitProgressNavComponent } from "app/_partials/unit-progress-nav/unit-progress-nav.component";
-import { environment } from "environments/environment";
-import { Throttle } from "app/_decorators/throttle.decorator";
-import { AudioService } from "app/_services/audio.service";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
+import { Settings } from "@app/_constants/app.constants";
+import { CookieService } from "@app/_services/cookie.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ReviewService } from "@app/_services/review.service";
+import { UnitProgressNavComponent } from "@app/_partials/unit-progress-nav/unit-progress-nav.component";
+import { environment } from "@environments/environment";
+import { Throttle } from "@app/_decorators/throttle.decorator";
+import { AudioService } from "@app/_services/audio.service";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 /**
  * Queue of events to be processed in order.

@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { environment } from "environments/environment";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { environment } from "@environments/environment";
+import { BaseService } from "@app/_services/base.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-notifications",

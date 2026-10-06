@@ -1,14 +1,14 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "downlevelIteration": true,
+        "rootDir": "./",
         "importHelpers": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "outDir": "./dist/out-tsc",
         "sourceMap": true,
         "declaration": false,
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "experimentalDecorators": true,
         "target": "ES2022",
         "types": ["jasmine", "node"],
@@ -16,7 +16,10 @@
         "skipLibCheck": true,
         "lib": ["es2018", "dom", "dom.iterable"],
         "module": "es2015",
-        "baseUrl": "./src",
+        "paths": {
+            "@app/*": ["./src/app/*"],
+            "@environments/*": ["./environments/*"]
+        },
         "strict": false,
         "noImplicitAny": false,
         "strictNullChecks": false,
@@ -24,7 +27,6 @@
         "useDefineForClassFields": false
     },
     "angularCompilerOptions": {
-        "fullTemplateTypeCheck": true,
         "strictInjectionParameters": true,
         "strictTemplates": true
     },

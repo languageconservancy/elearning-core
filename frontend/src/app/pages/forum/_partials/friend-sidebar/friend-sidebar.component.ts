@@ -1,13 +1,13 @@
 import { Component, OnInit, Renderer2 } from "@angular/core";
 import { trigger, state, style, animate, transition } from "@angular/animations";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
+import { ForumService } from "@app/_services/forum.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-friend-sidebar",

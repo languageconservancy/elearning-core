@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ProgressService } from "app/_services/progress.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ProgressService } from "@app/_services/progress.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 @Component({
     selector: "app-leader-board",

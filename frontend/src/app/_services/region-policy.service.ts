@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BaseService } from "./base.service";
-import * as API from "app/_constants/api.constants";
-import { MIN_ADULT_AGE_DEFAULT, MIN_SELF_CONSENT_AGE_DEFAULT } from "app/_constants/app.constants";
+import * as API from "@app/_constants/api.constants";
+import { MIN_ADULT_AGE_DEFAULT, MIN_SELF_CONSENT_AGE_DEFAULT } from "@app/_constants/app.constants";
 
 @Injectable({
     providedIn: "root",

@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
-
-import { Loader } from "app/_services/loader.service";
-import { ProgressService } from "app/_services/progress.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { RegionPolicyService } from "app/_services/region-policy.service";
+import { CookieService } from "@app/_services/cookie.service";
+    
+import { Loader } from "@app/_services/loader.service";
+import { ProgressService } from "@app/_services/progress.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
 
 @Component({
     selector: "app-your-progress",

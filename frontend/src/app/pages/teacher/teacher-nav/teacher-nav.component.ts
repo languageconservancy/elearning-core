@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { ClassroomService } from "app/_services/classroom.service";
-import { TeacherService } from "app/_services/teacher.service";
-import { Loader } from "app/_services/loader.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { TeacherService } from "@app/_services/teacher.service";
+import { Loader } from "@app/_services/loader.service";
 
 //this component navigates between teacher panels and selects the current school.
 //Schools are only added from the backend

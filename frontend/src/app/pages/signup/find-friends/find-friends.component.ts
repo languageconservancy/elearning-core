@@ -1,16 +1,16 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { FindFriendsService } from "app/_services/find-friends.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SocialWebService } from "app/_services/social-web.service";
-import { environment } from "environments/environment";
-import { SettingsService } from "app/_services/settings.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { FindFriendsService } from "@app/_services/find-friends.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SocialWebService } from "@app/_services/social-web.service";
+import { environment } from "@environments/environment";
+import { SettingsService } from "@app/_services/settings.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 declare let gapi: any;
 

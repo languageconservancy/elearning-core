@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { SettingsService } from "app/_services/settings.service";
-import { environment } from "environments/environment";
+import { SettingsService } from "@app/_services/settings.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-about",

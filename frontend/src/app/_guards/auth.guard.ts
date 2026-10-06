@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { Observable, of, from } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { AgreementsService } from "app/_services/agreements.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { BaseService } from "@app/_services/base.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { AgreementsService } from "@app/_services/agreements.service";
 import { switchMap, catchError } from "rxjs/operators";
-import { Routes } from "app/shared/utils/elearning-types";
-import { environment } from "environments/environment";
-import { RegistrationService } from "app/_services/registration.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { environment } from "@environments/environment";
+import { RegistrationService } from "@app/_services/registration.service";
 
 @Injectable()
 export class AuthGuard {

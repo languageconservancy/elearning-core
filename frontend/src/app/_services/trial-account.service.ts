@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { RegistrationService } from "app/_services/registration.service";
-import { LoginService } from "app/_services/login.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { RegistrationData, SiteLoginData } from "app/shared/utils/elearning-types";
+import { RegistrationService } from "@app/_services/registration.service";
+import { LoginService } from "@app/_services/login.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { RegistrationData, SiteLoginData } from "@app/shared/utils/elearning-types";
 
 @Injectable({
     providedIn: "root",

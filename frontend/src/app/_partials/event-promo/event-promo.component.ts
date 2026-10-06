@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { SettingsService } from "app/_services/settings.service";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-event-promo",

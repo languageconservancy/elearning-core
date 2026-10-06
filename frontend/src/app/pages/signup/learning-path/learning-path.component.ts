@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
-
-import { LearningPathService } from "app/_services/learning-path.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { environment } from "environments/environment";
+import { CookieService } from "@app/_services/cookie.service";
+    
+import { LearningPathService } from "@app/_services/learning-path.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-learning-path",

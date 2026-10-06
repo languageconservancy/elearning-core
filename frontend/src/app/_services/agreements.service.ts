@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, firstValueFrom } from "rxjs";
-import { BaseService } from "app/_services/base.service";
-import * as API from "app/_constants/api.constants";
-import { ApiResponse } from "app/shared/utils/elearning-types";
+import { BaseService } from "@app/_services/base.service";
+import * as API from "@app/_constants/api.constants";
+import { ApiResponse } from "@app/shared/utils/elearning-types";
 import { filter, take } from "rxjs/operators";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Injectable({
     providedIn: "root",

@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { Device } from "@capacitor/device";
-import { environment } from "environments/environment";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-update-modal",

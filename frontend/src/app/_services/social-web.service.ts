@@ -7,10 +7,10 @@ import {
 } from "@abacritt/angularx-social-login";
 import { SignInWithApple } from "@capacitor-community/apple-sign-in";
 import { jwtDecode } from "jwt-decode";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
-import { SocialLoginError, SocialLoginErrorType } from "app/_exceptions/social-login.errors";
+import { BaseService } from "@app/_services/base.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
+import { SocialLoginError, SocialLoginErrorType } from "@app/_exceptions/social-login.errors";
 
 // Facebook SDK loaded in index.html
 declare let FB: any;

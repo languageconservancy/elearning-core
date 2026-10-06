@@ -2,10 +2,10 @@
 import { Component, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { SettingsService } from "app/_services/settings.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
 
 declare let jQuery: any;
 

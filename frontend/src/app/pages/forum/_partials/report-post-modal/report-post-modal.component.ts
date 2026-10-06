@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { ForumService } from "@app/_services/forum.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 declare let jQuery: any;
 

@@ -1,14 +1,14 @@
 import { Component, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 
 @Component({
     selector: "app-review-next-popup",

@@ -2,9 +2,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 
-import { ResetPasswordService } from "app/_services/reset-password.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { ResetPasswordService } from "@app/_services/reset-password.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-forgot-password",

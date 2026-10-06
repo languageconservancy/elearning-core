@@ -3,14 +3,14 @@ import { Router } from "@angular/router";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import * as xlsx from "xlsx";
 
-import { TeacherService } from "app/_services/teacher.service";
-import { ClassroomService } from "app/_services/classroom.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
+import { TeacherService } from "@app/_services/teacher.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
 
 export interface StudentActivitiesTable {
     id: number;

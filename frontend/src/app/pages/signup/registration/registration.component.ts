@@ -3,20 +3,20 @@ import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { LearningPathService } from "app/_services/learning-path.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { LoginService } from "app/_services/login.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { RegexConsts } from "app/_constants/app.constants";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
-import { SettingsService } from "app/_services/settings.service";
-import { BaseService } from "app/_services/base.service";
-import { AgreementsService } from "app/_services/agreements.service";
-import { Routes } from "app/shared/utils/elearning-types";
-import { RegionPolicyService } from "app/_services/region-policy.service";
-import { RecaptchaCheckboxComponent } from "app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
+import { LearningPathService } from "@app/_services/learning-path.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { LoginService } from "@app/_services/login.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { RegexConsts } from "@app/_constants/app.constants";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
+import { SettingsService } from "@app/_services/settings.service";
+import { BaseService } from "@app/_services/base.service";
+import { AgreementsService } from "@app/_services/agreements.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
+import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
 
 @Component({
     selector: "app-registration",

@@ -1,11 +1,11 @@
 import { AgePromptComponent } from "./age-prompt.component";
-import { SettingsService } from "app/_services/settings.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
-import { ModalService } from "app/_services/modal.service";
+import { ModalService } from "@app/_services/modal.service";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { AgePromptService } from "app/_services/age-prompt.service";
+import { AgePromptService } from "@app/_services/age-prompt.service";
 
 declare let jQuery: any;
 

@@ -2,14 +2,14 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Renderer2 } from "@angular/core";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { ForumService } from "@app/_services/forum.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 declare let jQuery: any;
 

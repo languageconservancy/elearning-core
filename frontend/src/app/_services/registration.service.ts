@@ -3,11 +3,11 @@ import { BehaviorSubject } from "rxjs";
 
 import { BaseService } from "./base.service";
 import { CookieService } from "./cookie.service";
-import * as API from "app/_constants/api.constants";
+import * as API from "@app/_constants/api.constants";
 import { LocalStorageService } from "./local-storage.service";
 import { Router } from "@angular/router";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
-import { ApiResponse } from "app/shared/utils/elearning-types";
+import { ApiResponse } from "@app/shared/utils/elearning-types";
 
 @Injectable()
 export class RegistrationService extends BaseService {

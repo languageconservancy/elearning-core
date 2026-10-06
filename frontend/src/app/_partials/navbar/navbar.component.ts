@@ -2,19 +2,19 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } fr
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SettingsService } from "app/_services/settings.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ReviewService } from "app/_services/review.service";
-import { BaseService } from "app/_services/base.service";
-import { ForumService } from "app/_services/forum.service";
-import { environment } from "environments/environment";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { VirtualKeyboardService } from "app/_services/virtual-keyboard.service";
-import { Routes } from "app/shared/utils/elearning-types";
-import { PlatformRolesService } from "app/_services/platform-roles.service";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ReviewService } from "@app/_services/review.service";
+import { BaseService } from "@app/_services/base.service";
+import { ForumService } from "@app/_services/forum.service";
+import { environment } from "@environments/environment";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { PlatformRolesService } from "@app/_services/platform-roles.service";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 declare let jQuery: any;
 

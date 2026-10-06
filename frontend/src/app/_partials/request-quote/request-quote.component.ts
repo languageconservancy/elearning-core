@@ -3,10 +3,10 @@ import { Component, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
-import { Loader } from "app/_services/loader.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
+import { Loader } from "@app/_services/loader.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-request-quote",

@@ -2,9 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 
-import { Loader } from "app/_services/loader.service";
-import { SettingsService } from "app/_services/settings.service";
-
+import { Loader } from "@app/_services/loader.service";
+import { SettingsService } from "@app/_services/settings.service";
+    
 @Component({
     selector: "app-maintenance-mode",
     templateUrl: "./maintenance-mode.component.html",

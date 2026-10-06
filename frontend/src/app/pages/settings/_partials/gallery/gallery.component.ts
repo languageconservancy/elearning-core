@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from "@angular/core";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { Loader } from "app/_services/loader.service";
-import { SettingsService } from "app/_services/settings.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { Loader } from "@app/_services/loader.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-gallery",

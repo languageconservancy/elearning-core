@@ -21,9 +21,25 @@
 //
 import { mount } from "cypress/angular";
 
-Cypress.Commands.add("mount", (component, config) => {
-    return mount(component, config);
-});
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      mount: typeof mount
+      logInViaUi: () => Chainable<void>;
+      screenshotSignup: (captureType: any, screenshotsPath: string, fileNameSuffix?: string) => Chainable<void>;
+      registerTestUser: (captureType: any, screenshotsPath: string, fileNameSuffix?: string) => Chainable<void>;
+      screenshotLearningSpeedAndContinue: (captureType: any, screenshotsPath: string, fileNameSuffix?: string) => Chainable<void>;
+      screenshotSpreadTheWordAndContinue: (captureType: any, screenshotsPath: string, fileNameSuffix?: string) => Chainable<void>;
+      screenshotFindFriendsAndContinue: (captureType: any, screenshotsPath: string, fileNameSuffix?: string) => Chainable<void>;
+      screenshotNewUserDashboard: (captureType: any, screenshotsPath: string, fileNameSuffix?: string) => Chainable<void>;
+      signUp: (captureType: any, screenshotsPath: string, fileNameSuffix?: string) => Chainable<void>;
+    }
+  }
+}
+
+Cypress.Commands.add('mount', (component, config) => {
+  return mount(component, config)
+})
 
 // -- This is a parent command --
 Cypress.Commands.add("logInViaUi", () => {

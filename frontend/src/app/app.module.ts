@@ -38,6 +38,7 @@ import { AboutModule } from "./pages/about/about.module";
 import { ContactUsModule } from "./pages/contact-us/contact-us.module";
 import { DashboardModule } from "./pages/dashboard/dashboard.module";
 import { ForumModule } from "./pages/forum/forum.module";
+import { KeyboardModule } from "@app/shared/keyboard/keyboard.module";
 import { LearningModule } from "./pages/learning/learning.module";
 import { LearningPathModule } from "./pages/learning-path/learning-path.module";
 import { LoginModule } from "./pages/login/login.module";
@@ -124,6 +125,7 @@ export function initializeApp(
         ContactUsModule,
         DashboardModule,
         ForumModule,
+        KeyboardModule,
         LearningModule,
         LearningPathModule,
         LoginModule,

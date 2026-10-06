@@ -2,16 +2,16 @@ import { Component, OnInit, OnDestroy, Input } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
-import { CookieService } from "app/_services/cookie.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { ExerciseService } from "app/_services/exercise.service";
-import { AnswerType } from "app/shared/utils/elearning-types";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { AudioService } from "app/_services/audio.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ExerciseService } from "@app/_services/exercise.service";
+import { AnswerType } from "@app/shared/utils/elearning-types";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { AudioService } from "@app/_services/audio.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-match-pair",

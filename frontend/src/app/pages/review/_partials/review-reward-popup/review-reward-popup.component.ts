@@ -2,13 +2,13 @@ import { Component, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 
-import { Loader } from "app/_services/loader.service";
-import { ReviewService } from "app/_services/review.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { AudioService } from "app/_services/audio.service";
-import * as App from "app/_constants/app.constants";
-import { LocalizeService } from "app/_services/localize.service";
+import { Loader } from "@app/_services/loader.service";
+import { ReviewService } from "@app/_services/review.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { AudioService } from "@app/_services/audio.service";
+import * as App from "@app/_constants/app.constants";
+import { LocalizeService } from "@app/_services/localize.service";
 
 @Component({
     selector: "app-review-reward-popup",

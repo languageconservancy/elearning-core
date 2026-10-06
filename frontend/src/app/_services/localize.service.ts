@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
-import { TRANSLATION_FILE_PATH } from "app/_constants/app.constants";
+import { TRANSLATION_FILE_PATH } from "@app/_constants/app.constants";
 
 @Injectable({
     providedIn: "root",

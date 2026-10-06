@@ -4,9 +4,9 @@ import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { Loader } from "app/_services/loader.service";
-import { ResetPasswordService } from "app/_services/reset-password.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { Loader } from "@app/_services/loader.service";
+import { ResetPasswordService } from "@app/_services/reset-password.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-change-password",

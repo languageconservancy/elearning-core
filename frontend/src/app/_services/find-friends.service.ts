@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { CapacitorHttp } from "@capacitor/core";
 
 import { BaseService } from "./base.service";
-import { environment } from "environments/environment";
-import * as API from "app/_constants/api.constants";
+import { environment } from "@environments/environment";
+import * as API from "@app/_constants/api.constants";
 
 @Injectable()
 export class FindFriendsService extends BaseService {

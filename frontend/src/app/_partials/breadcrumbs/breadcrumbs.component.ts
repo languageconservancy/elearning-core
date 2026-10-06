@@ -2,8 +2,8 @@ import { Component, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { NavigationEnd, Router } from "@angular/router";
 
-import { Routes } from "app/shared/utils/elearning-types";
-import { BreadcrumbsService, Breadcrumb } from "app/_services/breadcrumbs.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { BreadcrumbsService, Breadcrumb } from "@app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-breadcrumbs",

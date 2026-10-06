@@ -1,12 +1,12 @@
 import { Component, AfterViewInit, Renderer2 } from "@angular/core";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { FindFriendsService } from "app/_services/find-friends.service";
-import { SettingsService } from "app/_services/settings.service";
+import { ForumService } from "@app/_services/forum.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { FindFriendsService } from "@app/_services/find-friends.service";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-add-friends",

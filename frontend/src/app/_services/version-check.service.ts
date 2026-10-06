@@ -2,7 +2,7 @@
 import { Injectable } from "@angular/core";
 import { App } from "@capacitor/app";
 import { compareVersions } from "compare-versions";
-import { Settings as API } from "app/_constants/api.constants";
+import { Settings as API } from "@app/_constants/api.constants";
 import { BaseService } from "./base.service";
 
 interface VersionResponse {

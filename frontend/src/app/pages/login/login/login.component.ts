@@ -96,9 +96,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnInit() {
         if (this.deviceDetector.isMobile() || this.deviceDetector.isTablet()) {
-            if (["iOS", "ios", "Mac", "mac"].indexOf(this.deviceDetector.os) > -1) {
+            if (["iOS", "ios", "Mac", "mac"].indexOf(this.deviceDetector.os()) > -1) {
                 this.isIos = true;
-            } else if (["android", "Android"].indexOf(this.deviceDetector.os) > -1) {
+            } else if (["android", "Android"].indexOf(this.deviceDetector.os()) > -1) {
                 this.isAndroid = true;
             }
         }

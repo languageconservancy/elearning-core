@@ -9,7 +9,7 @@ import { LocalStorageService } from "@app/_services/local-storage.service";
 import { Subscription } from "rxjs";
 import { ReviewService } from "@app/_services/review.service";
 import { ForumService } from "@app/_services/forum.service";
-import { environment } from "environments/environment";
+import { environment } from "@environments/environment";
 import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 import { SiteSettingsService } from "@app/_services/site-settings.service";
 import { BaseService } from "@app/_services/base.service";

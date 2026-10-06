@@ -10,7 +10,7 @@ import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { SettingsService } from "@app/_services/settings.service";
 import { BadgeService } from "@app/_services/badge.service";
-import { environment } from "environments/environment";
+import { environment } from "@environments/environment";
 import { SnackbarService } from "@app/_services/snackbar.service";
 import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
 import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -17,6 +17,7 @@ import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
     selector: "app-dashboard",
     templateUrl: "./dashboard.component.html",
     styleUrls: ["./dashboard.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class DashboardComponent implements OnInit, OnDestroy {

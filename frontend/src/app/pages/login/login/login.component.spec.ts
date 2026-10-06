@@ -1,9 +1,9 @@
 import { fakeAsync, tick, ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import {
     SocialAuthService,
     SocialLoginModule,
@@ -14,18 +14,18 @@ import {
 } from "@abacritt/angularx-social-login";
 import { ReactiveFormsModule } from "@angular/forms";
 
-import { PartialsModule } from "app/_partials/partials.module";
-import { LearningPathService } from "app/_services/learning-path.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { LoginService } from "app/_services/login.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SettingsService } from "app/_services/settings.service";
+import { PartialsModule } from "@app/_partials/partials.module";
+import { LearningPathService } from "@app/_services/learning-path.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { LoginService } from "@app/_services/login.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SettingsService } from "@app/_services/settings.service";
 import { LoginComponent } from "./login.component";
-import { SocialWebService } from "app/_services/social-web.service";
+import { SocialWebService } from "@app/_services/social-web.service";
 import { ColorThemeRgb } from "../../../../../e2e/lib/color-theme";
-import { BaseService } from "app/_services/base.service";
-import { ForumService } from "app/_services/forum.service";
+import { BaseService } from "@app/_services/base.service";
+import { ForumService } from "@app/_services/forum.service";
 
 describe("LoginComponent", () => {
     let component: LoginComponent;
@@ -37,7 +37,7 @@ describe("LoginComponent", () => {
         null,
         null,
     );
-    const socialWebService: SocialWebService = new SocialWebService(null, null);
+    const socialWebService: SocialWebService = new SocialWebService(null, null, null);
 
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
@@ -76,7 +76,7 @@ describe("LoginComponent", () => {
                         ],
                     } as SocialAuthServiceConfig,
                 },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
             ],
         }).compileComponents();
     }));

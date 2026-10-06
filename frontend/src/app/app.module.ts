@@ -2,7 +2,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { NgModule, inject, provideAppInitializer } from "@angular/core";
 
 // Third Party Addons
@@ -173,7 +173,7 @@ export function initializeApp(
         BadgeService,
         AudioService,
         VirtualKeyboardService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
     ],
 })
 export class AppModule {}

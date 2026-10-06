@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,6 +14,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-accessibility",
     templateUrl: "./accessibility.component.html",
     styleUrls: ["./accessibility.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AccessibilityComponent implements OnInit, OnDestroy {

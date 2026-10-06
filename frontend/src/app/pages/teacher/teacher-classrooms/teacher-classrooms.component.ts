@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,6 +14,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-teacher-classrooms",
     templateUrl: "./teacher-classrooms.component.html",
     styleUrls: ["./teacher-classrooms.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class TeacherClassroomsComponent implements OnDestroy {

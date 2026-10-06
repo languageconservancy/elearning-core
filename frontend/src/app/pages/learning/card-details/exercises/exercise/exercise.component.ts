@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LessonsService } from "@app/_services/lessons.service";
@@ -7,6 +7,7 @@ import { LessonsService } from "@app/_services/lessons.service";
     selector: "app-exercise",
     templateUrl: "./exercise.component.html",
     styleUrls: ["./exercise.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ExerciseComponent implements OnDestroy {

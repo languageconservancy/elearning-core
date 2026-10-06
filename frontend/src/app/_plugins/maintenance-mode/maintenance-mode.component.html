@@ -1,3 +1,6 @@
 <div class="row sign-box">
-    <div class="col-lg-12 text-center maintenance-mode" [innerHTML]="maintenance?.under_construction_html"></div>
+    <div
+        class="col-lg-12 text-center maintenance-mode"
+        [innerHTML]="$safeNavigationMigration(maintenance?.under_construction_html)"
+    ></div>
 </div>

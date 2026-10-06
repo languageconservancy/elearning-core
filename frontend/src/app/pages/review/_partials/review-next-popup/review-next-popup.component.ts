@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from "@angular/core";
+import { Component, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,6 +14,7 @@ import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
     selector: "app-review-next-popup",
     templateUrl: "./review-next-popup.component.html",
     styleUrls: ["./review-next-popup.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ReviewNextPopupComponent {

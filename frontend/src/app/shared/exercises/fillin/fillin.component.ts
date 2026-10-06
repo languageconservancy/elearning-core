@@ -6,6 +6,7 @@ import {
     AfterViewInit,
     ViewEncapsulation,
     ViewChild,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
@@ -76,6 +77,7 @@ interface FlatIndex {
     templateUrl: "./fillin.component.html",
     styleUrls: ["./fillin.component.scss"],
     providers: [ExerciseService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 /**

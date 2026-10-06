@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
@@ -18,6 +18,7 @@ import * as App from "@app/_constants/app.constants";
     templateUrl: "./true-false.component.html",
     styleUrls: ["./true-false.component.scss"],
     providers: [ExerciseService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class TrueFalseComponent implements OnInit, OnDestroy {

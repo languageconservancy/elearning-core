@@ -1,4 +1,4 @@
-import { Component, ApplicationRef, createComponent } from "@angular/core";
+import { Component, ApplicationRef, createComponent, ChangeDetectionStrategy } from "@angular/core";
 import { SettingsService } from "./_services/settings.service";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { environment } from "@environments/environment";
@@ -11,6 +11,7 @@ import { UpdateModalComponent } from "./_partials/update-modal/update-modal.comp
     selector: "app-root",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AppComponent {

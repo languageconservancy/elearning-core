@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 
 import { ResetPasswordService } from "@app/_services/reset-password.service";
@@ -10,6 +10,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-forgot-password",
     templateUrl: "./forgot-password.component.html",
     styleUrls: ["./forgot-password.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {

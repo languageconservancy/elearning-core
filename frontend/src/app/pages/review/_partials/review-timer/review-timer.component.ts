@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { take, map } from "rxjs/operators";
 import { Subscription, timer, interval } from "rxjs";
 import { Router } from "@angular/router";
@@ -22,6 +22,7 @@ enum ModalType {
     selector: "app-review-timer",
     templateUrl: "./review-timer.component.html",
     styleUrls: ["./review-timer.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ReviewTimerComponent implements OnDestroy {

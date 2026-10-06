@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ChangeDetectorRef,
+    OnDestroy,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -16,6 +22,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-learning",
     templateUrl: "./learning.component.html",
     styleUrls: ["./learning.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class LearningComponent implements OnInit, OnDestroy {

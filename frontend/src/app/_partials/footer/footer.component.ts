@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
 
@@ -12,6 +12,7 @@ import { SiteSettingsService } from "@app/_services/site-settings.service";
     selector: "app-footer",
     templateUrl: "./footer.component.html",
     styleUrls: ["./footer.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class FooterComponent {

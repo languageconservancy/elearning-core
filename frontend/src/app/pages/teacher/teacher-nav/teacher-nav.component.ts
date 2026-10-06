@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,6 +14,7 @@ import { Loader } from "@app/_services/loader.service";
     selector: "app-teacher-nav",
     templateUrl: "./teacher-nav.component.html",
     styleUrls: ["./teacher-nav.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class TeacherNavComponent implements OnInit {

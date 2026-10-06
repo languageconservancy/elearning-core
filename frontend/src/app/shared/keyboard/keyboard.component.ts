@@ -1,9 +1,10 @@
-import { Component, HostListener } from "@angular/core";
+import { Component, HostListener, ChangeDetectionStrategy } from "@angular/core";
 import { KeyboardService } from "./keyboard.service";
 
 @Component({
     selector: "app-keyboard",
     template: "",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class KeyboardComponent {

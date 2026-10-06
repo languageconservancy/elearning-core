@@ -6,6 +6,7 @@ import {
     Input,
     Output,
     EventEmitter,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 import { environment } from "@environments/environment";
 import { Settings } from "@app/_constants/app.constants";
@@ -61,6 +62,7 @@ export type ExerciseBlockMap = {
     selector: "app-unit-progress-nav",
     templateUrl: "./unit-progress-nav.component.html",
     styleUrls: ["./unit-progress-nav.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class UnitProgressNavComponent implements OnInit {

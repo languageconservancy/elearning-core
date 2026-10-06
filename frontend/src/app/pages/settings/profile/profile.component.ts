@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -14,6 +14,7 @@ import { BaseService } from "@app/_services/base.service";
     selector: "app-profile",
     templateUrl: "./profile.component.html",
     styleUrls: ["./profile.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ProfileComponent implements OnInit, OnDestroy {

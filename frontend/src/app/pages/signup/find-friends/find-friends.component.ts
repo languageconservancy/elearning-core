@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ChangeDetectorRef,
+    OnDestroy,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -18,6 +24,7 @@ declare let gapi: any;
     selector: "app-find-friends",
     templateUrl: "./find-friends.component.html",
     styleUrls: ["./find-friends.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class FindFriendsComponent implements OnInit, OnDestroy {

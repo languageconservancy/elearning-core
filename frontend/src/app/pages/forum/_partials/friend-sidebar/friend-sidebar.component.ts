@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from "@angular/core";
+import { Component, OnInit, Renderer2, ChangeDetectionStrategy } from "@angular/core";
 import { trigger, state, style, animate, transition } from "@angular/animations";
 import { Router } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
@@ -27,6 +27,7 @@ import { SettingsService } from "@app/_services/settings.service";
             transition("1 => 0", animate(".5s")),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class FriendSidebarComponent implements OnInit {

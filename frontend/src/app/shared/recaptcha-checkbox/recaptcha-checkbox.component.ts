@@ -8,6 +8,7 @@ import {
     OnDestroy,
     Output,
     ViewChild,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 
 interface GoogleRecaptchaApi {
@@ -83,6 +84,7 @@ function loadRecaptchaApi(): Promise<GoogleRecaptchaApi> {
 @Component({
     selector: "app-recaptcha-checkbox",
     templateUrl: "./recaptcha-checkbox.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class RecaptchaCheckboxComponent implements AfterViewInit, OnDestroy {

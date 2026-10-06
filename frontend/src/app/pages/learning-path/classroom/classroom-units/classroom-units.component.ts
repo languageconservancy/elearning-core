@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 
@@ -16,6 +16,7 @@ import { BaseService } from "@app/_services/base.service";
     selector: "app-classroom-units",
     templateUrl: "./classroom-units.component.html",
     styleUrls: ["./classroom-units.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 
 import { ForumService } from "@app/_services/forum.service";
 import { Loader } from "@app/_services/loader.service";
@@ -10,6 +10,7 @@ declare let jQuery: any;
     selector: "app-report-post-modal",
     templateUrl: "./report-post-modal.component.html",
     styleUrls: ["./report-post-modal.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ReportPostModalComponent implements OnInit {

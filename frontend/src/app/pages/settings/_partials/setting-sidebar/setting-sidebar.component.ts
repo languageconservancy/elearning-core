@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { SettingsService } from "@app/_services/settings.service";
@@ -7,6 +7,7 @@ import { SettingsService } from "@app/_services/settings.service";
     selector: "app-setting-sidebar",
     templateUrl: "./setting-sidebar.component.html",
     styleUrls: ["./setting-sidebar.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class SettingSidebarComponent implements OnDestroy {

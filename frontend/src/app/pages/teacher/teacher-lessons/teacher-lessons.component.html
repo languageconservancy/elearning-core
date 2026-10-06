@@ -3,30 +3,37 @@
         <div class="tlc-flex tlc-align-items-center tlc-gap-xs">
             <h2 class="tlc-ts-22">Lesson Administration</h2>
             <a href="/contact-us">
-                <i class="fa fa-question-circle"
+                <i
+                    class="fa fa-question-circle"
                     data-toggle="tooltip"
                     data-placement="top"
-                    title="Ask a question"></i>
+                    title="Ask a question"
+                ></i>
             </a>
         </div>
         <p>
-            From this page, you can arrange curriculum for your classes. Each class may be
-            assigned a single level, but a level may be shared between classes.
+            From this page, you can arrange curriculum for your classes. Each class may be assigned
+            a single level, but a level may be shared between classes.
         </p>
     </div>
 </div>
-<div id="class-overview" class="tlc-card tlc-column tlc-width-whole tlc-width-two-thirds-lg-up tlc-gap-xs">
+<div
+    id="class-overview"
+    class="tlc-card tlc-column tlc-width-whole tlc-width-two-thirds-lg-up tlc-gap-xs"
+>
     <h3 class="tlc-ts-22">Your Lesson Plans</h3>
     <div class="overview-levels">
         <div class="level-container">
             <a (click)="openModal()"
                 >Add New Lesson Plan
-                <i (click)="openModal()"class="fa fa-plus"></i>
+                <i (click)="openModal()" class="fa fa-plus"></i>
             </a>
 
             @for (level of listTeacherLevels; track $index) {
-                <a [ngClass]="{ 'active-level': $index === activeLevelIndex }"
-                    (click)="setActiveTeacherLessonPlan($index)">
+                <a
+                    [ngClass]="{ 'active-level': $index === activeLevelIndex }"
+                    (click)="setActiveTeacherLessonPlan($index)"
+                >
                     {{ level.level.name }}
                     <img src="{{ level.level.image.FullUrl }}" />
                 </a>
@@ -36,8 +43,7 @@
         @if (activeLevelIndex === -1) {
             <div>
                 <h4 class="tlc-ts-22">
-                    Click the Add New Lesson Plan button to start building your first
-                    Lesson Plan
+                    Click the Add New Lesson Plan button to start building your first Lesson Plan
                 </h4>
             </div>
         }
@@ -50,44 +56,59 @@
             <div cdkDropListGroup class="tlc-column tlc-gap-sm">
                 <div class="tlc-row tlc-justify-content-between">
                     <div class="tlc-column tlc-gap-xs">
-                        <h3 class="tlc-ts-22">Editing {{ listTeacherLevels[activeLevelIndex].level.description }}</h3>
+                        <h3 class="tlc-ts-22">
+                            Editing {{ listTeacherLevels[activeLevelIndex].level.description }}
+                        </h3>
                     </div>
                 </div>
                 <div class="tlc-row tlc-gap-sm">
                     <!-- Paths dropdown -->
-                    <div class="teacherportal-drop tlc-column tlc-width-whole tlc-width-quarter-md-up tlc-flex-1">
+                    <div
+                        class="teacherportal-drop tlc-column tlc-width-whole tlc-width-quarter-md-up tlc-flex-1"
+                    >
                         <span class="tlc-ts-16 tlc-font-sans">Learning Path</span>
 
                         @if (currentAvailablePathIndex > -1) {
                             <div class="dropdown">
-                                <button class="teacher-drop dropdown-toggle"
+                                <button
+                                    class="teacher-drop dropdown-toggle"
                                     type="button"
                                     id="levelDropdownBtn"
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
-                                    aria-expanded="false">
+                                    aria-expanded="false"
+                                >
                                     <span>
-                                        {{ availablePaths[currentAvailablePathIndex].label}}
+                                        {{ availablePaths[currentAvailablePathIndex].label }}
                                     </span>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="levelDropdownBtn">
                                     <div class="dropdown-menu-wrap">
                                         @for (availablePath of availablePaths; track $index) {
-                                            <div class="tlc-row tlc-align-items-center tlc-width-whole" style="cursor: pointer; gap: 10px;" (click)="setCurrentAvailablePath($index)">
+                                            <div
+                                                class="tlc-row tlc-align-items-center tlc-width-whole"
+                                                style="cursor: pointer; gap: 10px"
+                                                (click)="setCurrentAvailablePath($index)"
+                                            >
                                                 <div class="tlc-flex">
-                                                    <label class="custom-control custom-radio tlc-sr-only">Learning Paths</label>
-                                                        <input
-                                                            id="availablePath-{{ $index }}"
-                                                            name="radio-stacked-available-path"
-                                                            type="radio"
-                                                            value="{{ availablePath.id }}"
-                                                            class="custom-control-input tlc-display-none"
-                                                            required=""
-                                                            [checked]="
-                                                                currentAvailablePathIndex === $index
-                                                            "
-                                                        />
-                                                        <span class="custom-control-indicator tlc-flex"></span>
+                                                    <label
+                                                        class="custom-control custom-radio tlc-sr-only"
+                                                        >Learning Paths</label
+                                                    >
+                                                    <input
+                                                        id="availablePath-{{ $index }}"
+                                                        name="radio-stacked-available-path"
+                                                        type="radio"
+                                                        value="{{ availablePath.id }}"
+                                                        class="custom-control-input tlc-display-none"
+                                                        required=""
+                                                        [checked]="
+                                                            currentAvailablePathIndex === $index
+                                                        "
+                                                    />
+                                                    <span
+                                                        class="custom-control-indicator tlc-flex"
+                                                    ></span>
                                                 </div>
                                                 <dl>
                                                     <dt>{{ availablePath.label }}</dt>
@@ -100,26 +121,45 @@
                         }
                     </div>
                     <!-- Levels dropdown -->
-                    <div class="teacherportal-drop tlc-column tlc-width-whole tlc-width-quarter-md-up tlc-flex-1">
+                    <div
+                        class="teacherportal-drop tlc-column tlc-width-whole tlc-width-quarter-md-up tlc-flex-1"
+                    >
                         <span class="tlc-ts-16 tlc-font-sans">Level</span>
                         @if (currentAvailableLevelIndex > -1) {
                             <div class="dropdown">
-                                <button class="teacher-drop dropdown-toggle"
+                                <button
+                                    class="teacher-drop dropdown-toggle"
                                     type="button"
                                     id="levelDropdownBtn"
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <span>{{ availablePaths[currentAvailablePathIndex]?.levels[currentAvailableLevelIndex]?.name }}</span>
+                                    aria-expanded="false"
+                                >
+                                    <span>{{
+                                        availablePaths[currentAvailablePathIndex]?.levels[
+                                            currentAvailableLevelIndex
+                                        ]?.name
+                                    }}</span>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="levelDropdownBtn">
                                     <div class="dropdown-menu-wrap">
-                                        @for (availableLevel of availablePaths[currentAvailablePathIndex]?.levels; track $index) {
+                                        @for (
+                                            availableLevel of availablePaths[
+                                                currentAvailablePathIndex
+                                            ]?.levels;
+                                            track $index
+                                        ) {
                                             <div class="teacher-check tlc-row tlc-width-whole">
-                                                <div class="tlc-row tlc-align-items-center tlc-width-whole" style="cursor: pointer; gap: 10px;"
-                                                        (click)="setCurrentAvailableLevel($index)">
+                                                <div
+                                                    class="tlc-row tlc-align-items-center tlc-width-whole"
+                                                    style="cursor: pointer; gap: 10px"
+                                                    (click)="setCurrentAvailableLevel($index)"
+                                                >
                                                     <div class="tlc-flex">
-                                                        <label class="custom-control custom-radio tlc-sr-only">Levels</label>
+                                                        <label
+                                                            class="custom-control custom-radio tlc-sr-only"
+                                                            >Levels</label
+                                                        >
                                                         <input
                                                             id="availableLevel-{{ $index }}"
                                                             name="radio-stacked-available-level"
@@ -127,8 +167,14 @@
                                                             value="{{ availableLevel.id }}"
                                                             class="custom-control-input tlc-display-none"
                                                             required=""
-                                                            [checked]="currentAvailableLevelIndex === $index" />
-                                                        <span class="custom-control-indicator tlc-flex"></span>
+                                                            [checked]="
+                                                                currentAvailableLevelIndex ===
+                                                                $index
+                                                            "
+                                                        />
+                                                        <span
+                                                            class="custom-control-indicator tlc-flex"
+                                                        ></span>
                                                     </div>
                                                     <dl>
                                                         <dt>{{ availableLevel.name }}</dt>
@@ -144,12 +190,19 @@
                     <div class="tlc-column-reverse tlc-width-whole tlc-width-half-md-up">
                         @if (unsavedUnitChanges) {
                             <div class="unsaved tlc-flex tlc-justify-content-end">
-                                <button class="tlc-row tlc-button tlc-align-items-center tlc-gap-xxs" (click)="saveTeacherLevelUnits()">
-                                    <span class="tlc-line-height--tight tlc-ts-22 tlc-font-sans">Save Changes</span>
-                                    <i class="fa fa-save"
+                                <button
+                                    class="tlc-row tlc-button tlc-align-items-center tlc-gap-xxs"
+                                    (click)="saveTeacherLevelUnits()"
+                                >
+                                    <span class="tlc-line-height--tight tlc-ts-22 tlc-font-sans"
+                                        >Save Changes</span
+                                    >
+                                    <i
+                                        class="fa fa-save"
                                         data-toggle="tooltip"
                                         data-placement="top"
-                                        title="Save Lesson">
+                                        title="Save Lesson"
+                                    >
                                     </i>
                                 </button>
                             </div>
@@ -157,48 +210,76 @@
                     </div>
                 </div>
                 <!-- Available units list for selected path and level -->
-            <div class="tlc-row tlc-justify-content-between tlc-gap-sm">
-                <div class="teacher-dnd tlc-column tlc-width-half-md-up tlc-flex-1 tlc-gap-xs">
-                    @if (currentAvailablePathIndex > -1 && currentAvailableLevelIndex > -1) {
-                        <div class="teacher-dnd-list tlc-column" cdkDropList [cdkDropListData]="availablePaths[currentAvailablePathIndex]?.levels[currentAvailableLevelIndex]?.units">
-                            @for (unit of availablePaths[currentAvailablePathIndex]?.levels[currentAvailableLevelIndex]?.units; track $index) {
-                                <div class="list-group-item tlc-flex tlc-justify-content-between tlc-align-items-center" cdkDrag>
-                                    <span>{{ unit.name }} - {{ unit.description }}</span>
+                <div class="tlc-row tlc-justify-content-between tlc-gap-sm">
+                    <div class="teacher-dnd tlc-column tlc-width-half-md-up tlc-flex-1 tlc-gap-xs">
+                        @if (currentAvailablePathIndex > -1 && currentAvailableLevelIndex > -1) {
+                            <div
+                                class="teacher-dnd-list tlc-column"
+                                cdkDropList
+                                [cdkDropListData]="
+                                    $safeNavigationMigration(
+                                        availablePaths[currentAvailablePathIndex]?.levels[
+                                            currentAvailableLevelIndex
+                                        ]?.units
+                                    )
+                                "
+                            >
+                                @for (
+                                    unit of availablePaths[currentAvailablePathIndex]?.levels[
+                                        currentAvailableLevelIndex
+                                    ]?.units;
+                                    track $index
+                                ) {
+                                    <div
+                                        class="list-group-item tlc-flex tlc-justify-content-between tlc-align-items-center"
+                                        cdkDrag
+                                    >
+                                        <span>{{ unit.name }} - {{ unit.description }}</span>
+                                        <i
+                                            class="fa fa-arrow-right"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Click or Drag to Move"
+                                            (click)="addUnitToLesson($index)"
+                                        ></i>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="teacher-dnd tlc-column tlc-width-half-md-up tlc-flex-1 tlc-gap-xs">
+                        <div
+                            cdkDropList
+                            #classroomStudentsList="cdkDropList"
+                            [cdkDropListData]="listLevelUnits"
+                            class="teacher-dnd-list tlc-column"
+                            (cdkDropListDropped)="drop($event)"
+                        >
+                            @for (levelUnit of listLevelUnits; track $index) {
+                                <div
+                                    class="list-group-item tlc-flex tlc-justify-content-between tlc-align-items-center"
+                                    cdkDrag
+                                >
+                                    <span
+                                        >{{ levelUnit.unit.name }} -
+                                        {{ levelUnit.unit.description }}</span
+                                    >
                                     <i
-                                        class="fa fa-arrow-right"
+                                        class="fa-regular fa-circle-xmark"
                                         data-toggle="tooltip"
                                         data-placement="top"
                                         title="Click or Drag to Move"
-                                        (click)="addUnitToLesson($index)"></i>
+                                        (click)="removeUnitFromLesson($index)"
+                                    >
+                                    </i>
                                 </div>
                             }
                         </div>
-                    }
-                </div>
-                <div class="teacher-dnd tlc-column tlc-width-half-md-up tlc-flex-1 tlc-gap-xs">
-                    <div cdkDropList
-                        #classroomStudentsList="cdkDropList"
-                        [cdkDropListData]="listLevelUnits"
-                        class="teacher-dnd-list tlc-column"
-                        (cdkDropListDropped)="drop($event)">
-
-                        @for (levelUnit of listLevelUnits; track $index) {
-                            <div class="list-group-item tlc-flex tlc-justify-content-between tlc-align-items-center" cdkDrag>
-                                <span>{{ levelUnit.unit.name }} - {{ levelUnit.unit.description }}</span>
-                                <i class="fa-regular fa-circle-xmark"
-                                    data-toggle="tooltip"
-                                    data-placement="top"
-                                    title="Click or Drag to Move"
-                                    (click)="removeUnitFromLesson($index)">
-                                </i>
-                            </div>
-                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-  </div>
 }
 
 <div #formModal class="modal fade">
@@ -211,12 +292,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>When adding a new lesson, you may copy an existing lesson or start from scratch.
+                <p>
+                    When adding a new lesson, you may copy an existing lesson or start from scratch.
                     A lesson plan sets the content and order for the curriculum of a class. When
                     creating a class, a lesson plan is required. Additional options for releasing
                     units as optional units, scored(test) units, and scheduled units are available
-                    for specific classes from the classroom menu.</p>
-                <form name="newLevelForm" [formGroup]="newLevelForm" (submit)="createNewLevel(newLevelForm)">
+                    for specific classes from the classroom menu.
+                </p>
+                <form
+                    name="newLevelForm"
+                    [formGroup]="newLevelForm"
+                    (submit)="createNewLevel(newLevelForm)"
+                >
                     <div class="modal-body modal-n-table seoc-btn-row">
                         <span><label for="name">Name</label></span>
                         <span>
@@ -230,9 +317,10 @@
                                     'has-error':
                                         newLevelForm.value.name &&
                                         newLevelForm.controls.name.invalid &&
-                                        newLevelForm.controls.name.touched
-                                }" />
-                        </span><br />
+                                        newLevelForm.controls.name.touched,
+                                }"
+                            /> </span
+                        ><br />
                         <span><label for="name">Description</label></span>
                         <span>
                             <input
@@ -241,11 +329,15 @@
                                 formControlName="description"
                                 name="description"
                                 class="input-default form-control seoc-btn-thin seoc-btn-width"
-                                [ngClass]="{ 'has-error': newLevelForm.value.description }" />
-                        </span><br />
+                                [ngClass]="{ 'has-error': newLevelForm.value.description }"
+                            /> </span
+                        ><br />
                         <span><label for="name">Copy Units</label></span>
                         <span>
-                            <select formControlName="newLevelContent" class="teacher-drop dropdown-toggle">
+                            <select
+                                formControlName="newLevelContent"
+                                class="teacher-drop dropdown-toggle"
+                            >
                                 <option value="-2" selected>All Units</option>
                                 <option value="-1" selected>Empty</option>
 

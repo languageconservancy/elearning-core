@@ -17,7 +17,14 @@
  * Outputs: None
  */
 
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+    ElementRef,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { ApiResponse } from "@app/shared/utils/elearning-types";
@@ -32,6 +39,7 @@ declare let jQuery: any;
     selector: "app-agreements-acceptance",
     templateUrl: "./agreements-acceptance.component.html",
     styleUrls: ["./agreements-acceptance.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {

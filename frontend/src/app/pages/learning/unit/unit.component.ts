@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    AfterViewInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 
@@ -290,6 +297,7 @@ export declare type StateMachine = {
     selector: "app-unit-component",
     templateUrl: "./unit.component.html",
     styleUrls: ["./unit.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {

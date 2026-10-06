@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
@@ -63,6 +63,7 @@ type Path = {
     selector: "app-teacher-lessons",
     templateUrl: "./teacher-lessons.component.html",
     styleUrls: ["./teacher-lessons.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class TeacherLessonsComponent implements OnInit, OnDestroy {

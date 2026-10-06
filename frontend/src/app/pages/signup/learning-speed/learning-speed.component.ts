@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -12,6 +12,7 @@ import { environment } from "@environments/environment";
     selector: "app-learning-speed",
     templateUrl: "./learning-speed.component.html",
     styleUrls: ["./learning-speed.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class LearningSpeedComponent implements OnInit, OnDestroy {

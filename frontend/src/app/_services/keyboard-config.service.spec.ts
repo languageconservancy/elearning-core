@@ -1,7 +1,7 @@
 import { TestBed } from "@angular/core/testing";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { KeyboardConfigService, KeyboardConfig } from "./keyboard-config.service";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 
 describe("KeyboardConfigService", () => {
     let service: KeyboardConfigService;
@@ -78,7 +78,7 @@ describe("KeyboardConfigService", () => {
             imports: [],
             providers: [
                 KeyboardConfigService,
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
         });

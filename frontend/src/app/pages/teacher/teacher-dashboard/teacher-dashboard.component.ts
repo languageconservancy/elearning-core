@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    ElementRef,
+    OnDestroy,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
@@ -27,6 +34,7 @@ const ELEMENT_DATA: StudentActivitiesTable[] = [];
     selector: "app-teacher-dashboard",
     templateUrl: "./teacher-dashboard.component.html",
     styleUrls: ["./teacher-dashboard.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class TeacherDashboardComponent implements OnInit, OnDestroy {

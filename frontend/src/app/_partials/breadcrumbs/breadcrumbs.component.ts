@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { NavigationEnd, Router } from "@angular/router";
 
@@ -9,6 +9,7 @@ import { BreadcrumbsService, Breadcrumb } from "@app/_services/breadcrumbs.servi
     selector: "app-breadcrumbs",
     templateUrl: "./breadcrumbs.component.html",
     styleUrls: ["./breadcrumbs.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class BreadcrumbsComponent implements OnDestroy {

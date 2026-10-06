@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 
@@ -42,6 +42,7 @@ import { LocalizeService } from "@app/_services/localize.service";
             ]),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ReviewRewardPopupComponent implements OnDestroy {

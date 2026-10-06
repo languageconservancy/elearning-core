@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { SettingsService } from "@app/_services/settings.service";
@@ -7,6 +7,7 @@ import { SettingsService } from "@app/_services/settings.service";
     selector: "app-event-promo",
     templateUrl: "./event-promo.component.html",
     styleUrls: ["./event-promo.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class EventPromoComponent implements OnInit, OnDestroy {

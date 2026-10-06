@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    ElementRef,
+    ViewChild,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -22,6 +30,7 @@ declare let jQuery: any;
     selector: "app-navbar",
     templateUrl: "./navbar.component.html",
     styleUrls: ["./navbar.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {

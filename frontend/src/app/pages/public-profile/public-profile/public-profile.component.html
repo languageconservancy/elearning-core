@@ -1,111 +1,144 @@
 <div class="row justify-content-center text-center">
-  <div class="col-12 l-speed">
-    <div class="justify-content-start">
-      <app-page-title [pageTitle]="pageTitle"></app-page-title>
-      @if (!noProfile) {
-        <div class="logo-container-box mt-13">
-          <div class="profile-main-pic">
-            <div class="profile-main-block">
-              <div class="pro-img-wrap">
-                @if (publicUser?.usersetting?.FullProfileImageUrl) {
-                  <img
-                    [src]="publicUser?.usersetting.FullProfileImageUrl"
-                    alt=""
-                    />
-                }
-                @if (!publicUser?.usersetting?.FullProfileImageUrl) {
-                  <img
-                    src="./assets/images/user_img.png"
-                    alt=""
-                    />
-                }
-              </div>
-              <h4 class="user-name">{{ publicUser?.name }}</h4>
-            </div>
-            <div class="text-center">
-              <div class="sub-logo-link">
-                <a href="javascript:void(0)">
-                  @if (publicUser?.badge?.socialpoint && publicUser?.badge?.socialpoint > 4) {
-                    <img
-                      [src]="imgfunc(publicUser?.badge?.socialpoint, 'socialpoint')"
-                      />
-                  }
-                </a>
-                <a href="javascript:void(0)">
-                  @if (
-                    publicUser?.badge?.firebadges && publicUser?.badge?.firebadges?.fire_days > 0
-                    ) {
-                    <img
-                      [src]="imgfunc(publicUser?.badge?.firebadges, 'firebadges')"
-                      />
-                  }
-                </a>
-                @if (publicUser?.badge?.levelbadge) {
-                  <a href="javascript:void(0)">
-                    @for (levelbadgeImg of publicUser?.badge?.levelbadge | badgeImage; track levelbadgeImg) {
-                      <div>
-                        <img [src]="levelbadgeImg.image" />
-                      </div>
-                    }
-                  </a>
-                }
-              </div>
-            </div>
-            <div class="px-0 font-weight-bold pt-1 pb-4">
-              <div class="text-center detail-profile-txt higlightbox mb-4 mx-auto">
-                <p>{{ publicUser?.usersetting?.profile_desc }}</p>
-              </div>
-              <button
-                type="button"
-                class="btn input-default go-to-posts position-static"
-                (click)="goToPosts()"
-                >
-                Posts by {{ publicUser?.name }}
-              </button>
-              <div class="img-gallery-wrap">
-                @if (imageLength > 0) {
-                  <div class="row">
-                    <div class="col-xs-2 col-md-2 col-lg-2 text-right">
-                      @if (imageLength > 1) {
-                        <div class="arrow-holder">
-                          <a href="javascript:void(0)" (click)="previous()">
-                            <i class="fa fa-caret-left" aria-hidden="true"></i>
-                          </a>
+    <div class="col-12 l-speed">
+        <div class="justify-content-start">
+            <app-page-title [pageTitle]="pageTitle"></app-page-title>
+            @if (!noProfile) {
+                <div class="logo-container-box mt-13">
+                    <div class="profile-main-pic">
+                        <div class="profile-main-block">
+                            <div class="pro-img-wrap">
+                                @if (publicUser?.usersetting?.FullProfileImageUrl) {
+                                    <img
+                                        [src]="
+                                            $safeNavigationMigration(
+                                                publicUser?.usersetting.FullProfileImageUrl
+                                            )
+                                        "
+                                        alt=""
+                                    />
+                                }
+                                @if (!publicUser?.usersetting?.FullProfileImageUrl) {
+                                    <img src="./assets/images/user_img.png" alt="" />
+                                }
+                            </div>
+                            <h4 class="user-name">{{ publicUser?.name }}</h4>
                         </div>
-                      }
-                    </div>
-                    <div class="col-xs-8 col-md-8 col-lg-8">
-                      <div class="slider-container" [@slider]="selectedIndex">
-                        @for (image of images; track image) {
-                          <div class="slide">
-                            @if (image) {
-                              <img [src]="image" />
-                            }
-                          </div>
-                        }
-                      </div>
-                    </div>
-                    <div class="col-xs-2 col-md-2 col-lg-2 text-left">
-                      @if (imageLength > 1) {
-                        <div class="arrow-holder">
-                          <a href="javascript:void(0)" (click)="next()">
-                            <i class="fa fa-caret-right" aria-hidden="true"></i>
-                          </a>
+                        <div class="text-center">
+                            <div class="sub-logo-link">
+                                <a href="javascript:void(0)">
+                                    @if (
+                                        publicUser?.badge?.socialpoint &&
+                                        publicUser?.badge?.socialpoint > 4
+                                    ) {
+                                        <img
+                                            [src]="
+                                                imgfunc(
+                                                    $safeNavigationMigration(
+                                                        publicUser?.badge?.socialpoint
+                                                    ),
+                                                    'socialpoint'
+                                                )
+                                            "
+                                        />
+                                    }
+                                </a>
+                                <a href="javascript:void(0)">
+                                    @if (
+                                        publicUser?.badge?.firebadges &&
+                                        publicUser?.badge?.firebadges?.fire_days > 0
+                                    ) {
+                                        <img
+                                            [src]="
+                                                imgfunc(
+                                                    $safeNavigationMigration(
+                                                        publicUser?.badge?.firebadges
+                                                    ),
+                                                    'firebadges'
+                                                )
+                                            "
+                                        />
+                                    }
+                                </a>
+                                @if (publicUser?.badge?.levelbadge) {
+                                    <a href="javascript:void(0)">
+                                        @for (
+                                            levelbadgeImg of $safeNavigationMigration(
+                                                publicUser?.badge?.levelbadge
+                                            ) | badgeImage;
+                                            track levelbadgeImg
+                                        ) {
+                                            <div>
+                                                <img [src]="levelbadgeImg.image" />
+                                            </div>
+                                        }
+                                    </a>
+                                }
+                            </div>
                         </div>
-                      }
+                        <div class="px-0 font-weight-bold pt-1 pb-4">
+                            <div class="text-center detail-profile-txt higlightbox mb-4 mx-auto">
+                                <p>{{ publicUser?.usersetting?.profile_desc }}</p>
+                            </div>
+                            <button
+                                type="button"
+                                class="btn input-default go-to-posts position-static"
+                                (click)="goToPosts()"
+                            >
+                                Posts by {{ publicUser?.name }}
+                            </button>
+                            <div class="img-gallery-wrap">
+                                @if (imageLength > 0) {
+                                    <div class="row">
+                                        <div class="col-xs-2 col-md-2 col-lg-2 text-right">
+                                            @if (imageLength > 1) {
+                                                <div class="arrow-holder">
+                                                    <a
+                                                        href="javascript:void(0)"
+                                                        (click)="previous()"
+                                                    >
+                                                        <i
+                                                            class="fa fa-caret-left"
+                                                            aria-hidden="true"
+                                                        ></i>
+                                                    </a>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="col-xs-8 col-md-8 col-lg-8">
+                                            <div class="slider-container" [@slider]="selectedIndex">
+                                                @for (image of images; track image) {
+                                                    <div class="slide">
+                                                        @if (image) {
+                                                            <img [src]="image" />
+                                                        }
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-2 col-md-2 col-lg-2 text-left">
+                                            @if (imageLength > 1) {
+                                                <div class="arrow-holder">
+                                                    <a href="javascript:void(0)" (click)="next()">
+                                                        <i
+                                                            class="fa fa-caret-right"
+                                                            aria-hidden="true"
+                                                        ></i>
+                                                    </a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
+                </div>
+            }
+            @if (noProfile) {
+                <div class="d-none d-lg-block text-center">
+                    <h3 class="text-white no-units">No profile ID to look up</h3>
+                </div>
+            }
         </div>
-      }
-      @if (noProfile) {
-        <div class="d-none d-lg-block text-center">
-          <h3 class="text-white no-units">No profile ID to look up</h3>
-        </div>
-      }
     </div>
-  </div>
 </div>

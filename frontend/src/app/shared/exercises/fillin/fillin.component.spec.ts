@@ -6,20 +6,20 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { of } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { ExerciseService } from "app/_services/exercise.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { AudioService } from "app/_services/audio.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { BaseService } from "app/_services/base.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ExerciseService } from "@app/_services/exercise.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { AudioService } from "@app/_services/audio.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { BaseService } from "@app/_services/base.service";
 import { FillinComponent } from "./fillin.component";
-import { VirtualKeyboardComponent } from "app/_partials/virtual-keyboard/virtual-keyboard.component";
-import { AnswerType } from "app/shared/utils/elearning-types";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
+import { AnswerType } from "@app/shared/utils/elearning-types";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 
 describe("FillinComponent", () => {
     let component: FillinComponent;
@@ -113,7 +113,7 @@ describe("FillinComponent", () => {
                 { provide: DeviceDetectorService, useValue: mockDeviceDetectorService },
                 { provide: SnackbarService, useValue: mockSnackbarService },
                 SettingsService,
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
                 provideHttpClientTesting(),
             ],
         });

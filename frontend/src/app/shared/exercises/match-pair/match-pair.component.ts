@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
@@ -18,6 +18,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     templateUrl: "./match-pair.component.html",
     styleUrls: ["./match-pair.component.scss"],
     providers: [ExerciseService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class MatchPairComponent implements OnInit, OnDestroy {

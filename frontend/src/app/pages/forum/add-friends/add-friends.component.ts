@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Renderer2 } from "@angular/core";
+import { Component, AfterViewInit, Renderer2, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
 
@@ -12,6 +12,7 @@ import { SettingsService } from "@app/_services/settings.service";
     selector: "app-add-friends",
     templateUrl: "./add-friends.component.html",
     styleUrls: ["./add-friends.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AddFriendsComponent implements AfterViewInit {

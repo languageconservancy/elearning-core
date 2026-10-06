@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { PipesModule } from "@app/_pipes/pipes.module";
 import { CardDataType } from "@app/shared/utils/elearning-types";
 import { AudioService } from "@app/_services/audio.service";
@@ -30,6 +30,7 @@ type Card = {
     standalone: true,
     imports: [PipesModule, PartialsModule],
     templateUrl: "./non-selectable-card.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ["./non-selectable-card.component.scss"],
 })
 export class NonSelectableCardComponent {

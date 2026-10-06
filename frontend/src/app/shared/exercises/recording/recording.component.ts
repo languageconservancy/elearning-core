@@ -5,6 +5,7 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Input,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import * as WaveSurfer from "wavesurfer.js";
@@ -28,6 +29,7 @@ declare let jQuery: any;
     selector: "app-recording",
     templateUrl: "./recording.component.html",
     styleUrls: ["./recording.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {

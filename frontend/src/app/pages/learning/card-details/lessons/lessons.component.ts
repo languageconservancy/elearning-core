@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -15,6 +15,7 @@ declare let jQuery: any;
     selector: "app-lessons",
     templateUrl: "./lessons.component.html",
     styleUrls: ["./lessons.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class LessonsComponent implements OnDestroy {

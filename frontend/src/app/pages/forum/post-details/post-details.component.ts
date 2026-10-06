@@ -1,4 +1,12 @@
-import { Component, OnInit, ElementRef, Renderer2, ViewChild, OnDestroy } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ElementRef,
+    Renderer2,
+    ViewChild,
+    OnDestroy,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl } from "@angular/forms";
@@ -23,6 +31,7 @@ declare let bootbox: any;
     selector: "app-post-details",
     templateUrl: "./post-details.component.html",
     styleUrls: ["./post-details.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class PostDetailsComponent implements OnInit, OnDestroy {

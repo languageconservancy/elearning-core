@@ -1,8 +1,14 @@
-import { Component, OnDestroy, ElementRef, ChangeDetectorRef } from "@angular/core";
+import {
+    Component,
+    OnDestroy,
+    ElementRef,
+    ChangeDetectorRef,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
-    
+
 import { ReviewService } from "@app/_services/review.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
@@ -13,6 +19,7 @@ import { ReviewType } from "@app/shared/utils/elearning-types";
     selector: "app-review-cards",
     templateUrl: "./review-cards.component.html",
     styleUrls: ["./review-cards.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ReviewCardsComponent implements OnDestroy {

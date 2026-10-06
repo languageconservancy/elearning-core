@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
@@ -19,6 +19,7 @@ import { AudioService } from "@app/_services/audio.service";
     templateUrl: "./mcq.component.html",
     styleUrls: ["./mcq.component.scss"],
     providers: [ExerciseService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class McqComponent implements OnInit, OnDestroy {

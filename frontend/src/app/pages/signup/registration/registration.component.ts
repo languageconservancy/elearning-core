@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -22,6 +22,7 @@ import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recap
     selector: "app-registration",
     templateUrl: "./registration.component.html",
     styleUrls: ["./registration.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class RegistrationComponent implements OnInit, OnDestroy {

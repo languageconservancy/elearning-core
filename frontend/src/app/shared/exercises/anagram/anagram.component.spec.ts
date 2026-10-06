@@ -1,7 +1,7 @@
 import { fakeAsync, ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { RouterTestingModule } from "@angular/router/testing";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 import {
     SocialAuthServiceConfig,
@@ -10,15 +10,15 @@ import {
     AmazonLoginProvider,
 } from "@abacritt/angularx-social-login";
 
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { ExerciseService } from "app/_services/exercise.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { AudioService } from "app/_services/audio.service";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ExerciseService } from "@app/_services/exercise.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { AudioService } from "@app/_services/audio.service";
 import { AnagramComponent } from "./anagram.component";
-import { NonSelectableCardComponent } from "app/shared/non-selectable-card/non-selectable-card.component";
+import { NonSelectableCardComponent } from "@app/shared/non-selectable-card/non-selectable-card.component";
 
 describe("AnagramComponent", () => {
     let component: AnagramComponent;
@@ -58,7 +58,7 @@ describe("AnagramComponent", () => {
                         ],
                     } as SocialAuthServiceConfig,
                 },
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
             ],
         }).compileComponents();
     }));

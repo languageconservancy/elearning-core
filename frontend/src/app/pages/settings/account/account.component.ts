@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    ChangeDetectorRef,
+    OnDestroy,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -20,6 +26,7 @@ declare let jQuery: any;
     selector: "app-account",
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AccountComponent implements OnInit, OnDestroy {

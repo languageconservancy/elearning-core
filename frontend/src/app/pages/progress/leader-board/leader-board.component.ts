@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
 
@@ -11,6 +11,7 @@ import { SiteSettingsService } from "@app/_services/site-settings.service";
     selector: "app-leader-board",
     templateUrl: "./leader-board.component.html",
     styleUrls: ["./leader-board.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class LeaderBoardComponent implements OnInit {

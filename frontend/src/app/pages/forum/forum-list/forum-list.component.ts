@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    AfterViewInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { CookieService } from "@app/_services/cookie.service";
@@ -26,6 +33,7 @@ declare let bootbox: any;
     selector: "app-forum-list",
     templateUrl: "./forum-list.component.html",
     styleUrls: ["./forum-list.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ForumListComponent implements OnInit, OnDestroy, AfterViewInit {

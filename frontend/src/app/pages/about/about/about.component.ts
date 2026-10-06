@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { SettingsService } from "@app/_services/settings.service";
@@ -8,6 +8,7 @@ import { environment } from "@environments/environment";
     selector: "app-about",
     templateUrl: "./about.component.html",
     styleUrls: ["./about.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AboutComponent implements OnInit {

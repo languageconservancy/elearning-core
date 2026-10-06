@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
@@ -8,6 +8,7 @@ import { LessonsService } from "@app/_services/lessons.service";
     selector: "app-single-card",
     templateUrl: "./single-card.component.html",
     styleUrls: ["./single-card.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class SingleCardComponent implements OnDestroy {

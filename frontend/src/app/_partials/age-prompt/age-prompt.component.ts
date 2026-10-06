@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { RegexConsts } from "@app/_constants/app.constants";
 import { AgePromptService } from "@app/_services/age-prompt.service";
@@ -15,6 +15,7 @@ import { BaseService } from "@app/_services/base.service";
     selector: "app-age-prompt",
     templateUrl: "./age-prompt.component.html",
     styleUrls: ["./age-prompt.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AgePromptComponent implements OnInit {

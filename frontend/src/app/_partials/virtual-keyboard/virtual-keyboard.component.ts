@@ -12,6 +12,7 @@ import {
     ViewChild,
     ElementRef,
     OnDestroy,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 import Keyboard, { KeyboardInput, KeyboardLayoutObject } from "simple-keyboard";
 import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
@@ -43,6 +44,7 @@ type LayoutName = "default" | "shift";
         "./virtual-keyboard.component.scss",
         "../../../../node_modules/simple-keyboard/build/css/index.css",
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 /**

@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-    
+
 import { Loader } from "@app/_services/loader.service";
 import { LearningPathService } from "@app/_services/learning-path.service";
 import { LessonsService } from "@app/_services/lessons.service";
@@ -17,6 +17,7 @@ import { SiteSettingsService } from "@app/_services/site-settings.service";
     selector: "app-levels",
     templateUrl: "./levels.component.html",
     styleUrls: ["./levels.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class LevelsComponent implements OnInit, OnDestroy {

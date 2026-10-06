@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -12,6 +12,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-change-password",
     templateUrl: "./change-password.component.html",
     styleUrls: ["./change-password.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {

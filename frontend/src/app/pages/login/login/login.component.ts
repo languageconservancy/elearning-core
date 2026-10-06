@@ -15,6 +15,7 @@ import {
     ElementRef,
     ViewChild,
     NgZone,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -49,6 +50,7 @@ import { SocialLoginError } from "@app/_exceptions/social-login.errors";
     selector: "app-login",
     templateUrl: "./login.component.html",
     styleUrls: ["./login.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {

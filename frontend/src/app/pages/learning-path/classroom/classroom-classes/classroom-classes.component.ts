@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -20,6 +20,7 @@ import { BaseService } from "@app/_services/base.service";
     selector: "app-classroom-classes",
     templateUrl: "./classroom-classes.component.html",
     styleUrls: ["./classroom-classes.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ClassroomClassesComponent implements OnInit, OnDestroy {

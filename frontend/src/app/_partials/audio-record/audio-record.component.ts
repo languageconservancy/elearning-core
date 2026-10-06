@@ -1,4 +1,9 @@
-import { Component, AfterViewInit, ChangeDetectorRef } from "@angular/core";
+import {
+    Component,
+    AfterViewInit,
+    ChangeDetectorRef,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import * as MRecordRTC from "recordrtc";
 import * as DetectRTC from "detectrtc";
 import WaveSurfer from "wavesurfer.js";
@@ -12,6 +17,7 @@ import { ReviewService } from "@app/_services/review.service";
     selector: "app-audio-record",
     templateUrl: "./audio-record.component.html",
     styleUrls: ["./audio-record.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AudioRecordComponent implements AfterViewInit {

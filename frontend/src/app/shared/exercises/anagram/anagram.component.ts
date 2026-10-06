@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
+import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
@@ -19,6 +19,7 @@ declare let jQuery: any;
     templateUrl: "./anagram.component.html",
     styleUrls: ["./anagram.component.scss"],
     providers: [ExerciseService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class AnagramComponent implements OnInit, OnDestroy {

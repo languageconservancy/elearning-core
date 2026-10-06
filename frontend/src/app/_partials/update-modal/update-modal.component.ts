@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { Device } from "@capacitor/device";
 import { environment } from "@environments/environment";
 
@@ -6,6 +6,7 @@ import { environment } from "@environments/environment";
     selector: "app-update-modal",
     templateUrl: "./update-modal.component.html",
     styleUrls: ["./update-modal.component.css"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 /**

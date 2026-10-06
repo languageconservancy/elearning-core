@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 import { Subscription } from "rxjs";
 
@@ -45,6 +45,7 @@ import * as App from "@app/_constants/app.constants";
             ]),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class RewardPopupsComponent implements OnDestroy {

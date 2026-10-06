@@ -1,4 +1,4 @@
-import { Component, OnDestroy, AfterViewInit } from "@angular/core";
+import { Component, OnDestroy, AfterViewInit, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
@@ -71,6 +71,7 @@ import { BadgeService } from "@app/_services/badge.service";
             ),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class PublicProfileComponent implements OnDestroy, AfterViewInit {

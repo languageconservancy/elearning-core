@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,6 +14,7 @@ import { RegionPolicyService } from "@app/_services/region-policy.service";
     selector: "app-spread-the-word",
     templateUrl: "./spread-the-word.component.html",
     styleUrls: ["./spread-the-word.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class SpreadTheWordComponent implements OnInit, OnDestroy {

@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    ChangeDetectorRef,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { ReviewService } from "@app/_services/review.service";
@@ -8,6 +14,7 @@ import { DeviceDetectorService } from "ngx-device-detector";
     selector: "app-review-exercise",
     templateUrl: "./review-exercise.component.html",
     styleUrls: ["./review-exercise.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ReviewExerciseComponent implements OnInit, OnDestroy {

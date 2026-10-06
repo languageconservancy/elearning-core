@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "@environments/environment";
 
@@ -6,6 +6,7 @@ import { environment } from "@environments/environment";
     selector: "app-info-space",
     templateUrl: "./info-space.component.html",
     styleUrls: ["./info-space.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class InfoSpaceComponent {

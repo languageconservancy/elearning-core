@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 
@@ -11,6 +11,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-classroom-select",
     templateUrl: "./classroom-select.component.html",
     styleUrls: ["./classroom-select.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ClassroomSelectComponent implements OnInit, OnDestroy {

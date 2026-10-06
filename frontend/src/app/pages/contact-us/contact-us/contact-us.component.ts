@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Loader } from "@app/_services/loader.service";
 import { RegistrationService } from "@app/_services/registration.service";
@@ -12,6 +12,7 @@ import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtua
     selector: "app-contact-us",
     templateUrl: "./contact-us.component.html",
     styleUrls: ["./contact-us.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ContactUsComponent implements OnInit {

@@ -8,6 +8,7 @@ import {
     ViewEncapsulation,
     OnInit,
     OnChanges,
+    ChangeDetectionStrategy,
 } from "@angular/core";
 import { PipesModule } from "@app/_pipes/pipes.module";
 import { AudioService } from "@app/_services/audio.service";
@@ -38,6 +39,7 @@ type Card = {
     imports: [PipesModule],
     templateUrl: "./selectable-card.component.html",
     styleUrls: ["./selectable-card.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None,
 })
 export class SelectableCardComponent implements OnInit, OnChanges {

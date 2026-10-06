@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LessonsService } from "@app/_services/lessons.service";
@@ -9,6 +9,7 @@ import { KeyboardService } from "../keyboard.service";
     selector: "app-keyboard-shortcuts",
     templateUrl: "./keyboard-shortcuts.component.html",
     styleUrls: ["./keyboard-shortcuts.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 /**

@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import {
     UntypedFormArray,
@@ -26,6 +33,7 @@ import { ErrorCode } from "@app/shared/utils/error-code";
     selector: "app-teacher-admin",
     templateUrl: "./teacher-admin.component.html",
     styleUrls: ["./teacher-admin.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class TeacherAdminComponent implements OnInit, OnDestroy {

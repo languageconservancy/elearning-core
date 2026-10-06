@@ -1,7 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
-    
+
 import { Loader } from "@app/_services/loader.service";
 import { ProgressService } from "@app/_services/progress.service";
 import { SiteSettingsService } from "@app/_services/site-settings.service";
@@ -11,6 +11,7 @@ import { RegionPolicyService } from "@app/_services/region-policy.service";
     selector: "app-your-progress",
     templateUrl: "./your-progress.component.html",
     styleUrls: ["./your-progress.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class YourProgressComponent implements OnInit {

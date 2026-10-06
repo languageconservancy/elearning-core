@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
-    
+
 import { LearningPathService } from "@app/_services/learning-path.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { RegistrationService } from "@app/_services/registration.service";
@@ -12,6 +12,7 @@ import { environment } from "@environments/environment";
     selector: "app-learning-path",
     templateUrl: "./learning-path.component.html",
     styleUrls: ["./learning-path.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class LearningPathComponent implements OnInit, OnDestroy {

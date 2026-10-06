@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { SettingsService } from "@app/_services/settings.service";
 import { environment } from "@environments/environment";
 @Component({
     selector: "app-site-image",
     templateUrl: "./site-image.component.html",
     styleUrls: ["./site-image.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class SiteImageComponent implements OnInit {

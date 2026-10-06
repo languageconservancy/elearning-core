@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, OnDestroy, AfterViewInit, Renderer2 } from "@angular/core";
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    AfterViewInit,
+    Renderer2,
+    ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { CookieService } from "@app/_services/cookie.service";
@@ -18,6 +25,7 @@ declare let bootbox: any;
     selector: "app-forum-general-discussion",
     templateUrl: "./forum-general-discussion.component.html",
     styleUrls: ["./forum-general-discussion.component.scss"],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false,
 })
 export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, AfterViewInit {

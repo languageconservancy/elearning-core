@@ -28,7 +28,7 @@
 }
 
 .welcome-box {
-    background: url(~/assets/images/background-main.jpg?version=1.1) center no-repeat
+    background: url(/assets/images/background-main.jpg?version=1.1) center no-repeat
         theme.$background;
     min-height: 100vh;
     width: 100vw;
@@ -289,7 +289,7 @@ h2.blue-bg {
 
         &:after {
             content: "";
-            background: url(~/assets/images/blue-tick.png) top left no-repeat;
+            background: url(/assets/images/blue-tick.png) top left no-repeat;
             position: absolute;
             top: 7px;
             right: 15px;
@@ -303,7 +303,7 @@ h2.blue-bg {
 
         &:after {
             content: "";
-            background: url(~/assets/images/blue-tick.png) top left no-repeat;
+            background: url(/assets/images/blue-tick.png) top left no-repeat;
             position: absolute;
             top: 0px;
             right: -45px;
@@ -2010,7 +2010,7 @@ a.edit {
     }
 
     .title-back-btn {
-        background: url(~/assets/images/back-triangle-icon.png) no-repeat 0 0;
+        background: url(/assets/images/back-triangle-icon.png) no-repeat 0 0;
         width: 2rem;
         height: 2rem;
         display: inline-block;
@@ -2185,7 +2185,7 @@ a.edit {
 }
 
 #drawer-opener {
-    background-image: url(~/assets/images/user_img.png) !important;
+    background-image: url(/assets/images/user_img.png) !important;
     background-size: cover !important;
     margin: 0 !important;
     top: 50% !important;
@@ -2289,7 +2289,7 @@ a.edit {
     padding-top: 15px;
 
     a {
-        background: url(~/assets/images/white-tick.png) no-repeat 90% 50% #2392d0;
+        background: url(/assets/images/white-tick.png) no-repeat 90% 50% #2392d0;
         padding: 10px 35px 10px 15px;
         font-family: variables.$font-main;
         font-size: 14px;

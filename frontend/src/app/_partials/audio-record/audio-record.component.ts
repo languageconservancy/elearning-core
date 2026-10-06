@@ -4,7 +4,7 @@ import {
     ChangeDetectorRef,
     ChangeDetectionStrategy,
 } from "@angular/core";
-import * as MRecordRTC from "recordrtc";
+import { MRecordRTC } from "recordrtc";
 import * as DetectRTC from "detectrtc";
 import WaveSurfer from "wavesurfer.js";
 import Microphone from "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js";

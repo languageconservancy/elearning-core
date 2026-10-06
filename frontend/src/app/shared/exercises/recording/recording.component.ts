@@ -8,7 +8,7 @@ import {
     ChangeDetectionStrategy,
 } from "@angular/core";
 import { Subscription } from "rxjs";
-import * as WaveSurfer from "wavesurfer.js";
+import WaveSurfer from "wavesurfer.js";
 import Microphone from "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js";
 
 import { CookieService } from "@app/_services/cookie.service";
@@ -88,8 +88,6 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(() => {
                 console.error("AuthUser cookie empty");
             });
-
-        WaveSurfer.microphone = Microphone;
 
         this.socialWebService
             .initFacebook()
@@ -232,6 +230,11 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
             cursorColor: "#2392d0", // neutral blue
             height: 90,
             normalize: true,
+            plugins: [
+                Microphone.create({
+                // plugin options go here
+                })
+            ]
         });
 
         this.wavesurfer.on("finish", () => {

@@ -1,4 +1,3 @@
-import { CommonModule } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { PipesModule } from "@app/_pipes/pipes.module";
 import { CardDataType } from "@app/shared/utils/elearning-types";
@@ -29,7 +28,7 @@ type Card = {
 @Component({
     selector: "app-non-selectable-card",
     standalone: true,
-    imports: [CommonModule, PipesModule, PartialsModule],
+    imports: [PipesModule, PartialsModule],
     templateUrl: "./non-selectable-card.component.html",
     styleUrls: ["./non-selectable-card.component.scss"],
 })

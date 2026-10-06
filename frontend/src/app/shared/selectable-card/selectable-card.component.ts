@@ -1,4 +1,3 @@
-import { CommonModule } from "@angular/common";
 import {
     Component,
     Input,
@@ -36,7 +35,7 @@ type Card = {
 @Component({
     selector: "app-selectable-card",
     standalone: true,
-    imports: [CommonModule, PipesModule],
+    imports: [PipesModule],
     templateUrl: "./selectable-card.component.html",
     styleUrls: ["./selectable-card.component.scss"],
     encapsulation: ViewEncapsulation.None,

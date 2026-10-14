@@ -1,4 +1,4 @@
-<div class="row sign-box mb-4 no-gutters">
+<div class="row sign-box mb-4 g-0">
   <div class="col-lg-6 text-center d-flex flex-column align-items-center justify-content-center">
     <div class="d-flex flex-column flex-nowrap align-content-center align-items-center">
       @if (
@@ -120,10 +120,10 @@
           id="forgot-pwd-btn"
           href="javascript:void(0)"
           [routerLink]="['/forgot-password']"
-          class="text-blue-hover text-left font-weight-bold mr-1"
+          class="text-blue-hover text-start font-weight-bold me-1"
           >Forgot Password?</a
           >
-          <button type="submit" id="login-submit-btn" class="btn btn-white ml-1">
+          <button type="submit" id="login-submit-btn" class="btn btn-white ms-1">
             Submit
           </button>
         </div>
@@ -135,7 +135,7 @@
         </p>
         <button
           type="submit"
-          class="btn btn-light d-lg-none rounded-pill ml-1 py-1 text-dark"
+          class="btn btn-light d-lg-none rounded-pill ms-1 py-1 text-dark"
           (click)="goToSignup()"
           >
           Sign up
@@ -158,7 +158,7 @@
         <div class="modal-content">
           <div class="modal-header text-center">
             <h3 class="modal-title">Trial Session</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span>&times;</span>
             </button>
           </div>
@@ -173,7 +173,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               (click)="goToSignup()"
               >
               Sign Up
@@ -189,7 +189,7 @@
     <div
       class="modal fade modal-n"
       id="signup-suggestion"
-      data-backdrop="static"
+      data-bs-backdrop="static"
       tabindex="-1"
       role="dialog"
       aria-labelledby="SignupSuggestion"

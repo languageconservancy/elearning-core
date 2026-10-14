@@ -1,5 +1,5 @@
 @if (showAllocatedDailyTimeCountdownTimer) {
-  <div class="timer mr-3 ml-lg-3 shadow-sm">
+  <div class="timer me-3 ms-lg-3 shadow-sm">
     <span>
       {{ minutesDisplay && minutesDisplay <= 59 ? minutesDisplay : "00" }}:{{
       secondsDisplay && secondsDisplay <= 59 ? secondsDisplay : "00"
@@ -33,8 +33,8 @@
 <div
   class="modal fade modal-n timer-modal"
   id="idleTimeoutModal"
-  data-backdrop="static"
-  data-keyboard="false"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
   tabindex="-1"
   role="dialog"
   aria-labelledby="ResponseCheck"
@@ -43,7 +43,7 @@
     <div class="modal-content">
       <div class="modal-header text-center">
         <h3 class="modal-title" id="myModalLabel">Attention!</h3>
-        <button type="button" class="close" (click)="closeIdleTimeoutModal()" aria-label="Close">
+        <button type="button" class="btn-close" (click)="closeIdleTimeoutModal()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -74,8 +74,8 @@
 <div
   class="modal fade modal-n"
   id="allocatedDailyTimeReachedModal"
-  data-backdrop="static"
-  data-keyboard="false"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
   tabindex="-1"
   role="dialog"
   aria-labelledby="ResponseCheck"
@@ -86,8 +86,8 @@
         <h3 class="modal-title" id="myModalLabel">Attention!</h3>
         <button
           type="button"
-          class="close"
-          data-dismiss="modal"
+          class="btn-close"
+          data-bs-dismiss="modal"
           aria-label="Close"
           (click)="closeAllocatedDailyTimeReachedModal()"
           >
@@ -108,7 +108,7 @@
           type="button"
           class="btn btn-text-hover"
           autofocus
-          data-dismiss="modal"
+          data-bs-dismiss="modal"
           autofocus
           (click)="closeAllocatedDailyTimeReachedModal()"
           >

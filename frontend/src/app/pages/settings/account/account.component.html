@@ -2,8 +2,8 @@
   <div class="scroll-y">
     @if (isTrial()) {
       <div class="path-check py-2">
-        <div class="form-row">
-          <div class="col-6 text-left">
+        <div class="row">
+          <div class="col-6 text-start">
             <b>Account Type</b>
           </div>
           <div class="col-6 my-auto">
@@ -14,8 +14,8 @@
     }
     @if (userEmailValid()) {
       <div class="path-check">
-        <div class="form-row">
-          <div class="col-6 text-left my-auto">
+        <div class="row">
+          <div class="col-6 text-start my-auto">
             <b>Email</b>
           </div>
           <div class="col-6 my-auto">
@@ -28,12 +28,12 @@
     }
     @if (googleConfigValid && !isTrial()) {
       <div class="path-check py-2">
-        <div class="form-row">
-          <div class="col-5 text-left">
+        <div class="row">
+          <div class="col-5 text-start">
             <b>Link with Google</b>
           </div>
           <div class="col-7 d-flex flex-row align-items-center justify-content-center">
-            <img src="./assets/images/goog-icon.png" alt="" class="mr-3" />
+            <img src="./assets/images/goog-icon.png" alt="" class="me-3" />
             <div
               class="d-flex flex-column flex-nowrap align-items-center justify-content-center align-content-center"
               >
@@ -60,12 +60,12 @@
   }
   @if (facebookLoaded && facebookConfigValid && !isTrial()) {
     <div class="path-check py-2">
-      <div class="form-row">
-        <div class="col-5 text-left">
+      <div class="row">
+        <div class="col-5 text-start">
           <b>Link with Facebook</b>
         </div>
         <div class="col-7 d-flex flex-row align-items-center justify-content-center">
-          <img src="./assets/images/face-icon.png" alt="" class="mr-3" />
+          <img src="./assets/images/face-icon.png" alt="" class="me-3" />
           <div
             class="d-flex flex-column flex-nowrap align-items-center justify-content-center align-content-center"
             >
@@ -93,8 +93,8 @@
 }
 @if (!isTrial()) {
   <div class="path-check py-2">
-    <div class="form-row">
-      <div class="col-6 text-left my-auto">
+    <div class="row">
+      <div class="col-6 text-start my-auto">
         <b>Reset Password</b>
       </div>
       <div class="col-6">
@@ -111,8 +111,8 @@
     </div>
   }
   <div class="path-check py-2">
-    <div class="form-row">
-      <div class="col-6 text-left my-auto">
+    <div class="row">
+      <div class="col-6 text-start my-auto">
         <b>Reset Progress Data</b>
       </div>
       <div class="col-6">
@@ -128,8 +128,8 @@
       </div>
     </div>
     <div class="path-check py-2">
-      <div class="form-row">
-        <div class="col-6 text-left my-auto">
+      <div class="row">
+        <div class="col-6 text-start my-auto">
           <b>Deactivate Account</b>
         </div>
         <div class="col-6">
@@ -143,8 +143,8 @@
         </div>
       </div>
       <div class="path-check py-2">
-        <div class="form-row">
-          <div class="col-6 text-left my-auto">
+        <div class="row">
+          <div class="col-6 text-start my-auto">
             <b>Delete Account</b>
           </div>
           <div class="col-6">
@@ -172,7 +172,7 @@
         <div class="modal-content">
           <div class="modal-header text-center">
             <h3 class="modal-title" id="google-contacts">Google Contacts</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -198,14 +198,15 @@
                     <tr>
                       <td scope="col" class="g-contact">{{ mailItem.name }}</td>
                       <td class="check-n g-contact" scope="col">
-                        <label class="custom-control custom-checkbox">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                          </label>
                           <input
                             type="checkbox"
                             [(ngModel)]="mailItem.checked"
-                            class="custom-control-input"
+                            class="form-check-input"
                             />
-                          <span class="custom-control-indicator"></span>
-                        </label>
+                        </div>
                       </td>
                     </tr>
                   }
@@ -222,14 +223,14 @@
             ></textarea>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+            <button type="button" class="btn btn-text-hover" data-bs-dismiss="modal">
               Cancel
             </button>
             <button
               type="button"
               class="btn btn-primary"
               (click)="sendGoogleInvite()"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               >
               Send
             </button>
@@ -251,7 +252,7 @@
         <div class="modal-content">
           <div class="modal-header text-center">
             <h3 class="modal-title" id="reset-password">Reset Password</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -301,7 +302,7 @@
                 />
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+              <button type="button" class="btn btn-text-hover" data-bs-dismiss="modal">
                 Cancel
               </button>
               <button type="submit" class="btn btn-primary">Submit</button>
@@ -324,7 +325,7 @@
         <div class="modal-content">
           <div class="modal-header text-center">
             <h3 class="modal-title" id="deactivate-profile">Deactivate Profile</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -333,13 +334,13 @@
             <p>This will keep your data intact, but prevent you from logging in.</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+            <button type="button" class="btn btn-text-hover" data-bs-dismiss="modal">
               Cancel
             </button>
             <button
               type="button"
               class="btn btn-primary"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               (click)="deactivateProfile()"
               >
               Yes
@@ -362,7 +363,7 @@
         <div class="modal-content">
           <div class="modal-header text-center">
             <h3 class="modal-title" id="deactivate-profile">Delete Account</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -385,7 +386,7 @@
               }
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+              <button type="button" class="btn btn-text-hover" data-bs-dismiss="modal">
                 Cancel
               </button>
               <button type="submit" class="btn btn-danger">Delete Account</button>
@@ -406,7 +407,7 @@
         <div class="modal-content">
           <div class="modal-header text-center">
             <h3 class="modal-title" id="deactivate-profile">Account Deletion Confirmation</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -415,11 +416,11 @@
             <p>You won't be able to use the app unless you sign up again.</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
             <button
               type="button"
               class="btn btn-text-hover"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               (click)="deleteUsersAccount()"
               >
               YES
@@ -433,8 +434,8 @@
     <!-- Profile Already Deleted -->
     <div
       class="modal fade modal-n"
-      data-backdrop="static"
-      data-keyboard="false"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
       id="deletedProfile"
       tabindex="-1"
       role="dialog"
@@ -444,7 +445,7 @@
         <div class="modal-content">
           <div class="modal-header text-center">
             <h3 class="modal-title" id="profile-deactivated">Profile Already deactivated</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -455,7 +456,7 @@
             <button
               type="button"
               class="btn btn-text-hover"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               (click)="alreadyDeleted()"
               >
               Cancel
@@ -463,7 +464,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               (click)="alreadyDeleted()"
               >
               Yes
@@ -485,7 +486,7 @@
         <div class="modal-content">
           <div class="modal-header text-center">
             <h3 class="modal-title" id="reset-progress-data">Reset Progress Data</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -515,7 +516,7 @@
             }
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-gray-text-hover" data-dismiss="modal">
+            <button type="button" class="btn btn-gray-text-hover" data-bs-dismiss="modal">
               Cancel
             </button>
             <button

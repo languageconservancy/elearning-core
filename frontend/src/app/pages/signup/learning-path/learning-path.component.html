@@ -5,7 +5,7 @@
     <div class="path-wrap-scroll">
       @for (path of learningPaths; track path; let i = $index) {
         <div class="path-check">
-          <div class="form-row">
+          <div class="row">
             <div class="col-5 my-auto">
               <dl>
                 <dt>{{ path.label }}</dt>
@@ -16,19 +16,18 @@
                 <dd>{{ path.description }}</dd>
               </dl>
             </div>
-            <div class="col-3 my-auto">
-              <label class="custom-control custom-radio">
-                <input
+            <div class="col-3 my-auto form-check">
+              <label class="form-check-label" for="radioStacked{{ i + 1 }}">
+              </label>
+              <input
                   id="radioStacked{{ i + 1 }}"
                   name="radio-stacked"
                   value="{{ path.id }}"
                   [(ngModel)]="pathModel.selected"
                   type="radio"
-                  class="custom-control-input"
+                  class="form-check-input"
                   required
                   />
-                <span class="custom-control-indicator"></span>
-              </label>
             </div>
           </div>
         </div>
@@ -38,7 +37,7 @@
   <div class="col d-flex">
     <button
       type="submit"
-      class="btn btn-white mt-5 ml-auto"
+      class="btn btn-white mt-5 ms-auto"
       [ngClass]="{ disabled: !pathModel.selected }"
       (click)="submit()"
       >

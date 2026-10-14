@@ -1,15 +1,15 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, OnInit, OnDestroy, inject } from "@angular/core";
 import { take, map } from "rxjs/operators";
 import { Subscription, timer, interval } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
 
 import { LessonsService } from "@app/_services/lessons.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ModalService } from "@app/_services/modal.service";
 import { ReviewService } from "@app/_services/review.service";
 import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 import { environment } from "@environments/environment";
 
-declare let jQuery: any;
 const OneMinuteMs: number = 1000 * 60;
 const OneSecMs: number = 1000;
 
@@ -28,8 +28,7 @@ type AllocatedDailyTimeCountdownTimer = {
     selector: "app-timer",
     templateUrl: "./timer.component.html",
     styleUrls: ["./timer.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 /**
  * Timer Component
@@ -46,6 +45,13 @@ type AllocatedDailyTimeCountdownTimer = {
  *    - The idle timer is reset when the user closes the allocated daily time
  */
 export class TimerComponent implements OnInit, OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private localStorage = inject(LocalStorageService);
+    private reviewService = inject(ReviewService);
+    private keyboardService = inject(KeyboardService);
+    private modalService = inject(ModalService);
+
     public countDown: any;
     public timeRemainingSec: number = 0;
     public timerTicks: number = 0;
@@ -74,16 +80,12 @@ export class TimerComponent implements OnInit, OnDestroy {
     // Used for keyboard shortcuts to know which modal to close
     private currentModal: ModalType = ModalType.None;
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-    ) {}
-
-    async ngOnInit() {
+    ngOnInit(): void {
         this.subscribeToStopTimerEvents();
+        void this.initializeUser();
+    }
+
+    private async initializeUser(): Promise<void> {
         try {
             this.user = await this.getAuthUserFromCookie();
         } catch (err) {
@@ -97,7 +99,7 @@ export class TimerComponent implements OnInit, OnDestroy {
         try {
             const value = await this.cookieService.get("AuthUser");
             if (value == "") {
-                throw value;
+                throw new Error("No AuthUser cookie");
             }
             return JSON.parse(value);
         } catch (err) {
@@ -171,7 +173,7 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     private idleTimeReached() {
         // show idle modal
-        jQuery("#idleTimeoutModal").modal("show");
+        this.modalService.openModal("idleTimeoutModal");
         this.currentModal = ModalType.IdleModal;
         // stop the allocated daily time countdown timer
         this.stopAllocatedDailyTimeCountdownTimer();
@@ -249,7 +251,7 @@ export class TimerComponent implements OnInit, OnDestroy {
 
     handleAllocatedDailyTimeReached() {
         // user allocated daily time reached. present modal.
-        jQuery("#allocatedDailyTimeReachedModal").modal("show");
+        this.modalService.openModal("allocatedDailyTimeReachedModal");
         this.currentModal = ModalType.TimeUpModal;
         this.stopAllocatedDailyTimeCountdownTimer();
         this.stopIdleTimer();
@@ -372,7 +374,7 @@ export class TimerComponent implements OnInit, OnDestroy {
     }
 
     closeIdleTimeoutModal() {
-        jQuery("#idleTimeoutModal").modal("hide");
+        this.modalService.closeModal("idleTimeoutModal");
         this.currentModal = ModalType.None;
         this.subscribeToTimer();
         this.resetIdleTimer();
@@ -380,7 +382,7 @@ export class TimerComponent implements OnInit, OnDestroy {
     }
 
     closeAllocatedDailyTimeReachedModal() {
-        jQuery("#allocatedDailyTimeReachedModal").modal("hide");
+        this.modalService.closeModal("allocatedDailyTimeReachedModal");
         this.currentModal = ModalType.None;
         this.setKeyboardListeners(false);
     }

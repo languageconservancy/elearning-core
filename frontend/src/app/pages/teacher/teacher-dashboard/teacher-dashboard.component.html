@@ -1,6 +1,6 @@
 @if (noClassrooms) {
   <div class="d-flex justify-content-center logo-container-box row">
-    <div class="col-xs-6 col-sm-7 col-lg-12 mb-3 mt-3 d-flex justify-content-center">
+    <div class="col-6 col-sm-7 col-lg-12 mb-3 mt-3 d-flex justify-content-center">
       <h2 class="blue-bg">Welcome to the {{ environment.SITE_NAME }} Teacher Portal</h2>
       <br />
     </div>
@@ -12,7 +12,7 @@
       </h5>
       <br />
     </div>
-    <div class="card col-xs-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+    <div class="card col-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
       <img
         class="card-img-top"
         src="https://owoksape.s3.us-west-2.amazonaws.com/Dashboard.jpg"
@@ -27,7 +27,7 @@
         </ul>
       </div>
     </div>
-    <div class="card col-xs-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+    <div class="card col-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
       <img
         class="card-img-top"
         src="https://owoksape.s3.us-west-2.amazonaws.com/Classrooms.jpg"
@@ -42,7 +42,7 @@
         </ul>
       </div>
     </div>
-    <div class="card col-xs-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
+    <div class="card col-6 col-sm-7 col-lg-4 d-flex justify-content-center" style="width: 18rem">
       <img class="card-img-top" src="https://owoksape.s3.us-west-2.amazonaws.com/Lessons.jpg" alt="Card image cap" />
       <div class="card-body">
         <h5 class="card-title">Design Your Own Curriculum</h5>
@@ -52,7 +52,7 @@
         </ul>
       </div>
     </div>
-    <div class="col-xs-6 col-sm-7 col-lg-12 mb-3 d-flex justify-content-center">
+    <div class="col-6 col-sm-7 col-lg-12 mb-3 d-flex justify-content-center">
       <span>
         Have more general questions? Find<a href="javascript:void()" [routerLink]="['about/help']">help</a> here
       </span>
@@ -68,8 +68,8 @@
                 <h2 class="tlc-ts-22">Welcome, {{ teacher.name | titlecase }}</h2>
                 <a href="/contact-us">
                     <i class="fa fa-question-circle"
-                        data-toggle="tooltip"
-                        data-placement="top"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
                         title="Ask a question">
                     </i>
                 </a>
@@ -87,8 +87,8 @@
                 <a href="javascript:void(0)">
                     <i
                         class="fa fa-save"
-                        data-toggle="tooltip"
-                        data-placement="top"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
                         (click)="updateClassroomMessage(classroom)"
                         title="Save Message"></i>
                 </a>
@@ -114,16 +114,16 @@
       </h2>
       <a href="javascript:void(0)">
         <i class="fa fa-refresh"
-            data-toggle="tooltip"
-            data-placement="top"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
             (click)="updateStudentActivities(teacher.id, classroom.id, null)"
             title="Update Activities Table">
         </i>
       </a>
       <a href="javascript:void(0)">
         <i class="fa fa-download"
-          data-toggle="tooltip"
-          data-placement="top"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
           (click)="exportProgressToExcel()"
           title="Download All Class Data">
         </i>
@@ -138,8 +138,8 @@
                 <th class="rotate-45">
                   <div>
                     <span
-                      data-toggle="tooltip"
-                      data-placement="top"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
                       title="{{ classroomUnit.level_unit.unit.description }}">
                       {{ classroomUnit.level_unit.unit.name }}
                     </span>
@@ -168,8 +168,8 @@
                   }">
                     <i
                       class="fa fa-circle"
-                      data-toggle="tooltip"
-                      data-placement="top"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
                       title="{{ percent }}%"></i>
                   </span>
                   <div class="hidden">{{ percent }}</div>
@@ -191,16 +191,16 @@
       </h2>
       <a href="javascript:void(0)">
         <i class="fa fa-refresh"
-          data-toggle="tooltip"
-          data-placement="top"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
           (click)="updateStudentActivities(teacher.id, classroom.id, null)"
           title="Update Activities Table">
         </i>
       </a>
       <a href="javascript:void(0)">
         <i class="fa fa-download"
-          data-toggle="tooltip"
-          data-placement="top"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
           (click)="exportActivitiesToExcel()"
           title="Download All Student Data">
         </i>

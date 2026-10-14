@@ -1,66 +1,81 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-import {
-    Component,
-    OnInit,
-    OnDestroy,
-    AfterViewInit,
-    Renderer2,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { Component, OnInit, OnDestroy, AfterViewInit, inject, signal } from "@angular/core";
+import { form, FieldTree, FormField, required, submit, validate } from "@angular/forms/signals";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { CookieService } from "@app/_services/cookie.service";
+import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { Subscription } from "rxjs";
 
+import { CookieService } from "@app/_services/cookie.service";
+import { FriendSidebarComponent } from "@app/pages/forum/_partials/friend-sidebar/friend-sidebar.component";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { ReportPostModalComponent } from "@app/pages/forum/_partials/report-post-modal/report-post-modal.component";
+import { DirectivesModule } from "@app/_directives/directives.module";
 import { ForumService } from "@app/_services/forum.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ModalService } from "@app/_services/modal.service";
 import { SettingsService } from "@app/_services/settings.service";
 import { SnackbarService } from "@app/_services/snackbar.service";
 
-declare let jQuery: any;
+interface PostFormValue {
+    title: string;
+    content: string;
+    postStatus: string;
+}
 
 declare let bootbox: any;
 @Component({
     selector: "app-forum-general-discussion",
+    imports: [
+        DirectivesModule,
+        FormField,
+        FormsModule,
+        InfiniteScrollDirective,
+        ReportPostModalComponent,
+        FriendSidebarComponent,
+        PageTitleComponent,
+    ],
     templateUrl: "./forum-general-discussion.component.html",
     styleUrls: ["./forum-general-discussion.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, AfterViewInit {
-    public pagenumber = 1;
+    private forumService = inject(ForumService);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private modalService = inject(ModalService);
+    private settingsService = inject(SettingsService);
+    private snackbarService = inject(SnackbarService);
+
+    postModel = signal<PostFormValue>({
+        title: "",
+        content: "",
+        postStatus: "R",
+    });
+
     public currentPage = 1;
     public totalPage = 1;
     public activeForum: number = null;
+    public modalTitle = "New Topic";
     public searchTxt: string = "";
     public searchPost: boolean = false;
-    public successMsg: string = "";
-    public postCreated: boolean = false;
     public postId: number = null;
     public userId: number = null;
     public noPost: boolean = false;
     public paramsFetched: boolean = false;
     public postList: any = [];
+    private postsRequestId = 0;
+    public isLoadingPosts = false;
     public user: any = {};
-    public postForm: UntypedFormGroup;
+    public postForm: FieldTree<PostFormValue>;
     public successFlag: boolean = false;
-    public levelbadgeFlag: boolean = false;
-
     public postDataSubscription: Subscription;
     public postReportDoneSubscription: Subscription;
 
-    constructor(
-        private forumService: ForumService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private router: Router,
-        private renderer: Renderer2,
-        private localStorage: LocalStorageService,
-        private settingsService: SettingsService,
-        private snackbarService: SnackbarService,
-    ) {
-        this.postDataSubscription = forumService.currentUserId.subscribe((obj) => {
+    constructor() {
+        this.postDataSubscription = this.forumService.currentUserId.subscribe((obj) => {
             if (obj && Object.keys(obj).length > 0) {
                 this.userId = obj.user_id;
                 this.getPosts(obj.user_id);
@@ -68,7 +83,7 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
             }
         });
 
-        this.postReportDoneSubscription = forumService.postReportDone.subscribe((status) => {
+        this.postReportDoneSubscription = this.forumService.postReportDone.subscribe((status) => {
             // Reload posts is data is available, otherwise reload page
             if (status == true) {
                 const postId = this.localStorage.getItem("postId");
@@ -86,26 +101,34 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
             })
-            .catch(() => {});
-        this.postForm = new UntypedFormGroup({
-            title: new UntypedFormControl("", [
-                Validators.required,
-                this.validateBlankValue.bind(this),
-            ]),
-            content: new UntypedFormControl("", [
-                Validators.required,
-                this.validateBlankValue.bind(this),
-            ]),
-            postStatus: new UntypedFormControl("R"),
+            .catch((err) => {
+                console.error(err);
+            });
+        this.postForm = form(this.postModel, (path) => {
+            required(path.title);
+            required(path.content);
+
+            validate(path.title, ({ value }) =>
+                value().trim() === ""
+                    ? { kind: "blank", message: "A value is required" }
+                    : undefined,
+            );
+            validate(path.content, ({ value }) =>
+                value().trim() === ""
+                    ? { kind: "blank", message: "A value is required" }
+                    : undefined,
+            );
         });
     }
 
     ngAfterViewInit() {
         if (!this.paramsFetched) {
+            if (!this.localStorage.getItem("publicProfile")) return;
+
             this.userId = parseInt(this.localStorage.getItem("publicProfile"));
             this.getPosts(parseInt(this.localStorage.getItem("publicProfile")));
         }
@@ -113,15 +136,11 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
 
     ngOnDestroy(): void {
         this.postDataSubscription.unsubscribe();
-    }
-
-    private validateBlankValue(control: UntypedFormControl): any {
-        if (this.postForm) {
-            return control.value.trim() === "" ? { emptyValue: true } : null;
-        }
+        this.postReportDoneSubscription.unsubscribe();
     }
 
     getPosts(user_id: any, page: number = 1) {
+        const requestId = ++this.postsRequestId;
         const timeZoneOffset = new Date().getTimezoneOffset() * 60;
         const params: any = {
             user_id: user_id,
@@ -131,6 +150,7 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
             timestamp_offset:
                 timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset),
         };
+        this.isLoadingPosts = true;
         this.loader.setLoader(true);
         if (this.searchPost && this.searchTxt.trim() != "" && this.searchTxt != undefined) {
             params.q = this.searchTxt;
@@ -138,32 +158,43 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
         this.forumService
             .getForumPosts(params)
             .then((res) => {
-                this.loader.setLoader(false);
-                if (res.data.results.items.length > 0) {
-                    res.data.results.items.forEach((post) => {
-                        this.postList.push(post);
-                    });
-                    this.currentPage = res.data.results.pageinfo.currentpage;
-                    this.totalPage = res.data.results.pageinfo.totalpage;
-                    this.noPost = false;
-                } else {
-                    this.noPost = true;
-                }
+                if (requestId !== this.postsRequestId) return;
+
+                const results = res.data.results;
+
+                this.postList = page === 1 ? results.items : [...this.postList, ...results.items];
+
+                this.currentPage = results.pageinfo.currentpage;
+                this.totalPage = results.pageinfo.totalpage;
+                this.noPost = this.postList.length === 0;
             })
             .catch((err) => {
-                this.loader.setLoader(false);
+                if (requestId !== this.postsRequestId) return;
+
                 console.error(err);
+
+                this.snackbarService.showSnackbar({
+                    status: false,
+                    msg: "There has been an error. Please try again after some time while we fix it.",
+                });
+            })
+            .finally(() => {
+                if (requestId !== this.postsRequestId) return;
+
+                this.isLoadingPosts = false;
+                this.loader.setLoader(false);
             });
     }
 
     onScroll() {
-        if (this.currentPage != this.totalPage) {
-            this.pagenumber = this.pagenumber + 1;
-            this.getPosts(this.userId, this.pagenumber);
+        if (!this.isLoadingPosts && this.currentPage < this.totalPage) {
+            this.getPosts(this.userId, this.currentPage + 1);
         }
     }
 
-    goToProfile(user) {
+    goToProfile(user): void {
+        if (!user?.id) return;
+
         this.localStorage.setItem("publicProfile", user.id);
         this.settingsService.setPublicProfile({ profile_id: user.id });
         void this.router.navigate(["profile"]);
@@ -185,19 +216,26 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
     openModal(name, type, postObj) {
         if (type == "edit") {
             this.postId = postObj.id;
-            this.postForm.patchValue({
+            this.postModel.update((value) => ({
+                ...value,
                 title: postObj.title,
                 content: postObj.content,
-            });
+                postStatus: postObj.status ?? "R",
+            }));
             setTimeout(() => {
-                jQuery("#" + name).modal("show");
+                this.modalService.openModal("#" + name);
+                this.modalTitle = "Edit Topic";
             }, 100);
         } else {
-            this.postForm.patchValue({
+            this.postId = null;
+            this.postModel.update((value) => ({
+                ...value,
                 title: "",
                 content: "",
-            });
-            jQuery("#" + name).modal("show");
+                postStatus: "R",
+            }));
+            this.modalService.openModal("#" + name);
+            this.modalTitle = "New Topic";
         }
     }
 
@@ -229,10 +267,7 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
                                 msg: res.data.message,
                             });
                             if (res.data.status) {
-                                this.postList = [];
-                                //changes on 7th may
-                                this.getPosts(this.userId);
-                                //changes on 7th may
+                                this.reloadPosts();
                             }
                         })
                         .catch((err) => {
@@ -242,67 +277,34 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
                                 status: false,
                                 msg: "There has been an error. Please try again after some time while we fix it.",
                             });
-                            this.postList = [];
-                            this.getPosts(this.userId);
                         });
                 }
             },
         });
     }
 
-    search() {
-        this.searchPost = true;
+    private reloadPosts(): void {
+        this.currentPage = 1;
+        this.totalPage = 1;
+        this.noPost = false;
         this.postList = [];
-        this.getPosts(this.userId);
+        this.getPosts(this.userId, 1);
     }
 
-    clear() {
+    search(): void {
+        this.searchPost = this.searchTxt.trim() !== "";
+        this.reloadPosts();
+    }
+
+    clear(): void {
         this.searchPost = false;
         this.searchTxt = "";
-        this.postList = [];
-        this.getPosts(this.userId);
+        this.reloadPosts();
     }
-    imgfunc(allbadge: any, type: string) {
-        if (type == "firebadges") {
-            const fire_days = allbadge.fire_days;
-            let imagsrc = "./assets/images/fire_dead.png";
-            if (fire_days > 0 && fire_days < 3) {
-                imagsrc = "./assets/images/fire_low.png";
-            } else if (fire_days >= 3 && fire_days < 7) {
-                imagsrc = "./assets/images/fire_med.png";
-            } else if (fire_days >= 7 && fire_days < 14) {
-                imagsrc = "./assets/images/fire_high.png";
-            } else if (fire_days >= 14) {
-                imagsrc = "./assets/images/fire_ultra.png";
-            }
-            return imagsrc;
-        } else if (type == "levelbadge") {
-            const levelbadge = allbadge;
-            levelbadge.reverse();
-            levelbadge.forEach(function (element) {
-                if (element.status) {
-                    this.levelbadgeFlag = true;
-                    return element.image;
-                }
-            });
-        } else if (type == "socialpoint") {
-            let imagsrc = "";
-            if (allbadge > 4 && allbadge < 100) {
-                imagsrc = "./assets/images/fire_low.png";
-            } else if (allbadge >= 100 && allbadge < 250) {
-                imagsrc = "./assets/images/fire_med.png";
-            } else if (allbadge >= 250 && allbadge < 1000) {
-                imagsrc = "./assets/images/fire_high.png";
-            } else if (allbadge >= 1000 && allbadge < 5000) {
-                imagsrc = "./assets/images/fire_high.png";
-            } else if (allbadge >= 5000) {
-                imagsrc = "./assets/images/fire_ultra.png";
-            }
-            return imagsrc;
-        }
-    }
+
     private createPostApiCall(params) {
-        this.forumService
+        this.loader.setLoader(true);
+        return this.forumService
             .createPost(params)
             .then((res: any) => {
                 this.loader.setLoader(false);
@@ -311,9 +313,8 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
                     msg: res.data.message,
                 });
                 if (res.data.status) {
-                    jQuery("#newPost").modal("hide");
-                    this.postList = [];
-                    this.getPosts(this.userId);
+                    this.modalService.closeModal("#newPost");
+                    this.reloadPosts();
                 }
             })
             .catch((err) => {
@@ -327,7 +328,8 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
     }
 
     private updatePostApiCall(params) {
-        this.forumService
+        this.loader.setLoader(true);
+        return this.forumService
             .updatePost(params)
             .then((res: any) => {
                 this.loader.setLoader(false);
@@ -336,9 +338,8 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
                     msg: res.data.message,
                 });
                 if (res.data.status) {
-                    jQuery("#newPost").modal("hide");
-                    this.postList = [];
-                    this.getPosts(this.userId);
+                    this.modalService.closeModal("#newPost");
+                    this.reloadPosts();
                 }
             })
             .catch((err) => {
@@ -351,38 +352,43 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
             });
     }
 
-    createPost(form) {
-        if (form.valid) {
-            this.loader.setLoader(true);
-            if (this.postId) {
-                const params: any = {
-                    post_id: this.postId,
-                    user_id: this.user.id,
-                    title: form.value.title,
-                    content: form.value.content,
-                };
-                if (
-                    (this.user.role_id == 4 || this.user.role_id == 1) &&
-                    this.activeForum == null
-                ) {
-                    params.status = form.value.postStatus;
+    createPost(event: Event) {
+        event.preventDefault();
+
+        void submit(this.postForm, {
+            action: async () => {
+                const { title, content, postStatus } = this.postModel();
+                if (this.postId) {
+                    const params: any = {
+                        post_id: this.postId,
+                        user_id: this.user.id,
+                        title,
+                        content,
+                    };
+                    if (
+                        (this.user.role_id == 4 || this.user.role_id == 1) &&
+                        this.activeForum == null
+                    ) {
+                        params.status = postStatus;
+                    }
+                    await this.updatePostApiCall(params);
+                } else {
+                    const params = {
+                        forum_id: this.activeForum,
+                        user_id: this.user.id,
+                        title,
+                        content,
+                        type: "create",
+                    };
+                    await this.createPostApiCall(params);
                 }
-                this.updatePostApiCall(params);
-            } else {
-                const params = {
-                    forum_id: this.activeForum,
-                    user_id: this.user.id,
-                    title: form.value.title,
-                    content: form.value.content,
-                    type: "create",
-                };
-                this.createPostApiCall(params);
-            }
-        } else {
-            this.snackbarService.showSnackbar({
-                status: false,
-                msg: "Please fill in all fields with valid data before moving forward.",
-            });
-        }
+            },
+            onInvalid: () => {
+                this.snackbarService.showSnackbar({
+                    status: false,
+                    msg: "Please fill in all fields with valid data before moving forward.",
+                });
+            },
+        });
     }
 }

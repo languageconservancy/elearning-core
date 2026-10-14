@@ -17,43 +17,34 @@
  * Outputs: None
  */
 
-import {
-    Component,
-    OnInit,
-    OnDestroy,
-    ViewChild,
-    ElementRef,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Subscription } from "rxjs";
 
 import { ApiResponse } from "@app/shared/utils/elearning-types";
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
 import { SnackbarService } from "@app/_services/snackbar.service";
 import { SiteSettingsService } from "@app/_services/site-settings.service";
 import { AgreementsService } from "@app/_services/agreements.service";
 import { ModalService } from "@app/_services/modal.service";
 
-declare let jQuery: any;
-
 @Component({
     selector: "app-agreements-acceptance",
+    imports: [SafeHtmlPipe, FormsModule],
     templateUrl: "./agreements-acceptance.component.html",
     styleUrls: ["./agreements-acceptance.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
+    private agreementsService = inject(AgreementsService);
+    private modalService = inject(ModalService);
+    private settingservice = inject(SiteSettingsService);
+    private snackbarservice = inject(SnackbarService);
+
     @ViewChild("termsScrollContainer") termsScrollContainer: ElementRef;
     @ViewChild("privacyScrollContainer") privacyScrollContainer: ElementRef;
 
     showModalSubscription: Subscription;
-
-    constructor(
-        private agreementsService: AgreementsService,
-        private modalService: ModalService,
-        private settingservice: SiteSettingsService,
-        private snackbarservice: SnackbarService,
-    ) {}
 
     public activeTab: string = "terms"; // Active tab for terms and conditions content
     private user: any = null; // User object from cookie to use user ID for terms acceptance database storage
@@ -69,10 +60,9 @@ export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
     public isTermsAccepted: boolean = false; // Flag to check if user has accepted terms
     public isPrivacyAccepted: boolean = false; // Flag to check if user has accepted privacy policy
 
-    async ngOnInit() {
+    ngOnInit(): void {
         this.subscribeToAgreementsModalEvents();
-        await this.fetchTermsAndConditions();
-        await this.fetchPrivacyPolicy();
+        void this.loadAgreementContent();
     }
 
     ngOnDestroy() {
@@ -134,6 +124,11 @@ export class AgreementsAcceptanceComponent implements OnInit, OnDestroy {
                 status: false,
             });
         }
+    }
+
+    private async loadAgreementContent(): Promise<void> {
+        await this.fetchTermsAndConditions();
+        await this.fetchPrivacyPolicy();
     }
 
     /**

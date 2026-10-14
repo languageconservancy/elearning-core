@@ -32,8 +32,8 @@
 <div
   class="modal fade modal-n timer-modal"
   id="idleModal"
-  data-backdrop="static"
-  data-keyboard="false"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
   tabindex="-1"
   role="dialog"
   aria-labelledby="ResponseCheck"
@@ -44,7 +44,7 @@
         <h3 class="modal-title" id="myModalLabel">Attention!</h3>
         <button
           type="button"
-          class="close"
+          class="btn-close"
           (click)="closeTimeOutModal()"
           aria-label="Close"
           >
@@ -69,13 +69,13 @@
 </div>
 <!-- Two minute warning modal -->
 <!-- Time up modal -->
-<!-- <div class="modal fade modal-n" id="timeUpModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+<!-- <div class="modal fade modal-n" id="timeUpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog"
 aria-labelledby="ResponseCheck">
 <div class="modal-dialog modal-md" role="document">
   <div class="modal-content">
     <div class="modal-header text-center">
       <h3 class="modal-title" id="myModalLabel">Attention!</h3>
-      <button type="button" class="close" (click)="closeTimeUpModal()" aria-label="Close">
+      <button type="button" class="btn-close" (click)="closeTimeUpModal()" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -99,8 +99,8 @@ aria-labelledby="ResponseCheck">
 <div
   class="modal fade modal-n"
   id="timeUpModal"
-  data-backdrop="static"
-  data-keyboard="false"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
   tabindex="-1"
   role="dialog"
   aria-labelledby="ResponseCheck"

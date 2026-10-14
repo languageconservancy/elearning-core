@@ -89,7 +89,7 @@
                             <div class="img-gallery-wrap">
                                 @if (imageLength > 0) {
                                     <div class="row">
-                                        <div class="col-xs-2 col-md-2 col-lg-2 text-right">
+                                        <div class="col-2 col-md-2 col-lg-2 text-end">
                                             @if (imageLength > 1) {
                                                 <div class="arrow-holder">
                                                     <a
@@ -104,7 +104,7 @@
                                                 </div>
                                             }
                                         </div>
-                                        <div class="col-xs-8 col-md-8 col-lg-8">
+                                        <div class="col-8 col-md-8 col-lg-8">
                                             <div class="slider-container" [@slider]="selectedIndex">
                                                 @for (image of images; track image) {
                                                     <div class="slide">
@@ -115,7 +115,7 @@
                                                 }
                                             </div>
                                         </div>
-                                        <div class="col-xs-2 col-md-2 col-lg-2 text-left">
+                                        <div class="col-2 col-md-2 col-lg-2 text-start">
                                             @if (imageLength > 1) {
                                                 <div class="arrow-holder">
                                                     <a href="javascript:void(0)" (click)="next()">

@@ -4,8 +4,8 @@
             <h2 class="tlc-ts-22">Classroom Administration</h2>
             <a href="/contact-us">
                 <i class="fa fa-question-circle"
-                    data-toggle="tooltip"
-                    data-placement="top"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
                     title="Ask a question">
                 </i>
             </a>
@@ -41,13 +41,13 @@
         <div id="class-overview">
             <h3 class="tlc-ts-22">Lesson Plan ({{ classroom.level.name }})</h3>
             <div class="teacher-check teacher-check-all">
-                <div class="form-row">
-                    <div class="col-xs-12 col-sm-9 col-lg-6">
+                <div class="row">
+                    <div class="col-12 col-sm-9 col-lg-6">
                         <dl>
                             <dt>Bulk Change (all units)</dt>
                         </dl>
                     </div>
-                    <div class="col-xs-12 col-sm-3 col-lg-2">
+                    <div class="col-12 col-sm-3 col-lg-2">
                         <span>is active</span>
                         <label class="teacher-switch">
                             <button class="button2no round" type="button" (click)="updateAllClassroomUnits('active', false)">
@@ -58,7 +58,7 @@
                             </button>
                         </label>
                     </div>
-                    <div class="col-xs-12 col-sm-3 col-lg-2">
+                    <div class="col-12 col-sm-3 col-lg-2">
                         <span>optional</span>
                         <label class="teacher-switch">
                             <button
@@ -80,8 +80,8 @@
         </div>
         @for (classroomUnit of classroomUnits; track $index) {
             <div class="teacher-check teacher-check-alternating">
-                <div class="form-row">
-                    <div class="col-xs-12 col-sm-9 col-lg-6">
+                <div class="row">
+                    <div class="col-12 col-sm-9 col-lg-6">
                         <dl>
                             <dt>
                                 {{ classroomUnit.level_unit.unit.name }} -
@@ -99,7 +99,7 @@
                             </dd>
                         </dl>
                     </div>
-                    <div class="col-xs-12 col-sm-3 col-lg-2">
+                    <div class="col-12 col-sm-3 col-lg-2">
                         <span>is active</span>
                         <label class="teacher-switch">
                             <input
@@ -110,7 +110,7 @@
                             <span class="slider2 round"></span>
                         </label>
                     </div>
-                    <div class="col-xs-12 col-sm-3 col-lg-2">
+                    <div class="col-12 col-sm-3 col-lg-2">
                         <span>optional</span>
                         <label class="teacher-switch">
                             <input
@@ -144,8 +144,8 @@
                                     <img src="{{ student.user.usersetting.FullProfileImageUrl }}" />
                                     <span>{{ student.user.name }} - {{ student.user.email }}</span>
                                     <i class="fa fa-arrow-right"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
                                         title="Click or Drag to Move"
                                         (click)="moveStudentToClassroom($index)">
                                     </i>
@@ -166,8 +166,8 @@
                                 @for (student of classroomStudents; track $index) {
                                     <div class="list-group-item tlc-flex tlc-justify-content-between tlc-align-items-center" cdkDrag>
                                         <i class="fa fa-arrow-left"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
                                         title="Click or Drag to Move"
                                         (click)="moveStudentToSchool($index)">
                                         </i>
@@ -180,7 +180,7 @@
                         @if (unsavedStudentChanges) {
                             <div class="unsaved">
                                 <button class="btn teacher-save" (click)="updateClassroomStudents()">
-                                    <i class="fa fa-save" data-toggle="tooltip" data-placement="top" title="Save Roster"></i>
+                                    <i class="fa fa-save" data-bs-toggle="tooltip" data-bs-placement="top" title="Save Roster"></i>
                                     Save Changes
                                 </button>
                             </div>

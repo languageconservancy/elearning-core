@@ -7,14 +7,8 @@ import { CapitalizeFirstLetterPipe } from "./capitalize-first-letter.pipe";
 import { SafeUrlPipe } from "./safe-url.pipe";
 
 @NgModule({
-    imports: [CommonModule],
-    declarations: [
-        BadgeImagePipe,
-        SafeHtmlPipe,
-        YoutubePipe,
-        CapitalizeFirstLetterPipe,
-        SafeUrlPipe,
-    ],
+    imports: [BadgeImagePipe, CommonModule],
+    declarations: [SafeHtmlPipe, YoutubePipe, CapitalizeFirstLetterPipe, SafeUrlPipe],
 
     exports: [BadgeImagePipe, SafeHtmlPipe, YoutubePipe, CapitalizeFirstLetterPipe, SafeUrlPipe],
 })

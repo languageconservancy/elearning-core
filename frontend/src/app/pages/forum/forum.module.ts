@@ -18,22 +18,19 @@ import { ReportPostModalComponent } from "./_partials/report-post-modal/report-p
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule,
-        RouterModule,
-        ReactiveFormsModule,
-        InfiniteScrollDirective,
-        PipesModule,
-        PartialsModule,
         DirectivesModule,
-    ],
-    declarations: [
-        ForumListComponent,
-        PostDetailsComponent,
-        FriendSidebarComponent,
+        FormsModule,
         ForumGeneralDiscussionComponent,
+        ForumListComponent,
+        FriendSidebarComponent,
+        InfiniteScrollDirective,
+        PartialsModule,
+        PipesModule,
+        ReactiveFormsModule,
         ReportPostModalComponent,
-        AddFriendsComponent,
+        RouterModule,
     ],
+    declarations: [PostDetailsComponent, AddFriendsComponent],
     exports: [],
 })
 export class ForumModule {}

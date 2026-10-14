@@ -33,14 +33,14 @@
             />
           <!-- Display punctuation next to input -->
           @if (punctuationArray[i]) {
-            <b class="ml-1">{{ punctuationArray[i] }}</b>
+            <b class="ms-1">{{ punctuationArray[i] }}</b>
           }
           @if (i < inputCountArray.length - 1) {
             <span class="mx-1">&nbsp;</span>
           }
         }
         @if (punctuationArray[inputCountArray.length]) {
-          <b class="ml-2">{{ punctuationArray[inputCountArray.length] }}</b>
+          <b class="ms-2">{{ punctuationArray[inputCountArray.length] }}</b>
         }
       </div>
       <div class="key-btn-area">

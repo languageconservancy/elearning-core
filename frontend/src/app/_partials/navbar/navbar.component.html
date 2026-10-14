@@ -11,8 +11,8 @@
         <button
             class="navbar-toggler navbar-toggler-right"
             type="button"
-            data-toggle="collapse"
-            data-target="#navbarResponsive, #profileDropdown"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarResponsive, #profileDropdown"
             aria-expanded="false"
             aria-label="Toggle navigation"
         >
@@ -23,15 +23,15 @@
             class="collapse navbar-collapse dont-collapse-lg"
             id="navbarResponsive"
             #navbarResponsive
-            data-toggle="collapse"
-            data-target=".collapse"
+            data-bs-toggle="collapse"
+            data-bs-target=".collapse"
         >
             @if (loggedIn && user.agreements_accepted) {
-                <ul class="navbar-nav ml-auto align-items-center">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item left-menu">
                         <a
                             id="nav-learn-btn"
-                            class="nav-link mr-1"
+                            class="nav-link me-1"
                             [ngClass]="{ active: currentRoute === Routes.StartLearning }"
                             href="javascript:void(0)"
                             [routerLink]="Routes.StartLearning"
@@ -42,7 +42,7 @@
                         <li class="nav-item left-menu">
                             <a
                                 id="nav-review-btn"
-                                class="nav-link mr-1"
+                                class="nav-link me-1"
                                 [ngClass]="{ active: currentRoute === Routes.Review }"
                                 href="javascript:void(0)"
                                 (click)="gotoUrlOther(Routes.Review)"
@@ -53,7 +53,7 @@
                     <li class="nav-item left-menu">
                         <a
                             id="nav-progress-btn"
-                            class="nav-link mr-1"
+                            class="nav-link me-1"
                             [ngClass]="{ active: currentRoute === Routes.Progress }"
                             href="javascript:void(0)"
                             [routerLink]="Routes.Progress"
@@ -64,7 +64,7 @@
                         <li class="nav-item left-menu">
                             <a
                                 id="nav-leaderboard-btn"
-                                class="nav-link mr-1"
+                                class="nav-link me-1"
                                 [ngClass]="{ active: currentRoute === Routes.Leaderboard }"
                                 href="javascript:void(0)"
                                 [routerLink]="Routes.Leaderboard"
@@ -76,7 +76,7 @@
                         <li class="nav-item left-menu">
                             <a
                                 id="nav-village-btn"
-                                class="nav-link mr-1"
+                                class="nav-link me-1"
                                 href="javascript:void(0)"
                                 [ngClass]="{ active: currentRoute === Routes.Village }"
                                 (click)="goToVillage()"
@@ -91,7 +91,7 @@
                         <li class="nav-item left-menu d-none d-lg-block">
                             <a
                                 id="nav-teachers-btn"
-                                class="nav-link mr-1"
+                                class="nav-link me-1"
                                 href="javascript:void(0)"
                                 [ngClass]="{
                                     active:
@@ -108,7 +108,7 @@
                         <li class="nav-item left-menu">
                             <a
                                 id="nav-classroom-btn"
-                                class="nav-link mr-1"
+                                class="nav-link me-1"
                                 href="javascript:void(0)"
                                 [ngClass]="{ active: currentRoute === Routes.Classroom }"
                                 [routerLink]="Routes.Classroom"
@@ -118,17 +118,17 @@
                     }
                 </ul>
             }
-            <ul class="navbar-nav ml-auto align-items-center">
+            <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item d-none d-lg-block">
                     @if (!loggedIn && showSignUpBtns) {
-                        <a class="nav-link right-menu mr-4" [routerLink]="Routes.Register"
+                        <a class="nav-link right-menu me-4" [routerLink]="Routes.Register"
                             >Sign up</a
                         >
                     }
                 </li>
                 <li class="nav-item d-none d-lg-block">
                     @if (!loggedIn && showSignIn) {
-                        <a class="nav-link right-menu mr-4" [routerLink]="Routes.Login">Sign in</a>
+                        <a class="nav-link right-menu me-4" [routerLink]="Routes.Login">Sign in</a>
                     }
                 </li>
                 <li class="nav-item dropdown bg-transparent mt-0 pt-0">
@@ -140,14 +140,14 @@
                         class="text-decoration-none d-none d-lg-block"
                         href="javascript:void(0)"
                         id="navbardropdown"
-                        data-toggle="dropdown"
+                        data-bs-toggle="dropdown"
                         aria-haspopup="true"
                         role="button"
                         aria-expanded="false"
                     >
                         <span
                             class="welcometext2 d-flex align-items-center right-menu user-pic"
-                            [ngClass]="{ 'mr-2': $safeNavigationMigration(user?.name) }"
+                            [ngClass]="{ 'me-2': $safeNavigationMigration(user?.name) }"
                         >
                             @if (user?.usersetting?.FullProfileImageUrl) {
                                 <img

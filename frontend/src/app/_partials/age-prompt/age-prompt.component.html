@@ -1,4 +1,4 @@
-<div class="modal fade modal-n" id="age-prompt" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="AgePrompt">
+<div class="modal fade modal-n" id="age-prompt" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="AgePrompt">
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header flex-column">
@@ -91,7 +91,7 @@
             ) {
             <div
               [hidden]="!show.parentsEmailField"
-              class="text-left mx-4 mt-n4 mb-1"
+              class="text-start mx-4 mt-n4 mb-1"
               >
               @if (form.get('parentsEmail').hasError('pattern')) {
                 <small class="text-danger input-error-shadow"

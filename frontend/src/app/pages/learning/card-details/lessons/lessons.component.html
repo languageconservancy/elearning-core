@@ -20,7 +20,7 @@
         }
       </a>
     }
-    <div class="row justify-content-evenly align-items-center no-gutters">
+    <div class="row justify-content-evenly align-items-center g-0">
       <!-- One or two blocks (wrapped) -->
       @if (frame.number_of_block === 1 || frame.number_of_block === 2) {
         <ng-container *ngTemplateOutlet="frameBlock; context: { block: frame.lesson_frame_blocks[0], idx: 0 }">

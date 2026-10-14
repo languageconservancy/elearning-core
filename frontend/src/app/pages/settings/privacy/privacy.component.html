@@ -1,5 +1,5 @@
 <div class="p-lg-4 pb-4">
-  <div class="text-left">
+  <div class="text-start">
     <p>
       The {{ environment.SITE_NAME }} community is here to support you in your {{ environment.LANGUAGE }} learning
       path. If age or privacy is a concern though, please select the appropriate options below.
@@ -7,7 +7,7 @@
   </div>
   <div class="scroll-y">
     <div class="path-check">
-      <div class="form-row">
+      <div class="row">
         <div class="col-6">
           <dl>
             <dt>Parental Lock</dt>
@@ -28,8 +28,8 @@
                 href="javascript:void(0)"
                 class="invite-frd edit-parental-lock rounded-pill"
                 (click)="lockEditFlag = true"
-                data-toggle="modal"
-                data-target="#parentalLockModal"
+                data-bs-toggle="modal"
+                data-bs-target="#parentalLockModal"
                 >
                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
               </a>
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="path-check">
-      <div class="form-row">
+      <div class="row">
         <div class="col-6">
           <dl>
             <dt>Public Profile</dt>
@@ -59,7 +59,7 @@
       </div>
     </div>
     <div class="path-check">
-      <div class="form-row">
+      <div class="row">
         <div class="col-6">
           <dl>
             <dt>Public Leader Board</dt>
@@ -79,13 +79,13 @@
       </div>
     </div>
     <!-- <div class="path-check">
-    <div class="form-row">
-      <div class="col-xs-12 col-sm-9 col-lg-9">
+    <div class="row">
+      <div class="col-12 col-sm-9 col-lg-9">
         <dl>
           <dt>Audio Archiving</dt>
         </dl>
       </div>
-      <div class="col-xs-12 col-sm-3 col-lg-3">
+      <div class="col-12 col-sm-3 col-lg-3">
         <label class="switch">
           <input type="checkbox" [(ngModel)]="privacy.audioArchive" (change)="setPrivacy('audioArchive')">
           <span class="slider round"></span>
@@ -103,8 +103,8 @@
 <div
   class="modal fade modal-n"
   id="parentalLockModal"
-  data-backdrop="static"
-  data-keyboard="false"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
   tabindex="-1"
   role="dialog"
   aria-labelledby="ParentalLock"
@@ -115,8 +115,8 @@
         <h3 class="modal-title" id="myModalLabel">Parental Locks</h3>
         <button
           type="button"
-          class="close"
-          data-dismiss="modal"
+          class="btn-close"
+          data-bs-dismiss="modal"
           aria-label="Close"
           (click)="cancelParentalLock()"
           >
@@ -148,7 +148,7 @@
               <button
                 type="button"
                 class="btn btn-gray-text-hover"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
                 (click)="cancelParentalLock()"
                 >
                 Cancel
@@ -195,7 +195,7 @@
               <button
                 type="button"
                 class="btn btn-gray-text-hover"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
                 (click)="cancelParentalLock()"
                 >
                 Cancel

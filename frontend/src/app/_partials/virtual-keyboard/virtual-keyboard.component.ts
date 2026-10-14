@@ -6,13 +6,12 @@ import {
     AfterViewInit,
     ViewEncapsulation,
     Renderer2,
-    Input,
-    Output,
-    EventEmitter,
+    input,
+    output,
     ViewChild,
     ElementRef,
     OnDestroy,
-    ChangeDetectionStrategy,
+    inject,
 } from "@angular/core";
 import Keyboard, { KeyboardInput, KeyboardLayoutObject } from "simple-keyboard";
 import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
@@ -44,8 +43,7 @@ type LayoutName = "default" | "shift";
         "./virtual-keyboard.component.scss",
         "../../../../node_modules/simple-keyboard/build/css/index.css",
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 /**
  * Inputs:
@@ -59,20 +57,23 @@ type LayoutName = "default" | "shift";
  *     </app-keyboard>
  */
 export class VirtualKeyboardComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+    private keyboardConfigService = inject(KeyboardConfigService);
+    private renderer2 = inject(Renderer2);
+    private virtualKeyboardService = inject(VirtualKeyboardService);
     // Parent component defines if app is debug mode
-    @Input() debug: boolean = false;
+    debug = input<boolean>(false);
     // Parent component sends inputs to use virtual keyboard on
-    @Input() inputs: KeyboardInput = {};
+    inputs = input<KeyboardInput>({});
     // Class for keyboard
-    @Input() customClass: string;
+    customClass = input<string>("");
     // This component sends SimpleKeyboard virtual key strings to parent when pressed
-    @Output() newVirtualKeyPress = new EventEmitter<string>();
+    newVirtualKeyPress = output<string>();
     // This component send SimpleKeyboard physical key strings to parent when pressed
-    @Output() newPhysicalKeyPress = new EventEmitter<string>();
+    newPhysicalKeyPress = output<string>();
     // This component sends SimpleKeyboard latest input value to parent when changed
-    @Output() inputValueChanged = new EventEmitter<{ inputName: string; value: string }>();
+    inputValueChanged = output<{ inputName: string; value: string }>();
     // This component sends SimpleKeyboard virtual key strings to parent when pressed
-    @Output() keyboardReady = new EventEmitter<void>();
+    keyboardReady = output<void>();
     // This component's outer div element
     @ViewChild("keyboard") mainDiv: ElementRef;
     // Close button, so we don't add so much padding that we see white space
@@ -93,12 +94,6 @@ export class VirtualKeyboardComponent implements OnInit, OnChanges, OnDestroy, A
         "N/A KeyA KeyS KeyD KeyF KeyG KeyH KeyJ KeyK KeyL Semicolon Quote N/A",
         "N/A KeyZ KeyX KeyC KeyV KeyB KeyN KeyM Comma Period Slash N/A",
     ];
-
-    constructor(
-        private renderer2: Renderer2,
-        private virtualKeyboardService: VirtualKeyboardService,
-        private keyboardConfigService: KeyboardConfigService,
-    ) {}
 
     private unlisteners: any[] = [];
 
@@ -157,13 +152,13 @@ export class VirtualKeyboardComponent implements OnInit, OnChanges, OnDestroy, A
 
         // Create SimpleKeyboard with necessary options.
         try {
-            const divClass = `.${this.customClass}`;
+            const divClass = `.${this.customClass()}`;
             // Use first input key if focusedInputId is not set
             const initialInputName =
                 this.focusedInputId || Object.keys(this.inputs)[0] || "default";
 
             this.keyboard = new Keyboard(divClass, {
-                debug: this.debug,
+                debug: this.debug(),
                 input: this.inputs,
                 layout: this.keyboardConfig.defaultLayoutObject,
                 inputName: initialInputName,
@@ -193,7 +188,7 @@ export class VirtualKeyboardComponent implements OnInit, OnChanges, OnDestroy, A
                 },
                 buttonTheme: this.getButtonThemes(),
             });
-            this.keyboard.replaceInput(this.inputs);
+            this.keyboard.replaceInput(this.inputs());
             this.keyboardReady.emit();
         } catch (err) {
             console.error("Error creating keyboard: ", err);
@@ -210,9 +205,9 @@ export class VirtualKeyboardComponent implements OnInit, OnChanges, OnDestroy, A
         }
 
         this.hide();
-        this.keyboard.replaceInput(this.inputs);
+        this.keyboard.replaceInput(this.inputs());
 
-        const inputKeys = Object.keys(this.inputs);
+        const inputKeys = Object.keys(this.inputs());
         const focusedId =
             this.focusedInputId && inputKeys.includes(this.focusedInputId)
                 ? this.focusedInputId

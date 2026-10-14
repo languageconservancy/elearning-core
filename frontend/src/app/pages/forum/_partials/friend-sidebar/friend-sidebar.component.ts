@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, Renderer2 } from "@angular/core";
 import { trigger, state, style, animate, transition } from "@angular/animations";
 import { Router } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
@@ -27,10 +27,17 @@ import { SettingsService } from "@app/_services/settings.service";
             transition("1 => 0", animate(".5s")),
         ]),
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class FriendSidebarComponent implements OnInit {
+    private cookieService = inject(CookieService);
+    private forumService = inject(ForumService);
+    private loader = inject(Loader);
+    private localStorage = inject(LocalStorageService);
+    private renderer = inject(Renderer2);
+    private router = inject(Router);
+    private settingsService = inject(SettingsService);
+
     public friendsListArray: any = [];
     public noFriends: boolean = false;
     public friendsList: any = [];
@@ -41,16 +48,6 @@ export class FriendSidebarComponent implements OnInit {
     public searchItem: any = {};
     public toggleArrow: boolean = true;
     public user: any = {};
-
-    constructor(
-        private forumService: ForumService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private router: Router,
-        private renderer: Renderer2,
-        private localStorage: LocalStorageService,
-        private settingsService: SettingsService,
-    ) {}
 
     ngOnInit() {
         this.cookieService

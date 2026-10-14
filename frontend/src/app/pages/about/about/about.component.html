@@ -8,9 +8,9 @@
           id="about-dropdown"
           class="dropdown-toggle default-font-size d-flex flex-nowrap text-wrap justify-content-between align-items-center mx-auto px-4 py-2"
           type="button"
-          data-toggle="dropdown"
+          data-bs-toggle="dropdown"
           aria-expanded="false"
-          data-display="static"
+          data-bs-display="static"
           >
           {{ activeTab | capitalizeFirstLetter }}
         </button>
@@ -50,7 +50,7 @@
                   class="nav-link"
                   id="{{ contentItem.Id }}-tab"
                   (click)="gotoUrl(contentItem.Id)"
-                  data-toggle="tab"
+                  data-bs-toggle="tab"
                   href="#{{ contentItem.Id }}"
                   role="tab"
                   aria-controls="project"
@@ -65,7 +65,7 @@
                   class="nav-link"
                   id="privacy-tab"
                   (click)="gotoUrl('privacy')"
-                  data-toggle="tab"
+                  data-bs-toggle="tab"
                   href="#privacy"
                   role="tab"
                   aria-controls="privacy"
@@ -79,7 +79,7 @@
                     class="nav-link"
                     id="terms-tab"
                     (click)="gotoUrl('terms')"
-                    data-toggle="tab"
+                    data-bs-toggle="tab"
                     href="#terms"
                     role="tab"
                     aria-controls="terms"

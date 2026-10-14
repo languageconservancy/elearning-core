@@ -22,7 +22,7 @@
             [ngClass]="{
                 'disabled-link, disabledIcon':
                     activity.state === ActivityState.NotAttempted && i !== currentActivityIdx,
-                'ml-0': i === 0,
+                'ms-0': i === 0,
             }"
             (click)="
                 activity.state !== ActivityState.NotAttempted &&
@@ -33,8 +33,8 @@
         >
         <img
           [src]="getProgressIconUrl(activity, i)"
-          data-toggle="tooltip"
-          data-placement="top"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
           title="{{ getProgressIconTooltip(activity) }}"
           />
       </div>
@@ -47,16 +47,16 @@
         @if (!unitCompleteOrPreviouslyCompleted) {
           <img
             src="./assets/images/fire-dead-progress-icon.png"
-            data-toggle="tooltip"
-            data-placement="top"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
             title="Complete the Unit to Start Review"
             />
         }
         @if (unitCompleteOrPreviouslyCompleted) {
           <img
             src="./assets/images/fire-progress-icon.png"
-            data-toggle="tooltip"
-            data-placement="top"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
             title="Start Review"
             (click)="activityPressed('review', -1)"
             />
@@ -92,8 +92,8 @@
         >
         <img
           [src]="getProgressIconUrl(activity, i)"
-          data-toggle="tooltip"
-          data-placement="top"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
           title="{{ getProgressIconTooltip(activity) }}"
           />
       </div>
@@ -106,16 +106,16 @@
         @if (!unitCompleteOrPreviouslyCompleted) {
           <img
             src="./assets/images/fire-dead-progress-icon.png"
-            data-toggle="tooltip"
-            data-placement="top"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
             title="Complete the Unit to Start Review"
             />
         }
         @if (unitCompleteOrPreviouslyCompleted) {
           <img
             src="./assets/images/fire-progress-icon.png"
-            data-toggle="tooltip"
-            data-placement="top"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
             title="Start Review"
             (click)="activityPressed('review', -1)"
             />

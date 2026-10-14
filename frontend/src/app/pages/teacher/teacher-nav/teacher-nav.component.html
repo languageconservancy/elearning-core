@@ -4,7 +4,7 @@
         @if (currentSchoolIndex !== -1) {
             <nav class="navbar-expand-lg navbar-dark pb-1">
                 <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav mr-auto tlc-align-items-center">
+                    <ul class="navbar-nav me-auto tlc-align-items-center">
                         <li class="nav-item left-menu">
                             <a href="javascript:void(0)"
                                 [ngClass]="{ active: tabName === 'teacher-dashboard' }"
@@ -56,7 +56,7 @@
                             </li>
                         }
                     </ul>
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ms-auto">
                         @if (schools.length > 1) {
                             <div class="teacherportal-drop">
                                 <div class="dropdown">
@@ -64,7 +64,7 @@
                                         class="teacher-drop dropdown-toggle"
                                         type="button"
                                         id="schoolDropdownBtn"
-                                        data-toggle="dropdown"
+                                        data-bs-toggle="dropdown"
                                         aria-haspopup="true"
                                         aria-expanded="false"
                                     >
@@ -74,29 +74,28 @@
                                         <div class="dropdown-menu-wrap">
                                             @for (school of schools; track $index) {
                                                 <div class="teacher-check">
-                                                    <div class="form-row" (click)="setCurrentSchool($index)">
-                                                        <div class="col-xs-12 col-sm-9 col-lg-2">
+                                                    <div class="row" (click)="setCurrentSchool($index)">
+                                                        <div class="col-12 col-sm-9 col-lg-2">
                                                             <img src="{{ school.school.FullImageUrl }}" />
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-9 col-lg-8">
+                                                        <div class="col-12 col-sm-9 col-lg-8">
                                                             <dl>
                                                                 <dt>{{ school.school.name }}</dt>
                                                                 <dd>{{ school.school.grade_low }} - {{ school.school.grade_high }}</dd>
                                                             </dl>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-3 col-lg-2">
-                                                            <label class="custom-control custom-radio">
+                                                        <div class="col-12 col-sm-3 col-lg-2 form-check">
+                                                            <label class="form-check-label" for="school-{{ $index }}">
+                                                            </label>
                                                                 <input
                                                                     id="school-{{ $index }}"
                                                                     name="radio-stacked-school"
                                                                     type="radio"
                                                                     [value]="school.school.id"
-                                                                    class="custom-control-input"
+                                                                    class="form-check-input"
                                                                     required=""
                                                                     [checked]="currentSchoolIndex === $index"
                                                                 />
-                                                                <span class="custom-control-indicator"></span>
-                                                            </label>
                                                         </div>
                                                     </div>
                                                     <hr class="mt-0 mb-0" />
@@ -127,9 +126,9 @@
 @if (currentSchoolIndex === -1) {
     <div class="padd-box">
         <div class="mt-3 mb-4 text-center text-white"></div>
-        <div class="col-xs-5 col-sm-8 col-lg-12 l-speed">
+        <div class="col-5 col-sm-8 col-lg-12 l-speed">
             <div class="row justify-content-start">
-                <div class="col-xs-3 col-sm-8 col-lg-12">
+                <div class="col-3 col-sm-8 col-lg-12">
                     <div id="teacher-info" class="logo-container-box col-lg-12">
                         <app-request-quote></app-request-quote>
                     </div>

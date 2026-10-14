@@ -9,9 +9,9 @@
         <button
           class="dropdown-toggle d-flex flex-nowrap text-wrap justify-content-between align-items-center mx-auto px-4 py-2"
           type="button"
-          data-toggle="dropdown"
+          data-bs-toggle="dropdown"
           aria-expanded="false"
-          data-display="static"
+          data-bs-display="static"
           >
           {{ activeForumName }}
         </button>
@@ -49,7 +49,6 @@
               <span [hidden]="searchTxt === ''" class="icon-close" (click)="clear()">
                 <i class="fa fa-times-circle"></i>
               </span>
-              <div class="input-group-append">
                 <button
                   class="input-default btn search-btn d-flex align-items-center"
                   type="button"
@@ -57,13 +56,12 @@
                   >
                   <i class="fa fa-search"></i>
                 </button>
-              </div>
             </div>
           </div>
         </div>
         <div class="col-4">
           <div class="text-center text-white">
-            <div class="text-right">
+            <div class="text-end">
               <button
                 class="btn btn-white px-3"
                 (click)="openModal('newPost', 'add', '')"
@@ -85,7 +83,7 @@
                 <li (click)="setActiveForum(forum)">
                   <a
                     href="javascript:void(0)"
-                    [ngClass]="{ active: activeForum === forum.id }"
+                    [class]="{ active: activeForum === forum.id }"
                     ><h5 class="mb-0">{{ forum.title }}</h5></a
                     >
                   </li>
@@ -99,7 +97,7 @@
           <div class="col-12 col-lg-8 l-speed">
             @if (!noPosts) {
               <div
-                class="row no-gutters justify-content-start units-container mt-lg-1"
+                class="row g-0 justify-content-start units-container mt-lg-1"
                 infiniteScroll
                 [infiniteScrollDistance]="2"
                 [infiniteScrollUpDistance]="1.5"
@@ -304,8 +302,8 @@
               <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
                   <div class="modal-header text-center">
-                    <h3 class="modal-title" id="reset-progress-data">New Topic</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h3 class="modal-title" id="reset-progress-data">{{ modalTitle }}</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
@@ -320,30 +318,28 @@
                       <span class="slider round"></span>
                     </label>
                   </div>
-                  <form name="postForm" [formGroup]="postForm" (submit)="createPost(postForm)">
+                  <form name="postForm" (submit)="createPost($event)">
                     <div class="modal-body modal-n-table">
                       <input
                         type="text"
                         id="input_id"
                         (click)="toggleVirtualKeyboard()"
                         placeholder="Title"
-                        formControlName="title"
-                        name="title"
                         class="form-control input-default seoc-btn-width font-language"
                         (focus)="setActiveInput($event)"
-                        [(ngModel)]="inputs.input_id"
+                        [formField]="postForm.title"
+                        (input)="virtualKeyboard.onInputChange($event)"
                         inputmode="none"
                         appAutoScrollModalInput
                         />
                       <textarea
-                        name="content"
                         id="textarea_id"
                         (click)="toggleVirtualKeyboard()"
                         placeholder="Description"
-                        formControlName="content"
                         class="form-control input-default seoc-btn-width font-language"
                         (focus)="setActiveInput($event)"
-                        [(ngModel)]="inputs.textarea_id"
+                        [formField]="postForm.content"
+                        (input)="virtualKeyboard.onInputChange($event)"
                         inputmode="none"
                         appAutoScrollModalInput
                       ></textarea>
@@ -351,16 +347,16 @@
                         (user.role_id === 4 || user.role_id === 1) && activeForum === null
                         ) {
                         <select
-                          formControlName="postStatus"
+                          [formField]="postForm.postStatus"
                           class="form-control input-default seoc-btn-width"
                           >
-                          <option value="R" selected>Reject</option>
+                          <option value="R">Reject</option>
                           <option value="A">Approve</option>
                         </select>
                       }
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-text-hover" data-dismiss="modal">
+                      <button type="button" class="btn btn-text-hover" data-bs-dismiss="modal">
                         Cancel
                       </button>
                       <button type="submit" class="btn btn-primary">Submit</button>
@@ -376,6 +372,7 @@
               [inputs]="inputs"
               [debug]="!environment.production"
               [customClass]="'forumListKeyboard'"
+              (inputValueChanged)="onInputValueChange($event)"
               class="fixed-bottom"
               style="z-index: 1050 !important"
             ></app-virtual-keyboard>

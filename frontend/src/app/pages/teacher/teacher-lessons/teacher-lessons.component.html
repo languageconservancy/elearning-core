@@ -5,8 +5,8 @@
             <a href="/contact-us">
                 <i
                     class="fa fa-question-circle"
-                    data-toggle="tooltip"
-                    data-placement="top"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
                     title="Ask a question"
                 ></i>
             </a>
@@ -74,7 +74,7 @@
                                     class="teacher-drop dropdown-toggle"
                                     type="button"
                                     id="levelDropdownBtn"
-                                    data-toggle="dropdown"
+                                    data-bs-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
                                 >
@@ -90,9 +90,10 @@
                                                 style="cursor: pointer; gap: 10px"
                                                 (click)="setCurrentAvailablePath($index)"
                                             >
-                                                <div class="tlc-flex">
+                                                <div class="tlc-flex form-check">
                                                     <label
-                                                        class="custom-control custom-radio tlc-sr-only"
+                                                        class="form-check-label tlc-sr-only"
+                                                        for="availablePath-{{ $index }}"
                                                         >Learning Paths</label
                                                     >
                                                     <input
@@ -100,15 +101,12 @@
                                                         name="radio-stacked-available-path"
                                                         type="radio"
                                                         value="{{ availablePath.id }}"
-                                                        class="custom-control-input tlc-display-none"
+                                                        class="form-check-input tlc-display-none"
                                                         required=""
                                                         [checked]="
                                                             currentAvailablePathIndex === $index
                                                         "
                                                     />
-                                                    <span
-                                                        class="custom-control-indicator tlc-flex"
-                                                    ></span>
                                                 </div>
                                                 <dl>
                                                     <dt>{{ availablePath.label }}</dt>
@@ -131,7 +129,7 @@
                                     class="teacher-drop dropdown-toggle"
                                     type="button"
                                     id="levelDropdownBtn"
-                                    data-toggle="dropdown"
+                                    data-bs-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false"
                                 >
@@ -155,9 +153,10 @@
                                                     style="cursor: pointer; gap: 10px"
                                                     (click)="setCurrentAvailableLevel($index)"
                                                 >
-                                                    <div class="tlc-flex">
+                                                    <div class="tlc-flex form-check">
                                                         <label
-                                                            class="custom-control custom-radio tlc-sr-only"
+                                                            class="form-check-label tlc-sr-only"
+                                                            for="availableLevel-{{ $index }}"
                                                             >Levels</label
                                                         >
                                                         <input
@@ -165,16 +164,13 @@
                                                             name="radio-stacked-available-level"
                                                             type="radio"
                                                             value="{{ availableLevel.id }}"
-                                                            class="custom-control-input tlc-display-none"
+                                                            class="form-check-input tlc-display-none"
                                                             required=""
                                                             [checked]="
                                                                 currentAvailableLevelIndex ===
                                                                 $index
                                                             "
                                                         />
-                                                        <span
-                                                            class="custom-control-indicator tlc-flex"
-                                                        ></span>
                                                     </div>
                                                     <dl>
                                                         <dt>{{ availableLevel.name }}</dt>
@@ -199,8 +195,8 @@
                                     >
                                     <i
                                         class="fa fa-save"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
                                         title="Save Lesson"
                                     >
                                     </i>
@@ -237,8 +233,8 @@
                                         <span>{{ unit.name }} - {{ unit.description }}</span>
                                         <i
                                             class="fa fa-arrow-right"
-                                            data-toggle="tooltip"
-                                            data-placement="top"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
                                             title="Click or Drag to Move"
                                             (click)="addUnitToLesson($index)"
                                         ></i>
@@ -266,8 +262,8 @@
                                     >
                                     <i
                                         class="fa-regular fa-circle-xmark"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
                                         title="Click or Drag to Move"
                                         (click)="removeUnitFromLesson($index)"
                                     >
@@ -287,7 +283,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">New Lesson Plan</h4>
-                <button type="button" class="close" (click)="closeModal()">
+                <button type="button" class="btn-close" (click)="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

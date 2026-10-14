@@ -1,7 +1,7 @@
 <div
   class="modal fade modal-n"
   id="agreements-modal"
-  data-backdrop="static"
+  data-bs-backdrop="static"
   tabindex="-1"
   role="dialog"
   aria-labelledby="AgreementsAcceptance"
@@ -23,13 +23,13 @@
               <li class="nav-item bg-white rounded-top-left-3 rounded-top-right-3">
                 <a
                   class="nav-link rounded-top-left-3 rounded-top-right-3"
-                                    [ngClass]="{
+                                    [class]="{
                                         active: activeTab === 'terms',
                                         'cursor-pointer': activeTab !== 'terms',
                                         'font-weight-bold': activeTab === 'terms',
                                     }"
                   id="terms-tab"
-                  data-toggle="tab"
+                  data-bs-toggle="tab"
                   role="tab"
                   aria-controls="terms"
                   aria-selected="true"
@@ -41,13 +41,13 @@
               <li class="nav-item bg-white rounded-top-left-3 rounded-top-right-3">
                 <a
                   class="nav-link cursor-pointer rounded-top-left-3 rounded-top-right-3"
-                                    [ngClass]="{
+                                    [class]="{
                                         active: activeTab === 'privacy',
                                         'cursor-pointer': activeTab !== 'privacy',
                                         'font-weight-bold': activeTab === 'privacy',
                                     }"
                   id="privacy-tab"
-                  data-toggle="tab"
+                  data-bs-toggle="tab"
                   role="tab"
                   aria-controls="privacy"
                   aria-selected="false"
@@ -59,7 +59,7 @@
             </ul>
           </div>
 
-          <div class="bg-white path-box text-left l-speed mt-0 position-relative">
+          <div class="bg-white path-box text-start l-speed mt-0 position-relative">
             <!-- Terms and conditions content wrapper -->
             @if (activeTab === 'terms') {
               <div
@@ -124,7 +124,7 @@
                 <label
                   class="pl-2 label-default d-inline cursor-pointer"
                   for="termsAcceptance"
-                  [ngClass]="{ 'text-disabled': !termsHasBeenRead }"
+                  [class]="{ 'text-disabled': !termsHasBeenRead }"
                   >
                   I have read and accepted the terms and conditions.
                 </label>
@@ -143,7 +143,7 @@
                 <label
                   class="pl-2 label-default d-inline cursor-pointer"
                   for="privacyAcceptance"
-                  [ngClass]="{ 'text-disabled': !privacyHasBeenRead }"
+                  [class]="{ 'text-disabled': !privacyHasBeenRead }"
                   >
                   I have read and accepted the privacy policy.
                 </label>
@@ -167,7 +167,7 @@
           [disabled]="!(isTermsAccepted && isPrivacyAccepted)"
           type="submit"
           class="btn btn-primary"
-          [ngClass]="{ 'pointer-events-none': !(isTermsAccepted && isPrivacyAccepted) }"
+          [class]="{ 'pointer-events-none': !(isTermsAccepted && isPrivacyAccepted) }"
           (click)="acceptBtnPressed()"
           >
           Accept

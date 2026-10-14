@@ -1,7 +1,7 @@
 <div>
   <!-- Small audio icon in corner above all other data -->
   @if (isActive(DataType.Audio) && enabledDataTypes.length > 1) {
-    <div class="w-100 ml-3 mb-3">
+    <div class="w-100 ms-3 mb-3">
       <a
         href="javascript:void(0)"
         (click)="audioService.playPauseAudio(card.FullAudioUrl, optionType)"

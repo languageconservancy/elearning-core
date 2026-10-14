@@ -25,11 +25,9 @@
         [(ngModel)]="searchItem.search"
         (input)="search()"
         />
-      <div class="input-group-append">
-        <button class="input-default btn" type="button" (click)="goToAddFriendsPage()">
-          <i class="fa fa-plus-square"></i>
-        </button>
-      </div>
+      <button class="input-default btn" type="button" (click)="goToAddFriendsPage()">
+        <i class="fa fa-plus-square"></i>
+      </button>
     </div>
     <div class="forum-friend-list align-items-center">
       @if (friendsList.length > 0) {

@@ -3,7 +3,7 @@
     <div class="tlc-flex tlc-align-items-center tlc-gap-xs">
       <h2 class="tlc-ts-22">School Administration</h2>
       <a href="/contact-us">
-        <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Ask a question"></i>
+        <i class="fa fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Ask a question"></i>
       </a>
     </div>
     <p>From this page, you can add students and teachers to your school and change
@@ -28,7 +28,7 @@
 <div class="tlc-card tlc-width-whole">
   <div id="student-overview">
     <div class="row">
-      <div class="col-xs-2 col-sm-2 col-lg-12">
+      <div class="col-2 col-sm-2 col-lg-12">
         <h3 class="tlc-ts-22">{{ teacherSchoolUser.school.name }} Teachers</h3>
         <div class="panel panel-warning teacher-dnd teacher-dnd-left">
           <div class="panel-body">
@@ -49,7 +49,7 @@
 <div class="tlc-card tlc-width-whole">
   <div id="student-overview">
     <div class="row">
-      <div class="col-xs-2 col-sm-2 col-lg-12">
+      <div class="col-2 col-sm-2 col-lg-12">
         <div class="row">
           <div class="col-lg-6">
             <h3 class="tlc-ts-22">Classrooms</h3>
@@ -91,7 +91,7 @@
 <div class="tlc-card tlc-width-whole">
   <div id="student-overview">
     <div class="row">
-      <div class="col-xs-2 col-sm-2 col-lg-12">
+      <div class="col-2 col-sm-2 col-lg-12">
         <h3 class="tlc-ts-22">{{ teacherSchoolUser.school.name }} Students</h3>
         <div class="panel panel-warning teacher-dnd teacher-dnd-right">
           <div class="panel-body">
@@ -121,7 +121,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">{{ modalHeader }}</h4>
-        <button type="button" class="close" (click)="closeModal()">
+        <button type="button" class="btn-close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -135,7 +135,7 @@
               type="file"
               (change)="importExcelUsers($event)"
               accept=".xlsx,.xls"
-              class="ml-3" />
+              class="ms-3" />
           </p>
           <form [formGroup]="newUsersForm" (submit)="addNewUsers(newUsersForm)">
             <span><label for="name">Add Students to Class</label></span>
@@ -197,14 +197,14 @@
                       <option value="2">Substitute</option>
                     </select>
                   </label>
-                  <a class="ml-2" (click)="deleteNewUserRow(userIndex)">
+                  <a class="ms-2" (click)="deleteNewUserRow(userIndex)">
                     <i class="fa fa-times"></i>
                   </a>
                 </div>
               }
             </div>
             <button type="button" class="btn btn-text-hover" (click)="addNewUserRow()">
-              Add User<i class="fa fa-plus ml-2"></i>
+              Add User<i class="fa fa-plus ms-2"></i>
             </button>
             <br />
             <button type="submit" class="btn btn-primary">Submit</button>

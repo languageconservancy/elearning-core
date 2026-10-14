@@ -11,7 +11,7 @@
           class="teacher-drop dropdown-toggle"
           type="button"
           id="classroomDropdownBtn"
-          data-toggle="dropdown"
+          data-bs-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false">
           {{ currentClassroom.name }}
@@ -21,18 +21,17 @@
             @for (classroom of classrooms; track classroom; let i = $index) {
               <div class="teacher-check tlc-row tlc-width-whole">
                 <div class="tlc-row tlc-align-items-center tlc-width-whole" style="cursor: pointer; gap: 10px;" (click)="setCurrentClassroom(i)">
-                  <div class="tlc-flex">
-                    <label class="custom-control custom-radio tlc-sr-only">Pick a classroom</label>
-                      <input
-                          id="classroom-{{ i }}"
-                          name="radio-stacked-classroom"
-                          type="radio"
-                          [value]="classroom.id"
-                          class="custom-control-input tlc-display-none"
-                          required=""
-                          [checked]="currentClassroomIndex === i"
-                      />
-                      <span class="custom-control-indicator tlc-flex"></span>
+                  <div class="tlc-flex form-check">
+                    <label class="form-check-label tlc-sr-only" for="classroom-{{ i }}">Pick a classroom</label>
+                    <input
+                        id="classroom-{{ i }}"
+                        name="radio-stacked-classroom"
+                        type="radio"
+                        [value]="classroom.id"
+                        class="form-check-input tlc-display-none"
+                        required=""
+                        [checked]="currentClassroomIndex === i"
+                    />
                   </div>
                   <dl>
                       <dt>{{ classroom.name }}</dt>
@@ -54,7 +53,7 @@
         <div class="modal-content">
           <div class="modal-header">
               <h3 class="modal-title">New Classroom</h3>
-              <button type="button" class="close" (click)="closeModal()">
+              <button type="button" class="btn-close" (click)="closeModal()">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
@@ -128,7 +127,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">Edit Classroom</h3>
-            <button type="button" class="close" (click)="closeModal()">
+            <button type="button" class="btn-close" (click)="closeModal()">
                 <span aria-hidden="true">&times;</span>
             </button>
           </div>

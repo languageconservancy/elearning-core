@@ -1,8 +1,9 @@
-import { Component, AfterViewInit, Renderer2, ChangeDetectionStrategy } from "@angular/core";
+import { Component, AfterViewInit, inject } from "@angular/core";
 import { Router } from "@angular/router";
-import { CookieService } from "@app/_services/cookie.service";
 
-import { ForumService } from "@app/_services/forum.service";
+import { FriendSidebarComponent } from "../_partials/friend-sidebar/friend-sidebar.component";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { CookieService } from "@app/_services/cookie.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { FindFriendsService } from "@app/_services/find-friends.service";
@@ -10,12 +11,19 @@ import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-add-friends",
+    imports: [FriendSidebarComponent, PageTitleComponent],
     templateUrl: "./add-friends.component.html",
     styleUrls: ["./add-friends.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AddFriendsComponent implements AfterViewInit {
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private findFriendsService = inject(FindFriendsService);
+    private settingsService = inject(SettingsService);
+
     public user: any = {};
     public friends: any = [];
     public pagenumber = 1;
@@ -28,16 +36,7 @@ export class AddFriendsComponent implements AfterViewInit {
     public searchItem: any = {
         search: "",
     };
-    constructor(
-        private forumService: ForumService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private router: Router,
-        private renderer: Renderer2,
-        private localStorage: LocalStorageService,
-        private findFriendsService: FindFriendsService,
-        private settingsService: SettingsService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {

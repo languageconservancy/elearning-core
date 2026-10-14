@@ -17,16 +17,14 @@
               placeholder="Search here"
               aria-label="Search here"
               aria-describedby="basic-addon2"
-              inputmode="none"
+              (keydown.enter)="search()"
               />
             <span [hidden]="searchTxt === ''" class="icon-close" (click)="clear()">
               <i class="fa fa-times-circle"></i>
             </span>
-            <div class="input-group-append">
-              <button class="input-default btn" type="button" (click)="search()">
-                <i class="fa fa-search"></i>
-              </button>
-            </div>
+            <button class="input-default btn" type="button" (click)="search()">
+              <i class="fa fa-search"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -50,24 +48,25 @@
             <div class="row">
               <div class="col-12 col-lg-3">
                 <div class="profile-pic-section">
-                  <div class="forum-profile-pic" (click)="goToProfile(post.user)">
-                    @if (!post.user.usersetting.FullProfileImageUrl) {
+                  <div class="forum-profile-pic" (click)="goToProfile(post?.user)">
+                    @if (!post.user?.usersetting?.FullProfileImageUrl) {
                       <img
                         src="./assets/images/user_img.png"
                         />
                     }
-                    @if (post.user.usersetting.FullProfileImageUrl) {
+                    @if (post.user?.usersetting?.FullProfileImageUrl) {
                       <img
-                        [src]="post.user.usersetting.FullProfileImageUrl"
+                        [src]="post.user?.usersetting?.FullProfileImageUrl"
+                        [alt]="post.user?.name ?? 'User profile'"
                         />
                     }
                   </div>
-                  @if (post.user_id === user.id) {
-                    <h4 (click)="goToProfile(post.user)">You</h4>
+                  @if (post.user_id === user?.id) {
+                    <h4 (click)="goToProfile(post?.user)">You</h4>
                   }
-                  @if (post.user_id !== user.id) {
-                    <h4 (click)="goToProfile(post.user)" class="text-break">
-                      {{ post.user.name }}
+                  @if (post.user_id !== user?.id) {
+                    <h4 (click)="goToProfile(post?.user)" class="text-break">
+                      {{ post?.user?.name }}
                     </h4>
                   }
                   <div class="forum-profile-logos">
@@ -81,7 +80,7 @@
                   <h4 class="cursor-pointer font-language" (click)="goToDetails(post)">{{ post.title }}</h4>
                   <h6>
                     {{ post.entry_time }} - {{ post.viewer_count }} views
-                    @if (post.user_id === user.id || user.role_id === 4 || user.role_id === 1) {
+                    @if (post.user_id === user?.id || user.role_id === 4 || user.role_id === 1) {
                       <a
                         href="javascript:void(0);"
                         (click)="openModal('newPost', 'edit', post)"
@@ -89,7 +88,7 @@
                         - Edit</a
                         >
                       }
-                      @if (post.user_id === user.id || user.role_id === 4 || user.role_id === 1) {
+                      @if (post.user_id === user?.id || user.role_id === 4 || user.role_id === 1) {
                         <a
                           href="javascript:void(0);"
                           (click)="deletePost(post)"
@@ -105,7 +104,7 @@
                 <div class="bottom-replies-panel">
                   <div class="row flex-nowrap align-items-center">
                     <div class="col-3">
-                      @if (user.id !== post.user.id) {
+                      @if (user.id !== post.user?.id) {
                         <a
                           href="javascript:void(0)"
                           class="report-post"
@@ -140,7 +139,7 @@
 
       <div
         class="modal fade modal-n"
-        data-backdrop="static"
+        data-bs-backdrop="static"
         id="newPost"
         tabindex="-1"
         role="dialog"
@@ -150,54 +149,50 @@
         <div class="modal-dialog modal-md" role="document">
           <div class="modal-content">
             <div class="modal-header text-center">
-              <h3 class="modal-title" id="reset-progress-data">New Topic</h3>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <h3 class="modal-title" id="reset-progress-data">{{ modalTitle }}</h3>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form name="postForm" [formGroup]="postForm" (submit)="createPost(postForm)">
+            <form name="postForm" (submit)="createPost($event)">
               <div class="modal-body modal-n-table">
                 <input
                   type="text"
                   placeholder="Title"
-                  formControlName="title"
-                  name="title"
+                  [formField]="postForm.title"
                   class="form-control input-default seoc-btn-width"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
-                                postForm.value.title &&
-                                postForm.controls.title.invalid &&
-                                postForm.controls.title.touched,
+                                postForm.title().invalid() &&
+                                postForm.title().touched(),
                         }"
                   inputmode="none"
                   appAutoScrollModalInput
                   />
                 <textarea
-                  name="content"
                   placeholder="Description"
-                  formControlName="content"
+                  [formField]="postForm.content"
                   class="form-control input-default seoc-btn-width"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
-                                postForm.value.content &&
-                                postForm.controls.content.invalid &&
-                                postForm.controls.content.touched,
+                                postForm.content().invalid() &&
+                                postForm.content().touched(),
                         }"
                   inputmode="none"
                   appAutoScrollModalInput
                 ></textarea>
                 @if ((user.role_id === 4 || user.role_id === 1) && activeForum === null) {
                   <select
-                    formControlName="postStatus"
+                    [formField]="postForm.postStatus"
                     class="form-control input-default seoc-btn-width"
                     >
-                    <option value="R" selected>Reject</option>
+                    <option value="R">Reject</option>
                     <option value="A">Approve</option>
                   </select>
                 }
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </div>
             </form>

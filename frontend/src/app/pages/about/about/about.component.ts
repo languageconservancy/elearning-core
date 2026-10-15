@@ -1,11 +1,16 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { CapitalizeFirstLetterPipe } from "@app/_pipes/capitalize-first-letter.pipe";
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
+import { SafeUrlPipe } from "@app/_pipes/safe-url.pipe";
 import { SettingsService } from "@app/_services/settings.service";
 import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-about",
+    imports: [PageTitleComponent, CapitalizeFirstLetterPipe, SafeHtmlPipe, SafeUrlPipe],
     templateUrl: "./about.component.html",
     styleUrls: ["./about.component.scss"],
     standalone: true,

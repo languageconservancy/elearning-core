@@ -1,16 +1,16 @@
-import { Pipe, PipeTransform } from "@angular/core";
+import { inject, Pipe, PipeTransform } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 
 @Pipe({
     name: "youtube",
-    standalone: false,
+    standalone: true,
 })
 /**
  * Pipe to allow youtube video HTML markup to pass through Angular's
  * sanitizer. Only lets it pass if <script> tag doesn't exist in the string.
  */
 export class YoutubePipe implements PipeTransform {
-    constructor(private dom: DomSanitizer) {}
+    private dom = inject(DomSanitizer);
 
     /**
      * Bypasses HTML security if there's no <script> tag and only

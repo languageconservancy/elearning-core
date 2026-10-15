@@ -2,6 +2,7 @@ import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
+import { EventPromoComponent } from "@app/_partials/event-promo/event-promo.component";
 import { CookieService } from "@app/_services/cookie.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
@@ -15,6 +16,7 @@ import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-dashboard",
+    imports: [EventPromoComponent],
     templateUrl: "./dashboard.component.html",
     styleUrls: ["./dashboard.component.scss"],
     standalone: true,

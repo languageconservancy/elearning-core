@@ -1,4 +1,4 @@
-import { Directive, HostListener, OnInit, ElementRef, OnDestroy } from "@angular/core";
+import { Directive, HostListener, inject, OnInit, ElementRef, OnDestroy } from "@angular/core";
 import { VirtualKeyboardService } from "../_services/virtual-keyboard.service";
 import { Subscription } from "rxjs";
 import { environment } from "@environments/environment";
@@ -6,20 +6,18 @@ import { environment } from "@environments/environment";
 @Directive({
     // Apply to all input/textarea elements with this directive
     selector: "[appScrollIntoView]",
-    standalone: false,
+    standalone: true,
 })
 export class ScrollIntoViewDirective implements OnInit, OnDestroy {
+    private el = inject(ElementRef);
+    private keyboardService = inject(VirtualKeyboardService);
+
     private keyboardHeightSubscription: Subscription;
     private navbarHeightSubscription: Subscription;
     private currentKeyboardHeight: number = 0;
     private navbarHeight: number = 0;
     private scrollOffset: number = 10;
     private lineHeight: number = 30;
-
-    constructor(
-        private el: ElementRef,
-        private keyboardService: VirtualKeyboardService,
-    ) {}
 
     ngOnInit() {
         this.keyboardHeightSubscription = this.keyboardService.keyboardHeightChanges.subscribe(

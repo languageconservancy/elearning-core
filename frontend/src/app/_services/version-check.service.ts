@@ -1,5 +1,5 @@
 // version-check.service.ts
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { App } from "@capacitor/app";
 import { compareVersions } from "compare-versions";
 import { Settings as API } from "@app/_constants/api.constants";
@@ -12,7 +12,7 @@ interface VersionResponse {
 
 @Injectable({ providedIn: "root" })
 export class VersionCheckService {
-    constructor(private baseService: BaseService) {}
+    private baseService = inject(BaseService);
 
     async checkCompatibility(): Promise<"ok" | "force-update" | "suggest-update"> {
         const appInfo = await App.getInfo(); // { version: "1.3.0", ... }

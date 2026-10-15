@@ -3,6 +3,8 @@ import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
+import { NonSelectableCardComponent } from "@app/shared/non-selectable-card/non-selectable-card.component";
+import { SelectableCardComponent } from "@app/shared/selectable-card/selectable-card.component";
 import { Loader } from "@app/_services/loader.service";
 import { LessonsService } from "@app/_services/lessons.service";
 import { ReviewService } from "@app/_services/review.service";
@@ -16,6 +18,7 @@ import { AudioService } from "@app/_services/audio.service";
 
 @Component({
     selector: "app-mcq",
+    imports: [NonSelectableCardComponent, SelectableCardComponent],
     templateUrl: "./mcq.component.html",
     styleUrls: ["./mcq.component.scss"],
     providers: [ExerciseService],

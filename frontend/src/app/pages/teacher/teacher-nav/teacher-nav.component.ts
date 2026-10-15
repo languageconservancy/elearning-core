@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,10 +14,16 @@ import { Loader } from "@app/_services/loader.service";
     selector: "app-teacher-nav",
     templateUrl: "./teacher-nav.component.html",
     styleUrls: ["./teacher-nav.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class TeacherNavComponent implements OnInit {
+    private router = inject(Router);
+    private location = inject(Location);
+    private classroomService = inject(ClassroomService);
+    private teacherService = inject(TeacherService);
+    private cookieService = inject(CookieService);
+    private loader = inject(Loader);
+
     public schools: any = [];
     public teacher: any = {};
     public tabName: string = "teacher-dashboard";
@@ -26,20 +32,12 @@ export class TeacherNavComponent implements OnInit {
     public currentClassroomIndex: number = -1;
     public isTrueVariable = true;
 
-    constructor(
-        private router: Router,
-        private location: Location,
-        private classroomService: ClassroomService,
-        private teacherService: TeacherService,
-        private cookieService: CookieService,
-        private loader: Loader,
-    ) {}
     ngOnInit() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.setTab(this.router.url.substring(1));
                 this.teacher = JSON.parse(value);

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 
 import * as API from "@app/_constants/api.constants";
@@ -12,20 +12,25 @@ import { RegionPolicyService } from "./region-policy.service";
     providedIn: "root",
 })
 export class SiteSettingsService extends BaseService {
+    public cookieService = inject(CookieService);
+    protected localStorage = inject(LocalStorageService);
+    protected router = inject(Router);
+    protected socialAuthService = inject(SocialAuthService);
+    protected regionPolicyService = inject(RegionPolicyService);
+
     private settings: any;
     private settingsLoaded: Promise<any>;
 
     private features: any;
     private featuresLoaded: Promise<any>;
 
-    constructor(
-        public cookieService: CookieService,
-        protected localStorage: LocalStorageService,
-        protected router: Router,
-        protected socialAuthService: SocialAuthService,
-        protected regionPolicyService: RegionPolicyService,
-    ) {
-        super(cookieService, localStorage, router, socialAuthService);
+    constructor() {
+        super(
+            inject(CookieService),
+            inject(LocalStorageService),
+            inject(Router),
+            inject(SocialAuthService),
+        );
         this.settingsLoaded = this.fetchSettings();
         this.featuresLoaded = this.fetchFeatures();
     }

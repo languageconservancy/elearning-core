@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { SettingsService } from "@app/_services/settings.service";
@@ -8,19 +8,18 @@ import { environment } from "@environments/environment";
     selector: "app-about",
     templateUrl: "./about.component.html",
     styleUrls: ["./about.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AboutComponent implements OnInit {
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+    private settingservice = inject(SettingsService);
+
     public environment = environment;
     public content: any = [];
     public activeTab: any = [];
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private settingservice: SettingsService,
-    ) {
+    constructor() {
         this.route.params.subscribe((params) => {
             this.activeTab = params["tabid"];
             window.scroll(0, 0);
@@ -37,6 +36,7 @@ export class AboutComponent implements OnInit {
                     localContent = res.data.results;
                     for (const [i, value] of localContent.entries()) {
                         if (value.Id == "privacy" || value.Id == "terms") {
+                            // eslint-disable-next-line @typescript-eslint/no-array-delete
                             delete localContent[i];
                         }
                     }

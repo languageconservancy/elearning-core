@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LessonsService } from "@app/_services/lessons.service";
@@ -9,8 +9,7 @@ import { KeyboardService } from "../keyboard.service";
     selector: "app-keyboard-shortcuts",
     templateUrl: "./keyboard-shortcuts.component.html",
     styleUrls: ["./keyboard-shortcuts.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 /**
  * @class KeyboardShortuctsComponent
@@ -19,6 +18,10 @@ import { KeyboardService } from "../keyboard.service";
  * in the format of keyboard key icons followed by their function.
  */
 export class KeyboardShortcutsComponent implements OnDestroy {
+    private lessonsService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    private keyboardService = inject(KeyboardService);
+
     // Template variables
     public showKeyboardShortcuts: boolean = false;
     public showSelectNext: boolean = false;
@@ -37,11 +40,7 @@ export class KeyboardShortcutsComponent implements OnDestroy {
     private exerciseActivitySubscription: Subscription;
     private reviewActivitySubscription: Subscription;
 
-    constructor(
-        private lessonsService: LessonsService,
-        private reviewService: ReviewService,
-        private keyboardService: KeyboardService,
-    ) {
+    constructor() {
         // Lesson frame was just loaded
         this.lessonFrameSubscription = this.lessonsService.currentFrame.subscribe((data) => {
             if (!!data && Object.keys(data).length) {

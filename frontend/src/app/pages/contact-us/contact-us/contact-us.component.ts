@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, ViewChild } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Loader } from "@app/_services/loader.service";
 import { RegistrationService } from "@app/_services/registration.service";
@@ -12,10 +12,14 @@ import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtua
     selector: "app-contact-us",
     templateUrl: "./contact-us.component.html",
     styleUrls: ["./contact-us.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ContactUsComponent implements OnInit {
+    public registrationService = inject(RegistrationService);
+    public loader = inject(Loader);
+    public router = inject(Router);
+    public snackbarService = inject(SnackbarService);
+
     public contactUsForm: any;
     public issueList: any = [
         { name: "Bug Report" },
@@ -35,12 +39,7 @@ export class ContactUsComponent implements OnInit {
     };
     @ViewChild("virtualKeyboard") virtualKeyboard: VirtualKeyboardComponent;
 
-    constructor(
-        public registrationService: RegistrationService,
-        private loader: Loader,
-        private router: Router,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         window.scroll(0, 0);
     }
 

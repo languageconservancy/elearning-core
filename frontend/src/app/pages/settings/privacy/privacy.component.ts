@@ -1,5 +1,11 @@
 import { Component, inject, OnInit, OnDestroy } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import { FormsModule } from "@angular/forms";
+import {
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+    ReactiveFormsModule,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -15,6 +21,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-privacy",
+    imports: [FormsModule, ReactiveFormsModule],
     templateUrl: "./privacy.component.html",
     styleUrls: ["./privacy.component.scss"],
     standalone: true,

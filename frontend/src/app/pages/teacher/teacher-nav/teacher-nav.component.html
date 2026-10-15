@@ -7,7 +7,7 @@
                     <ul class="navbar-nav me-auto tlc-align-items-center">
                         <li class="nav-item left-menu">
                             <a href="javascript:void(0)"
-                                [ngClass]="{ active: tabName === 'teacher-dashboard' }"
+                                [class]="{ active: tabName === 'teacher-dashboard' }"
                                 (click)="setTab('teacher-dashboard')"
                                 class="nav-link mrgn-right5">
                                 @if (this.tabName === 'teacher-dashboard') {
@@ -19,7 +19,7 @@
                         </li>
                         <li class="nav-item left-menu">
                             <a href="javascript:void(0)"
-                                [ngClass]="{ active: tabName === 'teacher-classrooms' }"
+                                [class]="{ active: tabName === 'teacher-classrooms' }"
                                 (click)="setTab('teacher-classrooms')"
                                 class="nav-link mrgn-right5">
                                 @if (this.tabName === 'teacher-classrooms') {
@@ -31,7 +31,7 @@
                         </li>
                         <li class="nav-item left-menu">
                             <a href="javascript:void(0)"
-                                [ngClass]="{ active: tabName === 'teacher-lessons' }"
+                                [class]="{ active: tabName === 'teacher-lessons' }"
                                 (click)="setTab('teacher-lessons')"
                                 class="nav-link mrgn-right5">
                                 @if (this.tabName === 'teacher-lessons') {
@@ -44,7 +44,7 @@
                         @if (currentSchool.role_id === 1) {
                             <li class="nav-item left-menu">
                                 <a href="javascript:void(0)"
-                                    [ngClass]="{ active: tabName === 'teacher-admin' }"
+                                    [class]="{ active: tabName === 'teacher-admin' }"
                                     (click)="setTab('teacher-admin')"
                                     class="nav-link mrgn-right5">
                                     @if (this.tabName === 'teacher-admin') {

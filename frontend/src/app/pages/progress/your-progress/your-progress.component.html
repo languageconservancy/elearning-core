@@ -7,7 +7,7 @@
             ></app-progress-left-panel>
         </div>
     }
-    <div class="l-speed mx-2 col-12 col-lg-8" [ngClass]="{ col: userCanAccessLeaderboard }">
+    <div class="l-speed mx-2 col-12 col-lg-8" [class]="{ col: userCanAccessLeaderboard }">
         <div class="row justify-content-start g-0">
             <div class="logo-container-box col mb-3">
                 <h3 class="top-heading">
@@ -19,7 +19,7 @@
                             <!-- <img src="./assets/images/fire_med.png" class="ng-star-inserted"> -->
                             @if (fireImage === "dead") {
                                 <img
-                                    [ngClass]="{
+                                    [class]="{
                                         'small-img':
                                             $safeNavigationMigration(
                                                 getprogress.progressData?.reviewTimeMinute
@@ -35,7 +35,7 @@
                             }
                             @if (fireImage === "low") {
                                 <img
-                                    [ngClass]="{
+                                    [class]="{
                                         'small-img':
                                             $safeNavigationMigration(
                                                 getprogress.progressData?.reviewTimeMinute
@@ -51,7 +51,7 @@
                             }
                             @if (fireImage === "medium") {
                                 <img
-                                    [ngClass]="{
+                                    [class]="{
                                         'small-img':
                                             $safeNavigationMigration(
                                                 getprogress.progressData?.reviewTimeMinute
@@ -67,7 +67,7 @@
                             }
                             @if (fireImage === "high") {
                                 <img
-                                    [ngClass]="{
+                                    [class]="{
                                         'small-img':
                                             $safeNavigationMigration(
                                                 getprogress.progressData?.reviewTimeMinute
@@ -83,7 +83,7 @@
                             }
                             @if (fireImage === "ultra") {
                                 <img
-                                    [ngClass]="{
+                                    [class]="{
                                         'small-img':
                                             $safeNavigationMigration(
                                                 getprogress.progressData?.reviewTimeMinute
@@ -168,7 +168,7 @@
                         <!-- Review badge -->
                         <div
                             class="summary-img-box"
-                            [ngClass]="{
+                            [class]="{
                                 badgesOpacity: !(
                                     getprogress?.badge?.firebadges?.fire_days > 0 &&
                                     getprogress?.badge?.firebadges?.fire_days < 3
@@ -179,7 +179,7 @@
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{
+                            [class]="{
                                 badgesOpacity: !(
                                     getprogress?.badge?.firebadges?.fire_days > 3 &&
                                     getprogress?.badge?.firebadges?.fire_days < 7
@@ -190,7 +190,7 @@
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{
+                            [class]="{
                                 badgesOpacity: !(
                                     getprogress?.badge?.firebadges?.fire_days > 7 &&
                                     getprogress?.badge?.firebadges?.fire_days < 14
@@ -201,7 +201,7 @@
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{
+                            [class]="{
                                 badgesOpacity: !(getprogress?.badge?.firebadges?.fire_days >= 14),
                             }"
                         >
@@ -212,25 +212,25 @@
                         <!-- Social points badge -->
                         <div
                             class="summary-img-box"
-                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint > 4) }"
+                            [class]="{ badgesOpacity: !(getprogress?.badge?.socialpoint > 4) }"
                         >
                             <img src="./assets/images/teepee_01.png" alt="" />
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 100) }"
+                            [class]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 100) }"
                         >
                             <img src="./assets/images/teepee_02.png" alt="" />
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 250) }"
+                            [class]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 250) }"
                         >
                             <img src="./assets/images/teepee_03.png" alt="" />
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{
+                            [class]="{
                                 badgesOpacity: !(getprogress?.badge?.socialpoint >= 1000),
                             }"
                         >
@@ -238,7 +238,7 @@
                         </div>
                         <div
                             class="summary-img-box"
-                            [ngClass]="{
+                            [class]="{
                                 badgesOpacity: !(getprogress?.badge?.socialpoint >= 5000),
                             }"
                         >
@@ -256,7 +256,7 @@
                                     <div>
                                         <div
                                             class="summary-img-box"
-                                            [ngClass]="{ badgesOpacity: !levelbadgeImg.status }"
+                                            [class]="{ badgesOpacity: !levelbadgeImg.status }"
                                         >
                                             <img [src]="levelbadgeImg.image" alt="" />
                                         </div>

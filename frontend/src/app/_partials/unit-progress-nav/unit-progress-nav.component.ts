@@ -5,9 +5,10 @@ import {
     ElementRef,
     Input,
     Output,
-    EventEmitter
+    EventEmitter,
 } from "@angular/core";
 import { environment } from "@environments/environment";
+import { TimerComponent } from "@app/_partials/timer/timer.component";
 import { Settings } from "@app/_constants/app.constants";
 import {
     Answer,
@@ -59,6 +60,7 @@ export type ExerciseBlockMap = {
 
 @Component({
     selector: "app-unit-progress-nav",
+    imports: [TimerComponent],
     templateUrl: "./unit-progress-nav.component.html",
     styleUrls: ["./unit-progress-nav.component.css"],
     standalone: true,

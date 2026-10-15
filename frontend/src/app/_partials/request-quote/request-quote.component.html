@@ -65,18 +65,18 @@
 	<h5>Primary Contact (Administrator)</h5>
 	<div class="ms-3 mb-3 seoc-btn-row">
 	<span><label for="schoolName">Name</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.adminName && !quoteForm.controls.adminName.invalid && quoteForm.controls.adminName.touched}">
-		<input formControlName="adminName" [ngClass]="{'has-error': quoteForm.value.adminName && quoteForm.controls.adminName.invalid && quoteForm.controls.adminName.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.adminName && !quoteForm.controls.adminName.invalid && quoteForm.controls.adminName.touched}">
+		<input formControlName="adminName" [class]="{'has-error': quoteForm.value.adminName && quoteForm.controls.adminName.invalid && quoteForm.controls.adminName.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="First & Last Name">
 	</span><br>
 	<span><label for="adminEmail">Email</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.adminEmail && !quoteForm.controls.adminEmail.invalid && quoteForm.controls.adminEmail.touched}">
-		<input formControlName="adminEmail" [ngClass]="{'has-error': quoteForm.value.adminEmail && quoteForm.controls.adminEmail.invalid && quoteForm.controls.adminEmail.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.adminEmail && !quoteForm.controls.adminEmail.invalid && quoteForm.controls.adminEmail.touched}">
+		<input formControlName="adminEmail" [class]="{'has-error': quoteForm.value.adminEmail && quoteForm.controls.adminEmail.invalid && quoteForm.controls.adminEmail.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="Admin@School.edu">
 	</span><br>
 	<span><label for="schoolName">Phone</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.adminPhone && !quoteForm.controls.adminPhone.invalid && quoteForm.controls.adminPhone.touched}">
-		<input formControlName="adminPhone" [ngClass]="{'has-error': quoteForm.value.adminPhone && quoteForm.controls.adminPhone.invalid && quoteForm.controls.adminPhone.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.adminPhone && !quoteForm.controls.adminPhone.invalid && quoteForm.controls.adminPhone.touched}">
+		<input formControlName="adminPhone" [class]="{'has-error': quoteForm.value.adminPhone && quoteForm.controls.adminPhone.invalid && quoteForm.controls.adminPhone.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="(555)555-5555 ext 5">
 	</span><br>
 	</div></div>
@@ -84,18 +84,18 @@
 	<h5>Technical Contact (IT Department)</h5>
 	<div class="ms-3 mb-3 seoc-btn-row">
 	<span><label for="schoolName">Name</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.techName && !quoteForm.controls.techName.invalid && quoteForm.controls.techName.touched}">
-		<input formControlName="techName" [ngClass]="{'has-error': quoteForm.value.techName && quoteForm.controls.techName.invalid && quoteForm.controls.techName.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.techName && !quoteForm.controls.techName.invalid && quoteForm.controls.techName.touched}">
+		<input formControlName="techName" [class]="{'has-error': quoteForm.value.techName && quoteForm.controls.techName.invalid && quoteForm.controls.techName.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="First & Last Name">
 	</span><br>
 	<span><label for="schoolName">Email</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.techEmail && !quoteForm.controls.techEmail.invalid && quoteForm.controls.techEmail.touched}">
-		<input formControlName="techEmail" [ngClass]="{'has-error': quoteForm.value.techEmail && quoteForm.controls.techEmail.invalid && quoteForm.controls.techEmail.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.techEmail && !quoteForm.controls.techEmail.invalid && quoteForm.controls.techEmail.touched}">
+		<input formControlName="techEmail" [class]="{'has-error': quoteForm.value.techEmail && quoteForm.controls.techEmail.invalid && quoteForm.controls.techEmail.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="Admin@School.edu">
 	</span><br>
 	<span><label for="schoolName">Phone</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.techPhone && !quoteForm.controls.techPhone.invalid && quoteForm.controls.techPhone.touched}">
-		<input formControlName="techPhone" [ngClass]="{'has-error': quoteForm.value.techPhone && quoteForm.controls.techPhone.invalid && quoteForm.controls.techPhone.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.techPhone && !quoteForm.controls.techPhone.invalid && quoteForm.controls.techPhone.touched}">
+		<input formControlName="techPhone" [class]="{'has-error': quoteForm.value.techPhone && quoteForm.controls.techPhone.invalid && quoteForm.controls.techPhone.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="(555)555-5555 ext 5">
 	</span><br>
 	</div></div></div>
@@ -104,23 +104,23 @@
 	<h5>School/District Information</h5>
 	<div class="ms-3 mb-3 seoc-btn-row">
 	<span><label for="schoolName">Name</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.schoolName && !quoteForm.controls.schoolName.invalid && quoteForm.controls.schoolName.touched}">
-		<input formControlName="schoolName" [ngClass]="{'has-error': quoteForm.value.schoolName && quoteForm.controls.schoolName.invalid && quoteForm.controls.schoolName.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.schoolName && !quoteForm.controls.schoolName.invalid && quoteForm.controls.schoolName.touched}">
+		<input formControlName="schoolName" [class]="{'has-error': quoteForm.value.schoolName && quoteForm.controls.schoolName.invalid && quoteForm.controls.schoolName.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="School HS">
 	</span><br>
 	<span><label for="schoolName">Website</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.schoolEmail && !quoteForm.controls.schoolEmail.invalid && quoteForm.controls.schoolEmail.touched}">
-		<input formControlName="schoolEmail" [ngClass]="{'has-error': quoteForm.value.schoolEmail && quoteForm.controls.schoolEmail.invalid && quoteForm.controls.schoolEmail.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.schoolEmail && !quoteForm.controls.schoolEmail.invalid && quoteForm.controls.schoolEmail.touched}">
+		<input formControlName="schoolEmail" [class]="{'has-error': quoteForm.value.schoolEmail && quoteForm.controls.schoolEmail.invalid && quoteForm.controls.schoolEmail.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="School.edu">
 	</span><br>
 	<span><label for="schoolName">Phone</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.schoolPhone && !quoteForm.controls.schoolPhone.invalid && quoteForm.controls.schoolPhone.touched}">
-		<input formControlName="schoolPhone" [ngClass]="{'has-error': quoteForm.value.schoolPhone && quoteForm.controls.schoolPhone.invalid && quoteForm.controls.schoolPhone.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.schoolPhone && !quoteForm.controls.schoolPhone.invalid && quoteForm.controls.schoolPhone.touched}">
+		<input formControlName="schoolPhone" [class]="{'has-error': quoteForm.value.schoolPhone && quoteForm.controls.schoolPhone.invalid && quoteForm.controls.schoolPhone.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="(555)555-5555">
 	</span><br>
 	<span><label for="schoolName">Address</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.schoolAddress && !quoteForm.controls.schoolAddress.invalid && quoteForm.controls.schoolAddress.touched}">
-		<input formControlName="schoolAddress" [ngClass]="{'has-error': quoteForm.value.schoolAddress && quoteForm.controls.schoolAddress.invalid && quoteForm.controls.schoolAddress.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.schoolAddress && !quoteForm.controls.schoolAddress.invalid && quoteForm.controls.schoolAddress.touched}">
+		<input formControlName="schoolAddress" [class]="{'has-error': quoteForm.value.schoolAddress && quoteForm.controls.schoolAddress.invalid && quoteForm.controls.schoolAddress.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="123 School Rd">
 	</span><br>
 	<span>
@@ -137,23 +137,23 @@
 	<h5>School/District Details</h5>
 	<div class="ms-3 mb-3 seoc-btn-row">
 	<span><label for="numSchools">Number of Schools</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.numSchools && !quoteForm.controls.numSchools.invalid && quoteForm.controls.numSchools.touched}">
-		<input formControlName="numSchools" size=4 [ngClass]="{'has-error': quoteForm.value.numSchools && quoteForm.controls.numSchools.invalid && quoteForm.controls.numSchools.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.numSchools && !quoteForm.controls.numSchools.invalid && quoteForm.controls.numSchools.touched}">
+		<input formControlName="numSchools" size=4 [class]="{'has-error': quoteForm.value.numSchools && quoteForm.controls.numSchools.invalid && quoteForm.controls.numSchools.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="##">
 	</span><br>
 	<span><label for="numStudents">Number of Students</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.numStudents && !quoteForm.controls.numStudents.invalid && quoteForm.controls.numStudents.touched}">
-		<input formControlName="numStudents" size=4 [ngClass]="{'has-error': quoteForm.value.numStudents && quoteForm.controls.numStudents.invalid && quoteForm.controls.numStudents.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.numStudents && !quoteForm.controls.numStudents.invalid && quoteForm.controls.numStudents.touched}">
+		<input formControlName="numStudents" size=4 [class]="{'has-error': quoteForm.value.numStudents && quoteForm.controls.numStudents.invalid && quoteForm.controls.numStudents.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="##">
 	</span><br>
 	<span><label for="numTeachers">Number of Lakota Teachers</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.numTeachers && !quoteForm.controls.numTeachers.invalid && quoteForm.controls.numTeachers.touched}">
-		<input formControlName="numTeachers" size=4 [ngClass]="{'has-error': quoteForm.value.numTeachers && quoteForm.controls.numTeachers.invalid && quoteForm.controls.numTeachers.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.numTeachers && !quoteForm.controls.numTeachers.invalid && quoteForm.controls.numTeachers.touched}">
+		<input formControlName="numTeachers" size=4 [class]="{'has-error': quoteForm.value.numTeachers && quoteForm.controls.numTeachers.invalid && quoteForm.controls.numTeachers.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="text " placeholder="##">
 	</span><br>
 	<span><label for="schoolName">School Start Date</label></span>
-	<span [ngClass]="{'tick-quote': quoteForm.value.startDate && !quoteForm.controls.startDate.invalid && quoteForm.controls.startDate.touched}">
-		<input formControlName="startDate" [ngClass]="{'has-error': quoteForm.value.startDate && quoteForm.controls.startDate.invalid && quoteForm.controls.startDate.touched}"
+	<span [class]="{'tick-quote': quoteForm.value.startDate && !quoteForm.controls.startDate.invalid && quoteForm.controls.startDate.touched}">
+		<input formControlName="startDate" [class]="{'has-error': quoteForm.value.startDate && quoteForm.controls.startDate.invalid && quoteForm.controls.startDate.touched}"
 		class="form-control	seoc-btn-thin seoc-btn-width" type="date" placeholder="">
 	</span><br>
 	<span><label>Hardware Available to Students</label></span><br>

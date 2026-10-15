@@ -1,19 +1,17 @@
-import { Directive, ElementRef, HostListener, OnDestroy, OnInit } from "@angular/core";
+import { Directive, ElementRef, HostListener, inject, OnDestroy, OnInit } from "@angular/core";
 import { VirtualKeyboardService } from "../_services/virtual-keyboard.service";
 import { Subscription } from "rxjs";
 
 @Directive({
     selector: "[appAutoScrollModalInput]",
-    standalone: false,
+    standalone: true,
 })
 export class AutoScrollModalInputDirective implements OnInit, OnDestroy {
+    private el = inject(ElementRef);
+    private keyboardService = inject(VirtualKeyboardService);
+
     private keyboardHeightSubscription: Subscription;
     private currentKeyboardHeight: number = 0;
-
-    constructor(
-        private el: ElementRef,
-        private keyboardService: VirtualKeyboardService,
-    ) {}
 
     ngOnInit() {
         // Subscribe to keyboard height changes

@@ -1,8 +1,9 @@
 import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "@app/_services/cookie.service";
 
+import { CookieService } from "@app/_services/cookie.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { SettingsService } from "@app/_services/settings.service";
@@ -12,6 +13,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-notifications",
+    imports: [FormsModule],
     templateUrl: "./notifications.component.html",
     styleUrls: ["./notifications.component.scss"],
     standalone: true,

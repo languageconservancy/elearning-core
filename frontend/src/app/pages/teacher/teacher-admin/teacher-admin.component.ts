@@ -1,12 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import {
-    Component,
-    ElementRef,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { Component, inject, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import {
     UntypedFormArray,
@@ -33,10 +26,20 @@ import { ErrorCode } from "@app/shared/utils/error-code";
     selector: "app-teacher-admin",
     templateUrl: "./teacher-admin.component.html",
     styleUrls: ["./teacher-admin.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class TeacherAdminComponent implements OnInit, OnDestroy {
+    private classroomService = inject(ClassroomService);
+    private teacherService = inject(TeacherService);
+    private registrationService = inject(RegistrationService);
+    private resetPassService = inject(ResetPasswordService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private fb = inject(UntypedFormBuilder);
+    private excelSrv = inject(ExcelService);
+    private snackbarService = inject(SnackbarService);
+
     private teacherSubscription: Subscription;
     private schoolUserSubscription: Subscription;
     @ViewChild("formModal") formModal;
@@ -60,23 +63,12 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
     public getLinkForm: UntypedFormGroup;
     public newUsersUploadTemplateLink = `${environment.API}templates/download/teacher-portal-new-users-form.xlsx`;
 
-    constructor(
-        private classroomService: ClassroomService,
-        private teacherService: TeacherService,
-        public registrationService: RegistrationService,
-        private resetPassService: ResetPasswordService,
-        private router: Router,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private fb: UntypedFormBuilder,
-        private excelSrv: ExcelService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {

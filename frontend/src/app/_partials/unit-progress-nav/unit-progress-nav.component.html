@@ -19,7 +19,7 @@
       <div
         class="stepNo-horiz d-flex"
         [attr.data-index]="i"
-            [ngClass]="{
+            [class]="{
                 'disabled-link, disabledIcon':
                     activity.state === ActivityState.NotAttempted && i !== currentActivityIdx,
                 'ms-0': i === 0,
@@ -42,7 +42,7 @@
     @if (unit?.activities.length) {
       <div
         class="stepNo-horiz lastStep"
-        [ngClass]="unitCompleteOrPreviouslyCompleted ? 'activeIcon' : 'disabledIcon'"
+        [class]="unitCompleteOrPreviouslyCompleted ? 'activeIcon' : 'disabledIcon'"
         >
         @if (!unitCompleteOrPreviouslyCompleted) {
           <img
@@ -79,7 +79,7 @@
       <div
         class="stepNo-vert d-flex"
         [attr.data-index]="i"
-            [ngClass]="{
+            [class]="{
                 'disabled-link, disabledIcon':
                     activity.state === ActivityState.NotAttempted && i !== currentActivityIdx,
             }"
@@ -101,7 +101,7 @@
     @if (activities?.length) {
       <div
         class="stepNo-vert lastStep"
-        [ngClass]="unitCompleteOrPreviouslyCompleted ? 'activeIcon' : 'disabledIcon'"
+        [class]="unitCompleteOrPreviouslyCompleted ? 'activeIcon' : 'disabledIcon'"
         >
         @if (!unitCompleteOrPreviouslyCompleted) {
           <img

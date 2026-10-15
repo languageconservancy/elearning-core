@@ -117,7 +117,7 @@
 </div>
 
 <div #formModal class="modal fade">
-  <div class="modal-dialog show" [ngClass]="{ 'modal-lg': modalType === 'addUsers' }">
+  <div class="modal-dialog show" [class]="{ 'modal-lg': modalType === 'addUsers' }">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">{{ modalHeader }}</h4>
@@ -255,7 +255,7 @@
               class="form-control input-default seoc-btn-width"
               formControlName="password"
               name="password"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             changeForm.value.password &&
                             changeForm.controls.password.invalid &&
@@ -267,7 +267,7 @@
               class="form-control input-default seoc-btn-width"
               formControlName="confirmpassword"
               name="confirmpassword"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             changeForm.value.confirmpassword &&
                             changeForm.controls.confirmpassword.invalid &&

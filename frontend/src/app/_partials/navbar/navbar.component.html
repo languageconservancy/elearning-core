@@ -32,7 +32,7 @@
                         <a
                             id="nav-learn-btn"
                             class="nav-link me-1"
-                            [ngClass]="{ active: currentRoute === Routes.StartLearning }"
+                            [class]="{ active: currentRoute === Routes.StartLearning }"
                             href="javascript:void(0)"
                             [routerLink]="Routes.StartLearning"
                             >Learn</a
@@ -43,7 +43,7 @@
                             <a
                                 id="nav-review-btn"
                                 class="nav-link me-1"
-                                [ngClass]="{ active: currentRoute === Routes.Review }"
+                                [class]="{ active: currentRoute === Routes.Review }"
                                 href="javascript:void(0)"
                                 (click)="gotoUrlOther(Routes.Review)"
                                 >Review</a
@@ -54,7 +54,7 @@
                         <a
                             id="nav-progress-btn"
                             class="nav-link me-1"
-                            [ngClass]="{ active: currentRoute === Routes.Progress }"
+                            [class]="{ active: currentRoute === Routes.Progress }"
                             href="javascript:void(0)"
                             [routerLink]="Routes.Progress"
                             >Progress</a
@@ -65,7 +65,7 @@
                             <a
                                 id="nav-leaderboard-btn"
                                 class="nav-link me-1"
-                                [ngClass]="{ active: currentRoute === Routes.Leaderboard }"
+                                [class]="{ active: currentRoute === Routes.Leaderboard }"
                                 href="javascript:void(0)"
                                 [routerLink]="Routes.Leaderboard"
                                 >Leaderboard</a
@@ -78,7 +78,7 @@
                                 id="nav-village-btn"
                                 class="nav-link me-1"
                                 href="javascript:void(0)"
-                                [ngClass]="{ active: currentRoute === Routes.Village }"
+                                [class]="{ active: currentRoute === Routes.Village }"
                                 (click)="goToVillage()"
                                 >Village</a
                             >
@@ -93,7 +93,7 @@
                                 id="nav-teachers-btn"
                                 class="nav-link me-1"
                                 href="javascript:void(0)"
-                                [ngClass]="{
+                                [class]="{
                                     active:
                                         currentRoute === Routes.TeacherDashboard ||
                                         currentRoute === Routes.TeacherLessons ||
@@ -110,7 +110,7 @@
                                 id="nav-classroom-btn"
                                 class="nav-link me-1"
                                 href="javascript:void(0)"
-                                [ngClass]="{ active: currentRoute === Routes.Classroom }"
+                                [class]="{ active: currentRoute === Routes.Classroom }"
                                 [routerLink]="Routes.Classroom"
                                 >Classroom</a
                             >
@@ -147,7 +147,7 @@
                     >
                         <span
                             class="welcometext2 d-flex align-items-center right-menu user-pic"
-                            [ngClass]="{ 'me-2': $safeNavigationMigration(user?.name) }"
+                            [class]="{ 'me-2': $safeNavigationMigration(user?.name) }"
                         >
                             @if (user?.usersetting?.FullProfileImageUrl) {
                                 <img

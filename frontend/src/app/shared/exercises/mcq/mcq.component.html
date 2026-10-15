@@ -14,7 +14,7 @@
     <hr />
     <!-- RESPONSE -->
     <div class="row row-cols-2 justify-content-center"
-        [ngClass]="{
+        [class]="{
             'mt-9': exerciseService.responseTypes.indexOf('a') > -1,
         }"
       >
@@ -45,7 +45,7 @@
       <button
         class="btn btn-white custom-next"
         type="button"
-        [ngClass]="{ 'd-none': !exerciseService.nextButtonShouldBeClickable }"
+        [class]="{ 'd-none': !exerciseService.nextButtonShouldBeClickable }"
         (click)="goToNext()"
         >
         Next

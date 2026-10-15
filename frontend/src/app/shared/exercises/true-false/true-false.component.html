@@ -37,7 +37,7 @@
       href="javascript:void(0)"
       tabindex="0"
       class="btn-option bg-option-default border-option-default"
-            [ngClass]="{
+            [class]="{
                 'border-option-correct bg-option-correct':
                     exerciseService.userAnswer === AnswerType.CORRECT &&
                     exerciseService.question.exerciseOptions?.response_true_false === 'Y' &&
@@ -60,7 +60,7 @@
       href="javascript:void(0)"
       tabindex="0"
       class="btn-option bg-option-default border-option-default"
-            [ngClass]="{
+            [class]="{
                 'border-option-correct bg-option-correct':
                     exerciseService.userAnswer === AnswerType.CORRECT &&
                     exerciseService.question.exerciseOptions?.response_true_false === 'N' &&

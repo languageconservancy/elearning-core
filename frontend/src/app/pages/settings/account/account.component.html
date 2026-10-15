@@ -103,7 +103,7 @@
           href="javascript:void(0)"
           class="btn-action"
           (click)="openModal('resetPass')"
-          [ngClass]="{ 'greyed-out': userType !== 'site' }"
+          [class]="{ 'greyed-out': userType !== 'site' }"
           >Reset</a
           >
         </div>
@@ -262,7 +262,7 @@
                 class="form-control input-default seoc-btn-width"
                 formControlName="oldpassword"
                 name="oldpassword"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
                                 changeForm.value.oldpassword &&
                                 changeForm.controls.oldpassword.invalid &&
@@ -276,7 +276,7 @@
                 class="form-control input-default seoc-btn-width"
                 formControlName="password"
                 name="password"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
                                 changeForm.value.password &&
                                 changeForm.controls.password.invalid &&
@@ -290,7 +290,7 @@
                 class="form-control input-default seoc-btn-width"
                 formControlName="confirmpassword"
                 name="confirmpassword"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
                                 changeForm.value.confirmpassword &&
                                 changeForm.controls.confirmpassword.invalid &&
@@ -511,7 +511,7 @@
                 [(ngModel)]="password"
                 appAutoFocus
                 (focus)="resetDataPasswordError = false"
-                [ngClass]="{ 'has-error': resetDataPasswordError }"
+                [class]="{ 'has-error': resetDataPasswordError }"
                 />
             }
           </div>

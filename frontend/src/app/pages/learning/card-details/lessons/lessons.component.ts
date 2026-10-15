@@ -1,7 +1,10 @@
 import { Component, inject, OnDestroy } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
+import { ImageZoomComponent } from "@app/_partials/image-zoom/image-zoom.component";
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
 import { AudioService } from "@app/_services/audio.service";
 import { CookieService } from "@app/_services/cookie.service";
 import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
@@ -11,6 +14,7 @@ import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
 
 @Component({
     selector: "app-lessons",
+    imports: [ImageZoomComponent, SafeHtmlPipe, NgTemplateOutlet],
     templateUrl: "./lessons.component.html",
     styleUrls: ["./lessons.component.scss"],
     standalone: true,

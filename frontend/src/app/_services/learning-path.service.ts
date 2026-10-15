@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
 
@@ -8,21 +8,33 @@ import { LocalStorageService } from "./local-storage.service";
 import { ForumService } from "./forum.service";
 import * as API from "@app/_constants/api.constants";
 import { ApiResponse } from "@app/shared/utils/elearning-types";
-    
+
 @Injectable()
 export class LearningPathService extends BaseService {
-    constructor(
-        cookieService: CookieService,
-        localStorage: LocalStorageService,
-        router: Router,
-        authService: SocialAuthService,
-        private forumService: ForumService,
-    ) {
-        super(cookieService, localStorage, router, authService);
+    public cookieService = inject(CookieService);
+    public localStorage = inject(LocalStorageService);
+    public router = inject(Router);
+    public authService = inject(SocialAuthService);
+    public forumService = inject(ForumService);
+
+    constructor() {
+        super(
+            inject(CookieService),
+            inject(LocalStorageService),
+            inject(Router),
+            inject(SocialAuthService),
+        );
     }
 
     async getLearningPaths(params: any): Promise<any> {
-        const res: ApiResponse = await this.callApi(API.Path.FETCH, "POST", params, {}, "site", true);
+        const res: ApiResponse = await this.callApi(
+            API.Path.FETCH,
+            "POST",
+            params,
+            {},
+            "site",
+            true,
+        );
         if (!res.data.status || !res.data.results || res.data.results.length === 0) {
             throw Error(res.data.message);
         }

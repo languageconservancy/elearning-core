@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -17,10 +17,20 @@ import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
     selector: "app-dashboard",
     templateUrl: "./dashboard.component.html",
     styleUrls: ["./dashboard.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private registrationService = inject(RegistrationService);
+    private cookieService = inject(CookieService);
+    private loader = inject(Loader);
+    private settingsService = inject(SettingsService);
+    private localStorage = inject(LocalStorageService);
+    private localizeService = inject(LocalizeService);
+    private reviewService = inject(ReviewService);
+    private forumService = inject(ForumService);
+    private breadcrumbsService = inject(BreadcrumbsService);
+
     private userSubscription: Subscription;
     public user: any = {};
     public timeZoneOffset: number = 0;
@@ -35,18 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public showImages: boolean = false;
     public translations: any = null;
 
-    constructor(
-        private router: Router,
-        private registrationService: RegistrationService,
-        private cookieService: CookieService,
-        private loader: Loader,
-        private settingsService: SettingsService,
-        private localStorage: LocalStorageService,
-        private localizeService: LocalizeService,
-        private reviewService: ReviewService,
-        private forumService: ForumService,
-        private breadcrumbsService: BreadcrumbsService,
-    ) {
+    constructor() {
         this.userSubscription = this.registrationService.currentUser.subscribe(
             (user) => (this.user = user),
         );
@@ -55,7 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value: string) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 } else {
                     this.user = JSON.parse(value);
                 }
@@ -79,7 +78,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.settingsService
                     .getAllSettings(this.user.id)

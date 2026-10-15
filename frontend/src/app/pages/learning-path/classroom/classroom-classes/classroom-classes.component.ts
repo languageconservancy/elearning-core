@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from "@angular/core";
-import { CookieService } from "@app/_services/cookie.service";
+import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import Swal from "sweetalert2";
 
+import { ClassroomUnitsComponent } from "@app/pages/learning-path/classroom/classroom-units/classroom-units.component";
+import { CookieService } from "@app/_services/cookie.service";
 import { Loader } from "@app/_services/loader.service";
 import { LearningPathService } from "@app/_services/learning-path.service";
 import { LessonsService } from "@app/_services/lessons.service";
@@ -18,12 +19,27 @@ import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-classroom-classes",
+    imports: [ClassroomUnitsComponent],
     templateUrl: "./classroom-classes.component.html",
     styleUrls: ["./classroom-classes.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ClassroomClassesComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private loader = inject(Loader);
+    private lessonService = inject(LessonsService);
+    private settingsService = inject(SettingsService);
+    private localStorage = inject(LocalStorageService);
+    private reviewService = inject(ReviewService);
+    private learningPathService = inject(LearningPathService);
+    private snackbarService = inject(SnackbarService);
+    private classroomService = inject(ClassroomService);
+    private route = inject(ActivatedRoute);
+    private breadcrumbService = inject(BreadcrumbsService);
+    private siteSettingsService = inject(SiteSettingsService);
+    private baseService = inject(BaseService);
+
     // Levels component properties duplicated here
     public user: any = {};
     public path: any = {};
@@ -48,23 +64,7 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
 
     public levelSubscription: Subscription;
 
-    constructor(
-        private router: Router,
-        private cookieService: CookieService,
-        private loader: Loader,
-        private lessonService: LessonsService,
-        private settingsService: SettingsService,
-        private localStorage: LocalStorageService,
-        private reviewService: ReviewService,
-        private learningPathService: LearningPathService,
-        private snackbarService: SnackbarService,
-        // Classroom-specific services
-        private classroomService: ClassroomService,
-        private route: ActivatedRoute,
-        private breadcrumbService: BreadcrumbsService,
-        private siteSettingsService: SiteSettingsService,
-        private baseService: BaseService,
-    ) {
+    constructor() {
         this.getUser();
 
         this.levelSubscription = this.lessonService.currentLevel.subscribe(
@@ -78,7 +78,7 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.localStorage.setItem("isClassroom", 1);
-        this.getFeatures();
+        void this.getFeatures();
     }
 
     private async getFeatures() {
@@ -98,7 +98,7 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    this.baseService.logout();
+                    void this.baseService.logout();
                     return;
                 }
                 this.loader.setLoader(true);
@@ -136,7 +136,7 @@ export class ClassroomClassesComponent implements OnInit, OnDestroy {
             })
             .catch(() => {
                 console.error("[classroom-classes] alreadyDeleted");
-                this.baseService.logout();
+                void this.baseService.logout();
                 void this.router.navigate([""]);
             });
     }

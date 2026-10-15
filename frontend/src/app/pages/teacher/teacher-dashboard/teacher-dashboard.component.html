@@ -161,7 +161,7 @@
               </td>
               @for (percent of studentProgress.percents; track $index) {
                 <td>
-                  <span [ngClass]="{
+                  <span [class]="{
                     'label complete': percent === 100,
                     'label attempted': percent > 0 && percent < 100,
                     'label incomplete': percent === 0,

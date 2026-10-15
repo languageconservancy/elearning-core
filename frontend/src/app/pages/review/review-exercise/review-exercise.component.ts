@@ -1,11 +1,27 @@
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 
+import { AnagramComponent } from "@app/shared/exercises/anagram/anagram.component";
+import { FillinComponent } from "@app/shared/exercises/fillin/fillin.component";
+import { KeyboardShortcutsComponent } from "@app/shared/keyboard/keyboard-shortcuts/keyboard-shortcuts.component";
+import { MatchPairComponent } from "@app/shared/exercises/match-pair/match-pair.component";
+import { McqComponent } from "@app/shared/exercises/mcq/mcq.component";
+import { RecordingComponent } from "@app/shared/exercises/recording/recording.component";
+import { TrueFalseComponent } from "@app/shared/exercises/true-false/true-false.component";
 import { ReviewService } from "@app/_services/review.service";
 import { DeviceDetectorService } from "ngx-device-detector";
 
 @Component({
     selector: "app-review-exercise",
+    imports: [
+        AnagramComponent,
+        FillinComponent,
+        KeyboardShortcutsComponent,
+        MatchPairComponent,
+        McqComponent,
+        RecordingComponent,
+        TrueFalseComponent,
+    ],
     templateUrl: "./review-exercise.component.html",
     styleUrls: ["./review-exercise.component.scss"],
     standalone: true,

@@ -2,6 +2,7 @@ import { Component, inject, OnDestroy } from "@angular/core";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 import { Subscription } from "rxjs";
 
+import { SocialShareComponent } from "@app/_partials/social-share/social-share.component";
 import { CookieService } from "@app/_services/cookie.service";
 import { ReviewService } from "@app/_services/review.service";
 import { Loader } from "@app/_services/loader.service";
@@ -15,6 +16,7 @@ import * as App from "@app/_constants/app.constants";
 
 @Component({
     selector: "app-reward-popups",
+    imports: [SocialShareComponent],
     templateUrl: "./reward-popups.component.html",
     styleUrls: ["./reward-popups.component.scss"],
     animations: [

@@ -12,7 +12,7 @@
     @if (questions.length) {
       <div
         class="col-6 my-3 d-flex flex-fill justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-5': questions[0].promptArray.indexOf('a') > -1,
             }"
         >
@@ -24,7 +24,7 @@
     @if (questions.length > 1) {
       <div
         class="col-6 my-3 d-flex flex-fill justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-5': questions[1].promptArray.indexOf('a') > -1,
             }"
         >
@@ -39,7 +39,7 @@
       @if (questions.length > 2) {
         <div
           class="col-6 my-3 d-flex flex-fill justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-5': questions[2].promptArray.indexOf('a') > -1,
             }"
           >
@@ -51,7 +51,7 @@
       @if (questions.length > 3) {
         <div
           class="col-6 my-3 d-flex flex-fill justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-5': questions[3].promptArray.indexOf('a') > -1,
             }"
           >
@@ -67,7 +67,7 @@
       @if (questions.length > 4) {
         <div
           class="col-6 my-3 d-flex flex-fill justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-5': questions[4].promptArray.indexOf('a') > -1,
             }"
           >
@@ -79,7 +79,7 @@
       @if (questions.length > 5) {
         <div
           class="col-6 my-3 d-flex flex-fill justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-5': questions[5].promptArray.indexOf('a') > -1,
             }"
           >
@@ -142,7 +142,7 @@
       @if (exerciseService.choices.length > 2) {
         <div
           class="col-6 my-3 d-flex justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-5': exerciseService.choices[2].respArray.indexOf('a') > -1,
             }"
           >
@@ -157,7 +157,7 @@
       @if (exerciseService.choices.length > 3) {
         <div
           class="col-6 my-3 d-flex justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-5': exerciseService.choices[3].respArray.indexOf('a') > -1,
             }"
           >
@@ -176,7 +176,7 @@
       @if (exerciseService.choices.length > 4) {
         <div
           class="col-6 my-3 d-flex justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-4': exerciseService.choices[4].respArray.indexOf('a') > -1,
             }"
           >
@@ -191,7 +191,7 @@
       @if (exerciseService.choices.length > 5) {
         <div
           class="col-6 my-3 d-flex justify-content-center"
-            [ngClass]="{
+            [class]="{
                 'my-4': exerciseService.choices[5].respArray.indexOf('a') > -1,
             }"
           >

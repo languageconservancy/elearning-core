@@ -7,7 +7,7 @@
     @if (popupType === 'exercise') {
       <div
         class="result-box position-fixed"
-        [ngClass]="{ 'result-box-success': popupStatus, 'result-box-fail': !popupStatus }"
+        [class]="{ 'result-box-success': popupStatus, 'result-box-fail': !popupStatus }"
         (click)="audioService.playPauseAudio(activeCard.FullAudioUrl)"
         [@fadeScaleBounceAnimation]="'initial'"
         >
@@ -30,7 +30,7 @@
             <a
               href="javascript:void(0)"
               (click)="previous()"
-              [ngClass]="{ 'disabled-arrow': previousDisable }"
+              [class]="{ 'disabled-arrow': previousDisable }"
               class="review-arrow review-arrow-left"
             ></a>
           }
@@ -66,7 +66,7 @@
             <a
               href="javascript:void(0)"
               (click)="next()"
-              [ngClass]="{ 'disabled-arrow': nextDisable }"
+              [class]="{ 'disabled-arrow': nextDisable }"
               class="review-arrow review-arrow-right"
             ></a>
           }

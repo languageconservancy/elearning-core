@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Component, inject, OnInit } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import {
+    UntypedFormGroup,
+    UntypedFormControl,
+    ReactiveFormsModule,
+    Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
 import { ModalService } from "@app/_services/modal.service";
@@ -12,6 +17,7 @@ import { LocalStorageService } from "@app/_services/local-storage.service";
     selector: "app-parental-lock",
     templateUrl: "./parental-lock.component.html",
     styleUrls: ["./parental-lock.component.scss"],
+    imports: [ReactiveFormsModule],
     standalone: true,
 })
 export class ParentalLockComponent implements OnInit {

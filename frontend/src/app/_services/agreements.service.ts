@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, firstValueFrom } from "rxjs";
 import { BaseService } from "@app/_services/base.service";
 import * as API from "@app/_constants/api.constants";
@@ -11,6 +11,10 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     providedIn: "root",
 })
 export class AgreementsService {
+    private loader = inject(Loader);
+    private snackbarService = inject(SnackbarService);
+    private baseService = inject(BaseService);
+
     private showModalSubject = new BehaviorSubject<boolean>(false);
     public showModal$ = this.showModalSubject.asObservable();
 
@@ -20,12 +24,6 @@ export class AgreementsService {
         accepted: null,
     });
     public response$ = this.responseSubject.asObservable();
-
-    constructor(
-        private loader: Loader,
-        private snackbarService: SnackbarService,
-        private baseService: BaseService,
-    ) {}
 
     // Open modal
     openModal(): void {

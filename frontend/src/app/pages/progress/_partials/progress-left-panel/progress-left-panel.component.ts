@@ -1,11 +1,4 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    SimpleChanges,
-    ChangeDetectionStrategy,
-    OnChanges,
-} from "@angular/core";
+import { Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { Router } from "@angular/router";
 import { Routes } from "@app/shared/utils/elearning-types";
 
@@ -18,10 +11,11 @@ interface DropdownItem {
     selector: "app-progress-left-panel",
     templateUrl: "./progress-left-panel.component.html",
     styleUrls: ["./progress-left-panel.component.scss"],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
+    standalone: true,
 })
 export class ProgressLeftPanelComponent implements OnInit, OnChanges {
+    private router = inject(Router);
+
     @Input() userCanAccessLeaderboard: boolean = false;
     public activeDropdownItemTitle: string = "";
     public dropdownItems: DropdownItem[] = [
@@ -30,8 +24,6 @@ export class ProgressLeftPanelComponent implements OnInit, OnChanges {
             route: Routes.Progress,
         },
     ];
-
-    constructor(public router: Router) {}
 
     /**
      * Called when the input properties change. Used to update the dropdown items based

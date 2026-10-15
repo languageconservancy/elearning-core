@@ -8,7 +8,14 @@ import { ForgotPasswordComponent } from "./forgot-password/forgot-password.compo
 import { PartialsModule } from "@app/_partials/partials.module";
 
 @NgModule({
-    declarations: [ChangePasswordComponent, ForgotPasswordComponent],
-    imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, PartialsModule],
+    imports: [
+        ChangePasswordComponent,
+        ForgotPasswordComponent,
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        PartialsModule,
+    ],
 })
 export class PasswordModule {}

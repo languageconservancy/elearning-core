@@ -8,9 +8,11 @@ import {
     inject,
     Input,
 } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
+import { NonSelectableCardComponent } from "@app/shared/non-selectable-card/non-selectable-card.component";
 import { LessonsService } from "@app/_services/lessons.service";
 import { ReviewService } from "@app/_services/review.service";
 import { ExerciseService } from "@app/_services/exercise.service";
@@ -23,6 +25,7 @@ import { AudioService } from "@app/_services/audio.service";
 
 @Component({
     selector: "app-anagram",
+    imports: [FormsModule, NonSelectableCardComponent],
     templateUrl: "./anagram.component.html",
     styleUrls: ["./anagram.component.scss"],
     providers: [ExerciseService],

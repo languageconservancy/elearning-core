@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 
 import { ResetPasswordService } from "@app/_services/reset-password.service";
@@ -10,19 +10,16 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-forgot-password",
     templateUrl: "./forgot-password.component.html",
     styleUrls: ["./forgot-password.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
+    private resetPasswordService = inject(ResetPasswordService);
+    private loader = inject(Loader);
+    private snackbarService = inject(SnackbarService);
+
     public resetForm: UntypedFormGroup;
     public passwordReset: boolean = false;
     public passMsg: string = "";
-
-    constructor(
-        private resetPasswordService: ResetPasswordService,
-        private loader: Loader,
-        private snackbarService: SnackbarService,
-    ) {}
 
     ngOnInit() {
         const emailRegex = `[A-Za-z0-9_]+([\.-]?[A-Za-z0-9_]+)*@[A-Za-z0-9_]+([\.-]?[A-Za-z0-9_]+)*(\.[A-Za-z_]{2,3})+`;

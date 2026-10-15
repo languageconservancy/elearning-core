@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -12,6 +13,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-accessibility",
+    imports: [FormsModule],
     templateUrl: "./accessibility.component.html",
     styleUrls: ["./accessibility.component.scss"],
     standalone: true,

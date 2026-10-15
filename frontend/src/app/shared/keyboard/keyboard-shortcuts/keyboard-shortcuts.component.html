@@ -9,7 +9,7 @@
       <!-- Space to play/pause audio -->
       @if (showPlayAudio) {
         <div class="keyboard-shortcut">
-          <div id="space-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Space') > -1 }">Space</div>
+          <div id="space-key" class="key" [class]="{ keydown: keysPressed.indexOf('Space') > -1 }">Space</div>
           <div class="keyboard-shortcuts-text">Play Audio</div>
         </div>
       }
@@ -19,7 +19,7 @@
           <div
             id="tab-key"
             class="key"
-            [ngClass]="{ keydown: keysPressed.indexOf('Tab') > -1 && keysPressed.indexOf('Shift') === -1 }"
+            [class]="{ keydown: keysPressed.indexOf('Tab') > -1 && keysPressed.indexOf('Shift') === -1 }"
             >
             Tab
           </div>
@@ -29,12 +29,12 @@
       <!-- Shift+Tab to select previous option -->
       @if (showSelectPrevious) {
         <div class="keyboard-shortcut">
-          <div id="shift-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Shift') > -1 }">Shift</div>
+          <div id="shift-key" class="key" [class]="{ keydown: keysPressed.indexOf('Shift') > -1 }">Shift</div>
           <div class="keyboard-shortcuts-symbol-text">+</div>
           <div
             id="tab-key"
             class="key"
-            [ngClass]="{ keydown: keysPressed.indexOf('Tab') > -1 && keysPressed.indexOf('Shift') > -1 }"
+            [class]="{ keydown: keysPressed.indexOf('Tab') > -1 && keysPressed.indexOf('Shift') > -1 }"
             >
             Tab
           </div>
@@ -47,7 +47,7 @@
           <div
             id="enter-key"
             class="key"
-            [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') === -1 }"
+            [class]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') === -1 }"
             >
             Enter
           </div>
@@ -60,7 +60,7 @@
           <div
             id="enter-key"
             class="key"
-            [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') === -1 }"
+            [class]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') === -1 }"
             >
             Enter
           </div>
@@ -70,12 +70,12 @@
       <!-- Shift+Enter to go to previous -->
       @if (showGotoPrevious) {
         <div class="keyboard-shortcut">
-          <div id="shift-key" class="key" [ngClass]="{ keydown: keysPressed.indexOf('Shift') > -1 }">Shift</div>
+          <div id="shift-key" class="key" [class]="{ keydown: keysPressed.indexOf('Shift') > -1 }">Shift</div>
           <div class="keyboard-shortcuts-symbol-text">+</div>
           <div
             id="enter-key"
             class="key"
-            [ngClass]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') > -1 }"
+            [class]="{ keydown: keysPressed.indexOf('Enter') > -1 && keysPressed.indexOf('Shift') > -1 }"
             >
             Enter
           </div>

@@ -7,7 +7,7 @@
     </p>
     <form name="contactUsForm" [formGroup]="contactUsForm">
       <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         contactUsForm.value.name &&
                         !contactUsForm.controls.name.invalid &&
@@ -17,7 +17,7 @@
         <input
           id="name-input"
           formControlName="name"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             contactUsForm.value.name &&
                             contactUsForm.controls.name.invalid &&
@@ -30,7 +30,7 @@
           />
       </span>
       <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         contactUsForm.value.email &&
                         !contactUsForm.controls.email.invalid &&
@@ -41,7 +41,7 @@
           id="email-input"
           formControlName="email"
           class="form-control input-default seoc-btn-width no-virtual-keyboard"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             contactUsForm.value.email &&
                             contactUsForm.controls.email.invalid &&
@@ -54,7 +54,7 @@
           />
       </span>
       <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         contactUsForm.value.issue &&
                         !contactUsForm.controls.issue.invalid &&
@@ -64,7 +64,7 @@
         <select
           name="Issue List"
           class="form-control seoc-btn-contact-us seoc-btn-width"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             contactUsForm.value.issue &&
                             contactUsForm.controls.issue.invalid &&
@@ -83,7 +83,7 @@
         </select>
       </span>
       <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         contactUsForm.value.problemdetails &&
                         !contactUsForm.controls.problemdetails.invalid &&
@@ -94,7 +94,7 @@
           id="problemdetails"
           formControlName="problemdetails"
           appScrollIntoView
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             contactUsForm.value.problemdetails &&
                             contactUsForm.controls.problemdetails.invalid &&

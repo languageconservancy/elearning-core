@@ -8,14 +8,14 @@
  */
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
-    Component,
-    OnInit,
     AfterViewInit,
-    OnDestroy,
+    Component,
     ElementRef,
-    ViewChild,
+    inject,
     NgZone,
-    ChangeDetectionStrategy,
+    OnDestroy,
+    OnInit,
+    ViewChild,
 } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -50,10 +50,30 @@ import { SocialLoginError } from "@app/_exceptions/social-login.errors";
     selector: "app-login",
     templateUrl: "./login.component.html",
     styleUrls: ["./login.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
+    private agePromptService = inject(AgePromptService);
+    private loginService = inject(LoginService);
+    private authService = inject(SocialAuthService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private registrationService = inject(RegistrationService);
+    private localStorage = inject(LocalStorageService);
+    private route = inject(ActivatedRoute);
+    private socialWebService = inject(SocialWebService);
+    private socialMobileService = inject(SocialMobileService);
+    private snackbarService = inject(SnackbarService);
+    private ngZone = inject(NgZone);
+    private baseService = inject(BaseService);
+    public deviceDetector = inject(DeviceDetectorService);
+    private learningPathService = inject(LearningPathService);
+    private settingsService = inject(SettingsService);
+    private agreementsService = inject(AgreementsService);
+    public modalService = inject(ModalService);
+    private trialAccountService = inject(TrialAccountService);
+    private platformRolesService = inject(PlatformRolesService);
+
     public loginForm: UntypedFormGroup;
     public loggedIn: boolean = false;
     public authUser: any;
@@ -73,28 +93,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private loginData: any;
     @ViewChild("googleSigninWebBtn") googleSigninWebBtn: ElementRef;
 
-    constructor(
-        private agePromptService: AgePromptService,
-        private loginService: LoginService,
-        private authService: SocialAuthService,
-        private router: Router,
-        private loader: Loader,
-        private registrationService: RegistrationService,
-        private localStorage: LocalStorageService,
-        private route: ActivatedRoute,
-        private socialWebService: SocialWebService,
-        private socialMobileService: SocialMobileService,
-        private snackbarService: SnackbarService,
-        private ngZone: NgZone,
-        private baseService: BaseService,
-        public deviceDetector: DeviceDetectorService,
-        private learningPathService: LearningPathService,
-        private settingsService: SettingsService,
-        private agreementsService: AgreementsService,
-        public modalService: ModalService,
-        private trialAccountService: TrialAccountService,
-        private platformRolesService: PlatformRolesService,
-    ) {}
+    constructor() {}
 
     ngOnInit() {
         if (this.deviceDetector.isMobile() || this.deviceDetector.isTablet()) {
@@ -220,17 +219,17 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         if (this.deviceDetector.isMobile() || this.deviceDetector.isTablet()) {
             if (this.environment.ENABLE_FACEBOOK_LOGIN && this.facebookConfigValid) {
-                this.socialMobileService.initFacebook();
+                void this.socialMobileService.initFacebook();
             } else {
                 console.info("Facebook config is not valid, skipping initialization");
             }
             if (this.environment.ENABLE_GOOGLE_LOGIN && this.googleConfigValid) {
-                this.socialMobileService.initGoogle();
+                void this.socialMobileService.initGoogle();
             } else {
                 console.info("Google config is not valid, skipping initialization");
             }
             if (this.environment.ENABLE_APPLE_LOGIN && this.appleConfigValid) {
-                this.socialMobileService.initApple();
+                void this.socialMobileService.initApple();
             } else {
                 console.info("Apple config is not valid, skipping initialization");
             }
@@ -516,7 +515,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             await this.baseService.setAuthUserCookie(this.authUser);
             this.registrationService.setUser(this.authUser);
             return true;
-        } catch (error) {
+        } catch {
             return false;
         }
     }
@@ -531,7 +530,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         try {
             const res = await this.loginService.getAuthToken(params);
             if (!res) {
-                throw res;
+                throw new Error(JSON.stringify(res));
             }
             return true;
         } catch (err) {

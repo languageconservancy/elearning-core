@@ -2,10 +2,14 @@ import { Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
+import { ExerciseComponent } from "../exercises/exercise/exercise.component";
+import { KeyboardShortcutsComponent } from "@app/shared/keyboard/keyboard-shortcuts/keyboard-shortcuts.component";
+import { LessonsComponent } from "@app/pages/learning/card-details/lessons/lessons.component";
 import { LessonsService } from "@app/_services/lessons.service";
 
 @Component({
     selector: "app-single-card",
+    imports: [ExerciseComponent, KeyboardShortcutsComponent, LessonsComponent],
     templateUrl: "./single-card.component.html",
     styleUrls: ["./single-card.component.scss"],
     standalone: true,

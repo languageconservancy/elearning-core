@@ -12,16 +12,8 @@ import { SpreadTheWordComponent } from "./spread-the-word/spread-the-word.compon
 import { PartialsModule } from "@app/_partials/partials.module";
 import { PipesModule } from "@app/_pipes/pipes.module";
 import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
-    
+
 @NgModule({
-    declarations: [
-        FindFriendsComponent,
-        LearningPathComponent,
-        LearningSpeedComponent,
-        RegistrationComponent,
-        RecaptchaCheckboxComponent,
-        SpreadTheWordComponent,
-    ],
     imports: [
         CommonModule,
         FormsModule,
@@ -30,6 +22,12 @@ import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recap
         RouterModule,
         PartialsModule,
         PipesModule,
+        FindFriendsComponent,
+        LearningPathComponent,
+        LearningSpeedComponent,
+        RecaptchaCheckboxComponent,
+        RegistrationComponent,
+        SpreadTheWordComponent,
     ],
 })
 export class SignupModule {}

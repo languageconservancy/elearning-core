@@ -28,14 +28,12 @@ import { PipesModule } from "@app/_pipes/pipes.module";
         MatSortModule,
         DragDropModule,
         NgxWigModule,
-    ],
-    declarations: [
-        TeacherNavComponent,
-        TeacherDashboardComponent,
-        TeacherClassroomsComponent,
-        TeacherLessonsComponent,
         ClassroomSelectComponent,
         TeacherAdminComponent,
+        TeacherClassroomsComponent,
+        TeacherDashboardComponent,
+        TeacherLessonsComponent,
+        TeacherNavComponent,
     ],
 })
 export class TeacherModule {}

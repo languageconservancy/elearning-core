@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { HttpStatusCode } from "@angular/common/http";
 import { Router } from "@angular/router";
@@ -15,17 +15,15 @@ import { SocialLogin } from "@capgo/capacitor-social-login";
     providedIn: "root",
 })
 export class BaseService {
+    public cookieService = inject(CookieService);
+    protected localStorage = inject(LocalStorageService);
+    protected router = inject(Router);
+    protected socialAuthService = inject(SocialAuthService);
+
     public AuthType: string = "agent";
     public loginType: string = "";
     private logOutSubject = new BehaviorSubject<any>({});
     public loginStatus = this.logOutSubject.asObservable();
-
-    constructor(
-        public cookieService: CookieService,
-        protected localStorage: LocalStorageService,
-        protected router: Router,
-        protected socialAuthService: SocialAuthService,
-    ) {}
 
     public async callApi(
         functionUrl: string,
@@ -74,11 +72,13 @@ export class BaseService {
                             .then(async (res) => {
                                 if (!res.data.data) {
                                     if (
+                                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                                         res.status == (HttpStatusCode.Unauthorized as number) ||
                                         this.tokenExpired(res)
                                     ) {
                                         await this.logOutOnError();
                                         throw new Error("Error getting auth token.");
+                                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                                     } else if (res.status == (HttpStatusCode.Forbidden as number)) {
                                         const reason = res.data.error.message;
                                         if (
@@ -95,6 +95,7 @@ export class BaseService {
                             .catch(async (err) => {
                                 if (
                                     err.data?.data?.status ==
+                                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                                         (HttpStatusCode.Unauthorized as number) ||
                                     this.tokenExpired(err)
                                 ) {
@@ -118,6 +119,7 @@ export class BaseService {
                 .catch(async (err) => {
                     if (!!err.data && !!err.data?.data) {
                         if (
+                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
                             err.data.data.status == (HttpStatusCode.Unauthorized as number) ||
                             this.tokenExpired(err)
                         ) {
@@ -136,6 +138,7 @@ export class BaseService {
             return false;
         }
         return (
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
             error.code == (HttpStatusCode.InternalServerError as number) &&
             error.message == "Expired token"
         );

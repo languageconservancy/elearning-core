@@ -3,13 +3,16 @@ import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 
 import { Settings } from "@app/_constants/app.constants";
+import { KeyboardComponent } from "@app/shared/keyboard/keyboard.component";
+import { RewardPopupsComponent } from "@app/pages/learning/_partials/reward-popups/reward-popups.component";
+import { SingleCardComponent } from "@app/pages/learning/card-details/single-card/single-card.component";
+import { UnitProgressNavComponent } from "@app/_partials/unit-progress-nav/unit-progress-nav.component";
 import { CookieService } from "@app/_services/cookie.service";
 import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 import { LessonsService } from "@app/_services/lessons.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { ReviewService } from "@app/_services/review.service";
-import { UnitProgressNavComponent } from "@app/_partials/unit-progress-nav/unit-progress-nav.component";
 import { environment } from "@environments/environment";
 import { Throttle } from "@app/_decorators/throttle.decorator";
 import { AudioService } from "@app/_services/audio.service";
@@ -288,6 +291,12 @@ export declare type StateMachine = {
 
 @Component({
     selector: "app-unit-component",
+    imports: [
+        KeyboardComponent,
+        RewardPopupsComponent,
+        SingleCardComponent,
+        UnitProgressNavComponent,
+    ],
     templateUrl: "./unit.component.html",
     styleUrls: ["./unit.component.css"],
     standalone: true,

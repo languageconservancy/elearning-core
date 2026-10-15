@@ -7,10 +7,12 @@ import {
     ViewChild,
     inject,
 } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
+import { NonSelectableCardComponent } from "@app/shared/non-selectable-card/non-selectable-card.component";
 import { LessonsService } from "@app/_services/lessons.service";
 import { ReviewService } from "@app/_services/review.service";
 import { ExerciseService } from "@app/_services/exercise.service";
@@ -71,6 +73,7 @@ interface FlatIndex {
 
 @Component({
     selector: "app-fillin",
+    imports: [FormsModule, NonSelectableCardComponent, VirtualKeyboardComponent],
     encapsulation: ViewEncapsulation.None,
     templateUrl: "./fillin.component.html",
     styleUrls: ["./fillin.component.scss"],

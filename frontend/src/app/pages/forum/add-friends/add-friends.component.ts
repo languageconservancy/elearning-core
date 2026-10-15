@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 
 import { FriendSidebarComponent } from "../_partials/friend-sidebar/friend-sidebar.component";
 import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CookieService } from "@app/_services/cookie.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
@@ -11,7 +12,7 @@ import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-add-friends",
-    imports: [FriendSidebarComponent, PageTitleComponent],
+    imports: [FriendSidebarComponent, PageTitleComponent, FormsModule, ReactiveFormsModule],
     templateUrl: "./add-friends.component.html",
     styleUrls: ["./add-friends.component.scss"],
     standalone: true,

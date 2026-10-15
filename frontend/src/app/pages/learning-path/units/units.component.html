@@ -8,7 +8,7 @@
           >
           <div
             class=""
-                [ngClass]="{
+                [class]="{
                     notclickable: unitDisabled(unit) || unitScheduled(unit),
                     'ng-unlocked-unit': unitEnabled(unit),
                 }"
@@ -119,8 +119,8 @@
                   <div class="">
                     <a
                       href="javascript:void(0)"
-                      [ngClass]="{ 'disabled-link': unit.unitPercentage === 0 }"
-                                [ngClass]="{
+                      [class]="{ 'disabled-link': unit.unitPercentage === 0 }"
+                                [class]="{
                                     'filter-gray-faded-disabled': unit.unitPercentage < 100,
                                 }"
                       (click)="setForumParams(unit)"
@@ -146,11 +146,11 @@
               }
               <!-- Review icon -->
               <div class="col-4 align-self-center px-1">
-                <div class="" [ngClass]="{ 'needs-review': unit.flagNeedsReview }">
+                <div class="" [class]="{ 'needs-review': unit.flagNeedsReview }">
                   <a
                     href="javascript:void(0)"
-                    [ngClass]="{ 'disabled-link': unitNotCompleted(unit) }"
-                                [ngClass]="{
+                    [class]="{ 'disabled-link': unitNotCompleted(unit) }"
+                                [class]="{
                                     'filter-gray-faded-disabled': unit.unitPercentage < 100,
                                 }"
                     tooltip
@@ -267,8 +267,8 @@
                   <div class="">
                     <a
                       href="javascript:void(0)"
-                      [ngClass]="{ 'disabled-link': unit.unitPercentage === 0 }"
-                                [ngClass]="{
+                      [class]="{ 'disabled-link': unit.unitPercentage === 0 }"
+                                [class]="{
                                     'filter-gray-faded-disabled': unit.unitPercentage < 100,
                                 }"
                       (click)="setForumParams(unit)"
@@ -290,11 +290,11 @@
               }
               <!-- Review icon -->
               <div class="col-2 align-self-center px-1">
-                <div class="" [ngClass]="{ 'needs-review': unit.flagNeedsReview }">
+                <div class="" [class]="{ 'needs-review': unit.flagNeedsReview }">
                   <a
                     href="javascript:void(0)"
-                    [ngClass]="{ 'disabled-link': unitNotCompleted(unit) }"
-                                [ngClass]="{
+                    [class]="{ 'disabled-link': unitNotCompleted(unit) }"
+                                [class]="{
                                     'filter-gray-faded-disabled': unit.unitPercentage < 100,
                                 }"
                     tooltip

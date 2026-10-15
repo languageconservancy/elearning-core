@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
 
@@ -11,24 +11,23 @@ import { RegionPolicyService } from "@app/_services/region-policy.service";
     selector: "app-your-progress",
     templateUrl: "./your-progress.component.html",
     styleUrls: ["./your-progress.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class YourProgressComponent implements OnInit {
+    private progressService = inject(ProgressService);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private router = inject(Router);
+    private regionPolicyService = inject(RegionPolicyService);
+    private siteSettingsService = inject(SiteSettingsService);
+
     public user: any = [];
     public getprogress: any = [];
     public fireImage: string = "dead";
     private settings: any = null;
     public userCanAccessLeaderboard: boolean = false;
 
-    constructor(
-        private progressService: ProgressService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private router: Router,
-        private regionPolicyService: RegionPolicyService,
-        private siteSettingsService: SiteSettingsService,
-    ) {
+    constructor() {
         this.siteSettingsService
             .getSettings()
             .then((settings) => {

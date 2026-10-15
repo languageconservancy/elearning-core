@@ -1,5 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef, inject, OnDestroy } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -20,6 +26,7 @@ declare let gapi: any;
     selector: "app-account",
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
+    imports: [FormsModule, ReactiveFormsModule],
     standalone: true,
 })
 export class AccountComponent implements OnInit, OnDestroy {

@@ -6,7 +6,7 @@
           <a
             id="breadcumb-link-{{ i }}"
             href="javascript:void(0)"
-            [ngClass]="{ active: router?.routerState?.snapshot?.url === breadcrumb.url }"
+            [class]="{ active: router?.routerState?.snapshot?.url === breadcrumb.url }"
             (click)="onBreadcrumbClick(breadcrumb)"
             >
             {{ breadcrumb?.name }}

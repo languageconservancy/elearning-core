@@ -1,14 +1,13 @@
-import { Component, HostListener, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, HostListener } from "@angular/core";
 import { KeyboardService } from "./keyboard.service";
 
 @Component({
     selector: "app-keyboard",
     template: "",
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class KeyboardComponent {
-    constructor(private keyboardService: KeyboardService) {}
+    private keyboardService = inject(KeyboardService);
 
     @HostListener("document:keydown", ["$event"])
     keyDownEvent(event: KeyboardEvent) {

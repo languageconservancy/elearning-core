@@ -1,4 +1,4 @@
-import { Component, OnDestroy, AfterViewInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
@@ -71,10 +71,16 @@ import { BadgeService } from "@app/_services/badge.service";
             ),
         ]),
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class PublicProfileComponent implements OnDestroy, AfterViewInit {
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private badgeService = inject(BadgeService);
+    private settingsService = inject(SettingsService);
+    private forumService = inject(ForumService);
+
     public publicUser: any = {};
     public profile: any = {};
     public userId: number = null;
@@ -87,14 +93,7 @@ export class PublicProfileComponent implements OnDestroy, AfterViewInit {
 
     private profileSub: Subscription;
 
-    constructor(
-        private loader: Loader,
-        private router: Router,
-        private localStorage: LocalStorageService,
-        private badgeService: BadgeService,
-        private settingsService: SettingsService,
-        private forumService: ForumService,
-    ) {
+    constructor() {
         this.profileSub = this.settingsService.currentProfile.subscribe((res) => {
             if (res && Object.keys(res).length > 0) {
                 this.userId = res.profile_id;

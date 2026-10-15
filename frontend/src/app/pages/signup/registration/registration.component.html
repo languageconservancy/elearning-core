@@ -5,7 +5,7 @@
     <form name="registrationForm" [formGroup]="registrationForm">
       <!-- Age -->
       <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         registrationForm.value.age &&
                         !registrationForm.controls.age.invalid &&
@@ -16,7 +16,7 @@
           formControlName="age"
           class="form-control input-default"
           (blur)="ageChanged(registrationForm.value.age)"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             registrationForm.value.age &&
                             registrationForm.controls.age.invalid &&
@@ -31,7 +31,7 @@
       </span>
       <!-- Username -->
       <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         registrationForm.value.name &&
                         !registrationForm.controls.name.invalid &&
@@ -40,7 +40,7 @@
         >
         <input
           formControlName="name"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             registrationForm.value.name &&
                             registrationForm.controls.name.invalid &&
@@ -54,7 +54,7 @@
       </span>
       <!-- Email -->
       <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         registrationForm.value.email &&
                         !registrationForm.controls.email.invalid &&
@@ -65,7 +65,7 @@
           formControlName="email"
           class="form-control input-default"
           (blur)="emailChanged(registrationForm.value.email)"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             registrationForm.value.email &&
                             registrationForm.controls.email.invalid &&
@@ -101,7 +101,7 @@
             </div>
           }
           <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         registrationForm.value.password &&
                         !registrationForm.controls.password.invalid &&
@@ -111,7 +111,7 @@
             <input
               formControlName="password"
               class="form-control input-default"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             registrationForm.value.password &&
                             registrationForm.controls.password.invalid &&
@@ -124,7 +124,7 @@
               />
           </span>
           <span
-                [ngClass]="{
+                [class]="{
                     tick:
                         registrationForm.value.confirmpassword &&
                         !registrationForm.controls.confirmpassword.invalid &&
@@ -134,7 +134,7 @@
             <input
               formControlName="confirmpassword"
               class="form-control input-default"
-                    [ngClass]="{
+                    [class]="{
                         'has-error':
                             registrationForm.value.confirmpassword &&
                             registrationForm.controls.confirmpassword.invalid &&

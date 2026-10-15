@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ChangeDetectorRef,
-    OnDestroy,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { Component, inject, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -24,10 +18,20 @@ declare let gapi: any;
     selector: "app-find-friends",
     templateUrl: "./find-friends.component.html",
     styleUrls: ["./find-friends.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class FindFriendsComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private friendsService = inject(FindFriendsService);
+    private registrationService = inject(RegistrationService);
+    private ref = inject(ChangeDetectorRef);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private settingsService = inject(SettingsService);
+    private socialWebService = inject(SocialWebService);
+    private snackbarService = inject(SnackbarService);
+
     private userSubscription: Subscription;
     public userId: string;
     public socialModel: any = {};
@@ -48,23 +52,12 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
     public limit: number = 20;
     public facebookLoaded: boolean = false;
 
-    constructor(
-        private router: Router,
-        public friendsService: FindFriendsService,
-        private registrationService: RegistrationService,
-        private ref: ChangeDetectorRef,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private settingsService: SettingsService,
-        private socialWebService: SocialWebService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -92,7 +85,7 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
                 // setTimeout(() => {

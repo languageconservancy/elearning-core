@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, inject, Input } from "@angular/core";
-import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
+import { NonSelectableCardComponent } from "@app/shared/non-selectable-card/non-selectable-card.component";
+import { CookieService } from "@app/_services/cookie.service";
 import { LessonsService } from "@app/_services/lessons.service";
 import { ReviewService } from "@app/_services/review.service";
 import { ExerciseService } from "@app/_services/exercise.service";
@@ -15,6 +16,7 @@ import * as App from "@app/_constants/app.constants";
 
 @Component({
     selector: "app-true-false",
+    imports: [NonSelectableCardComponent],
     templateUrl: "./true-false.component.html",
     styleUrls: ["./true-false.component.scss"],
     providers: [ExerciseService],

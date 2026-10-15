@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { Observable, of, from } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -15,14 +15,12 @@ import { RegistrationService } from "@app/_services/registration.service";
 export class AuthGuard {
     private debug: boolean = !environment.production;
 
-    constructor(
-        private router: Router,
-        private cookieService: CookieService,
-        private baseService: BaseService,
-        private snackService: SnackbarService,
-        private registrationService: RegistrationService,
-        private agreementsService: AgreementsService,
-    ) {}
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private baseService = inject(BaseService);
+    private snackService = inject(SnackbarService);
+    private registrationService = inject(RegistrationService);
+    private agreementsService = inject(AgreementsService);
 
     canActivate(next: ActivatedRouteSnapshot): Observable<boolean> | Promise<boolean> | boolean {
         const currentRoute = next.routeConfig.path;
@@ -196,17 +194,15 @@ export class AuthGuard {
 
 @Injectable()
 export class RegProgGuard {
-    private debug: boolean = !environment.production;
+    private cookieService = inject(CookieService);
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private snackService = inject(SnackbarService);
+    private baseService = inject(BaseService);
+    private registrationService = inject(RegistrationService);
+    private agreementsService = inject(AgreementsService);
 
-    constructor(
-        private cookieService: CookieService,
-        private router: Router,
-        private localStorage: LocalStorageService,
-        private snackService: SnackbarService,
-        private baseService: BaseService,
-        private registrationService: RegistrationService,
-        private agreementsService: AgreementsService,
-    ) {}
+    private debug: boolean = !environment.production;
 
     canActivate(): Observable<boolean> | Promise<boolean> | boolean {
         if (this.signupInProgress()) {

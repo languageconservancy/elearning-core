@@ -25,7 +25,7 @@
             readonly
             (keydown)="(false)"
             (click)="setActiveInput(i)"
-                    [ngClass]="{
+                    [class]="{
                         'active-input': i === activeInputIndex && answerSubmitted === false,
                         'border-option-correct border-bottom-2 bg-option-correct': answerIsCorrect[i] === AnswerType.CORRECT,
                         'border-option-incorrect border-bottom-2 bg-option-incorrect': answerIsCorrect[i] === AnswerType.INCORRECT,
@@ -50,7 +50,7 @@
             class="mx-1 my-2 btn btn-lg btn-blue font-language prompt-font-size"
             href="javascript:void(0)"
             (click)="jumbledLetterPressed(key)"
-                [ngClass]="{
+                [class]="{
                     'border-option-matched bg-option-matched text-black disabled-link': key.disabled
                 }"
             >{{ key.key }}</a

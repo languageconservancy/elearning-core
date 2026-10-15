@@ -1,33 +1,39 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import {
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
+import { SiteImageComponent } from "@app/_partials/site-image/site-image.component";
 import { Loader } from "@app/_services/loader.service";
 import { ResetPasswordService } from "@app/_services/reset-password.service";
 import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-change-password",
+    imports: [SiteImageComponent, ReactiveFormsModule],
     templateUrl: "./change-password.component.html",
     styleUrls: ["./change-password.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
+    private loader = inject(Loader);
+    private route = inject(ActivatedRoute);
+    private resetPassService = inject(ResetPasswordService);
+    private snackbarService = inject(SnackbarService);
+
     private tokenSubscription: Subscription;
     public changeForm: UntypedFormGroup;
     public passwordReset: boolean = false;
     public passMsg: string = "";
     public passwordToken: string = "";
 
-    constructor(
-        private loader: Loader,
-        private route: ActivatedRoute,
-        private resetPassService: ResetPasswordService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.tokenSubscription = this.route.params.subscribe((params) => {
             this.passwordToken = params.token;
         });

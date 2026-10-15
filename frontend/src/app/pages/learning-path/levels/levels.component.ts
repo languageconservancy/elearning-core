@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
-import { CookieService } from "@app/_services/cookie.service";
+import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
+import { UnitsComponent } from "../units/units.component";
+import { CookieService } from "@app/_services/cookie.service";
 import { Loader } from "@app/_services/loader.service";
 import { LearningPathService } from "@app/_services/learning-path.service";
 import { LessonsService } from "@app/_services/lessons.service";
@@ -15,12 +16,24 @@ import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 @Component({
     selector: "app-levels",
+    imports: [UnitsComponent],
     templateUrl: "./levels.component.html",
     styleUrls: ["./levels.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class LevelsComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private loader = inject(Loader);
+    private lessonService = inject(LessonsService);
+    private settingsService = inject(SettingsService);
+    private localStorage = inject(LocalStorageService);
+    private reviewService = inject(ReviewService);
+    private learningPathService = inject(LearningPathService);
+    public regionPolicyService = inject(RegionPolicyService);
+    private breadcrumbsService = inject(BreadcrumbsService);
+    private siteSettingsService = inject(SiteSettingsService);
+
     public user: any = {};
     public path: any = {};
     public allLevels: any = [];
@@ -36,24 +49,12 @@ export class LevelsComponent implements OnInit, OnDestroy {
     public levelSubscription: Subscription;
     public features: any = {};
 
-    constructor(
-        private router: Router,
-        private cookieService: CookieService,
-        private loader: Loader,
-        private lessonService: LessonsService,
-        private settingsService: SettingsService,
-        private localStorage: LocalStorageService,
-        private reviewService: ReviewService,
-        private learningPathService: LearningPathService,
-        public regionPolicyService: RegionPolicyService,
-        private breadcrumbsService: BreadcrumbsService,
-        private siteSettingsService: SiteSettingsService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -74,7 +75,7 @@ export class LevelsComponent implements OnInit, OnDestroy {
         localStorage.removeItem("unitID");
         localStorage.removeItem("reviewUnit");
         this.localStorage.setItem("isClassroom", 0);
-        this.getFeatures();
+        void this.getFeatures();
     }
 
     private async getFeatures() {
@@ -143,7 +144,7 @@ export class LevelsComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.loader.setLoader(true);
                 const loggedInUser = JSON.parse(value);

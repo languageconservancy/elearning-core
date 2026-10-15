@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, Input } from "@angular/core";
 import { PipesModule } from "@app/_pipes/pipes.module";
 import { CardDataType } from "@app/shared/utils/elearning-types";
 import { AudioService } from "@app/_services/audio.service";
@@ -30,18 +30,17 @@ type Card = {
     standalone: true,
     imports: [PipesModule, PartialsModule],
     templateUrl: "./non-selectable-card.component.html",
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ["./non-selectable-card.component.scss"],
 })
 export class NonSelectableCardComponent {
+    public audioService = inject(AudioService);
+
     @Input() card: Card;
     @Input() enabledDataTypes: string[];
     @Input() optionType: string; // prompt|response
 
     // Make enums accessible to template
     DataType = CardDataType;
-
-    constructor(public audioService: AudioService) {}
 
     /**
      * Play/Pause audio

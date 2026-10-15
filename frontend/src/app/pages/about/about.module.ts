@@ -6,7 +6,6 @@ import { PipesModule } from "@app/_pipes/pipes.module";
 import { PartialsModule } from "@app/_partials/partials.module";
 
 @NgModule({
-    declarations: [AboutComponent],
-    imports: [CommonModule, RouterModule, PipesModule, PartialsModule],
+    imports: [AboutComponent, CommonModule, RouterModule, PipesModule, PartialsModule],
 })
 export class AboutModule {}

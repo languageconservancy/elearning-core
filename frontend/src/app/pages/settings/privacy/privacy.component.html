@@ -53,7 +53,7 @@
               [(ngModel)]="privacy.public"
               (change)="setPrivacy('public')"
               />
-            <span class="slider round" [ngClass]="{ 'greyed-out': !privacy.adult }"></span>
+            <span class="slider round" [class]="{ 'greyed-out': !privacy.adult }"></span>
           </label>
         </div>
       </div>
@@ -73,7 +73,7 @@
               [(ngModel)]="privacy.leaderboard"
               (change)="setPrivacy('leaderboard')"
               />
-            <span class="slider round" [ngClass]="{ 'greyed-out': !privacy.adult }"></span>
+            <span class="slider round" [class]="{ 'greyed-out': !privacy.adult }"></span>
           </label>
         </div>
       </div>
@@ -135,7 +135,7 @@
               autocomplet="off"
               formControlName="parentalLock"
               name="parentalLock"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
                                 parentalForm.value.parentalLock &&
                                 parentalForm.controls.parentalLock.invalid &&
@@ -169,7 +169,7 @@
               class="form-control input-default seoc-btn-width"
               formControlName="parentalLockOld"
               name="parentalLockOld"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
                                 parentalEditForm.value.parentalLockOld &&
                                 parentalEditForm.controls.parentalLockOld.invalid &&
@@ -182,7 +182,7 @@
               class="form-control input-default seoc-btn-width"
               formControlName="parentalLockNew"
               name="parentalLockNew"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
                                 parentalEditForm.value.parentalLockNew &&
                                 parentalEditForm.controls.parentalLockNew.invalid &&

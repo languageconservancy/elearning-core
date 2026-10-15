@@ -30,7 +30,7 @@ export class FooterComponent {
     public environment = environment;
     public copyrightDate = new Date().getFullYear();
 
-    ngOnInit() {
+    OnInit() {
         this.cookieService
             .get("AuthUser")
             .then(async (value) => {

@@ -7,7 +7,7 @@ import {
     ViewChild,
     AfterViewInit,
 } from "@angular/core";
-import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
+import { Router, ActivatedRoute, NavigationEnd, RouterLink } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { CookieService } from "@app/_services/cookie.service";
@@ -27,6 +27,7 @@ import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-navbar",
+    imports: [RouterLink],
     templateUrl: "./navbar.component.html",
     styleUrls: ["./navbar.component.scss"],
     standalone: true,

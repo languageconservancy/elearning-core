@@ -16,10 +16,10 @@ import { LoginComponent } from "./login/login.component";
 import { environment } from "@environments/environment";
 
 @NgModule({
-    declarations: [LoginComponent],
     imports: [
         CommonModule,
         FormsModule,
+        LoginComponent,
         ReactiveFormsModule,
         RouterModule,
         SocialLoginModule,

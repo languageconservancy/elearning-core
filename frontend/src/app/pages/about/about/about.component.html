@@ -18,7 +18,7 @@
           @for (contentItem of content; track contentItem) {
             <a
               class="dropdown-item"
-              [ngClass]="{ active: activeTab === contentItem.Id }"
+              [class]="{ active: activeTab === contentItem.Id }"
               (click)="gotoUrl(contentItem.Id)"
               href="javascript:void(0)"
               >
@@ -27,14 +27,14 @@
           }
           <a
             class="dropdown-item"
-            [ngClass]="{ active: activeTab === 'privacy' }"
+            [class]="{ active: activeTab === 'privacy' }"
             (click)="gotoUrl('privacy')"
             href="javascript:void(0)"
             >Privacy Policy</a
             >
             <a
               class="dropdown-item"
-              [ngClass]="{ active: activeTab === 'terms' }"
+              [class]="{ active: activeTab === 'terms' }"
               (click)="gotoUrl('terms')"
               href="javascript:void(0)"
               >Terms & Conditions</a
@@ -55,7 +55,7 @@
                   role="tab"
                   aria-controls="project"
                   aria-selected="false"
-                  [ngClass]="{ active: 'project' === activeTab }"
+                  [class]="{ active: 'project' === activeTab }"
                   >{{ contentItem.tabTitle }}</a
                   >
                 </li>
@@ -70,7 +70,7 @@
                   role="tab"
                   aria-controls="privacy"
                   aria-selected="false"
-                  [ngClass]="{ active: 'privacy' === activeTab }"
+                  [class]="{ active: 'privacy' === activeTab }"
                   >Privacy Policy</a
                   >
                 </li>
@@ -84,7 +84,7 @@
                     role="tab"
                     aria-controls="terms"
                     aria-selected="false"
-                    [ngClass]="{ active: 'terms' === activeTab }"
+                    [class]="{ active: 'terms' === activeTab }"
                     >Terms & Conditions</a
                     >
                   </li>
@@ -93,14 +93,14 @@
                 <div
                   class="tab-content pl-6 py-5"
                   id="myTabContent"
-                  [ngClass]="'privacy' === activeTab || 'terms' === activeTab ? 'pr-0' : 'pr-6'"
+                  [class]="'privacy' === activeTab || 'terms' === activeTab ? 'pr-0' : 'pr-6'"
                   >
                   @for (item of content; track item; let i = $index) {
                     <div
                       class="tab-pane fade"
                       id="{{ item.Id }}"
                       role="tabpanel"
-                      [ngClass]="{ 'show active': item.Id === activeTab }"
+                      [class]="{ 'show active': item.Id === activeTab }"
                       >
                       <!--						<h2 *ngIf="item.Id != 'press' || item.Id != 'privacy'">{{item.tabTitle}}</h2>-->
                       @if (item.Id === 'press' || item.Id !== 'privacy' || item.Id !== 'terms') {

@@ -61,7 +61,7 @@
                 <div class="ft-action-btn">
                     <a
                         href="javascript:void(0)"
-                        [ngClass]="{ 'no-reviews': noReviews }"
+                        [class]="{ 'no-reviews': noReviews }"
                         routerLink="/review"
                     >
                         <span>
@@ -136,7 +136,7 @@
                         @for (level of allLevels; track level; let i = $index) {
                             <a
                                 class="dropdown-item"
-                                [ngClass]="{ 'last-dropdown-level': i === allLevels.length - 1 }"
+                                [class]="{ 'last-dropdown-level': i === allLevels.length - 1 }"
                                 href="javascript:void(0)"
                                 (click)="setActiveLevel(level)"
                             >
@@ -175,10 +175,10 @@
                     <ul>
                         @for (level of allLevels; track level; let i = $index) {
                             <li>
-                                <div [ngClass]="{ notclickable: !level.enable }">
+                                <div [class]="{ notclickable: !level.enable }">
                                     <a
                                         id="level-{{ i }}-btn"
-                                        [ngClass]="{
+                                        [class]="{
                                             'active-level': selectedLevel === level.id,
                                             'mt-0': i === 0,
                                         }"

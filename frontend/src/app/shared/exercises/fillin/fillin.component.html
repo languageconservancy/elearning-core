@@ -23,7 +23,7 @@
       <!-- MCQ Response -->
       <div
         class="mcq-fill-in-response spacer-top border-primary d-flex shadow position-relative flex-column justify-content-center align-items-center p-4"
-            [ngClass]="{
+            [class]="{
                 'border-option-correct bg-option-correct':
                     answerSubmitted === true && exerciseService.userAnswer === AnswerType.CORRECT,
                 'border-option-incorrect bg-option-incorrect':
@@ -49,7 +49,7 @@
                                 maxAnswerLength + 1
                             }} text-center fillin-input no-virtual-keyboard font-language cursor-pointer"
                     (click)="mcqResponseBlankClicked(groupIndex, partIndex)"
-                            [ngClass]="{
+                            [class]="{
                                 'active-input':
                                     !answerSubmitted &&
                                     groupIndex === activeGroupIndex &&
@@ -82,7 +82,7 @@
           <div class="">
             <span
               class="btn bg-option-default border-option-default border-width-2 font-language prompt-font-size px-4"
-                    [ngClass]="{
+                    [class]="{
                         'border-option-matched bg-option-matched text-ui-panel-light-contast':
                             choice.used,
                         'bg-option-default border-option-default': !isMobileOrTablet,
@@ -100,7 +100,7 @@
       <div class="mt-7 text-center">
         <button
           type="button"
-                [ngClass]="{
+                [class]="{
                     'bg-option-hover border-option-hover text-primary':
                         !isMobileOrTablet &&
                         keyboardHighlightedMcqChoiceIndex === exerciseService.choices.length,
@@ -124,7 +124,7 @@
         <div
           id="typing-area"
           class="border-primary d-flex shadow position-relative flex-column justify-content-center align-items-center p-4 text-center m-0 mt-3 scroll-on-overflow"
-                [ngClass]="{
+                [class]="{
                     'border-option-correct bg-option-correct':
                         answerSubmitted && exerciseService.userAnswer === AnswerType.CORRECT,
                     'border-option-incorrect bg-option-incorrect':
@@ -149,7 +149,7 @@
                                 }} text-center fillin-input font-language bg-transparent"
                       (focus)="typingResponseBlankClicked(groupIndex, partIndex, $event)"
                       [(ngModel)]="inputs['input_' + groupIndex + '_' + partIndex]"
-                                [ngClass]="{
+                                [class]="{
                                     'active-input':
                                         !answerSubmitted &&
                                         groupIndex === activeGroupIndex &&

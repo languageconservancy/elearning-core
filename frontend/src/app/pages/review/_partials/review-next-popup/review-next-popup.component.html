@@ -3,7 +3,7 @@
 <div class="popup-main-content">
   <div class="unit-screen-content">
     <div class="unit-block unit-review-block" (click)="closeUnitPopup('review')">
-      <a class="block-img big-img" href="javascript:void(0)" [ngClass]="{'big-img': fireData.progressData?.pathTimeMinute > fireData.progressData?.reviewTimeMinute}">
+      <a class="block-img big-img" href="javascript:void(0)" [class]="{'big-img': fireData.progressData?.pathTimeMinute > fireData.progressData?.reviewTimeMinute}">
         <img *ngIf="fireImage == 'dead'" src="./assets/images/fire_dead.png" alt="">
         <img *ngIf="fireImage == 'low'" src="./assets/images/fire_low.png" alt="">
         <img *ngIf="fireImage == 'medium'" src="./assets/images/fire_med.png" alt="">
@@ -45,7 +45,7 @@
                 (click)="gotoContinue('Continue')"
             >
                 <a class="block-img big-img" href="javascript:void(0)">
-                    <!-- <a class="block-img big-img" href="javascript:void(0)" [ngClass]="{'big-img': fireData.progressData?.pathTimeMinute > fireData.progressData?.reviewTimeMinute}"> -->
+                    <!-- <a class="block-img big-img" href="javascript:void(0)" [class]="{'big-img': fireData.progressData?.pathTimeMinute > fireData.progressData?.reviewTimeMinute}"> -->
                     @if (fireImage === "dead") {
                         <img src="./assets/images/fire_dead.png" alt="" />
                     }
@@ -64,7 +64,7 @@
                 </a>
                 <h5>
                     <a
-                        [ngClass]="
+                        [class]="
                             activeButtonIndex === 1
                                 ? 'option-white-underline'
                                 : 'option-white-underline-invisible'
@@ -79,7 +79,7 @@
                     <a
                         class="block-img"
                         href="javascript:void(0)"
-                        [ngClass]="{
+                        [class]="{
                             'big-img':
                                 $safeNavigationMigration(fireData.progressData?.pathTimeMinute) <
                                 $safeNavigationMigration(fireData.progressData?.reviewTimeMinute),
@@ -94,7 +94,7 @@
                     </a>
                     <h5>
                         <a
-                            [ngClass]="
+                            [class]="
                                 activeButtonIndex === 0
                                     ? 'option-white-underline'
                                     : 'option-white-underline-invisible'
@@ -114,7 +114,7 @@
                     <a
                         class="block-img"
                         href="javascript:void(0)"
-                        [ngClass]="{
+                        [class]="{
                             'big-img':
                                 $safeNavigationMigration(fireData.progressData?.pathTimeMinute) <
                                 $safeNavigationMigration(fireData.progressData?.reviewTimeMinute),
@@ -129,7 +129,7 @@
                     </a>
                     <h5>
                         <a
-                            [ngClass]="
+                            [class]="
                                 activeButtonIndex === 0
                                     ? 'option-white-underline'
                                     : 'option-white-underline-invisible'

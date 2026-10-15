@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, inject, Input } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
+import { SelectableCardComponent } from "@app/shared/selectable-card/selectable-card.component";
 import { CookieService } from "@app/_services/cookie.service";
 import { LessonsService } from "@app/_services/lessons.service";
 import { ReviewService } from "@app/_services/review.service";
@@ -15,6 +17,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-match-pair",
+    imports: [NgTemplateOutlet, SelectableCardComponent],
     templateUrl: "./match-pair.component.html",
     styleUrls: ["./match-pair.component.scss"],
     providers: [ExerciseService],

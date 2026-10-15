@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,10 +14,17 @@ import { RegionPolicyService } from "@app/_services/region-policy.service";
     selector: "app-spread-the-word",
     templateUrl: "./spread-the-word.component.html",
     styleUrls: ["./spread-the-word.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class SpreadTheWordComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private registrationService = inject(RegistrationService);
+    private localStorage = inject(LocalStorageService);
+    private localizeService = inject(LocalizeService);
+    private siteSettingsService = inject(SiteSettingsService);
+    private regionPolicyService = inject(RegionPolicyService);
+
     public environment = environment;
     private userSubscription: Subscription;
     public user: any = {};
@@ -25,20 +32,12 @@ export class SpreadTheWordComponent implements OnInit, OnDestroy {
     public translations: any = {};
     private settings: any = null;
 
-    constructor(
-        private router: Router,
-        private cookieService: CookieService,
-        private registrationService: RegistrationService,
-        private localStorage: LocalStorageService,
-        private localizeService: LocalizeService,
-        private siteSettingsService: SiteSettingsService,
-        private regionPolicyService: RegionPolicyService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -59,7 +58,7 @@ export class SpreadTheWordComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
             })

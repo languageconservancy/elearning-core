@@ -7,10 +7,15 @@ import {
     inject,
     Input,
 } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+
 import { Subscription } from "rxjs";
 import WaveSurfer from "wavesurfer.js";
 import Microphone from "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js";
 
+import { AudioRecordComponent } from "@app/_partials/audio-record/audio-record.component";
+
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
 import { CookieService } from "@app/_services/cookie.service";
 import { Loader } from "@app/_services/loader.service";
 import { LessonsService } from "@app/_services/lessons.service";
@@ -29,6 +34,7 @@ import { environment } from "@environments/environment";
     templateUrl: "./recording.component.html",
     styleUrls: ["./recording.component.scss"],
     standalone: true,
+    imports: [AudioRecordComponent, SafeHtmlPipe, FormsModule],
 })
 export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
     private cookieService = inject(CookieService);

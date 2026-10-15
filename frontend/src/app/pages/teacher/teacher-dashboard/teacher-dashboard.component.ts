@@ -1,11 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ViewChild,
-    ElementRef,
-    OnDestroy,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
@@ -34,10 +27,16 @@ const ELEMENT_DATA: StudentActivitiesTable[] = [];
     selector: "app-teacher-dashboard",
     templateUrl: "./teacher-dashboard.component.html",
     styleUrls: ["./teacher-dashboard.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class TeacherDashboardComponent implements OnInit, OnDestroy {
+    private teacherService = inject(TeacherService);
+    private classroomService = inject(ClassroomService);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private loader = inject(Loader);
+    private snackbarService = inject(SnackbarService);
+
     @ViewChild("table", { static: false }) private table: any;
     @ViewChild("progresstable", { static: false }) progressTable: ElementRef;
     private schoolSubscription: Subscription;
@@ -69,19 +68,12 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
 
     @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-    constructor(
-        private teacherService: TeacherService,
-        private classroomService: ClassroomService,
-        private router: Router,
-        private cookieService: CookieService,
-        private loader: Loader,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {

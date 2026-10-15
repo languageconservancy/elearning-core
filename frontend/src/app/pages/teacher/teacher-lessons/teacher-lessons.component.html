@@ -31,7 +31,7 @@
 
             @for (level of listTeacherLevels; track $index) {
                 <a
-                    [ngClass]="{ 'active-level': $index === activeLevelIndex }"
+                    [class]="{ 'active-level': $index === activeLevelIndex }"
                     (click)="setActiveTeacherLessonPlan($index)"
                 >
                     {{ level.level.name }}
@@ -309,7 +309,7 @@
                                 formControlName="name"
                                 name="name"
                                 class="form-control input-default seoc-btn-thin seoc-btn-width"
-                                [ngClass]="{
+                                [class]="{
                                     'has-error':
                                         newLevelForm.value.name &&
                                         newLevelForm.controls.name.invalid &&
@@ -325,7 +325,7 @@
                                 formControlName="description"
                                 name="description"
                                 class="input-default form-control seoc-btn-thin seoc-btn-width"
-                                [ngClass]="{ 'has-error': newLevelForm.value.description }"
+                                [class]="{ 'has-error': newLevelForm.value.description }"
                             /> </span
                         ><br />
                         <span><label for="name">Copy Units</label></span>

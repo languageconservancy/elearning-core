@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -22,10 +22,21 @@ import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recap
     selector: "app-registration",
     templateUrl: "./registration.component.html",
     styleUrls: ["./registration.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private learningPathService = inject(LearningPathService);
+    public loginService = inject(LoginService);
+    public registrationService = inject(RegistrationService);
+    private localStorage = inject(LocalStorageService);
+    private loader = inject(Loader);
+    private agreementsService = inject(AgreementsService);
+    private snackbarService = inject(SnackbarService);
+    private settingsService = inject(SettingsService);
+    private baseService = inject(BaseService);
+    private regionPolicyService = inject(RegionPolicyService);
+
     @ViewChild(RecaptchaCheckboxComponent)
     private recaptchaCheckbox?: RecaptchaCheckboxComponent;
 
@@ -43,19 +54,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         : "6LfZ48wfAAAAALDjum-CDaIHeM64Oxdfakkp_WPS";
     private previousAge: number = 0;
 
-    constructor(
-        private router: Router,
-        private learningPathService: LearningPathService,
-        public loginService: LoginService,
-        public registrationService: RegistrationService,
-        private localStorage: LocalStorageService,
-        private loader: Loader,
-        private agreementsService: AgreementsService,
-        private snackbarService: SnackbarService,
-        private settingsService: SettingsService,
-        private baseService: BaseService,
-        private regionPolicyService: RegionPolicyService,
-    ) {
+    constructor() {
         this.userSubscription = this.registrationService.currentUser.subscribe(
             (userId) => (this.userId = userId),
         );
@@ -71,22 +70,22 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                 Validators.min(1),
                 Validators.pattern(/^([1-9])([0-9]){0,1}$/),
             ]),
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             name: new UntypedFormControl("", [
+                // eslint-disable-next-line @typescript-eslint/unbound-method
                 Validators.required,
                 this.validateBlankValue.bind(this),
             ]),
             email: new UntypedFormControl("", {
-                // eslint-disable-next-line @typescript-eslint/unbound-method
                 validators: [
+                    // eslint-disable-next-line @typescript-eslint/unbound-method
                     Validators.required,
                     Validators.pattern(emailRegex),
                     this.validateBlankValue.bind(this),
                 ],
                 updateOn: "blur",
             }),
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             password: new UntypedFormControl("", [
+                // eslint-disable-next-line @typescript-eslint/unbound-method
                 Validators.required,
                 this.validateBlankValue.bind(this),
             ]),

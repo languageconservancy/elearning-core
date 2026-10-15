@@ -58,7 +58,7 @@
                             <a
                                 href="javascript:void(0)"
                                 (click)="previous()"
-                                [ngClass]="{ 'disabled-arrow': previousDisable }"
+                                [class]="{ 'disabled-arrow': previousDisable }"
                                 class="review-arrow review-arrow-left d-flex align-items-center justify-content-center"
                             >
                                 <img src="./assets/images/review-arrow-left.png" />
@@ -105,7 +105,7 @@
                             <a
                                 href="javascript:void(0)"
                                 (click)="next()"
-                                [ngClass]="{ 'disabled-arrow': nextDisable }"
+                                [class]="{ 'disabled-arrow': nextDisable }"
                                 class="review-arrow review-arrow-right d-flex align-items-center justify-content-center"
                             >
                                 <img src="./assets/images/review-arrow-right.png" />
@@ -128,7 +128,7 @@
         @if (popupType === "exercise") {
             <div
                 class="result-box position-fixed"
-                [ngClass]="{ 'result-box-success': popupStatus, 'result-box-fail': !popupStatus }"
+                [class]="{ 'result-box-success': popupStatus, 'result-box-fail': !popupStatus }"
                 (click)="audioService.playPauseAudio(activeCard.FullAudioUrl)"
                 [@fadeScaleBounceAnimation]="'initial'"
             >
@@ -157,7 +157,7 @@
                         <a
                             href="javascript:void(0)"
                             (click)="previous()"
-                            [ngClass]="{ 'disabled-arrow': previousDisable }"
+                            [class]="{ 'disabled-arrow': previousDisable }"
                             class="review-arrow review-arrow-left"
                         ></a>
                     }
@@ -222,7 +222,7 @@
                         <a
                             href="javascript:void(0)"
                             (click)="next()"
-                            [ngClass]="{ 'disabled-arrow': nextDisable }"
+                            [class]="{ 'disabled-arrow': nextDisable }"
                             class="review-arrow review-arrow-right"
                         ></a>
                     }
@@ -451,7 +451,7 @@
                             <a
                                 href="javascript:void(0)"
                                 (click)="previous()"
-                                [ngClass]="{ 'disabled-arrow': previousDisable }"
+                                [class]="{ 'disabled-arrow': previousDisable }"
                                 class="review-arrow review-arrow-left"
                             ></a>
                             <div class="review-blue-box">
@@ -492,7 +492,7 @@
                             <a
                                 href="javascript:void(0)"
                                 (click)="next()"
-                                [ngClass]="{ 'disabled-arrow': nextDisable }"
+                                [class]="{ 'disabled-arrow': nextDisable }"
                                 class="review-arrow review-arrow-right"
                             ></a>
                         </div>
@@ -532,7 +532,7 @@
                             <a
                                 class="block-img big-img"
                                 href="javascript:void(0)"
-                                [ngClass]="{
+                                [class]="{
                                     'big-img':
                                         $safeNavigationMigration(
                                             fireData.progressData?.pathTimeMinute
@@ -560,7 +560,7 @@
                             </a>
                             <h5>
                                 <a
-                                    [ngClass]="
+                                    [class]="
                                         keyboardUnitPopupHighlightIndex === 0
                                             ? 'option-white-underline'
                                             : 'option-white-underline-invisible'
@@ -575,7 +575,7 @@
                     </div>
                     <div class="unit-repeat justify-content-center d-flex mt-4">
                         <h3
-                            [ngClass]="
+                            [class]="
                                 keyboardUnitPopupHighlightIndex === 1
                                     ? 'option-white-underline'
                                     : 'option-white-underline-invisible'

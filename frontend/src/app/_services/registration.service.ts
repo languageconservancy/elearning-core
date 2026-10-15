@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
 import { BaseService } from "./base.service";
@@ -11,16 +11,21 @@ import { ApiResponse } from "@app/shared/utils/elearning-types";
 
 @Injectable()
 export class RegistrationService extends BaseService {
+    public cookieService = inject(CookieService);
+    protected localStorageService = inject(LocalStorageService);
+    protected router = inject(Router);
+    protected socialAuthService = inject(SocialAuthService);
+
     private userSubject = new BehaviorSubject<any>({});
     public currentUser = this.userSubject.asObservable();
 
-    constructor(
-        public cookieService: CookieService,
-        protected localStorageService: LocalStorageService,
-        protected router: Router,
-        protected socialAuthService: SocialAuthService,
-    ) {
-        super(cookieService, localStorageService, router, socialAuthService);
+    constructor() {
+        super(
+            inject(CookieService),
+            inject(LocalStorageService),
+            inject(Router),
+            inject(SocialAuthService),
+        );
     }
 
     register(data: any) {
@@ -38,7 +43,7 @@ export class RegistrationService extends BaseService {
                 })
                 .catch((err) => {
                     console.error("[register] ", err);
-                    reject(err);
+                    reject(err instanceof Error ? err : new Error(String(err)));
                 });
         });
         return promise;
@@ -51,7 +56,7 @@ export class RegistrationService extends BaseService {
                     resolve(res);
                 },
                 (msg) => {
-                    reject(msg);
+                    reject(msg instanceof Error ? msg : new Error(String(msg)));
                 },
             );
         });

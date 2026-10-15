@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,10 +14,16 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-teacher-classrooms",
     templateUrl: "./teacher-classrooms.component.html",
     styleUrls: ["./teacher-classrooms.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class TeacherClassroomsComponent implements OnDestroy {
+    private classroomService = inject(ClassroomService);
+    private teacherService = inject(TeacherService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private snackbarService = inject(SnackbarService);
+
     private schoolSubscription: Subscription;
     private teacherSubscription: Subscription;
     private classroomSubscription: Subscription;
@@ -32,19 +38,12 @@ export class TeacherClassroomsComponent implements OnDestroy {
     public activeEditUser: number = -1;
     public unsavedStudentChanges = false;
 
-    constructor(
-        private classroomService: ClassroomService,
-        private teacherService: TeacherService,
-        private loader: Loader,
-        private router: Router,
-        private cookieService: CookieService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {

@@ -1,11 +1,21 @@
 import { Component, OnInit, ElementRef, inject, ViewChild, OnDestroy } from "@angular/core";
 import { Location } from "@angular/common";
-import { UntypedFormGroup, UntypedFormControl } from "@angular/forms";
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { Subscription } from "rxjs";
 import Swal from "sweetalert2";
 
+import { FriendSidebarComponent } from "@app/pages/forum/_partials/friend-sidebar/friend-sidebar.component";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { ReportPostModalComponent } from "@app/pages/forum/_partials/report-post-modal/report-post-modal.component";
+import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
+import { BadgeImagePipe } from "@app/_pipes/badge-image.pipe";
 import { BadgeService } from "@app/_services/badge.service";
 import { CookieService } from "@app/_services/cookie.service";
 import { ForumService } from "@app/_services/forum.service";
@@ -14,12 +24,20 @@ import { LocalStorageService } from "@app/_services/local-storage.service";
 import { ModalService } from "@app/_services/modal.service";
 import { SettingsService } from "@app/_services/settings.service";
 import { SnackbarService } from "@app/_services/snackbar.service";
-import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
 import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
 import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-post-details",
+    imports: [
+        FriendSidebarComponent,
+        PageTitleComponent,
+        ReportPostModalComponent,
+        VirtualKeyboardComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        BadgeImagePipe,
+    ],
     templateUrl: "./post-details.component.html",
     styleUrls: ["./post-details.component.scss"],
     standalone: true,

@@ -61,7 +61,7 @@
             ) {
                 <div
                     class="text-center"
-                    [ngClass]="{ 'audio-icon': exerciseService.promptTypes.length > 1 }"
+                    [class]="{ 'audio-icon': exerciseService.promptTypes.length > 1 }"
                 >
                     <a class="audio-prompt" href="javascript:void(0)">
                         @if (
@@ -202,13 +202,7 @@
             </div>
             <div class="modal-body modal-n-table">
                 <div class="form-group">
-                    <!-- <input type="text" data-bs-role="tagsinput" class="form-control input-default seoc-btn-width" placeholder="Enter email(s)"> -->
-                    <tag-input
-                        [(ngModel)]="emailShareModel"
-                        addOnPaste="true"
-                        class="form-control input-default seoc-btn-width"
-                        placeholder="Enter email(s)"
-                    ></tag-input>
+                    <input type="text" addOnPaste="true" data-bs-role="tagsinput" class="form-control input-default seoc-btn-width" placeholder="Enter email(s)" [(ngModel)]="emailShareModel">
                 </div>
             </div>
             <div class="modal-footer">

@@ -9,7 +9,14 @@ import { ProgressLeftPanelComponent } from "@app/pages/progress/_partials/progre
 import { PartialsModule } from "@app/_partials/partials.module";
 
 @NgModule({
-    declarations: [LeaderBoardComponent, YourProgressComponent, ProgressLeftPanelComponent],
-    imports: [CommonModule, FormsModule, RouterModule, PartialsModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        LeaderBoardComponent,
+        RouterModule,
+        PartialsModule,
+        ProgressLeftPanelComponent,
+        YourProgressComponent,
+    ],
 })
 export class ProgressModule {}

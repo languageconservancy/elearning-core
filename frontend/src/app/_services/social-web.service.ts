@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 // For Facebook/Google login on web
 import {
     SocialAuthService,
@@ -19,11 +19,9 @@ declare let FB: any;
     providedIn: "root",
 })
 export class SocialWebService {
-    constructor(
-        private socialAuthService: SocialAuthService,
-        private snackbarService: SnackbarService,
-        private baseService: BaseService,
-    ) {}
+    private socialAuthService = inject(SocialAuthService);
+    private snackbarService = inject(SnackbarService);
+    private baseService = inject(BaseService);
 
     /*------------------------------------------------------------------------*/
     /*                           Facebook Login                               */
@@ -43,7 +41,7 @@ export class SocialWebService {
             return Promise.resolve(FB.init(initParams));
         } catch (error) {
             console.error("Error initializing FacebookService: ", error);
-            return Promise.reject(error);
+            return Promise.reject(error instanceof Error ? error : new Error(String(error)));
         }
     }
 
@@ -96,15 +94,21 @@ export class SocialWebService {
             try {
                 FB.api(path, method, params, (response) => {
                     if (!response) {
-                        reject(response);
+                        reject(new Error("Facebook API returned no response."));
                     } else if (response.error) {
-                        reject(response.error);
+                        reject(
+                            new Error(
+                                typeof response.error === "string"
+                                    ? response.error
+                                    : response.error.message || JSON.stringify(response.error),
+                            ),
+                        );
                     } else {
                         resolve(response);
                     }
                 });
             } catch (error) {
-                reject(error);
+                reject(error instanceof Error ? error : new Error(String(error)));
             }
         });
     }
@@ -114,15 +118,21 @@ export class SocialWebService {
             try {
                 FB.ui(params, (response) => {
                     if (!response) {
-                        reject(response);
+                        reject(new Error(JSON.stringify(response)));
                     } else if (response.error) {
-                        reject(response.error);
+                        reject(
+                            new Error(
+                                typeof response.error === "string"
+                                    ? response.error
+                                    : response.error.message || JSON.stringify(response.error),
+                            ),
+                        );
                     } else {
                         resolve(response);
                     }
                 });
             } catch (error) {
-                reject(error);
+                reject(error instanceof Error ? error : new Error(String(error)));
             }
         });
     }

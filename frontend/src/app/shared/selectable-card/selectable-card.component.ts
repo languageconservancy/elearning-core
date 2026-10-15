@@ -1,14 +1,14 @@
 import {
     Component,
-    Input,
-    Output,
-    EventEmitter,
     ElementRef,
+    EventEmitter,
+    inject,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
     ViewChild,
     ViewEncapsulation,
-    OnInit,
-    OnChanges,
-    ChangeDetectionStrategy,
 } from "@angular/core";
 import { PipesModule } from "@app/_pipes/pipes.module";
 import { AudioService } from "@app/_services/audio.service";
@@ -39,10 +39,12 @@ type Card = {
     imports: [PipesModule],
     templateUrl: "./selectable-card.component.html",
     styleUrls: ["./selectable-card.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None,
 })
 export class SelectableCardComponent implements OnInit, OnChanges {
+    private audioService = inject(AudioService);
+    private deviceService = inject(DeviceDetectorService);
+
     @Input() card: Card;
     @Input() index: number;
     @Input() highlightedCardIndex: number;
@@ -72,11 +74,6 @@ export class SelectableCardComponent implements OnInit, OnChanges {
 
     // Check if device is desktop or not for responsive design
     isDesktop: boolean = !this.deviceService.isMobile() && !this.deviceService.isTablet();
-
-    constructor(
-        private audioService: AudioService,
-        private deviceService: DeviceDetectorService,
-    ) {}
 
     ngOnInit() {
         this.updateSelectButtonVisibility();

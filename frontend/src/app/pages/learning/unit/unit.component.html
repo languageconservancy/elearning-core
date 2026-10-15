@@ -3,7 +3,7 @@
 <div
   id="cards-main-div"
   class="mx-2"
-    [ngClass]="{
+    [class]="{
         nolevel:
             !unit?.activities.length ||
             (unit?.activities[currentActivityIdx]?.flowType === 'exercise' &&
@@ -102,7 +102,7 @@
     @if (unitFetchedAndHasContent()) {
       <div
         class="col-lg-10 mt-2"
-        [ngClass]="{ 'p-3': unitFetchedAndHasContent() }"
+        [class]="{ 'p-3': unitFetchedAndHasContent() }"
         >
         <div class="rounded-3 bg-white l-speed py-4 px-4">
           <app-single-card></app-single-card>

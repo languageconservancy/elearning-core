@@ -3,12 +3,12 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     NgZone,
     OnDestroy,
     Output,
     ViewChild,
-    ChangeDetectionStrategy,
 } from "@angular/core";
 
 interface GoogleRecaptchaApi {
@@ -84,10 +84,11 @@ function loadRecaptchaApi(): Promise<GoogleRecaptchaApi> {
 @Component({
     selector: "app-recaptcha-checkbox",
     templateUrl: "./recaptcha-checkbox.component.html",
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class RecaptchaCheckboxComponent implements AfterViewInit, OnDestroy {
+    private zone = inject(NgZone);
+
     @Input() siteKey: string;
     @Output() resolved = new EventEmitter<string | null>();
     @ViewChild("captchaHost", { static: true })
@@ -97,8 +98,6 @@ export class RecaptchaCheckboxComponent implements AfterViewInit, OnDestroy {
     private recaptchaApi: GoogleRecaptchaApi;
     private widgetId: number;
     private destroyed = false;
-
-    constructor(private zone: NgZone) {}
 
     ngAfterViewInit(): void {
         void this.renderWidget();

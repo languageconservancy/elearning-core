@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BaseService } from "./base.service";
 import * as API from "@app/_constants/api.constants";
 import { ApiResponse } from "@app/shared/utils/elearning-types";
-    
+
 @Injectable()
 export class SettingsService extends BaseService {
     private tabSubject = new BehaviorSubject<any>("");
@@ -62,11 +62,25 @@ export class SettingsService extends BaseService {
     }
 
     getPublicUser(userId: number | string) {
-        return this.callApi(API.User.GET_PUBLIC_USER + "/" + userId + ".json", "GET", {}, {}, "site", true);
+        return this.callApi(
+            API.User.GET_PUBLIC_USER + "/" + userId + ".json",
+            "GET",
+            {},
+            {},
+            "site",
+            true,
+        );
     }
 
     getAllSettings(userId: any) {
-        return this.callApi(API.User.GET_USER + "/" + userId + ".json", "GET", {}, {}, "site", true);
+        return this.callApi(
+            API.User.GET_USER + "/" + userId + ".json",
+            "GET",
+            {},
+            {},
+            "site",
+            true,
+        );
     }
 
     updateUserSettings(data) {

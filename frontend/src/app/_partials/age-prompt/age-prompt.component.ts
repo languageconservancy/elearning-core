@@ -1,5 +1,11 @@
 import { Component, inject, OnInit } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import {
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
+import { RouterLink } from "@angular/router";
 import { RegexConsts } from "@app/_constants/app.constants";
 import { AgePromptService } from "@app/_services/age-prompt.service";
 import { SnackbarService } from "@app/_services/snackbar.service";
@@ -13,6 +19,7 @@ import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-age-prompt",
+    imports: [ReactiveFormsModule, RouterLink],
     templateUrl: "./age-prompt.component.html",
     styleUrls: ["./age-prompt.component.css"],
     standalone: true,

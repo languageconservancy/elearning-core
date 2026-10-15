@@ -14,7 +14,7 @@
       @for (dropdownItem of dropdownItems; track dropdownItem) {
         <a
           class="dropdown-item"
-          [ngClass]="{ active: router.url === dropdownItem.route }"
+          [class]="{ active: router.url === dropdownItem.route }"
           (click)="setActiveDropdownItem(dropdownItem)"
           href="javascript:void(0)"
           >
@@ -30,7 +30,7 @@
     <li>
       <a
         href="javascript:void(0)"
-        [ngClass]="{ active: router.url === '/progress' }"
+        [class]="{ active: router.url === '/progress' }"
         routerLink="/progress"
         ><h5 class="mb-0">Your Progress</h5></a
         >
@@ -39,7 +39,7 @@
         <li>
           <a
             href="javascript:void(0)"
-            [ngClass]="{ active: router.url === '/leader-board' }"
+            [class]="{ active: router.url === '/leader-board' }"
             routerLink="/leader-board"
             ><h5 class="mb-0">Leaderboard</h5></a
             >

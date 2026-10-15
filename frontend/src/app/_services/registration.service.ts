@@ -1,32 +1,14 @@
-import { inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
 import { BaseService } from "./base.service";
-import { CookieService } from "./cookie.service";
 import * as API from "@app/_constants/api.constants";
-import { LocalStorageService } from "./local-storage.service";
-import { Router } from "@angular/router";
-import { SocialAuthService } from "@abacritt/angularx-social-login";
 import { ApiResponse } from "@app/shared/utils/elearning-types";
 
 @Injectable()
 export class RegistrationService extends BaseService {
-    public cookieService = inject(CookieService);
-    protected localStorageService = inject(LocalStorageService);
-    protected router = inject(Router);
-    protected socialAuthService = inject(SocialAuthService);
-
     private userSubject = new BehaviorSubject<any>({});
     public currentUser = this.userSubject.asObservable();
-
-    constructor() {
-        super(
-            inject(CookieService),
-            inject(LocalStorageService),
-            inject(Router),
-            inject(SocialAuthService),
-        );
-    }
 
     register(data: any) {
         const promise = new Promise((resolve, reject) => {

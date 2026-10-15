@@ -3,27 +3,10 @@ import { inject, Injectable } from "@angular/core";
 import { BaseService } from "./base.service";
 import { RegistrationService } from "./registration.service";
 import * as API from "@app/_constants/api.constants";
-import { CookieService } from "./cookie.service";
-import { LocalStorageService } from "./local-storage.service";
-import { Router } from "@angular/router";
-import { SocialAuthService } from "@abacritt/angularx-social-login";
 
 @Injectable()
 export class LoginService extends BaseService {
     public registrationService = inject(RegistrationService);
-    public cookieService = inject(CookieService);
-    protected localStorageService = inject(LocalStorageService);
-    protected router = inject(Router);
-    protected socialAuthService = inject(SocialAuthService);
-
-    constructor() {
-        super(
-            inject(CookieService),
-            inject(LocalStorageService),
-            inject(Router),
-            inject(SocialAuthService),
-        );
-    }
 
     getAuthToken(data: any) {
         return this.getAuthTokens(data);

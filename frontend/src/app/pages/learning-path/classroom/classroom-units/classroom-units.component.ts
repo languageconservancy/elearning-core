@@ -1,16 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { CookieService } from "@app/_services/cookie.service";
-import { Router } from "@angular/router";
-
-import { Loader } from "@app/_services/loader.service";
-import { LessonsService } from "@app/_services/lessons.service";
-import { LocalStorageService } from "@app/_services/local-storage.service";
-import { ReviewService } from "@app/_services/review.service";
-import { ForumService } from "@app/_services/forum.service";
 import { UnitsComponent } from "@app/pages/learning-path/units/units.component";
-import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
-import { SiteSettingsService } from "@app/_services/site-settings.service";
-import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-classroom-units",
@@ -19,40 +8,12 @@ import { BaseService } from "@app/_services/base.service";
     standalone: true,
 })
 export class ClassroomUnitsComponent extends UnitsComponent implements OnInit, OnDestroy {
-    protected villageImageUrl: string;
+    protected override villageImageUrl = "./assets/images/lesson-icon.png";
 
-    constructor(
-        router: Router,
-        cookieService: CookieService,
-        loader: Loader,
-        lessonService: LessonsService,
-        reviewService: ReviewService,
-        localStorage: LocalStorageService,
-        forumService: ForumService,
-        breadcrumbsService: BreadcrumbsService,
-        siteSettingsService: SiteSettingsService,
-        baseService: BaseService,
-    ) {
-        super(
-            router,
-            cookieService,
-            loader,
-            lessonService,
-            reviewService,
-            localStorage,
-            forumService,
-            breadcrumbsService,
-            siteSettingsService,
-            baseService,
-        );
+    constructor() {
+        super();
 
-        this.villageImageUrl = "./assets/images/lesson-icon.png";
         this.path = { label: "Classroom" };
-        this.subscribeToCurrentLevel();
-
-        this.subscribeToLastActiveUnitOrReview();
-
-        this.subscribeToUnitReview();
     }
 
     override subscribeToCurrentLevel() {

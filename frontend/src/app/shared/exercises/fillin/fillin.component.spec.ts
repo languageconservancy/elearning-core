@@ -303,12 +303,6 @@ describe("FillinComponent", () => {
             component["createUiResponseTextArray"]();
             component["setUpBlankModel"]();
 
-            // Mock jQuery to return the correct answer
-            const mockJQuery = jasmine.createSpy("jQuery").and.returnValue({
-                val: jasmine.createSpy("val").and.returnValue("Škáte"),
-            });
-            (window as any).jQuery = mockJQuery;
-
             spyOn(component, "submitAnswer");
 
             component.submitButtonClicked();
@@ -320,12 +314,6 @@ describe("FillinComponent", () => {
         it("should submit incorrect answer", fakeAsync(() => {
             component["createUiResponseTextArray"]();
             component["setUpBlankModel"]();
-
-            // Mock jQuery to return wrong answer
-            const mockJQuery = jasmine.createSpy("jQuery").and.returnValue({
-                val: jasmine.createSpy("val").and.returnValue("wrong"),
-            });
-            (window as any).jQuery = mockJQuery;
 
             spyOn(component, "submitAnswer");
 

@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { Subscription } from "rxjs";
+import Swal from "sweetalert2";
 
 import { CookieService } from "@app/_services/cookie.service";
 import { FriendSidebarComponent } from "@app/pages/forum/_partials/friend-sidebar/friend-sidebar.component";
@@ -23,7 +24,6 @@ interface PostFormValue {
     postStatus: string;
 }
 
-declare let bootbox: any;
 @Component({
     selector: "app-forum-general-discussion",
     imports: [
@@ -239,48 +239,44 @@ export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, After
         }
     }
 
-    deletePost(postobj) {
-        bootbox.confirm({
-            message: "Are you sure? You want to delete this post?",
-            buttons: {
-                confirm: {
-                    label: "Yes",
-                    className: "btn-success",
-                },
-                cancel: {
-                    label: "No",
-                    className: "btn-danger",
-                },
-            },
-            callback: (result) => {
-                if (result) {
-                    // deletePost
-                    const data = {
-                        post_id: postobj.id,
-                    };
-                    this.forumService
-                        .deletePost(data)
-                        .then((res: any) => {
-                            this.loader.setLoader(false);
-                            this.snackbarService.showSnackbar({
-                                status: res.data.status,
-                                msg: res.data.message,
-                            });
-                            if (res.data.status) {
-                                this.reloadPosts();
-                            }
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            this.loader.setLoader(false);
-                            this.snackbarService.showSnackbar({
-                                status: false,
-                                msg: "There has been an error. Please try again after some time while we fix it.",
-                            });
-                        });
-                }
-            },
+    async deletePost(postobj) {
+        const result = await Swal.fire({
+            text: "Are you sure? You want to delete this post?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            confirmButtonColor: "#198754",
+            cancelButtonColor: "#dc3545",
         });
+
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        const data = {
+            post_id: postobj.id,
+        };
+        this.forumService
+            .deletePost(data)
+            .then((res: any) => {
+                this.loader.setLoader(false);
+                this.snackbarService.showSnackbar({
+                    status: res.data.status,
+                    msg: res.data.message,
+                });
+                if (res.data.status) {
+                    this.reloadPosts();
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                this.loader.setLoader(false);
+                this.snackbarService.showSnackbar({
+                    status: false,
+                    msg: "There has been an error. Please try again after some time while we fix it.",
+                });
+            });
     }
 
     private reloadPosts(): void {

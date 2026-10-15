@@ -9,8 +9,6 @@ import { LessonsService } from "@app/_services/lessons.service";
 import { Loader } from "@app/_services/loader.service";
 import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
 
-declare let jQuery: any;
-
 @Component({
     selector: "app-lessons",
     templateUrl: "./lessons.component.html",
@@ -82,17 +80,20 @@ export class LessonsComponent implements OnDestroy {
     }
 
     private setSize() {
-        const firstBox = jQuery("#box-1").outerHeight();
-        const secondBox = jQuery("#box-2").outerHeight();
+        const firstBox = document.getElementById("box-1");
+        const secondBox = document.getElementById("box-2");
 
-        if (firstBox >= secondBox) {
-            jQuery("#box-2").css({
-                height: firstBox,
-            });
+        if (!firstBox || !secondBox) {
+            return;
+        }
+
+        const firstHeight = firstBox.offsetHeight;
+        const secondHeight = secondBox.offsetHeight;
+
+        if (firstHeight >= secondHeight) {
+            secondBox.style.height = `${firstHeight}px`;
         } else {
-            jQuery("#box-1").css({
-                height: secondBox,
-            });
+            firstBox.style.height = `${secondHeight}px`;
         }
     }
 

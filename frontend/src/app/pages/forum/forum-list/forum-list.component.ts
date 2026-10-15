@@ -12,6 +12,7 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { Subscription } from "rxjs";
+import Swal from "sweetalert2";
 
 import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
 import { FriendSidebarComponent } from "../_partials/friend-sidebar/friend-sidebar.component";
@@ -33,8 +34,6 @@ import { SiteSettingsService } from "@app/_services/site-settings.service";
 import { SnackbarService } from "@app/_services/snackbar.service";
 import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
 import { environment } from "@environments/environment";
-
-declare let bootbox: any;
 
 interface PostFormValue {
     title: string;
@@ -578,65 +577,61 @@ export class ForumListComponent implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-    deletePost(postobj) {
-        bootbox.confirm({
-            message: "Are you sure? You want to delete this post?",
-            buttons: {
-                confirm: {
-                    label: "Yes",
-                    className: "btn-success",
-                },
-                cancel: {
-                    label: "No",
-                    className: "btn-danger",
-                },
-            },
-            callback: (result) => {
-                if (result) {
-                    // deletePost
-                    const data = {
-                        post_id: postobj.id,
-                    };
-                    this.forumService
-                        .deletePost(data)
-                        .then((res: any) => {
-                            this.loader.setLoader(false);
-                            this.snackbarService.showSnackbar({
-                                status: true,
-                                msg: res.data.message,
-                            });
-                            if (res.data.status) {
-                                this.posts = [];
-                                if (
-                                    (this.user.role_id == 4 || this.user.role_id == 1) &&
-                                    this.activeForum == null
-                                ) {
-                                    this.getPostsForFlagForum();
-                                } else {
-                                    this.getPostsForForum();
-                                }
-                            }
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            this.loader.setLoader(false);
-                            this.snackbarService.showSnackbar({
-                                status: false,
-                                msg: "There has been an error. Please try again after some time while we fix it.",
-                            });
-                            this.posts = [];
-                            if (
-                                (this.user.role_id == 4 || this.user.role_id == 1) &&
-                                this.activeForum == null
-                            ) {
-                                this.getPostsForFlagForum();
-                            } else {
-                                this.getPostsForForum();
-                            }
-                        });
-                }
-            },
+    async deletePost(postobj) {
+        const result = await Swal.fire({
+            text: "Are you sure? You want to delete this post?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            confirmButtonColor: "#198754",
+            cancelButtonColor: "#dc3545",
         });
+
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        const data = {
+            post_id: postobj.id,
+        };
+        this.forumService
+            .deletePost(data)
+            .then((res: any) => {
+                this.loader.setLoader(false);
+                this.snackbarService.showSnackbar({
+                    status: true,
+                    msg: res.data.message,
+                });
+                if (res.data.status) {
+                    this.posts = [];
+                    if (
+                        (this.user.role_id == 4 || this.user.role_id == 1) &&
+                        this.activeForum == null
+                    ) {
+                        this.getPostsForFlagForum();
+                    } else {
+                        this.getPostsForForum();
+                    }
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                this.loader.setLoader(false);
+                this.snackbarService.showSnackbar({
+                    status: false,
+                    msg: "There has been an error. Please try again after some time while we fix it.",
+                });
+                this.posts = [];
+                if (
+                    (this.user.role_id == 4 || this.user.role_id == 1) &&
+                    this.activeForum == null
+                ) {
+                    this.getPostsForFlagForum();
+                } else {
+                    this.getPostsForForum();
+                }
+            });
     }
 
     onInputValueChange(event: { inputName: string; value: string }): void {

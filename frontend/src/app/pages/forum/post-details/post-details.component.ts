@@ -4,6 +4,7 @@ import { UntypedFormGroup, UntypedFormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { Subscription } from "rxjs";
+import Swal from "sweetalert2";
 
 import { BadgeService } from "@app/_services/badge.service";
 import { CookieService } from "@app/_services/cookie.service";
@@ -16,8 +17,6 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
 import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
 import { environment } from "@environments/environment";
-
-declare let bootbox: any;
 
 @Component({
     selector: "app-post-details",
@@ -381,48 +380,44 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
-    deletePost(postobj) {
-        bootbox.confirm({
-            message: "Are you sure? You want to delete this post?",
-            buttons: {
-                confirm: {
-                    label: "Yes",
-                    className: "btn-success",
-                },
-                cancel: {
-                    label: "No",
-                    className: "btn-danger",
-                },
-            },
-            callback: (result) => {
-                if (result) {
-                    // deletePost
-                    const data = {
-                        post_id: postobj.id,
-                    };
-                    this.forumService
-                        .deletePost(data)
-                        .then((res: any) => {
-                            this.loader.setLoader(false);
-                            this.snackbarService.showSnackbar({
-                                status: true,
-                                msg: res.data.message,
-                            });
-                            if (res.data.status) {
-                                window.history.back();
-                            }
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            this.loader.setLoader(false);
-                            this.snackbarService.showSnackbar({
-                                status: false,
-                                msg: "There has been an error. Please try again after some time while we fix it.",
-                            });
-                        });
-                }
-            },
+    async deletePost(postobj) {
+        const result = await Swal.fire({
+            text: "Are you sure? You want to delete this post?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            confirmButtonColor: "#198754",
+            cancelButtonColor: "#dc3545",
         });
+
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        const data = {
+            post_id: postobj.id,
+        };
+        this.forumService
+            .deletePost(data)
+            .then((res: any) => {
+                this.loader.setLoader(false);
+                this.snackbarService.showSnackbar({
+                    status: true,
+                    msg: res.data.message,
+                });
+                if (res.data.status) {
+                    window.history.back();
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                this.loader.setLoader(false);
+                this.snackbarService.showSnackbar({
+                    status: false,
+                    msg: "There has been an error. Please try again after some time while we fix it.",
+                });
+            });
     }
 
     toggleReplyPostKeyboard(flag: boolean): void {

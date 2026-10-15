@@ -1,9 +1,4 @@
-import {
-    Component,
-    AfterViewInit,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { AfterViewInit, inject, Component, ChangeDetectorRef } from "@angular/core";
 import { MRecordRTC } from "recordrtc";
 import * as DetectRTC from "detectrtc";
 import WaveSurfer from "wavesurfer.js";
@@ -17,10 +12,13 @@ import { ReviewService } from "@app/_services/review.service";
     selector: "app-audio-record",
     templateUrl: "./audio-record.component.html",
     styleUrls: ["./audio-record.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AudioRecordComponent implements AfterViewInit {
+    private ref = inject(ChangeDetectorRef);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+
     public audio: any;
     public recorder: any;
     public microphone: any;
@@ -36,11 +34,7 @@ export class AudioRecordComponent implements AfterViewInit {
 
     public popupSubscription: Subscription;
 
-    constructor(
-        private ref: ChangeDetectorRef,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-    ) {
+    constructor() {
         WaveSurfer.microphone = Microphone;
 
         this.popupSubscription = this.lessonService.popup.subscribe((res) => {
@@ -70,9 +64,7 @@ export class AudioRecordComponent implements AfterViewInit {
         this.btnStopRecording = document.getElementById("btn-stop-recording");
         this.btnReleaseMicrophone = document.querySelector("#btn-release-microphone");
         DetectRTC.load(() => {
-            DetectRTC.hasMicrophone;
-            DetectRTC.isWebsiteHasMicrophonePermissions;
-            DetectRTC.audioInputDevices;
+            this.ref.detectChanges();
         });
         this.ref.detectChanges();
         this.setUpWaveSurfer();

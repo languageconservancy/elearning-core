@@ -1,6 +1,4 @@
 // Angular libraries
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { NgModule, inject, provideAppInitializer } from "@angular/core";
@@ -99,22 +97,12 @@ export function initializeApp(
 }
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        LoaderComponent,
-        SnackbarComponent,
-        MaintenanceModeComponent,
-        NavbarComponent,
-        NotFoundComponent,
-        FooterComponent,
-        InfoSpaceComponent,
-        AppAutoFocusDirective,
-    ],
-    bootstrap: [AppComponent],
     imports: [
+        AppComponent,
+        AppAutoFocusDirective,
         AppRoutingModule,
-        BrowserModule,
-        BrowserAnimationsModule,
+        //BrowserModule,
+        //BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         DragDropModule,
@@ -124,16 +112,23 @@ export function initializeApp(
         AboutModule,
         ContactUsModule,
         DashboardModule,
+        FooterComponent,
         ForumModule,
+        InfoSpaceComponent,
         KeyboardModule,
         LearningModule,
         LearningPathModule,
+        LoaderComponent,
         LoginModule,
+        MaintenanceModeComponent,
+        NavbarComponent,
+        NotFoundComponent,
         PasswordModule,
         ProgressModule,
         ReviewModule,
         SettingsModule,
         SignupModule,
+        SnackbarComponent,
         TeacherModule,
         PartialsModule,
         PipesModule,

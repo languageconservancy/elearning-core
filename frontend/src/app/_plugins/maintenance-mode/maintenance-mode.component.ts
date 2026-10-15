@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 
@@ -9,18 +9,15 @@ import { SettingsService } from "@app/_services/settings.service";
     selector: "app-maintenance-mode",
     templateUrl: "./maintenance-mode.component.html",
     styleUrls: ["./maintenance-mode.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class MaintenanceModeComponent implements OnInit {
-    public maintenance: any;
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private sanitizer = inject(DomSanitizer);
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private router: Router,
-        private sanitizer: DomSanitizer,
-    ) {}
+    public maintenance: any;
 
     ngOnInit() {
         this.setLoader(true);

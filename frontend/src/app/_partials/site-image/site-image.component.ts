@@ -1,18 +1,17 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { SettingsService } from "@app/_services/settings.service";
 import { environment } from "@environments/environment";
 @Component({
     selector: "app-site-image",
     templateUrl: "./site-image.component.html",
     styleUrls: ["./site-image.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class SiteImageComponent implements OnInit {
+    private settingsService = inject(SettingsService);
+
     public environment = environment;
     public imagePath: any;
-
-    constructor(private settingsService: SettingsService) {}
 
     ngOnInit() {
         void this.settingsService.getImage().then((res) => {

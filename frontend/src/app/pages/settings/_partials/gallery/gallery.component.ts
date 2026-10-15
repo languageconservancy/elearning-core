@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -69,27 +69,26 @@ import { SnackbarService } from "@app/_services/snackbar.service";
             ),
         ]),
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class GalleryComponent implements OnDestroy {
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private snackbarService = inject(SnackbarService);
+
     private gallerySubscription: Subscription;
     private _images: string[] = [];
     public selectedIndex: number = 0;
     private user: any;
     public imageLength: number = 0;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
             })

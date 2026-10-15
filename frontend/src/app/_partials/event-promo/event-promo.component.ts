@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { SettingsService } from "@app/_services/settings.service";
@@ -7,17 +7,18 @@ import { SettingsService } from "@app/_services/settings.service";
     selector: "app-event-promo",
     templateUrl: "./event-promo.component.html",
     styleUrls: ["./event-promo.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class EventPromoComponent implements OnInit, OnDestroy {
+    private settingservice = inject(SettingsService);
+
     public eventPromo: any = {};
     public promoSeen: boolean = false;
     @ViewChild("promoModal") promoModal;
 
     public promoSeenSubscription: Subscription;
 
-    constructor(private settingservice: SettingsService) {
+    constructor() {
         this.promoSeenSubscription = this.settingservice.promoSeen.subscribe((seen) => {
             this.promoSeen = seen;
         });

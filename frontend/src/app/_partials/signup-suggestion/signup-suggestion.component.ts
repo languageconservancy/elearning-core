@@ -1,11 +1,10 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Output, EventEmitter } from "@angular/core";
 
 @Component({
     selector: "app-signup-suggestion",
     templateUrl: "./signup-suggestion.component.html",
     styleUrls: ["./signup-suggestion.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class SignupSuggestionComponent {
     // Event emitter for continuing with trial

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { RegexConsts } from "@app/_constants/app.constants";
 import { AgePromptService } from "@app/_services/age-prompt.service";
@@ -15,27 +15,24 @@ import { BaseService } from "@app/_services/base.service";
     selector: "app-age-prompt",
     templateUrl: "./age-prompt.component.html",
     styleUrls: ["./age-prompt.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AgePromptComponent implements OnInit {
+    private agePromptService = inject(AgePromptService);
+    private settingsService = inject(SettingsService);
+    private snackbarService = inject(SnackbarService);
+    private modalService = inject(ModalService);
+    private regionPolicyService = inject(RegionPolicyService);
+    private platformRolesService = inject(PlatformRolesService);
+    private cookieService = inject(CookieService);
+    private baseService = inject(BaseService);
+
     public Routes = Routes;
     public form: UntypedFormGroup;
     public show = {
         usernameField: false,
         parentsEmailField: false,
     };
-
-    constructor(
-        private agePromptService: AgePromptService,
-        private settingsService: SettingsService,
-        private snackbarService: SnackbarService,
-        private modalService: ModalService,
-        private regionPolicyService: RegionPolicyService,
-        private platformRolesService: PlatformRolesService,
-        private cookieService: CookieService,
-        private baseService: BaseService,
-    ) {}
 
     ngOnInit() {
         this.form = new UntypedFormGroup({

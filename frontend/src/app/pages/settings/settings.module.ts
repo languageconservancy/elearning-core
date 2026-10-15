@@ -24,8 +24,6 @@ import { SettingsComponent } from "./settings/settings.component";
         RouterModule,
         PipesModule,
         PartialsModule,
-    ],
-    declarations: [
         AccessibilityComponent,
         AccountComponent,
         GalleryComponent,
@@ -34,8 +32,8 @@ import { SettingsComponent } from "./settings/settings.component";
         ParentalLockComponent,
         PrivacyComponent,
         ProfileComponent,
-        SettingSidebarComponent,
         SettingsComponent,
+        SettingSidebarComponent,
     ],
 })
 export class SettingsModule {}

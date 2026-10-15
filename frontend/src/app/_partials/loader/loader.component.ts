@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { Loader } from "@app/_services/loader.service";
@@ -7,14 +7,14 @@ import { Loader } from "@app/_services/loader.service";
     selector: "app-loader",
     templateUrl: "./loader.component.html",
     styleUrls: ["./loader.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class LoaderComponent implements OnDestroy {
+    private loader = inject(Loader);
     private loaderSubscription: Subscription;
     public showLoader: boolean = false;
 
-    constructor(private loader: Loader) {
+    constructor() {
         this.loaderSubscription = this.loader.loader.subscribe((val) => (this.showLoader = val));
     }
 

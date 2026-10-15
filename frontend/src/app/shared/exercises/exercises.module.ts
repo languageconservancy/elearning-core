@@ -19,22 +19,19 @@ import { DirectivesModule } from "@app/_directives/directives.module";
     // External modules needed by this module
     imports: [
         CommonModule,
-        PipesModule,
-        FormsModule,
-        DragDropModule,
-        PartialsModule,
-        SelectableCardComponent,
-        NonSelectableCardComponent,
         DirectivesModule,
-    ],
-    // Components in this module
-    declarations: [
-        McqComponent,
-        MatchPairComponent,
-        TrueFalseComponent,
+        DragDropModule,
         FillinComponent,
+        FormsModule,
+        PartialsModule,
+        PipesModule,
         AnagramComponent,
+        MatchPairComponent,
+        McqComponent,
+        NonSelectableCardComponent,
         RecordingComponent,
+        SelectableCardComponent,
+        TrueFalseComponent,
     ],
     // Components of this module used outside this module
     exports: [

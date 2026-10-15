@@ -1,11 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
     selector: "app-image-zoom",
     templateUrl: "./image-zoom.component.html",
     styleUrls: ["./image-zoom.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ImageZoomComponent {
     @Input() src: string;
@@ -14,8 +13,6 @@ export class ImageZoomComponent {
     @Input() alt: string = "";
     @Input() id: string = "";
     public popup: boolean = false;
-
-    constructor() {}
 
     /**
      * This toggles a class named "show-overlay", which shows the popup if assigned to an element.

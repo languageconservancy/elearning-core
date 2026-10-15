@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -14,26 +14,25 @@ import { BaseService } from "@app/_services/base.service";
     selector: "app-profile",
     templateUrl: "./profile.component.html",
     styleUrls: ["./profile.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private badgeService = inject(BadgeService);
+    private snackbarService = inject(SnackbarService);
+    private baseService = inject(BaseService);
+
     private lockSubscription: Subscription;
     public lockFlag: boolean = false;
     public user: any;
     public profile: any = {};
     public levelbadgeFlag: boolean = false;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private router: Router,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private badgeService: BadgeService,
-        private snackbarService: SnackbarService,
-        private baseService: BaseService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {

@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    ElementRef,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { ChangeDetectorRef, Component, inject, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -12,17 +6,22 @@ import { CookieService } from "@app/_services/cookie.service";
 import { ReviewService } from "@app/_services/review.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
-import { LessonsService } from "@app/_services/lessons.service";
 import { ReviewType } from "@app/shared/utils/elearning-types";
 
 @Component({
     selector: "app-review-cards",
     templateUrl: "./review-cards.component.html",
     styleUrls: ["./review-cards.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ReviewCardsComponent implements OnDestroy {
+    private cookieService = inject(CookieService);
+    private reviewService = inject(ReviewService);
+    private localStorage = inject(LocalStorageService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private ref = inject(ChangeDetectorRef);
+
     public numCompletedReviewActivitiesToUnlockNextUnit: number = 25;
     public user: any = {};
     public currentExercise: number = null;
@@ -40,21 +39,12 @@ export class ReviewCardsComponent implements OnDestroy {
     public unitSubscription: Subscription;
     public reviewType: ReviewType = ReviewType.PATH;
 
-    constructor(
-        private cookieService: CookieService,
-        private reviewService: ReviewService,
-        private lessonService: LessonsService,
-        private localStorage: LocalStorageService,
-        private router: Router,
-        private loader: Loader,
-        private myElement: ElementRef,
-        private ref: ChangeDetectorRef,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
                 this.getReviewDetails();

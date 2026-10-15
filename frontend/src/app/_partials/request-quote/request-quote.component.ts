@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
@@ -12,10 +12,14 @@ import { environment } from "@environments/environment";
     selector: "app-request-quote",
     templateUrl: "./request-quote.component.html",
     styleUrls: ["./request-quote.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class RequestQuoteComponent implements OnInit {
+    private registrationService = inject(RegistrationService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private snackbarService = inject(SnackbarService);
+
     public environment = environment;
     public quoteForm: any;
     public techList: any = [
@@ -45,12 +49,7 @@ export class RequestQuoteComponent implements OnInit {
         },
     ];
 
-    constructor(
-        public registrationService: RegistrationService,
-        private loader: Loader,
-        private router: Router,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         window.scroll(0, 0);
     }
 

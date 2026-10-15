@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnInit,
-    OnDestroy,
-    ChangeDetectorRef,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { ReviewService } from "@app/_services/review.service";
@@ -14,10 +8,13 @@ import { DeviceDetectorService } from "ngx-device-detector";
     selector: "app-review-exercise",
     templateUrl: "./review-exercise.component.html",
     styleUrls: ["./review-exercise.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ReviewExerciseComponent implements OnInit, OnDestroy {
+    private reviewService = inject(ReviewService);
+    private ref = inject(ChangeDetectorRef);
+    private deviceDetector = inject(DeviceDetectorService);
+
     public exercise: any = {};
     public exerciseSubscription: Subscription;
     public popupSubscription: Subscription;
@@ -27,11 +24,7 @@ export class ReviewExerciseComponent implements OnInit, OnDestroy {
     public isMobile: boolean = false;
     public isTablet: boolean = false;
 
-    constructor(
-        private reviewService: ReviewService,
-        private ref: ChangeDetectorRef,
-        private deviceDetector: DeviceDetectorService,
-    ) {
+    constructor() {
         this.exerciseSubscription = this.reviewService.currentExercise.subscribe((exercise) => {
             if (exercise && Object.keys(exercise).length > 0) {
                 this.exercise = exercise;

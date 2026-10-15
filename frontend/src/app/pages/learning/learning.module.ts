@@ -27,14 +27,12 @@ import { PipesModule } from "@app/_pipes/pipes.module";
         PipesModule,
         ExercisesModule,
         KeyboardModule,
-    ],
-    declarations: [
-        UnitComponent,
         // CardsComponent,
         ExerciseComponent,
         LessonsComponent,
-        SingleCardComponent,
         RewardPopupsComponent,
+        SingleCardComponent,
+        UnitComponent,
     ],
 })
 export class LearningModule {}

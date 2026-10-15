@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,10 +14,17 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-accessibility",
     templateUrl: "./accessibility.component.html",
     styleUrls: ["./accessibility.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AccessibilityComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private baseService = inject(BaseService);
+    private snackbarService = inject(SnackbarService);
+    private router = inject(Router);
+
     private lockSubscription: Subscription;
     public tabName: string = "";
     public hearing: any = {};
@@ -25,20 +32,12 @@ export class AccessibilityComponent implements OnInit, OnDestroy {
     public lockFlag: boolean = false;
     public environment = environment;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private baseService: BaseService,
-        private snackbarService: SnackbarService,
-        private router: Router,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -56,7 +55,7 @@ export class AccessibilityComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.setLoader(true);
                 const loggedInUser = JSON.parse(value);

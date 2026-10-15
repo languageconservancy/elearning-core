@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 import { Subscription } from "rxjs";
 
@@ -45,10 +45,18 @@ import * as App from "@app/_constants/app.constants";
             ]),
         ]),
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class RewardPopupsComponent implements OnDestroy {
+    private lessonService = inject(LessonsService);
+    private loader = inject(Loader);
+    private reviewService = inject(ReviewService);
+    private cookieService = inject(CookieService);
+    private keyboardService = inject(KeyboardService);
+    private localStorage = inject(LocalStorageService);
+    private localizeService = inject(LocalizeService);
+    public audioService = inject(AudioService);
+
     public popupSubscription: Subscription;
     public wrongAnswerSubscription: Subscription;
     private keyboardSubmitOrCloseSubscription: Subscription;
@@ -76,16 +84,7 @@ export class RewardPopupsComponent implements OnDestroy {
     public OwoksapeUtils = OwoksapeUtils;
     private closeCorrectAnswerPopupTimeoutId = undefined;
 
-    constructor(
-        private lessonService: LessonsService,
-        private loader: Loader,
-        private reviewService: ReviewService,
-        private cookieService: CookieService,
-        private keyboardService: KeyboardService,
-        private localStorage: LocalStorageService,
-        private localizeService: LocalizeService,
-        public audioService: AudioService,
-    ) {
+    constructor() {
         this.wrongAnswerSubscription = this.lessonService.wrongCard.subscribe((res) => {
             if (res) {
                 this.reviewCards = res;
@@ -106,7 +105,7 @@ export class RewardPopupsComponent implements OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
                 this.popupSubscription = this.lessonService.popup.subscribe((res) => {

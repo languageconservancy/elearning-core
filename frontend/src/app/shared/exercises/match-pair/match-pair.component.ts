@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, OnInit, OnDestroy, inject, Input } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
@@ -18,10 +18,19 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     templateUrl: "./match-pair.component.html",
     styleUrls: ["./match-pair.component.scss"],
     providers: [ExerciseService],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class MatchPairComponent implements OnInit, OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    public exerciseService = inject(ExerciseService);
+    public audioService = inject(AudioService);
+    private localStorage = inject(LocalStorageService);
+    private keyboardService = inject(KeyboardService);
+    private snackbarService = inject(SnackbarService);
+    private deviceDetector = inject(DeviceDetectorService);
+
     public questions: any = [];
     public type: string = "";
     public promptType: string = "";
@@ -50,24 +59,14 @@ export class MatchPairComponent implements OnInit, OnDestroy {
     public isMobile: boolean = false;
     public isTablet: boolean = false;
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        public exerciseService: ExerciseService,
-        public audioService: AudioService,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-        private snackbarService: SnackbarService,
-        private deviceDetector: DeviceDetectorService,
-    ) {
+    constructor() {
         this.getDeviceInfo();
 
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.exerciseService.user = JSON.parse(value);
             })

@@ -1,20 +1,43 @@
-import { Component, ApplicationRef, createComponent, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ApplicationRef, createComponent, inject } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
 import { SettingsService } from "./_services/settings.service";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { environment } from "@environments/environment";
 import { App } from "@capacitor/app";
 import { Location } from "@angular/common";
 import { VersionCheckService } from "./_services/version-check.service";
+import { AgreementsAcceptanceComponent } from "@app/_partials/agreements-acceptance/agreements-acceptance.component";
+import { BreadcrumbsComponent } from "@app/_partials/breadcrumbs/breadcrumbs.component";
+import { FooterComponent } from "./_partials/footer/footer.component";
+import { InfoSpaceComponent } from "@app/_partials/info-space/info-space.component";
+import { LoaderComponent } from "./_partials/loader/loader.component";
+import { NavbarComponent } from "./_partials/navbar/navbar.component";
+import { SnackbarComponent } from "./_partials/snackbar/snackbar.component";
 import { UpdateModalComponent } from "./_partials/update-modal/update-modal.component";
 
 @Component({
     selector: "app-root",
+    imports: [
+        AgreementsAcceptanceComponent,
+        BreadcrumbsComponent,
+        FooterComponent,
+        InfoSpaceComponent,
+        LoaderComponent,
+        NavbarComponent,
+        SnackbarComponent,
+        RouterOutlet,
+    ],
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AppComponent {
+    private settingsService = inject(SettingsService);
+    private deviceDetector = inject(DeviceDetectorService);
+    private location = inject(Location);
+    private versionCheckService = inject(VersionCheckService);
+    private appRef = inject(ApplicationRef);
+
     public environment = environment;
     public debug = !environment.production;
     public maintenanceFlag: boolean = false;
@@ -22,13 +45,7 @@ export class AppComponent {
     public isMobileOrTablet: boolean = false;
     public isDesktop: boolean = false;
 
-    constructor(
-        private settingsService: SettingsService,
-        private deviceDetector: DeviceDetectorService,
-        private location: Location,
-        private versionCheckService: VersionCheckService,
-        private appRef: ApplicationRef,
-    ) {
+    constructor() {
         this.getDeviceInfo();
 
         this.settingsService.maintenanceMode.subscribe((res) => {

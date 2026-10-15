@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ChangeDetectorRef,
-    OnDestroy,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -22,10 +16,19 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-learning",
     templateUrl: "./learning.component.html",
     styleUrls: ["./learning.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class LearningComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    public learningSpeedService = inject(LearningSpeedService);
+    private learningPathService = inject(LearningPathService);
+    private baseService = inject(BaseService);
+    private snackbarService = inject(SnackbarService);
+    private localStorage = inject(LocalStorageService);
+
     private lockSubscription: Subscription;
     public learningSpeeds: any = [];
     public learningPaths: any = [];
@@ -35,23 +38,12 @@ export class LearningComponent implements OnInit, OnDestroy {
     public lockFlag: boolean = false;
     public environment = environment;
 
-    constructor(
-        private settingsService: SettingsService,
-        private router: Router,
-        private loader: Loader,
-        private ref: ChangeDetectorRef,
-        private cookieService: CookieService,
-        public learningSpeedService: LearningSpeedService,
-        private learningPathService: LearningPathService,
-        private baseService: BaseService,
-        private snackbarService: SnackbarService,
-        private localStorage: LocalStorageService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -69,7 +61,7 @@ export class LearningComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.setLoader(true);
                 const loggedInUser = JSON.parse(value);

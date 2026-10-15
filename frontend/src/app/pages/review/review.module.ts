@@ -24,13 +24,11 @@ import { KeyboardModule } from "@app/shared/keyboard/keyboard.module";
         ExercisesModule,
         RouterModule,
         KeyboardModule,
-    ],
-    declarations: [
         ReviewCardsComponent,
         ReviewExerciseComponent,
+        ReviewNextPopupComponent,
         ReviewRewardPopupComponent,
         ReviewTimerComponent,
-        ReviewNextPopupComponent,
     ],
 })
 export class ReviewModule {}

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,30 +14,29 @@ import { SnackbarService } from "@app/_services/snackbar.service";
     selector: "app-notifications",
     templateUrl: "./notifications.component.html",
     styleUrls: ["./notifications.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private baseService = inject(BaseService);
+    private snackbarService = inject(SnackbarService);
+    private localStorage = inject(LocalStorageService);
+
     public environment = environment;
     private lockSubscription: Subscription;
     public notif: any = {};
     public user: any;
     public lockFlag: boolean = false;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private router: Router,
-        private cookieService: CookieService,
-        private baseService: BaseService,
-        private snackbarService: SnackbarService,
-        private localStorage: LocalStorageService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -55,7 +54,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 const loggedInUser = JSON.parse(value);
                 this.settingsService

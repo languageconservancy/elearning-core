@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { SettingsService } from "@app/_services/settings.service";
 import { ActivatedRoute } from "@angular/router";
@@ -7,10 +7,12 @@ import { ActivatedRoute } from "@angular/router";
     selector: "app-settings",
     templateUrl: "./settings.component.html",
     styleUrls: ["./settings.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class SettingsComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private activatedRoute = inject(ActivatedRoute);
+
     private tabSubscription: Subscription;
     public currentTabName: string = "Profile";
     public pages = [
@@ -18,10 +20,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         { title: "Learning", route: "/learning" },
     ];
 
-    constructor(
-        private settingsService: SettingsService,
-        private activatedRoute: ActivatedRoute,
-    ) {
+    constructor() {
         this.tabSubscription = this.settingsService.currentTab.subscribe((tab) => {
             this.currentTabName = tab.toLowerCase();
         });

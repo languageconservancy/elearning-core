@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, OnInit, OnDestroy, inject, Input } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
@@ -18,10 +18,18 @@ import * as App from "@app/_constants/app.constants";
     templateUrl: "./true-false.component.html",
     styleUrls: ["./true-false.component.scss"],
     providers: [ExerciseService],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class TrueFalseComponent implements OnInit, OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    public exerciseService = inject(ExerciseService);
+    public audioService = inject(AudioService);
+    private localStorage = inject(LocalStorageService);
+    private keyboardService = inject(KeyboardService);
+    private deviceDetector = inject(DeviceDetectorService);
+
     public type: string = "";
     public customCardId: number = null;
 
@@ -43,23 +51,14 @@ export class TrueFalseComponent implements OnInit, OnDestroy {
     public AnswerType = AnswerType;
     private specifiedService;
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        public exerciseService: ExerciseService,
-        public audioService: AudioService,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-        private deviceDetector: DeviceDetectorService,
-    ) {
+    constructor() {
         this.getDeviceInfo();
 
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.exerciseService.user = JSON.parse(value);
             })

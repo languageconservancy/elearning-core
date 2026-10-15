@@ -17,6 +17,7 @@ import { ReportPostModalComponent } from "./_partials/report-post-modal/report-p
 
 @NgModule({
     imports: [
+        AddFriendsComponent,
         CommonModule,
         DirectivesModule,
         FormsModule,
@@ -25,12 +26,12 @@ import { ReportPostModalComponent } from "./_partials/report-post-modal/report-p
         FriendSidebarComponent,
         InfiniteScrollDirective,
         PartialsModule,
+        PostDetailsComponent,
         PipesModule,
         ReactiveFormsModule,
         ReportPostModalComponent,
         RouterModule,
     ],
-    declarations: [PostDetailsComponent, AddFriendsComponent],
     exports: [],
 })
 export class ForumModule {}

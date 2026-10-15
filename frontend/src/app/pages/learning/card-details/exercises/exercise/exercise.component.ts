@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LessonsService } from "@app/_services/lessons.service";
@@ -7,14 +7,15 @@ import { LessonsService } from "@app/_services/lessons.service";
     selector: "app-exercise",
     templateUrl: "./exercise.component.html",
     styleUrls: ["./exercise.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ExerciseComponent implements OnDestroy {
+    private lessonService = inject(LessonsService);
+
     public exercise: any = {};
     public exerciseSubscription: Subscription;
 
-    constructor(private lessonService: LessonsService) {
+    constructor() {
         this.exerciseSubscription = this.lessonService.currentExercise.subscribe((exercise) => {
             if (exercise) {
                 this.exercise = exercise;

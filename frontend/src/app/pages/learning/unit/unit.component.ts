@@ -1,11 +1,4 @@
-import {
-    Component,
-    OnInit,
-    OnDestroy,
-    AfterViewInit,
-    ViewChild,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { AfterViewInit, Component, inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 
@@ -297,10 +290,19 @@ export declare type StateMachine = {
     selector: "app-unit-component",
     templateUrl: "./unit.component.html",
     styleUrls: ["./unit.component.css"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
+    private cookieService = inject(CookieService);
+    private keyboardService = inject(KeyboardService);
+    private lessonService = inject(LessonsService);
+    private loader = inject(Loader);
+    private localStorage = inject(LocalStorageService);
+    private reviewService = inject(ReviewService);
+    private router = inject(Router);
+    private audioService = inject(AudioService);
+    private breadcrumbsService = inject(BreadcrumbsService);
+
     // A Rxjs subscriptions for conveniently managing multiple subscriptions
     // and unsubscribing from them all at once.
     private subscriptions: Subscription = new Subscription();
@@ -753,18 +755,6 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // State machine and it's data
     unitStateMachine: StateMachine = Object.create(this.machine);
-
-    constructor(
-        private cookieService: CookieService,
-        private keyboardService: KeyboardService,
-        private lessonService: LessonsService,
-        private loader: Loader,
-        private localStorage: LocalStorageService,
-        private reviewService: ReviewService,
-        private router: Router,
-        private audioService: AudioService,
-        private breadcrumbsService: BreadcrumbsService,
-    ) {}
 
     ngOnInit(): void {
         this.subscribeToLevelIdAndName();

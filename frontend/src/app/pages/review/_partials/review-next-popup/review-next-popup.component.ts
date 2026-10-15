@@ -1,10 +1,9 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
 
 import { Loader } from "@app/_services/loader.service";
-import { LessonsService } from "@app/_services/lessons.service";
 import { ReviewService } from "@app/_services/review.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
@@ -14,10 +13,16 @@ import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
     selector: "app-review-next-popup",
     templateUrl: "./review-next-popup.component.html",
     styleUrls: ["./review-next-popup.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ReviewNextPopupComponent {
+    private loader = inject(Loader);
+    private reviewService = inject(ReviewService);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private router = inject(Router);
+    private keyboardService = inject(KeyboardService);
+
     @Output() abcd: EventEmitter<any> = new EventEmitter();
 
     public popupSubscription: Subscription;
@@ -47,15 +52,7 @@ export class ReviewNextPopupComponent {
     public isClassroom: boolean = false;
     readonly BUTTON_CHOICES: any = ["Next", "Continue"];
 
-    constructor(
-        private lessonService: LessonsService,
-        private loader: Loader,
-        private reviewService: ReviewService,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private router: Router,
-        private keyboardService: KeyboardService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
@@ -68,7 +65,7 @@ export class ReviewNextPopupComponent {
                 console.warn("No AuthUser cookie", err);
             });
 
-        if (parseInt(localStorage.getItem("isClassroom")) == 1) {
+        if (parseInt(this.localStorage.getItem("isClassroom")) == 1) {
             this.isClassroom = true;
         }
         this.setKeyboardListeners(true);

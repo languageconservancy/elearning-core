@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 
@@ -42,10 +42,15 @@ import { LocalizeService } from "@app/_services/localize.service";
             ]),
         ]),
     ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ReviewRewardPopupComponent implements OnDestroy {
+    private reviewService = inject(ReviewService);
+    private keyboardService = inject(KeyboardService);
+    public audioService = inject(AudioService);
+    private loader = inject(Loader);
+    private localizeService = inject(LocalizeService);
+
     public popupSubscription: Subscription;
     public wrongAnswerSubscription: Subscription;
     private keyboardSubmitOrCloseSubscription: Subscription;
@@ -67,13 +72,7 @@ export class ReviewRewardPopupComponent implements OnDestroy {
     public translations: any = {};
     public OwoksapeUtils = OwoksapeUtils;
 
-    constructor(
-        private reviewService: ReviewService,
-        private keyboardService: KeyboardService,
-        public audioService: AudioService,
-        private loader: Loader,
-        private localizeService: LocalizeService,
-    ) {
+    constructor() {
         this.wrongAnswerSubscription = this.reviewService.wrongCard.subscribe((res) => {
             this.reviewCards = res;
             this.activeCard = Object.assign({}, this.reviewCards[0]);

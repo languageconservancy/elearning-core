@@ -1,36 +1,35 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { Component, inject, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
+import { ModalService } from "@app/_services/modal.service";
 
 import { SettingsService } from "@app/_services/settings.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
-
-declare let jQuery: any;
 
 @Component({
     selector: "app-parental-lock",
     templateUrl: "./parental-lock.component.html",
     styleUrls: ["./parental-lock.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ParentalLockComponent implements OnInit {
+    private modalService = inject(ModalService);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private settingsService = inject(SettingsService);
+
     public parentalLockInputForm: UntypedFormGroup;
     public user: any;
 
-    constructor(
-        private settingsService: SettingsService,
-        private router: Router,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
             })
@@ -46,7 +45,7 @@ export class ParentalLockComponent implements OnInit {
                 this.validateParentalCode.bind(this),
             ]),
         });
-        jQuery("#parentalLockInput").modal("show");
+        this.modalService.openModal("parentalLockInput");
     }
 
     private validateParentalCode(control: UntypedFormControl): any {
@@ -58,7 +57,7 @@ export class ParentalLockComponent implements OnInit {
     }
 
     backToDashboard() {
-        jQuery("#parentalLockInput").modal("hide");
+        this.modalService.closeModal("parentalLockInput");
         void this.router.navigate(["dashboard"]);
     }
 
@@ -66,7 +65,7 @@ export class ParentalLockComponent implements OnInit {
         if (form.valid) {
             this.localStorage.setItem("parentalLockCode", form.value.parentalLock);
             this.settingsService.parentalLockInput(form.value.parentalLock);
-            jQuery("#parentalLockInput").modal("hide");
+            this.modalService.closeModal("parentalLockInput");
         }
     }
 }

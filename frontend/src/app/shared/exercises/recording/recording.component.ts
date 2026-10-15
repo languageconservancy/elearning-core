@@ -4,8 +4,8 @@ import {
     OnDestroy,
     AfterViewInit,
     ChangeDetectorRef,
+    inject,
     Input,
-    ChangeDetectionStrategy,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import WaveSurfer from "wavesurfer.js";
@@ -19,20 +19,30 @@ import { ExerciseService } from "@app/_services/exercise.service";
 import { AnswerType } from "@app/shared/utils/elearning-types";
 import { AudioService } from "@app/_services/audio.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ModalService } from "@app/_services/modal.service";
 import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 import { SocialWebService } from "@app/_services/social-web.service";
 import { environment } from "@environments/environment";
-
-declare let jQuery: any;
 
 @Component({
     selector: "app-recording",
     templateUrl: "./recording.component.html",
     styleUrls: ["./recording.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    public exerciseService = inject(ExerciseService);
+    public audioService = inject(AudioService);
+    private loader = inject(Loader);
+    private localStorage = inject(LocalStorageService);
+    private ref = inject(ChangeDetectorRef);
+    private keyboardService = inject(KeyboardService);
+    private socialWebService = inject(SocialWebService);
+    private modalService = inject(ModalService);
+
     public disableBtn: boolean = false;
     public mainResponse: string = "";
     public wavesurfer: any;
@@ -65,23 +75,12 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
     private keyboardToggleMediaSubscription: Subscription;
     public facebookLoaded: boolean = false;
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        public exerciseService: ExerciseService,
-        public audioService: AudioService,
-        private loader: Loader,
-        private localStorage: LocalStorageService,
-        private ref: ChangeDetectorRef,
-        private keyboardService: KeyboardService,
-        private socialWebService: SocialWebService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.exerciseService.user = JSON.parse(value);
             })
@@ -232,9 +231,9 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
             normalize: true,
             plugins: [
                 Microphone.create({
-                // plugin options go here
-                })
-            ]
+                    // plugin options go here
+                }),
+            ],
         });
 
         this.wavesurfer.on("finish", () => {
@@ -411,7 +410,7 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.savedAudio = res.data.data.results;
                     this.sharableLink = res.data.data.results.link;
                     if (fromShare) {
-                        jQuery("#share").modal("show");
+                        this.modalService.openModal("share");
                     } else {
                         this.submitAnswer();
                     }
@@ -424,23 +423,23 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
 
     shareFile() {
         if (this.sharableLink !== "") {
-            jQuery("#share").modal("show");
+            this.modalService.openModal("share");
         } else {
             this.submitFile(true);
         }
     }
 
     share(type) {
-        jQuery("#share").modal("hide");
+        this.modalService.closeModal("share");
         switch (type) {
             case "fb":
                 this.fbShare();
                 break;
             case "email":
-                jQuery("#email-share").modal("show");
+                this.modalService.openModal("email-share");
                 break;
             case "forum":
-                jQuery("#forum-share").modal("show");
+                this.modalService.openModal("forum-share");
                 break;
             default:
                 break;
@@ -497,7 +496,7 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.lessonService
             .shareRecordedAudioEmail(params)
             .then(() => {
-                jQuery("#email-share").modal("hide");
+                this.modalService.closeModal("email-share");
                 this.showSuccess("Audio successfully shared via email.", true);
             })
             .catch((err) => {
@@ -528,7 +527,7 @@ export class RecordingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.specifiedService
             .shareRecordedAudioForum(params)
             .then(() => {
-                jQuery("#forum-share").modal("hide");
+                this.modalService.closeModal("forum-share");
                 this.showSuccess("Audio successfully shared on forum.", true);
             })
             .catch((err) => {

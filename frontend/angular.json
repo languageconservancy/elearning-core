@@ -42,7 +42,6 @@
                             "node_modules/simple-keyboard/build/css/index.css"
                         ],
                         "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js",
                             "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
                             "node_modules/wavesurfer.js/dist/wavesurfer.min.js",
                             "node_modules/wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js",
@@ -141,7 +140,6 @@
                         "polyfills": ["src/polyfills.ts", "zone.js", "zone.js/testing"],
                         "tsConfig": "src/tsconfig.spec.json",
                         "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js",
                             "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
                             "node_modules/wavesurfer.js/dist/wavesurfer.min.js",
                             "node_modules/wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js",

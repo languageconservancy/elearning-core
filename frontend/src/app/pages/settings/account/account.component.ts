@@ -1,10 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ChangeDetectorRef,
-    OnDestroy,
-    ChangeDetectionStrategy,
-} from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef, inject, OnDestroy } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -13,23 +7,34 @@ import { CookieService } from "@app/_services/cookie.service";
 import { FindFriendsService } from "@app/_services/find-friends.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ModalService } from "@app/_services/modal.service";
 import { SettingsService } from "@app/_services/settings.service";
 import { SocialWebService } from "@app/_services/social-web.service";
 import { SnackbarService } from "@app/_services/snackbar.service";
-import { environment } from "@environments/environment";
 import { BaseService } from "@app/_services/base.service";
+import { environment } from "@environments/environment";
 
 declare let gapi: any;
-declare let jQuery: any;
 
 @Component({
     selector: "app-account",
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AccountComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private modalService = inject(ModalService);
+    public friendsService = inject(FindFriendsService);
+    private ref = inject(ChangeDetectorRef);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private router = inject(Router);
+    private socialWebService = inject(SocialWebService);
+    private snackbarService = inject(SnackbarService);
+    private baseService = inject(BaseService);
+
     private lockSubscription: Subscription;
     public socialModel: any = {};
     public googleContacts: any = [];
@@ -54,23 +59,12 @@ export class AccountComponent implements OnInit, OnDestroy {
         inputValue: "",
     };
 
-    constructor(
-        private settingsService: SettingsService,
-        public friendsService: FindFriendsService,
-        private ref: ChangeDetectorRef,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private router: Router,
-        private socialWebService: SocialWebService,
-        private snackbarService: SnackbarService,
-        private baseService: BaseService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -114,7 +108,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.setLoader(true);
                 const loggedInUser = JSON.parse(value);
@@ -396,7 +390,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                         msg: res.data.message,
                     });
                     if (res.data.status) {
-                        jQuery("#resetPass").modal("hide");
+                        this.modalService.closeModal("resetPass");
                     }
                 })
                 .catch((err) => {
@@ -448,7 +442,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             .then((res) => {
                 this.setLoader(false);
                 if (res.data?.status) {
-                    jQuery("#resetProgressData").modal("hide");
+                    this.modalService.closeModal("resetProgressData");
                     this.snackbarService.showSnackbar({
                         status: true,
                         msg: "You progress data has been successfully reset.",
@@ -483,11 +477,11 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     openModal(name) {
-        jQuery("#" + name).modal("show");
+        this.modalService.openModal(name);
     }
 
     hideModal(name) {
-        jQuery("#" + name).modal("hide");
+        this.modalService.closeModal(name);
     }
 
     alreadyDeleted() {

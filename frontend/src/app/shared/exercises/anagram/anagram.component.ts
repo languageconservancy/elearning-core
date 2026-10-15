@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy } from "@angular/core";
+import {
+    Component,
+    ElementRef,
+    OnInit,
+    OnDestroy,
+    QueryList,
+    ViewChildren,
+    inject,
+    Input,
+} from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
@@ -12,17 +21,25 @@ import { KeyboardConfigService } from "@app/_services/keyboard-config.service";
 import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
 import { AudioService } from "@app/_services/audio.service";
 
-declare let jQuery: any;
-
 @Component({
     selector: "app-anagram",
     templateUrl: "./anagram.component.html",
     styleUrls: ["./anagram.component.scss"],
     providers: [ExerciseService],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class AnagramComponent implements OnInit, OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    public exerciseService = inject(ExerciseService);
+    public audioService = inject(AudioService);
+    private localStorage = inject(LocalStorageService);
+    private keyboardService = inject(KeyboardService);
+    private keyboardConfigService = inject(KeyboardConfigService);
+
+    @ViewChildren("letterInput") letterInputs: QueryList<ElementRef<HTMLInputElement>>;
+
     public answerSubmitted: boolean = false;
     public mainResponse: string = ""; // target language ('l') or English ('e')
     public inputCountArray: any = []; // array of correct answers with replacement of non-standard characters
@@ -45,22 +62,13 @@ export class AnagramComponent implements OnInit, OnDestroy {
     private keyboardTypingSubscription: Subscription; // subscription to typing
     private specifiedService; // service to use (lesson or review)
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        public exerciseService: ExerciseService,
-        public audioService: AudioService,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-        private keyboardConfigService: KeyboardConfigService,
-    ) {
+    constructor() {
         // Ensure the user is logged in
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.exerciseService.user = JSON.parse(value);
             })
@@ -492,13 +500,17 @@ export class AnagramComponent implements OnInit, OnDestroy {
                     this.activeInputIndex < this.inputCountArray.length - 1
                 ) {
                     this.activeInputIndex++;
-                    jQuery("#input-" + this.activeInputIndex).focus();
+                    this.focusActiveInput();
                 }
             } else {
                 this.answer[this.activeInputIndex] = key.key;
             }
         }
         key.disabled = true;
+    }
+
+    private focusActiveInput(): void {
+        this.letterInputs.get(this.activeInputIndex)?.nativeElement.focus();
     }
 
     /**

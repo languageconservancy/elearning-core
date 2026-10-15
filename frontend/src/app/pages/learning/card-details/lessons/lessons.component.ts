@@ -1,12 +1,12 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
-import { CookieService } from "@app/_services/cookie.service";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { Loader } from "@app/_services/loader.service";
-import { LessonsService } from "@app/_services/lessons.service";
 import { AudioService } from "@app/_services/audio.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { Loader } from "@app/_services/loader.service";
 import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
 
 declare let jQuery: any;
@@ -15,10 +15,16 @@ declare let jQuery: any;
     selector: "app-lessons",
     templateUrl: "./lessons.component.html",
     styleUrls: ["./lessons.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class LessonsComponent implements OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private keyboardService = inject(KeyboardService);
+    public audioService = inject(AudioService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+
     public frame: any = {};
     public count: number = 0;
 
@@ -28,14 +34,7 @@ export class LessonsComponent implements OnDestroy {
     private keyboardToggleSelectionSubscription: Subscription;
     public keyboardHighlightedBlockIndex: number = 0;
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private keyboardService: KeyboardService,
-        public audioService: AudioService,
-        private router: Router,
-        private loader: Loader,
-    ) {
+    constructor() {
         this.frameSubscription = this.lessonService.currentFrame.subscribe((frame) => {
             if (frame && Object.keys(frame).length) {
                 this.frame = frame;

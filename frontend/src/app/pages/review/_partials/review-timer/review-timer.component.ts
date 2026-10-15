@@ -1,16 +1,15 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from "@angular/core";
-import { take, map } from "rxjs/operators";
-import { Subscription, timer, interval } from "rxjs";
+import { Component, inject, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
+import { Subscription, timer, interval } from "rxjs";
+import { take, map } from "rxjs/operators";
 
+import { CookieService } from "@app/_services/cookie.service";
 import { LessonsService } from "@app/_services/lessons.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
-import { CookieService } from "@app/_services/cookie.service";
+import { ModalService } from "@app/_services/modal.service";
 import { ReviewService } from "@app/_services/review.service";
-import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
-
-declare let jQuery: any;
 
 enum ModalType {
     None,
@@ -22,10 +21,18 @@ enum ModalType {
     selector: "app-review-timer",
     templateUrl: "./review-timer.component.html",
     styleUrls: ["./review-timer.component.scss"],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 export class ReviewTimerComponent implements OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    private localStorage = inject(LocalStorageService);
+    private keyboardService = inject(KeyboardService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private modalService = inject(ModalService);
+
     public countDown: any;
     public count: number = 0;
     public ticks: number = 0;
@@ -57,15 +64,7 @@ export class ReviewTimerComponent implements OnDestroy {
     public numCorrectlyAnsweredReviewQuestions: any;
     public numRemainingReviewQuestionsToAnswerCorrectly: any;
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-        private loader: Loader,
-        private router: Router,
-    ) {
+    constructor() {
         this.stopTimerSub = this.reviewService.stopTimerVar.subscribe((params) => {
             if (params.stopTimer) {
                 this.stopTimer();
@@ -158,7 +157,7 @@ export class ReviewTimerComponent implements OnDestroy {
             clearTimeout(this.closeModalTimeout);
         }
         this.closeModalTimeout = setTimeout(() => {
-            jQuery("#idleModal").modal("show");
+            this.modalService.openModal("idleModal");
             this.currentModal = ModalType.IdleModal;
             this.stopTimer();
             this.setKeyboardListeners(true);
@@ -235,7 +234,7 @@ export class ReviewTimerComponent implements OnDestroy {
                         .then((res) => {
                             this.totaldata = res.data.results.review_score_total;
                             this.setLoader(false);
-                            jQuery("#timeUpModal").modal("show");
+                            this.modalService.openModal("timeUpModal");
                             this.currentModal = ModalType.TimeUpModal;
                             this.stopTimer();
                             this.globalFire();
@@ -357,19 +356,19 @@ export class ReviewTimerComponent implements OnDestroy {
     }
 
     closeTimeOutModal() {
-        jQuery("#idleModal").modal("hide");
+        this.modalService.closeModal("idleModal");
         this.currentModal = ModalType.None;
         this.subscribeToTimer();
         this.setKeyboardListeners(false);
     }
 
     closeTimeUpModal() {
-        jQuery("#timeUpModal").modal("hide");
+        this.modalService.closeModal("timeUpModal");
         this.currentModal = ModalType.None;
         this.setKeyboardListeners(false);
     }
     redirectLearning() {
-        jQuery("#timeUpModal").modal("hide");
+        this.modalService.closeModal("timeUpModal");
         void this.router.navigate(["start-learning"]);
     }
 }

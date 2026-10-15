@@ -16,6 +16,7 @@
       <div class="input-field-area prompt-font-size spacer-top-20 text-center">
         @for (box of inputCountArray; track box; let i = $index) {
           <input
+            #letterInput
             type="text"
             id="input-{{ i }}"
             autofocus="i==activeInputIndex"

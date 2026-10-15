@@ -3,10 +3,9 @@ import {
     OnInit,
     OnDestroy,
     Input,
-    AfterViewInit,
     ViewEncapsulation,
     ViewChild,
-    ChangeDetectionStrategy,
+    inject,
 } from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
@@ -25,7 +24,6 @@ import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtua
 import { SnackbarService } from "@app/_services/snackbar.service";
 import { BaseService } from "@app/_services/base.service";
 import { RegexConsts } from "@app/_constants/app.constants";
-declare let jQuery: any;
 
 interface Choice {
     optionName: string;
@@ -77,8 +75,7 @@ interface FlatIndex {
     templateUrl: "./fillin.component.html",
     styleUrls: ["./fillin.component.scss"],
     providers: [ExerciseService],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false,
+    standalone: true,
 })
 /**
  * Fill-in-the-blanks exercise component
@@ -133,6 +130,17 @@ interface FlatIndex {
  * answer.userTypingInputId is the ID of the input element for typing exercises.
  */
 export class FillinComponent implements OnInit, OnDestroy {
+    private baseService = inject(BaseService);
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    public exerciseService = inject(ExerciseService);
+    public audioService = inject(AudioService);
+    private localStorage = inject(LocalStorageService);
+    private keyboardService = inject(KeyboardService);
+    private deviceDetector = inject(DeviceDetectorService);
+    private snackbarService = inject(SnackbarService);
+
     // Global info
     @Input() sessionType: string;
     private specifiedService: LessonsService | ReviewService;
@@ -168,18 +176,7 @@ export class FillinComponent implements OnInit, OnDestroy {
     private keyboardSubscriptions: Subscription[] = [];
     public keyboardHighlightedMcqChoiceIndex: number = -1;
 
-    constructor(
-        private baseService: BaseService,
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        public exerciseService: ExerciseService,
-        public audioService: AudioService,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-        private deviceDetector: DeviceDetectorService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.getDeviceInfo();
         this.getAuthUser();
     }
@@ -215,7 +212,7 @@ export class FillinComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.exerciseService.user = JSON.parse(value);
             })
@@ -502,23 +499,31 @@ export class FillinComponent implements OnInit, OnDestroy {
      * Set the widths of the blanks based on the size of the container.
      */
     private setBlanksWidths() {
-        const containerWidth = jQuery(".input-field-area").outerWidth();
+        const container = document.querySelector<HTMLElement>(".input-field-area");
+        const containerWidth = container?.offsetWidth ?? 0;
         let totalWidth = 0.0;
 
         // Set up size of blanks
-        jQuery(".word-block").each(function () {
-            const _thisWidth = jQuery(this).outerWidth();
-            totalWidth += _thisWidth;
+        document.querySelectorAll<HTMLElement>(".word-block").forEach((block) => {
+            totalWidth += block.offsetWidth;
             if (totalWidth > containerWidth) {
-                jQuery(this).prepend("<br>");
+                block.prepend(document.createElement("br"));
                 totalWidth = 0.0;
             }
         });
 
         // If typing version, focus on the first blank
         if (this.fillInType === "typing") {
-            jQuery(`#input_${this.activeGroupIndex}_${this.activePartIndex}`).focus();
+            this.focusInput(`input_${this.activeGroupIndex}_${this.activePartIndex}`);
         }
+    }
+
+    private getInput(id: string): HTMLInputElement | null {
+        return document.getElementById(id) as HTMLInputElement | null;
+    }
+
+    private focusInput(id: string): void {
+        this.getInput(id)?.focus();
     }
     // #endregion
 
@@ -625,7 +630,7 @@ export class FillinComponent implements OnInit, OnDestroy {
             if (this.fillInType == "typing") {
                 actualAnswer = OwoksapeUtils.replaceNonStandardChars(ans.optionName);
                 userAnswer = OwoksapeUtils.replaceNonStandardChars(
-                    jQuery(`#${ans.userTypingInputId}`).val(),
+                    this.getInput(ans.userTypingInputId)?.value ?? "",
                 );
             } else {
                 // mcq
@@ -974,8 +979,7 @@ export class FillinComponent implements OnInit, OnDestroy {
 
         if (newActiveSet && this.fillInType === "typing") {
             const idx = this.blankFlatIndexMap[this.activeBlankIndex];
-            const id = `#input_${idx.groupIndex}_${idx.partIndex}`;
-            jQuery(id).focus();
+            this.focusInput(`input_${idx.groupIndex}_${idx.partIndex}`);
         }
     }
 
@@ -1122,9 +1126,9 @@ export class FillinComponent implements OnInit, OnDestroy {
             : OwoksapeUtils.incrementWrap(activeIndex, 0, numIndices - 1);
 
         const idx = this.blankFlatIndexMap[activeIndex];
-        const idOfBlank = jQuery(`#input_${idx.groupIndex}_${idx.partIndex}`);
-        const input = jQuery(idOfBlank);
-        if (input.length == 0) {
+        const idOfBlank = `input_${idx.groupIndex}_${idx.partIndex}`;
+        const input = this.getInput(idOfBlank);
+        if (!input) {
             console.error("Input not found: ", idOfBlank);
             return;
         }

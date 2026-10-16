@@ -1,26 +1,48 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    OnDestroy,
+    inject,
+    Input,
+} from "@angular/core";
+import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { ExerciseService } from "app/_services/exercise.service";
-import { AnswerType } from "app/shared/utils/elearning-types";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import * as App from "app/_constants/app.constants";
-import { AudioService } from "app/_services/audio.service";
+import { NonSelectableCardComponent } from "@app/shared/non-selectable-card/non-selectable-card.component";
+import { SelectableCardComponent } from "@app/shared/selectable-card/selectable-card.component";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ExerciseService } from "@app/_services/exercise.service";
+import { AnswerType } from "@app/shared/utils/elearning-types";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import * as App from "@app/_constants/app.constants";
+import { AudioService } from "@app/_services/audio.service";
 
 @Component({
     selector: "app-mcq",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [NonSelectableCardComponent, SelectableCardComponent],
     templateUrl: "./mcq.component.html",
     styleUrls: ["./mcq.component.scss"],
     providers: [ExerciseService],
+    standalone: true,
 })
 export class McqComponent implements OnInit, OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    public exerciseService = inject(ExerciseService);
+    public audioService = inject(AudioService);
+    private loader = inject(Loader);
+    private localStorage = inject(LocalStorageService);
+    private keyboardService = inject(KeyboardService);
+    private deviceDetector = inject(DeviceDetectorService);
+
     @Input() sessionType: string;
     public AnswerType = AnswerType;
     public specifiedService: LessonsService | ReviewService;
@@ -36,23 +58,13 @@ export class McqComponent implements OnInit, OnDestroy {
     public isTablet: boolean = false;
     public userResponseAnswers = Array<AnswerType>();
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        public exerciseService: ExerciseService,
-        public audioService: AudioService,
-        private loader: Loader,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-        private deviceDetector: DeviceDetectorService,
-    ) {
+    constructor() {
         this.Math = Math;
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.exerciseService.user = JSON.parse(value);
             })

@@ -1,9 +1,7 @@
 // Angular libraries
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
-import { APP_INITIALIZER, NgModule } from "@angular/core";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
+import { NgModule, inject, provideAppInitializer } from "@angular/core";
 
 // Third Party Addons
 import { CookieService as NgCookieService } from "ngx-cookie-service";
@@ -38,6 +36,7 @@ import { AboutModule } from "./pages/about/about.module";
 import { ContactUsModule } from "./pages/contact-us/contact-us.module";
 import { DashboardModule } from "./pages/dashboard/dashboard.module";
 import { ForumModule } from "./pages/forum/forum.module";
+import { KeyboardModule } from "@app/shared/keyboard/keyboard.module";
 import { LearningModule } from "./pages/learning/learning.module";
 import { LearningPathModule } from "./pages/learning-path/learning-path.module";
 import { LoginModule } from "./pages/login/login.module";
@@ -98,24 +97,14 @@ export function initializeApp(
 }
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        LoaderComponent,
-        SnackbarComponent,
-        MaintenanceModeComponent,
-        NavbarComponent,
-        NotFoundComponent,
-        FooterComponent,
-        InfoSpaceComponent,
-        AppAutoFocusDirective,
-    ],
     imports: [
+        AppComponent,
+        AppAutoFocusDirective,
         AppRoutingModule,
-        BrowserModule,
-        BrowserAnimationsModule,
+        //BrowserModule,
+        //BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientModule,
         DragDropModule,
         MatTableModule,
         MatSortModule,
@@ -123,15 +112,23 @@ export function initializeApp(
         AboutModule,
         ContactUsModule,
         DashboardModule,
+        FooterComponent,
         ForumModule,
+        InfoSpaceComponent,
+        KeyboardModule,
         LearningModule,
         LearningPathModule,
+        LoaderComponent,
         LoginModule,
+        MaintenanceModeComponent,
+        NavbarComponent,
+        NotFoundComponent,
         PasswordModule,
         ProgressModule,
         ReviewModule,
         SettingsModule,
         SignupModule,
+        SnackbarComponent,
         TeacherModule,
         PartialsModule,
         PipesModule,
@@ -139,12 +136,13 @@ export function initializeApp(
         PublicProfileModule,
     ],
     providers: [
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeApp,
-            deps: [SiteSettingsService, PlatformRolesService],
-            multi: true,
-        },
+        provideAppInitializer(() => {
+            const initializerFn = initializeApp(
+                inject(SiteSettingsService),
+                inject(PlatformRolesService),
+            );
+            return initializerFn();
+        }),
         AuthGuard,
         RegProgGuard,
         MaintenanceModeGuard,
@@ -170,7 +168,7 @@ export function initializeApp(
         BadgeService,
         AudioService,
         VirtualKeyboardService,
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
     ],
-    bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,21 +1,33 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { SettingsService } from "app/_services/settings.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { Loader } from "app/_services/loader.service";
-import { environment } from "environments/environment";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { Loader } from "@app/_services/loader.service";
+import { environment } from "@environments/environment";
+import { BaseService } from "@app/_services/base.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-accessibility",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule],
     templateUrl: "./accessibility.component.html",
     styleUrls: ["./accessibility.component.scss"],
+    standalone: true,
 })
 export class AccessibilityComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private baseService = inject(BaseService);
+    private snackbarService = inject(SnackbarService);
+    private router = inject(Router);
+
     private lockSubscription: Subscription;
     public tabName: string = "";
     public hearing: any = {};
@@ -23,27 +35,21 @@ export class AccessibilityComponent implements OnInit, OnDestroy {
     public lockFlag: boolean = false;
     public environment = environment;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private baseService: BaseService,
-        private snackbarService: SnackbarService,
-        private router: Router,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("accessibility");
     }
 
@@ -52,7 +58,7 @@ export class AccessibilityComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.setLoader(true);
                 const loggedInUser = JSON.parse(value);
@@ -71,7 +77,8 @@ export class AccessibilityComponent implements OnInit, OnDestroy {
                                         : true
                                     : false;
                             }
-                            this.hearing.checked = this.user.usersetting.hearing == "0" ? false : true;
+                            this.hearing.checked =
+                                this.user.usersetting.hearing == "0" ? false : true;
                         } else {
                             console.error("[accessibility] Error with user settings result. ", res);
                             await this.alreadyDeleted();

@@ -1,16 +1,19 @@
-import { Component, OnInit, Renderer2 } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, Renderer2 } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { trigger, state, style, animate, transition } from "@angular/animations";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
+import { ForumService } from "@app/_services/forum.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-friend-sidebar",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule, ReactiveFormsModule],
     templateUrl: "./friend-sidebar.component.html",
     styleUrls: ["./friend-sidebar.component.scss"],
     animations: [
@@ -27,8 +30,17 @@ import { SettingsService } from "app/_services/settings.service";
             transition("1 => 0", animate(".5s")),
         ]),
     ],
+    standalone: true,
 })
 export class FriendSidebarComponent implements OnInit {
+    private cookieService = inject(CookieService);
+    private forumService = inject(ForumService);
+    private loader = inject(Loader);
+    private localStorage = inject(LocalStorageService);
+    private renderer = inject(Renderer2);
+    private router = inject(Router);
+    private settingsService = inject(SettingsService);
+
     public friendsListArray: any = [];
     public noFriends: boolean = false;
     public friendsList: any = [];
@@ -39,16 +51,6 @@ export class FriendSidebarComponent implements OnInit {
     public searchItem: any = {};
     public toggleArrow: boolean = true;
     public user: any = {};
-
-    constructor(
-        private forumService: ForumService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private router: Router,
-        private renderer: Renderer2,
-        private localStorage: LocalStorageService,
-        private settingsService: SettingsService,
-    ) {}
 
     ngOnInit() {
         this.cookieService
@@ -126,7 +128,10 @@ export class FriendSidebarComponent implements OnInit {
         //     this.noFriends = false;
         // }
         this.friendsList = Object.assign([], this.friendsListArray).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            );
         });
     }
 }

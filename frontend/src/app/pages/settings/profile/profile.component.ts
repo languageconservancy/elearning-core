@@ -1,37 +1,42 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { BadgeService } from "app/_services/badge.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { BaseService } from "app/_services/base.service";
+import { BadgeImagePipe } from "@app/_pipes/badge-image.pipe";
+import { BadgeService } from "@app/_services/badge.service";
+import { BaseService } from "@app/_services/base.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-profile",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [BadgeImagePipe, FormsModule],
     templateUrl: "./profile.component.html",
     styleUrls: ["./profile.component.scss"],
+    standalone: true,
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private badgeService = inject(BadgeService);
+    private snackbarService = inject(SnackbarService);
+    private baseService = inject(BaseService);
+
     private lockSubscription: Subscription;
     public lockFlag: boolean = false;
     public user: any;
     public profile: any = {};
     public levelbadgeFlag: boolean = false;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private router: Router,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private badgeService: BadgeService,
-        private snackbarService: SnackbarService,
-        private baseService: BaseService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
@@ -44,7 +49,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("profile");
     }
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Capacitor } from "@capacitor/core";
 import {
     GoogleLoginResponse,
@@ -6,10 +6,10 @@ import {
     SocialLogin,
     InitializeOptions,
 } from "@capgo/capacitor-social-login";
-import { BaseService } from "app/_services/base.service";
+import { BaseService } from "@app/_services/base.service";
 
-import { environment } from "environments/environment";
-import { SocialLoginError, SocialLoginErrorType } from "app/_exceptions/social-login.errors";
+import { environment } from "@environments/environment";
+import { SocialLoginError, SocialLoginErrorType } from "@app/_exceptions/social-login.errors";
 
 interface LimitedLoginClaims {
     sub: number;
@@ -30,7 +30,7 @@ function isGoogleLoginResponseOnline(
     providedIn: "root",
 })
 export class SocialMobileService {
-    constructor(private baseService: BaseService) {}
+    private baseService = inject(BaseService);
 
     /*------------------------------------------------------------------------*/
     /*                           Google Login                               */
@@ -73,7 +73,7 @@ export class SocialMobileService {
 
             if (!res.result) {
                 console.error("Error signing in with Google: ", res);
-                throw res;
+                throw new Error(JSON.stringify(res));
             }
 
             // Type guard to ensure we have an online response with profile data
@@ -148,7 +148,7 @@ export class SocialMobileService {
 
             if (!res.result) {
                 console.error("Error signing in with Facebook: ", res);
-                throw res;
+                throw new Error(JSON.stringify(res));
             }
 
             const profile = res.result.profile;
@@ -189,7 +189,7 @@ export class SocialMobileService {
      * @returns {void}
      */
     async initApple() {
-        let appleInitOptions: InitializeOptions = { apple: {} };
+        const appleInitOptions: InitializeOptions = { apple: {} };
         // If Android, set the clientId and redirectUrl to the app's ID and login URI
         if (Capacitor.getPlatform() === "android") {
             appleInitOptions.apple.clientId = environment.APP_ID;

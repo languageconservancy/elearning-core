@@ -1,28 +1,26 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { Observable, of, from } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { AgreementsService } from "app/_services/agreements.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { BaseService } from "@app/_services/base.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { AgreementsService } from "@app/_services/agreements.service";
 import { switchMap, catchError } from "rxjs/operators";
-import { Routes } from "app/shared/utils/elearning-types";
-import { environment } from "environments/environment";
-import { RegistrationService } from "app/_services/registration.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { environment } from "@environments/environment";
+import { RegistrationService } from "@app/_services/registration.service";
 
 @Injectable()
 export class AuthGuard {
     private debug: boolean = !environment.production;
 
-    constructor(
-        private router: Router,
-        private cookieService: CookieService,
-        private baseService: BaseService,
-        private snackService: SnackbarService,
-        private registrationService: RegistrationService,
-        private agreementsService: AgreementsService,
-    ) {}
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private baseService = inject(BaseService);
+    private snackService = inject(SnackbarService);
+    private registrationService = inject(RegistrationService);
+    private agreementsService = inject(AgreementsService);
 
     canActivate(next: ActivatedRouteSnapshot): Observable<boolean> | Promise<boolean> | boolean {
         const currentRoute = next.routeConfig.path;
@@ -196,17 +194,15 @@ export class AuthGuard {
 
 @Injectable()
 export class RegProgGuard {
-    private debug: boolean = !environment.production;
+    private cookieService = inject(CookieService);
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private snackService = inject(SnackbarService);
+    private baseService = inject(BaseService);
+    private registrationService = inject(RegistrationService);
+    private agreementsService = inject(AgreementsService);
 
-    constructor(
-        private cookieService: CookieService,
-        private router: Router,
-        private localStorage: LocalStorageService,
-        private snackService: SnackbarService,
-        private baseService: BaseService,
-        private registrationService: RegistrationService,
-        private agreementsService: AgreementsService,
-    ) {}
+    private debug: boolean = !environment.production;
 
     canActivate(): Observable<boolean> | Promise<boolean> | boolean {
         if (this.signupInProgress()) {

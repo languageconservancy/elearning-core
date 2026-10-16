@@ -1,16 +1,15 @@
-import { Component, OnDestroy } from "@angular/core";
-import { take, map } from "rxjs/operators";
-import { Subscription, timer, interval } from "rxjs";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
+import { Subscription, timer, interval } from "rxjs";
+import { take, map } from "rxjs/operators";
 
-import { LessonsService } from "app/_services/lessons.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { CookieService } from "app/_services/cookie.service";
-import { ReviewService } from "app/_services/review.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-
-declare let jQuery: any;
+import { CookieService } from "@app/_services/cookie.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ModalService } from "@app/_services/modal.service";
+import { ReviewService } from "@app/_services/review.service";
 
 enum ModalType {
     None,
@@ -20,10 +19,21 @@ enum ModalType {
 
 @Component({
     selector: "app-review-timer",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./review-timer.component.html",
     styleUrls: ["./review-timer.component.scss"],
+    standalone: true,
 })
 export class ReviewTimerComponent implements OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    private localStorage = inject(LocalStorageService);
+    private keyboardService = inject(KeyboardService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private modalService = inject(ModalService);
+
     public countDown: any;
     public count: number = 0;
     public ticks: number = 0;
@@ -55,15 +65,7 @@ export class ReviewTimerComponent implements OnDestroy {
     public numCorrectlyAnsweredReviewQuestions: any;
     public numRemainingReviewQuestionsToAnswerCorrectly: any;
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-        private loader: Loader,
-        private router: Router,
-    ) {
+    constructor() {
         this.stopTimerSub = this.reviewService.stopTimerVar.subscribe((params) => {
             if (params.stopTimer) {
                 this.stopTimer();
@@ -92,12 +94,16 @@ export class ReviewTimerComponent implements OnDestroy {
                     const numCorrectReviewAnswersToUnlockUnit =
                         res.progressValue?.num_correct_review_answers_to_unlock_unit;
                     this.numCorrectlyAnsweredReviewQuestions = res.progressValue.review_counter;
-                    if (this.numCorrectlyAnsweredReviewQuestions > numCorrectReviewAnswersToUnlockUnit) {
+                    if (
+                        this.numCorrectlyAnsweredReviewQuestions >
+                        numCorrectReviewAnswersToUnlockUnit
+                    ) {
                         this.unitPercentageFlag = false;
                     } else {
                         this.unitPercentageFlag = true;
                         this.numRemainingReviewQuestionsToAnswerCorrectly =
-                            numCorrectReviewAnswersToUnlockUnit - parseInt(this.numCorrectlyAnsweredReviewQuestions);
+                            numCorrectReviewAnswersToUnlockUnit -
+                            parseInt(this.numCorrectlyAnsweredReviewQuestions);
                     }
                 } else {
                     this.unitPercentageFlag = false;
@@ -129,13 +135,15 @@ export class ReviewTimerComponent implements OnDestroy {
 
     private setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
-            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                if (this.currentModal == ModalType.IdleModal) {
-                    this.closeTimeOutModal();
-                } else if (this.currentModal == ModalType.TimeUpModal) {
-                    this.closeTimeUpModal();
-                }
-            });
+            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(
+                () => {
+                    if (this.currentModal == ModalType.IdleModal) {
+                        this.closeTimeOutModal();
+                    } else if (this.currentModal == ModalType.TimeUpModal) {
+                        this.closeTimeUpModal();
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitSubscription) this.keyboardSubmitSubscription.unsubscribe();
         }
@@ -150,7 +158,7 @@ export class ReviewTimerComponent implements OnDestroy {
             clearTimeout(this.closeModalTimeout);
         }
         this.closeModalTimeout = setTimeout(() => {
-            jQuery("#idleModal").modal("show");
+            this.modalService.openModal("idleModal");
             this.currentModal = ModalType.IdleModal;
             this.stopTimer();
             this.setKeyboardListeners(true);
@@ -159,7 +167,8 @@ export class ReviewTimerComponent implements OnDestroy {
 
     private setUpTimer(params) {
         const timeZoneOffset = new Date().getTimezoneOffset() * 60;
-        this.timeZoneOffset = timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset);
+        this.timeZoneOffset =
+            timeZoneOffset > 0 ? -Math.abs(timeZoneOffset) : Math.abs(timeZoneOffset);
         this.pathID = parseInt(params.path_id) || null;
         this.levelID = parseInt(this.localStorage.getItem("LevelID")) || null;
         this.unitID = parseInt(this.localStorage.getItem("unitID")) || null;
@@ -226,7 +235,7 @@ export class ReviewTimerComponent implements OnDestroy {
                         .then((res) => {
                             this.totaldata = res.data.results.review_score_total;
                             this.setLoader(false);
-                            jQuery("#timeUpModal").modal("show");
+                            this.modalService.openModal("timeUpModal");
                             this.currentModal = ModalType.TimeUpModal;
                             this.stopTimer();
                             this.globalFire();
@@ -348,19 +357,19 @@ export class ReviewTimerComponent implements OnDestroy {
     }
 
     closeTimeOutModal() {
-        jQuery("#idleModal").modal("hide");
+        this.modalService.closeModal("idleModal");
         this.currentModal = ModalType.None;
         this.subscribeToTimer();
         this.setKeyboardListeners(false);
     }
 
     closeTimeUpModal() {
-        jQuery("#timeUpModal").modal("hide");
+        this.modalService.closeModal("timeUpModal");
         this.currentModal = ModalType.None;
         this.setKeyboardListeners(false);
     }
     redirectLearning() {
-        jQuery("#timeUpModal").modal("hide");
+        this.modalService.closeModal("timeUpModal");
         void this.router.navigate(["start-learning"]);
     }
 }

@@ -1,21 +1,31 @@
-import { Component, Output, EventEmitter } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
 
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
+import { SocialShareComponent } from "@app/_partials/social-share/social-share.component";
+import { CookieService } from "@app/_services/cookie.service";
+import { Loader } from "@app/_services/loader.service";
+import { ReviewService } from "@app/_services/review.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 
 @Component({
     selector: "app-review-next-popup",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [SocialShareComponent],
     templateUrl: "./review-next-popup.component.html",
     styleUrls: ["./review-next-popup.component.scss"],
+    standalone: true,
 })
 export class ReviewNextPopupComponent {
+    private loader = inject(Loader);
+    private reviewService = inject(ReviewService);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private router = inject(Router);
+    private keyboardService = inject(KeyboardService);
+
     @Output() abcd: EventEmitter<any> = new EventEmitter();
 
     public popupSubscription: Subscription;
@@ -45,15 +55,7 @@ export class ReviewNextPopupComponent {
     public isClassroom: boolean = false;
     readonly BUTTON_CHOICES: any = ["Next", "Continue"];
 
-    constructor(
-        private lessonService: LessonsService,
-        private loader: Loader,
-        private reviewService: ReviewService,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private router: Router,
-        private keyboardService: KeyboardService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
@@ -66,7 +68,7 @@ export class ReviewNextPopupComponent {
                 console.warn("No AuthUser cookie", err);
             });
 
-        if (parseInt(localStorage.getItem("isClassroom")) == 1) {
+        if (parseInt(this.localStorage.getItem("isClassroom")) == 1) {
             this.isClassroom = true;
         }
         this.setKeyboardListeners(true);
@@ -79,31 +81,35 @@ export class ReviewNextPopupComponent {
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
             // Turn on toggling of option keyboard shortcut
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (event.shiftKey) {
-                    this.activeButtonIndex = OwoksapeUtils.decrementWrap(
-                        this.activeButtonIndex,
-                        0,
-                        this.BUTTON_CHOICES.length - 1,
-                    );
-                } else {
-                    this.activeButtonIndex = OwoksapeUtils.incrementWrap(
-                        this.activeButtonIndex,
-                        0,
-                        this.BUTTON_CHOICES.length - 1,
-                    );
-                }
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (event.shiftKey) {
+                        this.activeButtonIndex = OwoksapeUtils.decrementWrap(
+                            this.activeButtonIndex,
+                            0,
+                            this.BUTTON_CHOICES.length - 1,
+                        );
+                    } else {
+                        this.activeButtonIndex = OwoksapeUtils.incrementWrap(
+                            this.activeButtonIndex,
+                            0,
+                            this.BUTTON_CHOICES.length - 1,
+                        );
+                    }
+                });
             // Turn on submit keyboard shortcut
-            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                if (this.activeButtonIndex < 0) {
-                    this.activeButtonIndex = 0;
-                }
-                this.gotoContinue(this.BUTTON_CHOICES[this.activeButtonIndex]);
-            });
+            this.keyboardSubmitSubscription = this.keyboardService.submitOrCloseEvent.subscribe(
+                () => {
+                    if (this.activeButtonIndex < 0) {
+                        this.activeButtonIndex = 0;
+                    }
+                    this.gotoContinue(this.BUTTON_CHOICES[this.activeButtonIndex]);
+                },
+            );
         } else {
             // Turn on keyboard listeners
-            if (this.keyboardToggleSelectionSubscription) this.keyboardToggleSelectionSubscription.unsubscribe();
+            if (this.keyboardToggleSelectionSubscription)
+                this.keyboardToggleSelectionSubscription.unsubscribe();
             if (this.keyboardSubmitSubscription) this.keyboardSubmitSubscription.unsubscribe();
         }
     }

@@ -16,42 +16,15 @@
 .teacher-check {
     padding: 1% 3%;
 }
-.teacher-check .custom-radio .custom-control-indicator {
-    border-radius: 42%;
-}
-.teacher-check .custom-control-indicator {
-    position: absolute;
-    top: 0.25rem;
-    left: 0;
-    display: block;
-    width: 2rem;
-    height: 2rem;
-    pointer-events: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-color: #fff;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 40% 40%;
-    border: 1px solid #2392d0;
-    box-shadow: 5px 5px 5px #00000026;
-}
-.teacher-check .custom-control {
+
+.teacher-check .form-check-label {
     position: relative;
     display: inline-flex;
     min-height: 2rem;
     padding-left: 1rem;
     margin-right: 0rem;
 }
-.teacher-check .custom-radio .custom-control-input:checked ~ .custom-control-indicator {
-    background-image: none;
-}
-.teacher-check .custom-control-input:checked ~ .custom-control-indicator {
-    color: #fff;
-    background-color: #2392d0;
-}
+
 .teacher-check img {
     border-radius: 50%;
     height: 40px;

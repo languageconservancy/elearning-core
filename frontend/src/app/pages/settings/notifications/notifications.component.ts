@@ -1,48 +1,54 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
 
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { environment } from "environments/environment";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { environment } from "@environments/environment";
+import { BaseService } from "@app/_services/base.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-notifications",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule],
     templateUrl: "./notifications.component.html",
     styleUrls: ["./notifications.component.scss"],
+    standalone: true,
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private baseService = inject(BaseService);
+    private snackbarService = inject(SnackbarService);
+    private localStorage = inject(LocalStorageService);
+
     public environment = environment;
     private lockSubscription: Subscription;
     public notif: any = {};
     public user: any;
     public lockFlag: boolean = false;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private router: Router,
-        private cookieService: CookieService,
-        private baseService: BaseService,
-        private snackbarService: SnackbarService,
-        private localStorage: LocalStorageService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("notifications");
     }
 
@@ -51,7 +57,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 const loggedInUser = JSON.parse(value);
                 this.settingsService

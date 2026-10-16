@@ -1,16 +1,18 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { BaseService } from "./base.service";
-import * as API from "app/_constants/api.constants";
-import { MIN_ADULT_AGE_DEFAULT, MIN_SELF_CONSENT_AGE_DEFAULT } from "app/_constants/app.constants";
+import * as API from "@app/_constants/api.constants";
+import { MIN_ADULT_AGE_DEFAULT, MIN_SELF_CONSENT_AGE_DEFAULT } from "@app/_constants/app.constants";
 
 @Injectable({
     providedIn: "root",
 })
 export class RegionPolicyService {
+    private baseService = inject(BaseService);
+
     private adultMinAge: number = MIN_ADULT_AGE_DEFAULT; // Default adult age
     private selfConsentMinAge: number = MIN_SELF_CONSENT_AGE_DEFAULT; // Default self consent age
 
-    constructor(private baseService: BaseService) {
+    constructor() {
         void this.fetchRegionPolicy();
     }
 
@@ -21,7 +23,12 @@ export class RegionPolicyService {
     private async fetchRegionPolicy(): Promise<void> {
         try {
             const res = await this.baseService.callApi(
-                API.User.GET_REGION_POLICY, "GET", {}, {}, "site", false,
+                API.User.GET_REGION_POLICY,
+                "GET",
+                {},
+                {},
+                "site",
+                false,
             );
             if (!res.data?.status || !res.data?.results) {
                 throw new Error("Error fetching region policy. " + res.data.message);

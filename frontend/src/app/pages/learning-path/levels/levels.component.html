@@ -1,7 +1,7 @@
 <!-- Continue, Village, Review buttons with text (Large screens) -->
 <div class="row d-none d-md-flex">
     <div class="col-8 offset-4">
-        <div class="action-btn-area mr-3">
+        <div class="action-btn-area me-3">
             <div class="d-flex justify-content-evenly">
                 <div class="ft-action-btn">
                     <a
@@ -15,28 +15,29 @@
                         Continue
                     </a>
                 </div>
-                <div
-                    class="ft-action-btn"
-                    *ngIf="
-                        regionPolicyService.isAdult(user?.approximate_age) &&
-                        features?.feature_village === '1'
-                    "
-                >
-                    <a href="javascript:void(0)" (click)="goToVillage()">
-                        <span>
-                            <img height="57" src="./assets/images/partner-logo.png" />
-                        </span>
-                        Village
-                    </a>
-                </div>
+                @if (
+                    regionPolicyService.isAdult($safeNavigationMigration(user?.approximate_age)) &&
+                    features?.feature_village === "1"
+                ) {
+                    <div class="ft-action-btn">
+                        <a href="javascript:void(0)" (click)="goToVillage()">
+                            <span>
+                                <img height="57" src="./assets/images/partner-logo.png" />
+                            </span>
+                            Village
+                        </a>
+                    </div>
+                }
                 <div class="ft-action-btn">
                     <a
                         href="javascript:void(0)"
-                        [ngClass]="{ 'no-reviews': noReviews }"
+                        [class]="{ 'no-reviews': noReviews }"
                         (click)="goToReview()"
                     >
                         <span>
-                            <span *ngIf="noReviews" class="img-overlay"></span>
+                            @if (noReviews) {
+                                <span class="img-overlay"></span>
+                            }
                             <img
                                 height="58"
                                 src="{{ getReviewImageUrl(fireImage, noReviews) }}"
@@ -59,17 +60,18 @@
             (click)="goToWhereverUserLeftOff()"
         />
     </div>
-    <div
-        class="ft-action-btn"
-        *ngIf="
-            this.regionPolicyService.isAdult(user?.approximate_age) &&
-            features?.feature_village === '1'
-        "
-    >
-        <img height="50rem" src="./assets/images/partner-logo.png" (click)="goToVillage()" />
-    </div>
+    @if (
+        this.regionPolicyService.isAdult($safeNavigationMigration(user?.approximate_age)) &&
+        features?.feature_village === "1"
+    ) {
+        <div class="ft-action-btn">
+            <img height="50rem" src="./assets/images/partner-logo.png" (click)="goToVillage()" />
+        </div>
+    }
     <div class="ft-action-btn">
-        <span *ngIf="noReviews" class="img-overlay"></span>
+        @if (noReviews) {
+            <span class="img-overlay"></span>
+        }
         <img
             height="50rem"
             src="{{ getReviewImageUrl(fireImage, noReviews) }}"
@@ -79,85 +81,108 @@
     </div>
 </div>
 
-<div class="justify-content-center text-center mt-md-3" *ngIf="!noLevel && !noPath">
-    <div class="row mx-md-0">
-        <div class="col-12 col-md-4 d-flex justify-content-center pt-3 pt-md-0">
-            <!-- Level selection dropdown (smaller screens) -->
-            <div class="dropdown d-md-none level-dropdown bg-transparent">
-                <button
-                    class="dropdown-toggle d-flex flex-nowrap text-wrap justify-content-between align-items-center mx-auto"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                    data-display="static"
-                >
-                    <img class="" [src]="currentLevel.image?.ResizeImageUrl" />
-                    <p class="mb-0">{{ currentLevel.name }}</p>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a
-                        *ngFor="let level of allLevels; let i = index"
-                        class="dropdown-item"
-                        [ngClass]="{ 'last-dropdown-level': i === allLevels.length - 1 }"
-                        href="javascript:void(0)"
-                        (click)="setActiveLevel(level)"
+@if (!noLevel && !noPath) {
+    <div class="justify-content-center text-center mt-md-3">
+        <div class="row mx-md-0">
+            <div class="col-12 col-md-4 d-flex justify-content-center pt-3 pt-md-0">
+                <!-- Level selection dropdown (smaller screens) -->
+                <div class="dropdown d-md-none level-dropdown bg-transparent">
+                    <button
+                        class="dropdown-toggle d-flex flex-nowrap text-wrap justify-content-between align-items-center mx-auto"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        data-bs-display="static"
                     >
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <img
-                                    class="w-75"
-                                    [src]="level.image?.ResizeImageUrl"
-                                    (error)="updateLevelImageUrl($event, level.id)"
-                                />
-                            </div>
-                            <div class="col-8 text-wrap">
-                                <span>{{ level.name }}</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- Level buttons on left side (larger screens) -->
-            <div class="landscape-leftpannel flex-md-grow-1 d-none d-md-block pt-3 pr-5">
-                <ul>
-                    <li *ngFor="let level of allLevels; let i = index">
-                        <div [ngClass]="{ notclickable: !level.enable }">
+                        <img
+                            class=""
+                            [src]="$safeNavigationMigration(currentLevel.image?.ResizeImageUrl)"
+                        />
+                        <p class="mb-0">{{ currentLevel.name }}</p>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @for (level of allLevels; track level; let i = $index) {
                             <a
-                                id="level-{{ i }}-btn"
-                                class="level-btn"
-                                [ngClass]="{
-                                    'active-level': selectedLevel === level.id,
-                                    'mt-0': i === 0,
-                                }"
+                                class="dropdown-item"
+                                [class]="{ 'last-dropdown-level': i === allLevels.length - 1 }"
                                 href="javascript:void(0)"
                                 (click)="setActiveLevel(level)"
-                                >{{ level.name }}</a
                             >
-                            <span>
-                                <img
-                                    *ngIf="level.image"
-                                    class="level-img"
-                                    [src]="level.image?.ResizeImageUrl"
-                                    alt=""
-                                    (error)="updateLevelImageUrl($event, level.id)"
-                                />
-                                <img *ngIf="!level.image" src="./assets/images/menu-3.png" alt="" />
-                            </span>
-                        </div>
-                    </li>
-                </ul>
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <img
+                                            class="w-75"
+                                            [src]="
+                                                $safeNavigationMigration(
+                                                    level.image?.ResizeImageUrl
+                                                )
+                                            "
+                                            (error)="updateLevelImageUrl($event, level.id)"
+                                        />
+                                    </div>
+                                    <div class="col-8 text-wrap">
+                                        <span>{{ level.name }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+                <!-- Level buttons on left side (larger screens) -->
+                <div class="landscape-leftpannel flex-md-grow-1 d-none d-md-block pt-3 pr-5">
+                    <ul>
+                        @for (level of allLevels; track level; let i = $index) {
+                            <li>
+                                <div [class]="{ notclickable: !level.enable }">
+                                    <a
+                                        id="level-{{ i }}-btn"
+                                        class="level-btn"
+                                        [class]="{
+                                            'active-level': selectedLevel === level.id,
+                                            'mt-0': i === 0,
+                                        }"
+                                        href="javascript:void(0)"
+                                        (click)="setActiveLevel(level)"
+                                        >{{ level.name }}</a
+                                    >
+                                    <span>
+                                        @if (level.image) {
+                                            <img
+                                                class="level-img"
+                                                [src]="
+                                                    $safeNavigationMigration(
+                                                        level.image?.ResizeImageUrl
+                                                    )
+                                                "
+                                                alt=""
+                                                (error)="updateLevelImageUrl($event, level.id)"
+                                            />
+                                        }
+                                        @if (!level.image) {
+                                            <img src="./assets/images/menu-3.png" alt="" />
+                                        }
+                                    </span>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="col-12 col-md-8">
+                <app-units [path]="path"></app-units>
             </div>
         </div>
-        <div class="col-12 col-md-8">
-            <app-units [path]="path"></app-units>
+    </div>
+}
+@if (noLevel || noPath) {
+    <div class="row">
+        <div class="col-12 text-center">
+            @if (noPath) {
+                <h3 class="text-white no-units">Please select a learning path from settings.</h3>
+            }
+            @if (noLevel && !noPath) {
+                <h3 class="text-white no-units">This path has no levels.</h3>
+            }
         </div>
     </div>
-</div>
-<div class="row" *ngIf="noLevel || noPath">
-    <div class="col-12 text-center">
-        <h3 class="text-white no-units" *ngIf="noPath">
-            Please select a learning path from settings.
-        </h3>
-        <h3 class="text-white no-units" *ngIf="noLevel && !noPath">This path has no levels.</h3>
-    </div>
-</div>
+}

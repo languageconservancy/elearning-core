@@ -1,7 +1,7 @@
-import { SelectableCardComponent } from './selectable-card.component'
+import { SelectableCardComponent } from "./selectable-card.component";
 
-describe('SelectableCardComponent', () => {
-  it('should mount', () => {
-    cy.mount(SelectableCardComponent)
-  })
-})
+describe("SelectableCardComponent", () => {
+    it("should mount", () => {
+        cy.mount(SelectableCardComponent);
+    });
+});

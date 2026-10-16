@@ -1,6 +1,6 @@
 import { BehaviorSubject } from "rxjs";
 import { Injectable } from "@angular/core";
-import { Routes } from "app/shared/utils/elearning-types";
+import { Routes } from "@app/shared/utils/elearning-types";
 
 export enum BreadcrumbType {
     LearningPath = "learningPath",

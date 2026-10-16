@@ -1,29 +1,55 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } from "@angular/core";
-import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ElementRef,
+    ViewChild,
+    AfterViewInit,
+} from "@angular/core";
+import { Router, ActivatedRoute, NavigationEnd, RouterLink } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SettingsService } from "app/_services/settings.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ReviewService } from "app/_services/review.service";
-import { BaseService } from "app/_services/base.service";
-import { ForumService } from "app/_services/forum.service";
-import { environment } from "environments/environment";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { VirtualKeyboardService } from "app/_services/virtual-keyboard.service";
-import { Routes } from "app/shared/utils/elearning-types";
-import { PlatformRolesService } from "app/_services/platform-roles.service";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
-
-declare let jQuery: any;
+import { CookieService } from "@app/_services/cookie.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ReviewService } from "@app/_services/review.service";
+import { BaseService } from "@app/_services/base.service";
+import { ForumService } from "@app/_services/forum.service";
+import { environment } from "@environments/environment";
+import { ModalService } from "@app/_services/modal.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { PlatformRolesService } from "@app/_services/platform-roles.service";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-navbar",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [RouterLink],
     templateUrl: "./navbar.component.html",
     styleUrls: ["./navbar.component.scss"],
+    standalone: true,
 })
 export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
+    public router = inject(Router);
+    private registrationService = inject(RegistrationService);
+    private cookieService = inject(CookieService);
+    private settingsService = inject(SettingsService);
+    public baseService = inject(BaseService);
+    private localStorage = inject(LocalStorageService);
+    private reviewService = inject(ReviewService);
+    private forumService = inject(ForumService);
+    private thisRoute = inject(ActivatedRoute);
+    private siteSettingsService = inject(SiteSettingsService);
+    private virtualKeyboardService = inject(VirtualKeyboardService);
+    public platformRolesService = inject(PlatformRolesService);
+    private breadcrumbsService = inject(BreadcrumbsService);
+    private modalService = inject(ModalService);
+
     public environment = environment;
     public loggedIn: boolean = false;
     public showSignIn: boolean = false;
@@ -44,21 +70,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild("mainDiv") mainDiv: ElementRef;
 
-    constructor(
-        public router: Router,
-        private registrationService: RegistrationService,
-        private cookieService: CookieService,
-        private settingsService: SettingsService,
-        public baseService: BaseService,
-        private localStorage: LocalStorageService,
-        private reviewService: ReviewService,
-        private forumService: ForumService,
-        private thisRoute: ActivatedRoute,
-        private siteSettingsService: SiteSettingsService,
-        private virtualKeyboardService: VirtualKeyboardService,
-        public platformRolesService: PlatformRolesService,
-        private breadcrumbsService: BreadcrumbsService,
-    ) {
+    constructor() {
         this.currentUserSub = this.registrationService.currentUser.subscribe((user) => {
             if (user && Object.keys(user).length > 0) {
                 void this.setUser(user);
@@ -100,7 +112,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (!!value) {
                     this.getUserSettings(false);
                 } else {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -216,7 +228,6 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
                                 return this.baseService.logout();
                             }
 
-                            jQuery(".dropdown-toggle").dropdown();
                             try {
                                 await this.baseService.setAuthUserCookie(authUser);
                             } catch (err) {
@@ -336,7 +347,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     openDoorbellModal() {
-        jQuery("#doorbell-button").click();
+        this.modalService.openModal("doorbell-button");
     }
 
     goToPrivacyPolicy() {

@@ -1,16 +1,31 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    OnDestroy,
+    OnInit,
+    signal,
+    ViewChild,
+} from "@angular/core";
+import { DatePipe, TitleCasePipe } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatTableModule } from "@angular/material/table";
+import { Router, RouterLink } from "@angular/router";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
 import * as xlsx from "xlsx";
 
-import { TeacherService } from "app/_services/teacher.service";
-import { ClassroomService } from "app/_services/classroom.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
+import { ClassroomSelectComponent } from "@app/pages/teacher/_partials/classroom-select/classroom-select.component";
+import { NgxWigModule } from "ngx-wig";
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
+import { CookieService } from "@app/_services/cookie.service";
+import { TeacherService } from "@app/_services/teacher.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
 
 export interface StudentActivitiesTable {
     id: number;
@@ -25,10 +40,29 @@ const ELEMENT_DATA: StudentActivitiesTable[] = [];
 
 @Component({
     selector: "app-teacher-dashboard",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        ClassroomSelectComponent,
+        RouterLink,
+        FormsModule,
+        MatTableModule,
+        NgxWigModule,
+        DatePipe,
+        SafeHtmlPipe,
+        TitleCasePipe,
+    ],
     templateUrl: "./teacher-dashboard.component.html",
     styleUrls: ["./teacher-dashboard.component.scss"],
+    standalone: true,
 })
 export class TeacherDashboardComponent implements OnInit, OnDestroy {
+    private teacherService = inject(TeacherService);
+    private classroomService = inject(ClassroomService);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private loader = inject(Loader);
+    private snackbarService = inject(SnackbarService);
+
     @ViewChild("table", { static: false }) private table: any;
     @ViewChild("progresstable", { static: false }) progressTable: ElementRef;
     private schoolSubscription: Subscription;
@@ -39,7 +73,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     public classroomStudents: any = [];
     public classroomUnits: any = [];
     public noClassrooms = false;
-    public messageIsDirty = false;
+    public messageIsDirty = signal<boolean>(false);
+    private savedMessage: string | undefined;
     public teacher: any = [];
     public activities: any = [];
     public progresses: any = [];
@@ -60,19 +95,12 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
 
     @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-    constructor(
-        private teacherService: TeacherService,
-        private classroomService: ClassroomService,
-        private router: Router,
-        private cookieService: CookieService,
-        private loader: Loader,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -92,7 +120,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
                 this.retrievedInitialActivities = false;
                 this.getUnitsAndStudentsThenUpdateActivities();
                 this.noClassrooms = false;
-                this.messageIsDirty = false;
+                this.savedMessage = classroom.teacher_message;
+                this.messageIsDirty.set(false);
             } else {
                 this.noClassrooms = true;
             }
@@ -186,7 +215,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
             this.classroomService
                 .updateClassroomData(params)
                 .then(() => {
-                    this.messageIsDirty = false;
+                    this.savedMessage = classroom.teacher_message;
+                    this.messageIsDirty.set(false);
                 })
                 .catch(() => {
                     this.snackbarService.showSnackbar({
@@ -206,7 +236,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     }
 
     markMessageDirty() {
-        this.messageIsDirty = true;
+        // The editor emits on initial render; only flag real changes
+        this.messageIsDirty.set(this.classroom?.teacher_message !== this.savedMessage);
     }
 
     getDisplayName(student: any): string {
@@ -281,13 +312,18 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
                         ) {
                             if (
                                 // eslint-disable-next-line prettier/prettier
-                                this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].unit_id == this.classroomUnits[unitIndex].level_unit.unit.id &&
+                                this.initialStudentProgresses[studentIndex].user_unit_activities[
+                                    progressIndex
+                                ].unit_id == this.classroomUnits[unitIndex].level_unit.unit.id &&
                                 // eslint-disable-next-line prettier/prettier
-                                !!this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].percent
+                                !!this.initialStudentProgresses[studentIndex].user_unit_activities[
+                                    progressIndex
+                                ].percent
                             ) {
                                 currentUnitPercent =
                                     // eslint-disable-next-line prettier/prettier
-                                    this.initialStudentProgresses[studentIndex].user_unit_activities[progressIndex].percent;
+                                    this.initialStudentProgresses[studentIndex]
+                                        .user_unit_activities[progressIndex].percent;
                             }
                         }
                         if (this.lastModified == null) {

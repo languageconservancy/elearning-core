@@ -1,28 +1,60 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
+import {
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { LearningPathService } from "app/_services/learning-path.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { LoginService } from "app/_services/login.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { RegexConsts } from "app/_constants/app.constants";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
-import { SettingsService } from "app/_services/settings.service";
-import { BaseService } from "app/_services/base.service";
-import { AgreementsService } from "app/_services/agreements.service";
-import { Routes } from "app/shared/utils/elearning-types";
-import { RegionPolicyService } from "app/_services/region-policy.service";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
+import { LearningPathService } from "@app/_services/learning-path.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { LoginService } from "@app/_services/login.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { RegexConsts } from "@app/_constants/app.constants";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
+import { SettingsService } from "@app/_services/settings.service";
+import { BaseService } from "@app/_services/base.service";
+import { AgreementsService } from "@app/_services/agreements.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
 
 @Component({
     selector: "app-registration",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./registration.component.html",
     styleUrls: ["./registration.component.scss"],
+    imports: [PageTitleComponent, RecaptchaCheckboxComponent, ReactiveFormsModule],
+    standalone: true,
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private learningPathService = inject(LearningPathService);
+    public loginService = inject(LoginService);
+    public registrationService = inject(RegistrationService);
+    private localStorage = inject(LocalStorageService);
+    private loader = inject(Loader);
+    private agreementsService = inject(AgreementsService);
+    private snackbarService = inject(SnackbarService);
+    private settingsService = inject(SettingsService);
+    private baseService = inject(BaseService);
+    private regionPolicyService = inject(RegionPolicyService);
+
+    @ViewChild(RecaptchaCheckboxComponent)
+    private recaptchaCheckbox?: RecaptchaCheckboxComponent;
+
     private userSubscription: Subscription;
     public userId: string;
     public registrationForm: any;
@@ -37,19 +69,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         : "6LfZ48wfAAAAALDjum-CDaIHeM64Oxdfakkp_WPS";
     private previousAge: number = 0;
 
-    constructor(
-        private router: Router,
-        private learningPathService: LearningPathService,
-        public loginService: LoginService,
-        public registrationService: RegistrationService,
-        private localStorage: LocalStorageService,
-        private loader: Loader,
-        private agreementsService: AgreementsService,
-        private snackbarService: SnackbarService,
-        private settingsService: SettingsService,
-        private baseService: BaseService,
-        private regionPolicyService: RegionPolicyService,
-    ) {
+    constructor() {
         this.userSubscription = this.registrationService.currentUser.subscribe(
             (userId) => (this.userId = userId),
         );
@@ -65,22 +85,22 @@ export class RegistrationComponent implements OnInit, OnDestroy {
                 Validators.min(1),
                 Validators.pattern(/^([1-9])([0-9]){0,1}$/),
             ]),
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             name: new UntypedFormControl("", [
+                // eslint-disable-next-line @typescript-eslint/unbound-method
                 Validators.required,
                 this.validateBlankValue.bind(this),
             ]),
             email: new UntypedFormControl("", {
-                // eslint-disable-next-line @typescript-eslint/unbound-method
                 validators: [
+                    // eslint-disable-next-line @typescript-eslint/unbound-method
                     Validators.required,
                     Validators.pattern(emailRegex),
                     this.validateBlankValue.bind(this),
                 ],
                 updateOn: "blur",
             }),
-            // eslint-disable-next-line @typescript-eslint/unbound-method
             password: new UntypedFormControl("", [
+                // eslint-disable-next-line @typescript-eslint/unbound-method
                 Validators.required,
                 this.validateBlankValue.bind(this),
             ]),
@@ -163,15 +183,24 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         }
     }
 
-    captchaResolved(data) {
+    captchaResolved(token: string | null) {
+        this.captchaResponse = false;
+        if (!token) {
+            return;
+        }
+
         this.loader.setLoader(true);
         this.registrationService
-            .getCaptchaResponse({ token: data })
+            .getCaptchaResponse({ token: token })
             .then((res: any) => {
-                this.captchaResponse = res.data.results.success;
+                this.captchaResponse = res?.data?.results?.success === true;
+                if (!this.captchaResponse) {
+                    this.recaptchaCheckbox?.reset();
+                }
             })
             .catch((err) => {
                 console.error(err);
+                this.recaptchaCheckbox?.reset();
             })
             .finally(() => {
                 this.loader.setLoader(false);

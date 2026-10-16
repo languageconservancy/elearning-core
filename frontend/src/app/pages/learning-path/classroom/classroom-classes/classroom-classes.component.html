@@ -5,7 +5,7 @@
             <div class="text-center d-none d-md-block"><a>Click to Ask a Question</a></div>
             <br class="d-none d-mg-block" />
             <div class="text-center">
-                @for (teacher of currentLevel.teachers; track teacher) {
+                @for (teacher of currentLevel.teachers; track teacher.user.id) {
                     <span>
                         <img
                             src="{{

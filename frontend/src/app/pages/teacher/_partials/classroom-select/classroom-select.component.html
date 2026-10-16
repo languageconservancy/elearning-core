@@ -18,19 +18,19 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="classroomDropdownBtn">
           <div class="dropdown-menu-wrap">
-            @for (classroom of classrooms; track classroom; let i = $index) {
+            @for (classroom of classrooms; track classroom.id;) {
               <div class="teacher-check tlc-row tlc-width-whole">
-                <div class="tlc-row tlc-align-items-center tlc-width-whole" style="cursor: pointer; gap: 10px;" (click)="setCurrentClassroom(i)">
+                <div class="tlc-row tlc-align-items-center tlc-width-whole" style="cursor: pointer; gap: 10px;" (click)="setCurrentClassroom($index)">
                   <div class="tlc-flex form-check">
-                    <label class="form-check-label tlc-sr-only" for="classroom-{{ i }}">Pick a classroom</label>
+                    <label class="form-check-label tlc-sr-only" for="classroom-{{ $index }}">Pick a classroom</label>
                     <input
-                        id="classroom-{{ i }}"
+                        id="classroom-{{ $index }}"
                         name="radio-stacked-classroom"
                         type="radio"
                         [value]="classroom.id"
                         class="form-check-input tlc-display-none"
                         required=""
-                        [checked]="currentClassroomIndex === i"
+                        [checked]="currentClassroomIndex === $index"
                     />
                   </div>
                   <dl>
@@ -106,8 +106,8 @@
                 <span><label for="name">Select Lesson</label></span>
                   <span>
                     <select formControlName="level" class="form-control seoc-btn-thin seoc-btn-width">
-                      @for (level of listTeacherLevels; track level; let i = $index) {
-                        <option value="{{ i }}">
+                      @for (level of listTeacherLevels; track level.level.id) {
+                        <option value="{{ $index }}">
                           {{ level.level.name }}
                         </option>
                       }

@@ -33,7 +33,7 @@
         <div class="panel panel-warning teacher-dnd teacher-dnd-left">
           <div class="panel-body">
             <ul class="list-group">
-              @for (teacher of schoolTeachers; track teacher; let i = $index) {
+              @for (teacher of schoolTeachers; track teacher.id) {
                 <li class="list-group-item">
                   <img src="{{ teacher.user.usersetting.FullProfileImageUrl }}" />
                   {{ teacher.user.name }} - {{ teacher.user.email }}
@@ -56,7 +56,7 @@
             <div class="panel panel-warning teacher-dnd teacher-dnd-left">
               <div class="panel-body">
                 <ul class="list-group">
-                  @for (classroom of classrooms; track classroom; let i = $index) {
+                  @for (classroom of classrooms; track classroom.id) {
                     <li class="list-group-item">
                       <p>{{ classroom.name }}</p>
                       <a href="javascript:void(0)" (click)="deleteClassroom(classroom.id)" >Delete classroom</a>
@@ -71,7 +71,7 @@
             <div class="panel panel-warning teacher-dnd teacher-dnd-left">
               <div class="panel-body">
                 <ul class="list-group">
-                  @for (classroom of archivedClassrooms; track classroom; let i = $index) {
+                  @for (classroom of archivedClassrooms; track classroom.id) {
                     <li class="list-group-item">
                       <p>{{ classroom.name }}</p>
                       <a href="javascript:void(0)" (click)="deleteClassroom(classroom.id)">
@@ -96,7 +96,7 @@
         <div class="panel panel-warning teacher-dnd teacher-dnd-right">
           <div class="panel-body">
             <ul class="list-group">
-              @for (student of schoolStudents; track $index;) {
+              @for (student of schoolStudents; track student.id) {
                 <li class="list-group-item">
                   <img src="{{ student.user.usersetting.FullProfileImageUrl }}" />
                     {{ student.l_name ? student.l_name + ', ' + student.f_name + ' -' : student.user.name + ' -' }} {{ student.user.email }}
@@ -142,16 +142,16 @@
             <span>
               <select formControlName="classroom" class="form-control seoc-btn-thin seoc-btn-width">
                 <option value="-1" selected>Add to School Only</option>
-                @for (classroom of classrooms; track classroom; let i = $index) {
-                  <option value="{{ i }}">
+                @for (classroom of classrooms; track classroom.id) {
+                  <option value="{{ $index }}">
                     {{ classroom.name }}
                   </option>
                 }
               </select>
             </span>
             <div class="user-array-form" formArrayName="new_users">
-              @for (item of newUsers.controls; track item; let userIndex = $index) {
-                <div [formGroupName]="userIndex">
+              @for (item of newUsers.controls; track item) {
+                <div [formGroupName]="$index">
                   <label class="label-w-200">
                     Student ID:
                     <input
@@ -197,7 +197,7 @@
                       <option value="2">Substitute</option>
                     </select>
                   </label>
-                  <a class="ms-2" (click)="deleteNewUserRow(userIndex)">
+                  <a class="ms-2" (click)="deleteNewUserRow($index)">
                     <i class="fa fa-times"></i>
                   </a>
                 </div>
@@ -220,8 +220,8 @@
             <span>
               <select formControlName="classroom" class="form-control seoc-btn-thin seoc-btn-width">
                 <option value="-1" selected>Add to School Only</option>
-                @for (classroom of classrooms; track classroom; let i = $index) {
-                  <option value="{{ i }}">
+                @for (classroom of classrooms; track classroom.id) {
+                  <option value="{{ $index }}">
                     {{ classroom.name }}
                   </option>
                 }

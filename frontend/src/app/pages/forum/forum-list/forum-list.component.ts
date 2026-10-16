@@ -94,7 +94,17 @@ export class ForumListComponent implements OnInit, OnDestroy, AfterViewInit {
     public noForums: boolean = false;
     public noPosts: boolean = false;
     public paramsFetched: boolean = false;
-    public postForm: FieldTree<PostFormValue>;
+    public readonly postForm: FieldTree<PostFormValue> = form(this.postModel, (path) => {
+        required(path.title);
+        required(path.content);
+
+        validate(path.title, ({ value }) =>
+            value().trim() === "" ? { kind: "blank", message: "A value is required" } : undefined,
+        );
+        validate(path.content, ({ value }) =>
+            value().trim() === "" ? { kind: "blank", message: "A value is required" } : undefined,
+        );
+    });
     public postList: any = [];
     private postsRequestId = 0;
     public currentPage = 1;
@@ -179,21 +189,6 @@ export class ForumListComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        this.postForm = form(this.postModel, (path) => {
-            required(path.title);
-            required(path.content);
-
-            validate(path.title, ({ value }) =>
-                value().trim() === ""
-                    ? { kind: "blank", message: "A value is required" }
-                    : undefined,
-            );
-            validate(path.content, ({ value }) =>
-                value().trim() === ""
-                    ? { kind: "blank", message: "A value is required" }
-                    : undefined,
-            );
-        });
         this.localStorage.removeItem("postId");
         this.cookieService
             .get("AuthUser")

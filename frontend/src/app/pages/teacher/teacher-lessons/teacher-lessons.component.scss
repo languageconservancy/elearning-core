@@ -11,10 +11,6 @@
     padding-right: 0;
 }
 
-#class-overview {
-    margin-top: 0;
-}
-
 #student-overview .panel {
     max-height: 300px;
     overflow: auto;
@@ -27,27 +23,10 @@
 }
 #teacher-info {
     height: 100%;
-    padding: 10px;
 }
 .overview-table {
     overflow: auto;
     margin-bottom: 10px;
-}
-i {
-    padding-left: 10px;
-}
-
-.css-checkbox {
-    /* position: absolute;
-z-index: -1000;
-left: -1000px;
-overflow: hidden;
-clip: rect(0 0 0 0);
-height: 1px;
-width: 1px;
-margin: -1px;
-padding: 0;
-border: 0; */
 }
 
 input[type="checkbox"].css-checkbox + label.css-label-sortable {
@@ -73,6 +52,40 @@ ul {
     list-style-type: none;
 }
 
+.teacher-dnd {
+    margin: 0;
+    
+    &-list {
+        flex-grow: 1;
+        margin: 0;
+
+        &:empty {
+            border: 2px solid rgba(0, 0, 0, 0.125);
+        }
+    }
+
+    i {
+        color: #2392d0;
+        font-size: 1.5em;
+    }
+
+    &:not(:first-of-type) i {
+        color: #9f0b10;
+    }
+}
+
+.list-group-item {
+    padding: 0 !important;
+
+    span {
+        padding: 0.75rem;
+    }
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+}
+
 .dnd-sortable-drag {
     transform: scale(1);
     opacity: 0.7;
@@ -82,7 +95,7 @@ ul {
     min-height: 200px;
 }
 
-.overview-levels ul {
+.overview-levels {
     list-style-type: none;
     margin-left: 0;
     padding-left: 0;
@@ -93,35 +106,36 @@ ul {
     scrollbar-width: thin;
 }
 
-.level-container li {
-    display: inline;
+.level-container {
+    display: flex;
+    gap: .25rem;
+    justify-content: space-between;
 }
 
 .active-level a {
     background: theme.$primary-color !important;
     color: white !important;
+    
 }
 
-.level-container {
-    max-height: 200px;
-}
-
-.level-container li a {
+.level-container a {
+    align-items: center;
     color: black;
     background: white;
-    height: 80px;
-    width: 160px;
     border: 2px solid theme.$primary-color;
     border-radius: 10px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
     font-size: 12px;
-    text-decoration: none;
-    margin: 5px;
+    height: 80px;
+    justify-content: center;
     padding-top: 10px;
-    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    width: 160px;
 }
 
-.level-container li a:hover {
+.level-container a:hover {
     background: theme.$primary-color;
     color: white;
     & i {
@@ -138,4 +152,56 @@ ul {
     color: theme.$primary-color;
     margin-left: 0;
     padding-left: 0;
+}
+
+.dropdown-menu.show {
+    border: none;
+    border-radius: 4px !important;
+    box-shadow: 0 .25rem .5rem rgb(36, 49, 66, .16);
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    width: 100%;
+}
+
+.teacherportal-drop  {
+    .dropdown-menu-wrap{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+.teacher-check {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    dl {
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+
+    .custom-control-indicator {
+        border: 1px solid transparent;
+        box-shadow: none;
+        display: flex;
+        height: 2rem;
+        left: unset;
+        position: relative;
+        top: unset;
+        width: .5rem;
+    }
+}
+
+.teacher-drop {
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }

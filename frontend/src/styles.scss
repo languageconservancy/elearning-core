@@ -14,3 +14,188 @@
 @import "./assets/css/all.min";
 @import "./assets/css/datepicker.min";
 @import "./assets/scss/partials";
+
+
+
+.tlc {
+    &-button {
+        background: #047eb9;
+        border: none;
+        border-radius: 20px;
+        color: #fff;
+        display: block;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    &-card {
+        background-color: #fff;
+        border-radius: .5rem;
+        border: medium solid #047eb9;
+        box-shadow: 0 0px 7px rgba(0, 0, 0, 0.3);
+        padding: 1rem;
+    }
+
+    &-sr-only {
+        border: 0;
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute !important;
+        width: 1px;
+        white-space: nowrap;
+    }
+}
+
+.tlc-font-sans {
+    font-family: TLC-ArialRoundedMTBoldRegular;
+}
+
+.tlc-ts-16 {
+    font-size: .9rem !important;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 0;
+}
+
+.tlc-ts-18 {
+    font-size: 1rem !important;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 0;
+}
+
+.tlc-ts-22 {
+    font-size: 1.25rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.tlc-line-height {
+    &--tight {
+        line-height: 1 !important;
+    }
+
+    &--regular {
+        line-height: 1.15 !important;
+    }
+
+    &--relaxed {
+        line-height: 1.2 !important;
+    }
+}
+
+.tlc {
+    &-align {
+        &-items {
+            &-center {
+                align-items: center;
+            }
+        }
+    }
+
+    &-display-none {
+        display: none;
+    }
+
+    &-flex,
+    &-column,
+    &-column-reverse,
+    &-row {
+        display: flex;
+    }
+
+    &-column {
+        flex-direction: column;
+
+        &-reverse {
+            flex-direction: column-reverse;
+        }
+    }
+
+    &-flex {
+        &-1 {
+            flex: 1;
+        }
+    
+        &-grow {
+            flex-grow: 1;
+        }
+    }
+
+    &-justify {
+        &-content {
+            &-between {
+                justify-content: space-between;
+            }
+    
+            &-center {
+                justify-content: center;
+            }
+
+            &-end {
+                justify-content: flex-end;
+            }
+        }
+    }
+
+    &-row {
+        flex-direction: row;
+    }
+
+    &-row,
+    &-wrap {
+        flex-wrap: wrap;
+    }
+}
+
+$common-breakpoints: (
+    sm: 30em,
+    md: 46.25em,
+    lg: 67.5em,
+    xl: 78.75em,
+    xxl: 87.5em
+);
+
+$common-gaps: (
+    xxs: .25rem,
+    xs: .5rem,
+    sm: 1rem
+);
+
+$common-widths: (
+    quarter: 25%,
+    third: 33%,
+    half: 50%,
+    two-thirds: 66%,
+    three-quarters: 75%,
+    whole: 100%
+);
+
+
+@each $size, $value in $common-widths {
+    .tlc-width-#{$size} {
+        width: $value;
+    }
+}
+
+@each $size, $value in $common-gaps {
+    .tlc-gap-#{$size} {
+        gap: $value;
+    }
+}
+
+@each $breakpoint, $size in $common-breakpoints {
+    @media screen and (min-width: $size) {
+        @each $width, $value in $common-widths {
+            .tlc-width-#{$width}-#{$breakpoint}-up {
+                width: $value;
+            }
+        }
+    }
+}

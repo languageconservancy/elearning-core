@@ -1,3 +1,17 @@
 .dropdown-selected {
     display: inherit;
 }
+
+.navbar-dark {
+    .navbar-nav {
+        .left-menu {
+            .nav-link > *,
+            .nav-link > * {
+                display: block;
+                font-family: TLC-ArialRoundedMTBoldRegular;
+                line-height: 1;
+                margin-top: 2px;
+            }
+        }
+    }
+}

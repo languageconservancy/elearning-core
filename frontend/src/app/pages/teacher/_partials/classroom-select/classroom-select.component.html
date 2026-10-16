@@ -1,7 +1,7 @@
 <div *ngIf="currentClassroomIndex === -1 && listTeacherLevels.length > 0">
-    <h5><a href="javascript:void(0);" (click)="openModal('new')">Add New Classroom</a></h5>
+    <h3 class="tlc-ts-22"><a href="javascript:void(0);" (click)="openModal('new')">Add New Classroom</a></h3>
 </div>
-<div *ngIf="currentClassroomIndex >= 0" class="teacherportal-drop">
+<div *ngIf="currentClassroomIndex >= 0" class="teacherportal-drop tlc-column tlc-gap-xs">
     <div class="dropdown" *ngIf="!!currentClassroom">
         <button
             class="teacher-drop dropdown-toggle"
@@ -16,44 +16,37 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="classroomDropdownBtn">
             <div class="dropdown-menu-wrap">
-                <div class="teacher-check" *ngFor="let classroom of classrooms; let i = index">
-                    <div class="form-row" (click)="setCurrentClassroom(i)">
-                        <div class="col-xs-12 col-sm-9 col-lg-10">
-                            <dl>
-                                <dt>{{ classroom.name }}</dt>
-                            </dl>
-                        </div>
-                        <div class="col-xs-12 col-sm-3 col-lg-2">
-                            <label class="custom-control custom-radio">
+                <div class="teacher-check tlc-row tlc-width-whole" *ngFor="let classroom of classrooms; let i = index">
+                        <div class="tlc-row tlc-align-items-center tlc-width-whole" style="cursor: pointer; gap: 10px;" (click)="setCurrentClassroom(i)">
+                            <div class="tlc-flex">
+                                <label class="custom-control custom-radio tlc-sr-only">Pick a classroom</label>
                                 <input
                                     id="classroom-{{ i }}"
                                     name="radio-stacked-classroom"
                                     type="radio"
                                     [value]="classroom.id"
-                                    class="custom-control-input"
+                                    class="custom-control-input tlc-display-none"
                                     required=""
                                     [checked]="currentClassroomIndex === i"
                                 />
-                                <span class="custom-control-indicator"></span>
-                            </label>
-                        </div>
+                                <span class="custom-control-indicator tlc-flex"></span>
+                            </div>
+                            <dl>
+                                <dt>{{ classroom.name }}</dt>
+                            </dl>
                     </div>
-                    <hr class="mt-0 mb-0" />
                 </div>
             </div>
         </div>
     </div>
-    <div>
-        <a href="javascript:;" (click)="openModal('update')">Edit Classroom</a>
-        /
-        <a href="javascript:;" (click)="openModal('new')">Add New Classroom</a>
-    </div>
+    <button type="button" href="javascript:;" (click)="openModal('update')" class="tlc-button">Edit Classroom</button>
+    <button type="button" href="javascript:;" (click)="openModal('new')" class="tlc-button">Add New Classroom</button>
 </div>
 <div #formModal class="modal fade">
     <div class="modal-dialog show">
         <div *ngIf="modalType === 'new'" class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">New Classroom</h5>
+                <h3 class="modal-title">New Classroom</h3>
                 <button type="button" class="close" (click)="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -123,7 +116,7 @@
         </div>
         <div *ngIf="modalType === 'update'" class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Classroom</h5>
+                <h3 class="modal-title">Edit Classroom</h3>
                 <button type="button" class="close" (click)="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>

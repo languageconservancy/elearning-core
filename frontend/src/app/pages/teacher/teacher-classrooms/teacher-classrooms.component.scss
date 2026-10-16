@@ -22,15 +22,12 @@
 }
 #teacher-info {
     height: 100%;
-    padding: 10px;
 }
+
 .overview-table {
     height: 200px;
     overflow: auto;
     margin-bottom: 10px;
-}
-i {
-    padding-left: 10px;
 }
 
 .teacher-switch {
@@ -169,4 +166,38 @@ input:checked + .slider2:before {
 }
 .list-group-item:nth-child(even) {
     background: rgba(0, 0, 0, 0.05);
+}
+
+.teacher-dnd {
+    margin: 0;
+    
+    &-list {
+        flex-grow: 1;
+        margin: 0;
+
+        &:empty {
+            border: 2px solid rgba(0, 0, 0, 0.125);
+        }
+    }
+
+    i {
+        color: #2392d0;
+        font-size: 1.5em;
+    }
+
+    &:not(:first-of-type) i {
+        color: #9f0b10;
+    }
+}
+
+.list-group-item {
+    padding: 0 !important;
+
+    span {
+        padding: 0.75rem;
+    }
+
+    &:last-of-type {
+        border-bottom: none;
+    }
 }

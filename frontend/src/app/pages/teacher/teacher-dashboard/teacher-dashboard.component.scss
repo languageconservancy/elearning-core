@@ -29,16 +29,6 @@ th.mat-sort-header-sorted {
 }
 #teacher-info {
     height: 100%;
-    padding: 10px;
-}
-#student-progress {
-    padding-bottom: 10px;
-}
-#student-activity {
-    padding-bottom: 10px;
-}
-#student-overview {
-    padding-bottom: 10px;
 }
 #student-overview img {
     border-radius: 50%;
@@ -53,16 +43,10 @@ th.mat-sort-header-sorted {
     height: 30px;
 }
 .overview-table {
-    height: 360px;
+    height: fit-content;
     overflow: auto;
-    margin-bottom: 10px;
 }
-i.fa-download {
-    padding-left: 10px;
-}
-i.fa-save {
-    padding-left: 10px;
-}
+
 i.fa-circle {
     text-align: center;
     min-width: 30px;

@@ -1,282 +1,223 @@
-<div class="col-xs-5 col-sm-8 col-lg-12 l-speed">
-    <div class="row justify-content-start mr-0">
-        <div class="col-xs-3 col-sm-4 col-lg-3">
-            <div id="teacher-info" class="logo-container-box col-lg-12">
-                <h5>Lesson Administration</h5>
-                <p>
-                    From this page, you can arrange curriculum for your classes. Each class may be
-                    assigned a single level, but a level may be shared between classes.
-                </p>
-                <h5>
-                    <a href="/contact-us"
-                        ><i
-                            class="fa fa-question-circle"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title="Ask a question"
-                        ></i
-                    ></a>
-                </h5>
-            </div>
+<div class="tlc-card tlc-width-whole tlc-width-third-lg-up">
+    <div id="teacher-info" class="tlc-column tlc-gap-xs">
+        <div class="tlc-flex tlc-align-items-center tlc-gap-xs">
+            <h2 class="tlc-ts-22">Lesson Administration</h2>
+            <a href="/contact-us">
+                <i class="fa fa-question-circle"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Ask a question"></i>
+            </a>
         </div>
-        <div id="class-overview" class="logo-container-box col-9">
-            <h5>Your Lesson Plans</h5>
-            <div class="overview-levels">
-                <div>
-                    <ul class="level-container">
-                        <li>
-                            <a (click)="openModal()"
-                                >Add New Lesson Plan<br /><i
-                                    (click)="openModal()"
-                                    class="fa fa-plus"
-                                ></i
-                            ></a>
-                        </li>
-                        <li
-                            *ngFor="let level of listTeacherLevels; let i = index"
-                            [ngClass]="{ 'active-level': i === activeLevelIndex }"
-                            (click)="setActiveTeacherLessonPlan(i)"
-                        >
-                            <a
-                                >{{ level.level.name }}<br /><img
-                                    src="{{ level.level.image.FullUrl }}"
-                            /></a>
-                        </li>
-                    </ul>
-                </div>
-                <div *ngIf="activeLevelIndex === -1">
-                    <h5>
-                        Click the Add New Lesson Plan button<br />to start building your first
-                        Lesson Plan
-                    </h5>
-                </div>
-            </div>
+        <p>
+            From this page, you can arrange curriculum for your classes. Each class may be
+            assigned a single level, but a level may be shared between classes.
+        </p>
+    </div>
+</div>
+<div id="class-overview" class="tlc-card tlc-column tlc-width-whole tlc-width-two-thirds-lg-up tlc-gap-xs">
+    <h3 class="tlc-ts-22">Your Lesson Plans</h3>
+    <div class="overview-levels">
+        <div class="level-container">
+            <a (click)="openModal()"
+                >Add New Lesson Plan
+                <i (click)="openModal()"class="fa fa-plus"></i>
+            </a>
+            <a *ngFor="let level of listTeacherLevels; let i = index"
+            [ngClass]="{ 'active-level': i === activeLevelIndex }"
+            (click)="setActiveTeacherLessonPlan(i)">
+                {{ level.level.name }}
+                <img src="{{ level.level.image.FullUrl }}" />
+            </a>
+        </div>
+        <div *ngIf="activeLevelIndex === -1">
+            <h4 class="tlc-ts-22">
+                Click the Add New Lesson Plan button to start building your first
+                Lesson Plan
+            </h4>
         </div>
     </div>
-    <div *ngIf="activeLevelIndex > -1" class="row mr-0">
-        <div class="col-xs-3 col-sm-4 col-lg-12">
-            <div id="student-overview" class="logo-container-box">
-                <div class="unsaved" *ngIf="unsavedUnitChanges">
-                    <h5>
-                        <button class="btn teacher-save" (click)="saveTeacherLevelUnits()">
-                            <i
-                                class="fa fa-save"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="Save Lesson"
-                            ></i>
-                            Save Changes
-                        </button>
-                    </h5>
+</div>
+<div *ngIf="activeLevelIndex > -1" class="tlc-card tlc-width-whole">
+    <div id="student-overview tlc-column">
+        <div cdkDropListGroup class="tlc-column tlc-gap-sm">
+            <div class="tlc-row tlc-justify-content-between">
+                <div class="tlc-column tlc-gap-xs">
+                    <h3 class="tlc-ts-22">Editing {{ listTeacherLevels[activeLevelIndex].level.description }}</h3>
                 </div>
-                <div cdkDropListGroup class="row">
-                    <div class="col-xs-2 col-sm-2 col-lg-6">
-                        <h5>Available Units</h5>
-                        <div class="row justify-content-evenly">
-                            <!-- Paths dropdown -->
-                            <div class="teacherportal-drop mb-2">
-                                <h6 class="mb-1">Learning Path</h6>
-                                <div *ngIf="currentAvailablePathIndex > -1" class="dropdown">
-                                    <button
-                                        class="teacher-drop dropdown-toggle"
-                                        type="button"
-                                        id="levelDropdownBtn"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <span>{{
-                                            availablePaths[currentAvailablePathIndex].label
-                                        }}</span>
-                                        <!-- <span *ngIf="!currentClassroomIndex">Select Classroom</span> -->
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="levelDropdownBtn">
-                                        <div class="dropdown-menu-wrap">
-                                            <div
-                                                class="teacher-check"
-                                                *ngFor="
-                                                    let availablePath of availablePaths;
-                                                    let i = index
-                                                "
-                                            >
-                                                <div
-                                                    class="form-row"
-                                                    (click)="setCurrentAvailablePath(i)"
-                                                >
-                                                    <div class="col-xs-12 col-sm-9 col-lg-10">
-                                                        <dl>
-                                                            <dt>{{ availablePath.label }}</dt>
-                                                        </dl>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-3 col-lg-2">
-                                                        <label class="custom-control custom-radio">
-                                                            <input
-                                                                id="availablePath-{{ i }}"
-                                                                name="radio-stacked-available-path"
-                                                                type="radio"
-                                                                value="{{ availablePath.id }}"
-                                                                class="custom-control-input"
-                                                                required=""
-                                                                [checked]="
-                                                                    currentAvailablePathIndex === i
-                                                                "
-                                                            />
-                                                            <span
-                                                                class="custom-control-indicator"
-                                                            ></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <hr class="mt-0 mb-0" />
-                                            </div>
+            </div>
+            <div class="tlc-row tlc-gap-sm">
+                <!-- Paths dropdown -->
+                <div class="teacherportal-drop tlc-column tlc-width-whole tlc-width-quarter-md-up tlc-flex-1">
+                    <span class="tlc-ts-16 tlc-font-sans">Learning Path</span>
+                    <div *ngIf="currentAvailablePathIndex > -1" class="dropdown">
+                        <button class="teacher-drop dropdown-toggle"
+                            type="button"
+                            id="levelDropdownBtn"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                            <span>
+                                {{ availablePaths[currentAvailablePathIndex].label}}
+                            </span>
+                            <!-- <span *ngIf="!currentClassroomIndex">Select Classroom</span> -->
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="levelDropdownBtn">
+                            <div class="dropdown-menu-wrap">
+                                <div class="teacher-check tlc-row tlc-width-whole" *ngFor="let availablePath of availablePaths; let i = index">
+                                    <div class="tlc-row tlc-align-items-center tlc-width-whole" style="cursor: pointer; gap: 10px;" (click)="setCurrentAvailablePath(i)">
+                                        <div class="tlc-flex">
+                                            <label class="custom-control custom-radio tlc-sr-only">Learning Paths</label>
+                                                <input
+                                                    id="availablePath-{{ i }}"
+                                                    name="radio-stacked-available-path"
+                                                    type="radio"
+                                                    value="{{ availablePath.id }}"
+                                                    class="custom-control-input tlc-display-none"
+                                                    required=""
+                                                    [checked]="
+                                                        currentAvailablePathIndex === i
+                                                    "
+                                                />
+                                                <span class="custom-control-indicator tlc-flex"></span>
                                         </div>
+                                        <dl>
+                                            <dt>{{ availablePath.label }}</dt>
+                                        </dl>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Levels dropdown -->
-                            <div class="teacherportal-drop mb-2">
-                                <h6 class="mb-1">Level</h6>
-                                <div *ngIf="currentAvailableLevelIndex > -1" class="dropdown">
-                                    <button
-                                        class="teacher-drop dropdown-toggle"
-                                        type="button"
-                                        id="levelDropdownBtn"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <span>{{
-                                            availablePaths[currentAvailablePathIndex]?.levels[
-                                                currentAvailableLevelIndex
-                                            ]?.name
-                                        }}</span>
-                                        <!--<span *ngIf="!currentClassroomIndex">Select Classroom</span>-->
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="levelDropdownBtn">
-                                        <div class="dropdown-menu-wrap">
-                                            <div
-                                                class="teacher-check"
-                                                *ngFor="
-                                                    let availableLevel of availablePaths[
-                                                        currentAvailablePathIndex
-                                                    ]?.levels;
-                                                    let i = index
-                                                "
-                                            >
-                                                <div
-                                                    class="form-row"
-                                                    (click)="setCurrentAvailableLevel(i)"
-                                                >
-                                                    <div class="col-xs-12 col-sm-9 col-lg-10">
-                                                        <dl>
-                                                            <dt>{{ availableLevel.name }}</dt>
-                                                        </dl>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-3 col-lg-2">
-                                                        <label class="custom-control custom-radio">
-                                                            <input
-                                                                id="availableLevel-{{ i }}"
-                                                                name="radio-stacked-available-level"
-                                                                type="radio"
-                                                                value="{{ availableLevel.id }}"
-                                                                class="custom-control-input"
-                                                                required=""
-                                                                [checked]="
-                                                                    currentAvailableLevelIndex === i
-                                                                "
-                                                            />
-                                                            <span
-                                                                class="custom-control-indicator"
-                                                            ></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <hr class="mt-0 mb-0" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Available units list for selected path and level -->
-                        <div class="teacher-dnd teacher-dnd-left">
-                            <div
-                                *ngIf="
-                                    currentAvailablePathIndex > -1 &&
-                                    currentAvailableLevelIndex > -1
-                                "
-                                cdkDropList
-                                [cdkDropListData]="
-                                    availablePaths[currentAvailablePathIndex]?.levels[
-                                        currentAvailableLevelIndex
-                                    ]?.units
-                                "
-                                class="teacher-dnd-list"
-                            >
-                                <div
-                                    class="list-group-item"
-                                    *ngFor="
-                                        let unit of availablePaths[currentAvailablePathIndex]
-                                            ?.levels[currentAvailableLevelIndex]?.units;
-                                        let i = index
-                                    "
-                                    cdkDrag
-                                >
-                                    {{ unit.name }} - {{ unit.description
-                                    }}<i
-                                        class="fa fa-arrow-right"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="Click or Drag to Move"
-                                        (click)="addUnitToLesson(i)"
-                                    ></i>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-2 col-sm-2 col-lg-6">
-                        <h5>{{ listTeacherLevels[activeLevelIndex].level.name }}</h5>
-                        <div class="unsaved">
-                            <a>{{ listTeacherLevels[activeLevelIndex].level.description }}</a>
-                        </div>
-                        <div class="teacher-dnd teacher-dnd-right">
-                            <div
-                                cdkDropList
-                                #classroomStudentsList="cdkDropList"
-                                [cdkDropListData]="listLevelUnits"
-                                class="teacher-dnd-list"
-                                (cdkDropListDropped)="drop($event)"
-                            >
+                </div>
+                <!-- Levels dropdown -->
+                <div class="teacherportal-drop tlc-column tlc-width-whole tlc-width-quarter-md-up tlc-flex-1">
+                    <span class="tlc-ts-16 tlc-font-sans">Level</span>
+                    <div *ngIf="currentAvailableLevelIndex > -1" class="dropdown">
+                        <button class="teacher-drop dropdown-toggle"
+                            type="button"
+                            id="levelDropdownBtn"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                            <span>{{ availablePaths[currentAvailablePathIndex]?.levels[currentAvailableLevelIndex]?.name }}</span>
+                            <!--<span *ngIf="!currentClassroomIndex">Select Classroom</span>-->
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="levelDropdownBtn">
+                            <div class="dropdown-menu-wrap">
                                 <div
-                                    class="list-group-item"
-                                    *ngFor="let levelUnit of listLevelUnits; let i = index"
-                                    cdkDrag
+                                    class="teacher-check tlc-row tlc-width-whole"
+                                    *ngFor="
+                                        let availableLevel of availablePaths[
+                                            currentAvailablePathIndex
+                                        ]?.levels;
+                                        let i = index
+                                    "
                                 >
-                                    <i
-                                        class="fa fa-x"
-                                        style="color: red"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="Click or Drag to Move"
-                                        (click)="removeUnitFromLesson(i)"
-                                    ></i
-                                    >{{ levelUnit.unit.name }} - {{ levelUnit.unit.description }}
+                                    <div class="tlc-row tlc-align-items-center tlc-width-whole" style="cursor: pointer; gap: 10px;"
+                                        (click)="setCurrentAvailableLevel(i)">
+                                        <div class="tlc-flex">
+                                            <label class="custom-control custom-radio tlc-sr-only">Levels</label>
+                                                <input
+                                                    id="availableLevel-{{ i }}"
+                                                    name="radio-stacked-available-level"
+                                                    type="radio"
+                                                    value="{{ availableLevel.id }}"
+                                                    class="custom-control-input tlc-display-none"
+                                                    required=""
+                                                    [checked]="
+                                                        currentAvailableLevelIndex === i
+                                                    "
+                                                />
+                                                <span class="custom-control-indicator tlc-flex"></span>
+                                        </div>
+                                        <dl>
+                                            <dt>{{ availableLevel.name }}</dt>
+                                        </dl>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!--<div class="panel panel-success teacher-dnd">
-							<div class="panel-body" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="listLevelUnits">
-								<ul class="list-group" >
-									<li *ngFor="let item of listLevelUnits; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i">{{item.name}} - {{item.description}}</li>
-								</ul>
-							</div>
-					 </div>-->
+                    </div>
+                </div>
+                <div class="tlc-column-reverse tlc-width-whole tlc-width-half-md-up">
+                    <div class="unsaved tlc-flex tlc-justify-content-end" *ngIf="unsavedUnitChanges">
+                        <button class="tlc-row tlc-button tlc-align-items-center tlc-gap-xxs" (click)="saveTeacherLevelUnits()">
+                            <span class="tlc-line-height--tight tlc-ts-22 tlc-font-sans">Save Changes</span>
+                            <i class="fa fa-save"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Save Lesson">
+                            </i>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <!-- Available units list for selected path and level -->
+            <div class="tlc-row tlc-justify-content-between tlc-gap-sm">
+                <div class="teacher-dnd tlc-column tlc-width-half-md-up tlc-flex-1 tlc-gap-xs">
+                    <div
+                        *ngIf="
+                            currentAvailablePathIndex > -1 &&
+                            currentAvailableLevelIndex > -1
+                        "
+                        cdkDropList
+                        [cdkDropListData]="
+                            availablePaths[currentAvailablePathIndex]?.levels[
+                                currentAvailableLevelIndex
+                            ]?.units
+                        "
+                        class="teacher-dnd-list tlc-column"
+                    >
+                        <div
+                            class="list-group-item tlc-flex tlc-justify-content-between tlc-align-items-center"
+                            *ngFor="
+                                let unit of availablePaths[currentAvailablePathIndex]
+                                    ?.levels[currentAvailableLevelIndex]?.units;
+                                let i = index
+                            "
+                            cdkDrag
+                        >
+                            <span>{{ unit.name }} - {{ unit.description
+                            }}</span><i
+                                class="fa fa-arrow-right"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Click or Drag to Move"
+                                (click)="addUnitToLesson(i)"
+                            ></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="teacher-dnd tlc-column tlc-width-half-md-up tlc-flex-1 tlc-gap-xs">
+                    <div cdkDropList
+                        #classroomStudentsList="cdkDropList"
+                        [cdkDropListData]="listLevelUnits"
+                        class="teacher-dnd-list tlc-column"
+                        (cdkDropListDropped)="drop($event)">
+                        <div class="list-group-item tlc-flex tlc-justify-content-between tlc-align-items-center"
+                            *ngFor="let levelUnit of listLevelUnits; let i = index"
+                            cdkDrag>
+                            <span>{{ levelUnit.unit.name }} - {{ levelUnit.unit.description }}</span>
+                            <i class="fa-regular fa-circle-xmark"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Click or Drag to Move"
+                                (click)="removeUnitFromLesson(i)">
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <!--<div class="panel panel-success teacher-dnd">
+                    <div class="panel-body" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="listLevelUnits">
+                        <ul class="list-group" >
+                            <li *ngFor="let item of listLevelUnits; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i">{{item.name}} - {{item.description}}</li>
+                        </ul>
+                    </div>
+                </div>-->
         </div>
     </div>
 </div>
@@ -284,7 +225,7 @@
     <div class="modal-dialog show">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">New Lesson Plan</h5>
+                <h4 class="modal-title">New Lesson Plan</h4>
                 <button type="button" class="close" (click)="closeModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>

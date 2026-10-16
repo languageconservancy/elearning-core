@@ -447,12 +447,14 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.machine.transition(MachineState.DoingLesson);
                 },
                 [MachineEvent.GoToReviewBtnPressed]: () => {
+                    // Mark the current lesson complete first, since it may be the last
+                    // incomplete activity in the unit.
+                    this.unitProgressNav.updateLessonState();
                     if (!this.unitProgressNav.unitCompleteOrPreviouslyCompleted) {
                         throw new Error(
                             "Review button displayed and pressed when unit is not complete",
                         );
                     }
-                    this.unitProgressNav.updateLessonState();
                     this.machine.transition(MachineState.PresentingUnitEndOptions);
                 },
                 [MachineEvent.LessonEndPopupClosed]: () => {

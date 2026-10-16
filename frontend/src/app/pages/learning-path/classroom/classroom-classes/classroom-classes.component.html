@@ -133,10 +133,10 @@
                         <p class="mb-0">{{ currentLevel.name }}</p>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        @for (level of allLevels; track level; let i = $index) {
+                        @for (level of allLevels; track level.id) {
                             <a
                                 class="dropdown-item"
-                                [class]="{ 'last-dropdown-level': i === allLevels.length - 1 }"
+                                [class]="{ 'last-dropdown-level': $index === allLevels.length - 1 }"
                                 href="javascript:void(0)"
                                 (click)="setActiveLevel(level)"
                             >
@@ -173,14 +173,14 @@
                 <!-- Level buttons on left side (larger screens) -->
                 <div class="landscape-leftpannel flex-md-grow-1 d-none d-md-block pt-3 pr-5">
                     <ul>
-                        @for (level of allLevels; track level; let i = $index) {
+                        @for (level of allLevels; track level.id) {
                             <li>
                                 <div [class]="{ notclickable: !level.enable }">
                                     <a
-                                        id="level-{{ i }}-btn"
+                                        id="level-{{ $index }}-btn"
                                         [class]="{
                                             'active-level': selectedLevel === level.id,
-                                            'mt-0': i === 0,
+                                            'mt-0': $index === 0,
                                         }"
                                         href="javascript:void(0)"
                                         (click)="setActiveLevel(level)"

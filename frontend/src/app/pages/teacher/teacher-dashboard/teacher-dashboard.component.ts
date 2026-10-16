@@ -5,6 +5,7 @@ import {
     inject,
     OnDestroy,
     OnInit,
+    signal,
     ViewChild,
 } from "@angular/core";
 import { DatePipe, TitleCasePipe } from "@angular/common";
@@ -72,7 +73,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     public classroomStudents: any = [];
     public classroomUnits: any = [];
     public noClassrooms = false;
-    public messageIsDirty = false;
+    public messageIsDirty = signal<boolean>(false);
+    private savedMessage: string | undefined;
     public teacher: any = [];
     public activities: any = [];
     public progresses: any = [];
@@ -118,7 +120,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
                 this.retrievedInitialActivities = false;
                 this.getUnitsAndStudentsThenUpdateActivities();
                 this.noClassrooms = false;
-                this.messageIsDirty = false;
+                this.savedMessage = classroom.teacher_message;
+                this.messageIsDirty.set(false);
             } else {
                 this.noClassrooms = true;
             }
@@ -212,7 +215,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
             this.classroomService
                 .updateClassroomData(params)
                 .then(() => {
-                    this.messageIsDirty = false;
+                    this.savedMessage = classroom.teacher_message;
+                    this.messageIsDirty.set(false);
                 })
                 .catch(() => {
                     this.snackbarService.showSnackbar({
@@ -232,7 +236,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     }
 
     markMessageDirty() {
-        this.messageIsDirty = true;
+        // The editor emits on initial render; only flag real changes
+        this.messageIsDirty.set(this.classroom?.teacher_message !== this.savedMessage);
     }
 
     getDisplayName(student: any): string {

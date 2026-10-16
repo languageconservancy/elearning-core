@@ -17,33 +17,29 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a
                 class="dropdown-item"
-                [class]="{ active: tabName === 'profile' }"
+                routerLinkeActive="active"
                 routerLink="/profile-settings"
-                href="javascript:void(0)"
             >
                 Profile
             </a>
             <a
                 class="dropdown-item"
-                [class]="{ active: tabName === 'learning' }"
+                routerLinkeActive="active"
                 routerLink="/learning-settings"
-                href="javascript:void(0)"
             >
                 Learning
             </a>
             <a
                 class="dropdown-item"
-                [class]="{ active: tabName === 'privacy' }"
+                routerLinkeActive="active"
                 routerLink="/privacy-settings"
-                href="javascript:void(0)"
             >
                 Privacy
             </a>
             <a
                 class="dropdown-item"
-                [class]="{ active: tabName === 'account' }"
+                routerLinkeActive="active"
                 routerLink="/account-settings"
-                href="javascript:void(0)"
             >
                 Account
             </a>

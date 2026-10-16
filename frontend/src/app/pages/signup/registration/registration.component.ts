@@ -23,7 +23,6 @@ import { BaseService } from "@app/_services/base.service";
 import { AgreementsService } from "@app/_services/agreements.service";
 import { Routes } from "@app/shared/utils/elearning-types";
 import { RegionPolicyService } from "@app/_services/region-policy.service";
-import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
 
 @Component({
     selector: "app-registration",

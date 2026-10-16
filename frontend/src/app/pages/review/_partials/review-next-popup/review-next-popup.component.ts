@@ -1,8 +1,9 @@
 import { Component, inject, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "@app/_services/cookie.service";
 
+import { SocialShareComponent } from "@app/_partials/social-share/social-share.component";
+import { CookieService } from "@app/_services/cookie.service";
 import { Loader } from "@app/_services/loader.service";
 import { ReviewService } from "@app/_services/review.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
@@ -11,6 +12,7 @@ import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 
 @Component({
     selector: "app-review-next-popup",
+    imports: [SocialShareComponent],
     templateUrl: "./review-next-popup.component.html",
     styleUrls: ["./review-next-popup.component.scss"],
     standalone: true,

@@ -2,6 +2,7 @@
 import { Component, inject, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import {
+    ReactiveFormsModule,
     UntypedFormArray,
     UntypedFormBuilder,
     UntypedFormControl,
@@ -24,6 +25,7 @@ import { ErrorCode } from "@app/shared/utils/error-code";
 
 @Component({
     selector: "app-teacher-admin",
+    imports: [ReactiveFormsModule],
     templateUrl: "./teacher-admin.component.html",
     styleUrls: ["./teacher-admin.component.scss"],
     standalone: true,

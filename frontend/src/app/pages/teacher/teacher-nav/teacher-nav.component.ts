@@ -1,8 +1,13 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
-import { CookieService } from "@app/_services/cookie.service";
 
+import { RequestQuoteComponent } from "@app/_partials/request-quote/request-quote.component";
+import { TeacherAdminComponent } from "../teacher-admin/teacher-admin.component";
+import { TeacherClassroomsComponent } from "@app/pages/teacher/teacher-classrooms/teacher-classrooms.component";
+import { TeacherDashboardComponent } from "@app/pages/teacher/teacher-dashboard/teacher-dashboard.component";
+import { TeacherLessonsComponent } from "@app/pages/teacher/teacher-lessons/teacher-lessons.component";
+import { CookieService } from "@app/_services/cookie.service";
 import { ClassroomService } from "@app/_services/classroom.service";
 import { TeacherService } from "@app/_services/teacher.service";
 import { Loader } from "@app/_services/loader.service";
@@ -12,6 +17,13 @@ import { Loader } from "@app/_services/loader.service";
 
 @Component({
     selector: "app-teacher-nav",
+    imports: [
+        RequestQuoteComponent,
+        TeacherAdminComponent,
+        TeacherClassroomsComponent,
+        TeacherDashboardComponent,
+        TeacherLessonsComponent,
+    ],
     templateUrl: "./teacher-nav.component.html",
     styleUrls: ["./teacher-nav.component.scss"],
     standalone: true,

@@ -1,8 +1,9 @@
 import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "@app/_services/cookie.service";
 
+import { SocialShareComponent } from "@app/_partials/social-share/social-share.component";
+import { CookieService } from "@app/_services/cookie.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { RegistrationService } from "@app/_services/registration.service";
 import { LocalizeService } from "@app/_services/localize.service";
@@ -14,6 +15,7 @@ import { RegionPolicyService } from "@app/_services/region-policy.service";
     selector: "app-spread-the-word",
     templateUrl: "./spread-the-word.component.html",
     styleUrls: ["./spread-the-word.component.scss"],
+    imports: [SocialShareComponent],
     standalone: true,
 })
 export class SpreadTheWordComponent implements OnInit, OnDestroy {

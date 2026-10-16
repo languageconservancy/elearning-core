@@ -1,15 +1,22 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Component, inject, OnInit, ViewChild } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import {
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
+import { Router } from "@angular/router";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
 import { Loader } from "@app/_services/loader.service";
 import { RegistrationService } from "@app/_services/registration.service";
-import { Router } from "@angular/router";
 import { SnackbarService } from "@app/_services/snackbar.service";
 import { environment } from "@environments/environment";
-import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
 
 @Component({
     selector: "app-contact-us",
+    imports: [ReactiveFormsModule, PageTitleComponent, VirtualKeyboardComponent],
     templateUrl: "./contact-us.component.html",
     styleUrls: ["./contact-us.component.scss"],
     standalone: true,

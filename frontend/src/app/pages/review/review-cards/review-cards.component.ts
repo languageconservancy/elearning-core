@@ -3,6 +3,10 @@ import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { KeyboardComponent } from "@app/shared/keyboard/keyboard.component";
+import { ReviewExerciseComponent } from "@app/pages/review/review-exercise/review-exercise.component";
+import { ReviewNextPopupComponent } from "@app/pages/review/_partials/review-next-popup/review-next-popup.component";
+import { ReviewRewardPopupComponent } from "@app/pages/review/_partials/review-reward-popup/review-reward-popup.component";
+import { ReviewTimerComponent } from "@app/pages/review/_partials/review-timer/review-timer.component";
 import { CookieService } from "@app/_services/cookie.service";
 import { ReviewService } from "@app/_services/review.service";
 import { Loader } from "@app/_services/loader.service";
@@ -11,7 +15,13 @@ import { ReviewType } from "@app/shared/utils/elearning-types";
 
 @Component({
     selector: "app-review-cards",
-    imports: [KeyboardComponent],
+    imports: [
+        KeyboardComponent,
+        ReviewExerciseComponent,
+        ReviewNextPopupComponent,
+        ReviewRewardPopupComponent,
+        ReviewTimerComponent,
+    ],
     templateUrl: "./review-cards.component.html",
     styleUrls: ["./review-cards.component.scss"],
     standalone: true,

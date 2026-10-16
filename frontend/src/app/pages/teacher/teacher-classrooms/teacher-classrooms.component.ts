@@ -1,10 +1,18 @@
 import { Component, inject, OnDestroy } from "@angular/core";
+import {
+    CdkDragDrop,
+    DragDropModule,
+    moveItemInArray,
+    transferArrayItem,
+} from "@angular/cdk/drag-drop";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { DatePipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import Swal from "sweetalert2";
 
+import { ClassroomSelectComponent } from "@app/pages/teacher/_partials/classroom-select/classroom-select.component";
 import { ClassroomService } from "@app/_services/classroom.service";
 import { TeacherService } from "@app/_services/teacher.service";
 import { Loader } from "@app/_services/loader.service";
@@ -12,6 +20,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-teacher-classrooms",
+    imports: [ClassroomSelectComponent, DatePipe, ReactiveFormsModule, FormsModule, DragDropModule],
     templateUrl: "./teacher-classrooms.component.html",
     styleUrls: ["./teacher-classrooms.component.scss"],
     standalone: true,

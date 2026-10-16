@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { DragDropModule, CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
 
@@ -61,6 +62,7 @@ type Path = {
 
 @Component({
     selector: "app-teacher-lessons",
+    imports: [ReactiveFormsModule, DragDropModule],
     templateUrl: "./teacher-lessons.component.html",
     styleUrls: ["./teacher-lessons.component.scss"],
     standalone: true,

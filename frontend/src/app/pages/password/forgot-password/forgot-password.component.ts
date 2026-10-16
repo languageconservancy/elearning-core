@@ -1,13 +1,21 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import {
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
 
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { SiteImageComponent } from "@app/_partials/site-image/site-image.component";
 import { ResetPasswordService } from "@app/_services/reset-password.service";
 import { Loader } from "@app/_services/loader.service";
 import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-forgot-password",
+    imports: [PageTitleComponent, SiteImageComponent, ReactiveFormsModule],
     templateUrl: "./forgot-password.component.html",
     styleUrls: ["./forgot-password.component.scss"],
     standalone: true,

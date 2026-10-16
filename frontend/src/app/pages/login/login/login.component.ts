@@ -18,18 +18,22 @@ import {
     ViewChild,
 } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { ActivatedRoute } from "@angular/router";
-import { DeviceDetectorService } from "ngx-device-detector";
-import { SocialAuthService } from "@abacritt/angularx-social-login";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ReactiveFormsModule } from "@angular/forms";
 import { Capacitor } from "@capacitor/core";
 import { Subscription, firstValueFrom } from "rxjs";
 import { filter, take } from "rxjs/operators";
+import { DeviceDetectorService } from "ngx-device-detector";
+import { SocialAuthService, GoogleSigninButtonModule } from "@abacritt/angularx-social-login";
+import { SocialLoginError } from "@app/_exceptions/social-login.errors";
+
+import { AgePromptComponent } from "@app/_partials/age-prompt/age-prompt.component";
+import { EventPromoComponent } from "@app/_partials/event-promo/event-promo.component";
+import { SignupSuggestionComponent } from "@app/_partials/signup-suggestion/signup-suggestion.component";
 import { BaseService } from "@app/_services/base.service";
 import { LoginService } from "@app/_services/login.service";
 import { RegistrationService } from "@app/_services/registration.service";
 import { Loader } from "@app/_services/loader.service";
-import { environment } from "@environments/environment";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { RegexConsts } from "@app/_constants/app.constants";
 import { SocialWebService } from "@app/_services/social-web.service";
@@ -44,10 +48,18 @@ import { ModalService } from "@app/_services/modal.service";
 import { TrialAccountService } from "@app/_services/trial-account.service";
 import { AgePromptService } from "@app/_services/age-prompt.service";
 import { PlatformRolesService } from "@app/_services/platform-roles.service";
-import { SocialLoginError } from "@app/_exceptions/social-login.errors";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-login",
+    imports: [
+        AgePromptComponent,
+        EventPromoComponent,
+        GoogleSigninButtonModule,
+        SignupSuggestionComponent,
+        RouterLink,
+        ReactiveFormsModule,
+    ],
     templateUrl: "./login.component.html",
     styleUrls: ["./login.component.scss"],
     standalone: true,

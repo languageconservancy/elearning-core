@@ -1,11 +1,17 @@
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { Router } from "@angular/router";
+import { DatePipe, TitleCasePipe } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { MatTableModule } from "@angular/material/table";
+import { Router, RouterLink } from "@angular/router";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Subscription } from "rxjs";
-import { CookieService } from "@app/_services/cookie.service";
 import * as xlsx from "xlsx";
 
+import { ClassroomSelectComponent } from "@app/pages/teacher/_partials/classroom-select/classroom-select.component";
+import { NgxWigModule } from "ngx-wig";
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
+import { CookieService } from "@app/_services/cookie.service";
 import { TeacherService } from "@app/_services/teacher.service";
 import { ClassroomService } from "@app/_services/classroom.service";
 import { Loader } from "@app/_services/loader.service";
@@ -25,6 +31,16 @@ const ELEMENT_DATA: StudentActivitiesTable[] = [];
 
 @Component({
     selector: "app-teacher-dashboard",
+    imports: [
+        ClassroomSelectComponent,
+        RouterLink,
+        FormsModule,
+        MatTableModule,
+        NgxWigModule,
+        DatePipe,
+        SafeHtmlPipe,
+        TitleCasePipe,
+    ],
     templateUrl: "./teacher-dashboard.component.html",
     styleUrls: ["./teacher-dashboard.component.scss"],
     standalone: true,

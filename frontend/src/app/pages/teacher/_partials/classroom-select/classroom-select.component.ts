@@ -1,6 +1,11 @@
 import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
-import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import {
+    ReactiveFormsModule,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
+} from "@angular/forms";
 
 import { ClassroomService } from "@app/_services/classroom.service";
 import { TeacherService } from "@app/_services/teacher.service";
@@ -9,6 +14,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-classroom-select",
+    imports: [ReactiveFormsModule],
     templateUrl: "./classroom-select.component.html",
     styleUrls: ["./classroom-select.component.scss"],
     standalone: true,

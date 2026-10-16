@@ -1,8 +1,15 @@
 import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import {
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recaptcha-checkbox.component";
 import { LearningPathService } from "@app/_services/learning-path.service";
 import { Loader } from "@app/_services/loader.service";
 import { LocalStorageService } from "@app/_services/local-storage.service";
@@ -22,6 +29,7 @@ import { RecaptchaCheckboxComponent } from "@app/shared/recaptcha-checkbox/recap
     selector: "app-registration",
     templateUrl: "./registration.component.html",
     styleUrls: ["./registration.component.scss"],
+    imports: [PageTitleComponent, RecaptchaCheckboxComponent, ReactiveFormsModule],
     standalone: true,
 })
 export class RegistrationComponent implements OnInit, OnDestroy {

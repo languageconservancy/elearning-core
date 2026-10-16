@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -10,6 +11,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-learning-path",
+    imports: [FormsModule],
     templateUrl: "./learning-path.component.html",
     styleUrls: ["./learning-path.component.scss"],
     standalone: true,

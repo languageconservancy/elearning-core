@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -16,6 +17,7 @@ declare let gapi: any;
 
 @Component({
     selector: "app-find-friends",
+    imports: [FormsModule],
     templateUrl: "./find-friends.component.html",
     styleUrls: ["./find-friends.component.scss"],
     standalone: true,

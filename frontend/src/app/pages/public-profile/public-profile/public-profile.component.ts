@@ -3,6 +3,8 @@ import { Router } from "@angular/router";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
 
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { BadgeImagePipe } from "@app/_pipes/badge-image.pipe";
 import { LocalStorageService } from "@app/_services/local-storage.service";
 import { SettingsService } from "@app/_services/settings.service";
 import { Loader } from "@app/_services/loader.service";
@@ -11,6 +13,7 @@ import { BadgeService } from "@app/_services/badge.service";
 
 @Component({
     selector: "app-public-profile",
+    imports: [PageTitleComponent, BadgeImagePipe],
     templateUrl: "./public-profile.component.html",
     styleUrls: ["./public-profile.component.scss"],
     animations: [

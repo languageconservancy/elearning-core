@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -9,6 +10,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-learning-speed",
+    imports: [FormsModule],
     templateUrl: "./learning-speed.component.html",
     styleUrls: ["./learning-speed.component.scss"],
     standalone: true,

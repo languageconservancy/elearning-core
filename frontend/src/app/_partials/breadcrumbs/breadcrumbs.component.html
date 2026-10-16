@@ -1,6 +1,6 @@
 @if (breadcrumbs.length > 0 && showBreadcrumb) {
   <div class="breadcumb pt-1">
-    @for (breadcrumb of breadcrumbs; track breadcrumb; let i = $index) {
+    @for (breadcrumb of breadcrumbs; track breadcrumb.type + breadcrumb.url; let i = $index) {
       <div class="breadcumb-link">
         @if (breadcrumb?.name !== '') {
           <a

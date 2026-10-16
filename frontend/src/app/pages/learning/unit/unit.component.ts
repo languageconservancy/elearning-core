@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    AfterViewInit,
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 
@@ -291,6 +299,7 @@ export declare type StateMachine = {
 
 @Component({
     selector: "app-unit-component",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         KeyboardComponent,
         RewardPopupsComponent,

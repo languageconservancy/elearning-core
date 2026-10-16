@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, inject, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    OnDestroy,
+    inject,
+    Input,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
@@ -16,6 +23,7 @@ import * as App from "@app/_constants/app.constants";
 
 @Component({
     selector: "app-true-false",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NonSelectableCardComponent],
     templateUrl: "./true-false.component.html",
     styleUrls: ["./true-false.component.scss"],

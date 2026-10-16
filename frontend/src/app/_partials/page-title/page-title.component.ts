@@ -1,8 +1,9 @@
-import { Component, inject, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input } from "@angular/core";
 import { Location } from "@angular/common";
 
 @Component({
     selector: "app-page-title",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./page-title.component.html",
     styleUrls: ["./page-title.component.scss"],
     standalone: true,

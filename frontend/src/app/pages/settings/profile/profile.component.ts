@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -14,6 +14,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-profile",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [BadgeImagePipe, FormsModule],
     templateUrl: "./profile.component.html",
     styleUrls: ["./profile.component.scss"],

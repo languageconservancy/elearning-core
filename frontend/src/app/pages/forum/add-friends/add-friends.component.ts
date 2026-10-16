@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, AfterViewInit, inject } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { FriendSidebarComponent } from "../_partials/friend-sidebar/friend-sidebar.component";
@@ -12,6 +12,7 @@ import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-add-friends",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FriendSidebarComponent, PageTitleComponent, FormsModule, ReactiveFormsModule],
     templateUrl: "./add-friends.component.html",
     styleUrls: ["./add-friends.component.scss"],

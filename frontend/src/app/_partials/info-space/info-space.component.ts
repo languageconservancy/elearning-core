@@ -1,9 +1,10 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-info-space",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./info-space.component.html",
     styleUrls: ["./info-space.component.scss"],
     standalone: true,

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -14,6 +14,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-learning",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./learning.component.html",
     styleUrls: ["./learning.component.scss"],
     standalone: true,

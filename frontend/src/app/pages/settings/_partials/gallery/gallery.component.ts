@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -9,6 +9,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-gallery",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./gallery.component.html",
     styleUrls: ["./gallery.component.scss"],
     animations: [

@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     AfterViewInit,
     Component,
     ElementRef,
@@ -83,6 +84,7 @@ function loadRecaptchaApi(): Promise<GoogleRecaptchaApi> {
 
 @Component({
     selector: "app-recaptcha-checkbox",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./recaptcha-checkbox.component.html",
     standalone: true,
 })

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -16,6 +16,7 @@ import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-dashboard",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [EventPromoComponent],
     templateUrl: "./dashboard.component.html",
     styleUrls: ["./dashboard.component.scss"],

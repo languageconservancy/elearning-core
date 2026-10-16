@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     OnInit,
     OnDestroy,
@@ -31,6 +32,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-recording",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./recording.component.html",
     styleUrls: ["./recording.component.scss"],
     standalone: true,

@@ -1,10 +1,11 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { Loader } from "@app/_services/loader.service";
 
 @Component({
     selector: "app-loader",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./loader.component.html",
     styleUrls: ["./loader.component.scss"],
     standalone: true,

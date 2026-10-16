@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -10,6 +10,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-learning-speed",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule],
     templateUrl: "./learning-speed.component.html",
     styleUrls: ["./learning-speed.component.scss"],

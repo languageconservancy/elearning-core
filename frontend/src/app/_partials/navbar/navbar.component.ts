@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     inject,
     OnInit,
@@ -27,6 +28,7 @@ import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-navbar",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterLink],
     templateUrl: "./navbar.component.html",
     styleUrls: ["./navbar.component.scss"],

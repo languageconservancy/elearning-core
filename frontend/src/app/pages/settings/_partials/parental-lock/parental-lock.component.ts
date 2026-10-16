@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import {
     UntypedFormGroup,
     UntypedFormControl,
@@ -15,6 +15,7 @@ import { LocalStorageService } from "@app/_services/local-storage.service";
 
 @Component({
     selector: "app-parental-lock",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./parental-lock.component.html",
     styleUrls: ["./parental-lock.component.scss"],
     imports: [ReactiveFormsModule],

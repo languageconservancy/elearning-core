@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -13,6 +13,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-notifications",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule],
     templateUrl: "./notifications.component.html",
     styleUrls: ["./notifications.component.scss"],

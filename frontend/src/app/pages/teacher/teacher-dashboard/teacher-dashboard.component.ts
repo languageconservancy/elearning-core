@@ -1,4 +1,12 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from "@angular/core";
 import { DatePipe, TitleCasePipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatTableModule } from "@angular/material/table";
@@ -31,6 +39,7 @@ const ELEMENT_DATA: StudentActivitiesTable[] = [];
 
 @Component({
     selector: "app-teacher-dashboard",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ClassroomSelectComponent,
         RouterLink,

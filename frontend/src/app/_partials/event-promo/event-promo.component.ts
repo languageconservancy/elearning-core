@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { YoutubePipe } from "@app/_pipes/youtube.pipe";
@@ -6,6 +13,7 @@ import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-event-promo",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [YoutubePipe],
     templateUrl: "./event-promo.component.html",
     styleUrls: ["./event-promo.component.scss"],

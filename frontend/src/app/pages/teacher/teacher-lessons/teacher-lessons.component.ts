@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
@@ -62,6 +69,7 @@ type Path = {
 
 @Component({
     selector: "app-teacher-lessons",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, DragDropModule],
     templateUrl: "./teacher-lessons.component.html",
     styleUrls: ["./teacher-lessons.component.scss"],

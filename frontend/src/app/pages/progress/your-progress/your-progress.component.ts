@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
@@ -11,6 +11,7 @@ import { RegionPolicyService } from "@app/_services/region-policy.service";
 
 @Component({
     selector: "app-your-progress",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [PageTitleComponent, ProgressLeftPanelComponent],
     templateUrl: "./your-progress.component.html",
     styleUrls: ["./your-progress.component.scss"],

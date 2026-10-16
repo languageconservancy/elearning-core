@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 import { Subscription } from "rxjs";
 
@@ -16,6 +16,7 @@ import * as App from "@app/_constants/app.constants";
 
 @Component({
     selector: "app-reward-popups",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SocialShareComponent],
     templateUrl: "./reward-popups.component.html",
     styleUrls: ["./reward-popups.component.scss"],

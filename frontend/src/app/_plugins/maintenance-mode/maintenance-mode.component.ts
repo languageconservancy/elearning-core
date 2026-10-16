@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 
@@ -7,6 +7,7 @@ import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-maintenance-mode",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./maintenance-mode.component.html",
     styleUrls: ["./maintenance-mode.component.scss"],
     standalone: true,

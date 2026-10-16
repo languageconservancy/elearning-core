@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import {
     UntypedFormGroup,
@@ -21,6 +21,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-privacy",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, ReactiveFormsModule],
     templateUrl: "./privacy.component.html",
     styleUrls: ["./privacy.component.scss"],

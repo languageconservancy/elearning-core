@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 
@@ -17,6 +17,7 @@ import { Loader } from "@app/_services/loader.service";
 
 @Component({
     selector: "app-teacher-nav",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         RequestQuoteComponent,
         TeacherAdminComponent,

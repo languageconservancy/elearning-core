@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -13,6 +13,7 @@ import { RegionPolicyService } from "@app/_services/region-policy.service";
 
 @Component({
     selector: "app-spread-the-word",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./spread-the-word.component.html",
     styleUrls: ["./spread-the-word.component.scss"],
     imports: [SocialShareComponent],

@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     OnInit,
     OnDestroy,
@@ -44,6 +45,7 @@ interface PostFormValue {
 // declare var VirtualKeyboard: any;
 @Component({
     selector: "app-forum-list",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         BadgeImagePipe,
         DirectivesModule,

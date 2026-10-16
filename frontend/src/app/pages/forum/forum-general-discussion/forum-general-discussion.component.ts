@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, inject, signal } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    OnDestroy,
+    AfterViewInit,
+    inject,
+    signal,
+} from "@angular/core";
 import { form, FieldTree, FormField, required, submit, validate } from "@angular/forms/signals";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -26,6 +34,7 @@ interface PostFormValue {
 
 @Component({
     selector: "app-forum-general-discussion",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         DirectivesModule,
         FormField,

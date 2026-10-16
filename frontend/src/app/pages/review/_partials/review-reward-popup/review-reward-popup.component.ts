@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 
@@ -12,6 +12,7 @@ import { LocalizeService } from "@app/_services/localize.service";
 
 @Component({
     selector: "app-review-reward-popup",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./review-reward-popup.component.html",
     styleUrls: ["./review-reward-popup.component.scss"],
     animations: [

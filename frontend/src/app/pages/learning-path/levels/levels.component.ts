@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -16,6 +16,7 @@ import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 @Component({
     selector: "app-levels",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [UnitsComponent],
     templateUrl: "./levels.component.html",
     styleUrls: ["./levels.component.scss"],

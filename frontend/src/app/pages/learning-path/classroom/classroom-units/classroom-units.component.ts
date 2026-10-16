@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from "@angular/core";
 import { UnitsComponent } from "@app/pages/learning-path/units/units.component";
 
 @Component({
     selector: "app-classroom-units",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./classroom-units.component.html",
     styleUrls: ["./classroom-units.component.scss"],
     standalone: true,

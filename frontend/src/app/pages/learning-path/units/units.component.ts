@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, OnDestroy, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    Input,
+} from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 import Swal from "sweetalert2";
@@ -16,6 +23,7 @@ import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-units",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./units.component.html",
     styleUrls: ["./units.component.scss"],
     standalone: true,

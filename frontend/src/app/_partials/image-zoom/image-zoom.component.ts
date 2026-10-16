@@ -1,7 +1,8 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 @Component({
     selector: "app-image-zoom",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./image-zoom.component.html",
     styleUrls: ["./image-zoom.component.scss"],
     standalone: true,

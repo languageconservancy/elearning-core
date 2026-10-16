@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, inject, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import {
     ReactiveFormsModule,
@@ -25,6 +33,7 @@ import { ErrorCode } from "@app/shared/utils/error-code";
 
 @Component({
     selector: "app-teacher-admin",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule],
     templateUrl: "./teacher-admin.component.html",
     styleUrls: ["./teacher-admin.component.scss"],

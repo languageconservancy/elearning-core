@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
@@ -10,6 +10,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-about",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [PageTitleComponent, CapitalizeFirstLetterPipe, SafeHtmlPipe, SafeUrlPipe],
     templateUrl: "./about.component.html",
     styleUrls: ["./about.component.scss"],

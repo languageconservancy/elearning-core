@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { CookieService } from "@app/_services/cookie.service";
 
@@ -10,6 +10,7 @@ import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 @Component({
     selector: "app-footer",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./footer.component.html",
     styleUrls: ["./footer.component.scss"],
     standalone: true,

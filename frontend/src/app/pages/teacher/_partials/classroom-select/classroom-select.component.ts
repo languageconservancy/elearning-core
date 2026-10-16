@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import {
     ReactiveFormsModule,
@@ -14,6 +21,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-classroom-select",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule],
     templateUrl: "./classroom-select.component.html",
     styleUrls: ["./classroom-select.component.scss"],

@@ -17,7 +17,15 @@
  * Outputs: None
  */
 
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, inject } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+    ElementRef,
+    inject,
+} from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -30,6 +38,7 @@ import { ModalService } from "@app/_services/modal.service";
 
 @Component({
     selector: "app-agreements-acceptance",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SafeHtmlPipe, FormsModule],
     templateUrl: "./agreements-acceptance.component.html",
     styleUrls: ["./agreements-acceptance.component.scss"],

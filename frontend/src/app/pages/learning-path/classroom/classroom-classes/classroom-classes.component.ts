@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import Swal from "sweetalert2";
@@ -19,6 +26,7 @@ import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-classroom-classes",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ClassroomUnitsComponent],
     templateUrl: "./classroom-classes.component.html",
     styleUrls: ["./classroom-classes.component.scss"],

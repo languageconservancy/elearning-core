@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, inject, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    OnDestroy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -15,6 +21,7 @@ import { ReviewType } from "@app/shared/utils/elearning-types";
 
 @Component({
     selector: "app-review-cards",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         KeyboardComponent,
         ReviewExerciseComponent,

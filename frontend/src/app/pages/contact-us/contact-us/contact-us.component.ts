@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, inject, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from "@angular/core";
 import {
     ReactiveFormsModule,
     UntypedFormGroup,
@@ -16,6 +16,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-contact-us",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, PageTitleComponent, VirtualKeyboardComponent],
     templateUrl: "./contact-us.component.html",
     styleUrls: ["./contact-us.component.scss"],

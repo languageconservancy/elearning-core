@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     EventEmitter,
@@ -35,6 +36,7 @@ type Card = {
 
 @Component({
     selector: "app-selectable-card",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true,
     imports: [PipesModule],
     templateUrl: "./selectable-card.component.html",

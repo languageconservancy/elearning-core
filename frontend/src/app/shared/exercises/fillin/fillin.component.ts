@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     OnInit,
     OnDestroy,
@@ -73,6 +74,7 @@ interface FlatIndex {
 
 @Component({
     selector: "app-fillin",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, NonSelectableCardComponent, VirtualKeyboardComponent],
     encapsulation: ViewEncapsulation.None,
     templateUrl: "./fillin.component.html",

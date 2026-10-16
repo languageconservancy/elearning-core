@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription, timer, interval } from "rxjs";
 import { take, map } from "rxjs/operators";
@@ -19,6 +19,7 @@ enum ModalType {
 
 @Component({
     selector: "app-review-timer",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./review-timer.component.html",
     styleUrls: ["./review-timer.component.scss"],
     standalone: true,

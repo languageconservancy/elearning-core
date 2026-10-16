@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     OnInit,
     OnChanges,
@@ -37,6 +38,7 @@ type LayoutName = "default" | "shift";
  */
 @Component({
     selector: "app-virtual-keyboard",
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None,
     templateUrl: "./virtual-keyboard.component.html",
     styleUrls: [

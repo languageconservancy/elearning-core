@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import {
     ReactiveFormsModule,
     UntypedFormGroup,
@@ -15,6 +15,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-forgot-password",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [PageTitleComponent, SiteImageComponent, ReactiveFormsModule],
     templateUrl: "./forgot-password.component.html",
     styleUrls: ["./forgot-password.component.scss"],

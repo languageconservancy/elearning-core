@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
@@ -12,6 +12,7 @@ import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 @Component({
     selector: "app-leader-board",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [PageTitleComponent, ProgressLeftPanelComponent, DecimalPipe],
     templateUrl: "./leader-board.component.html",
     styleUrls: ["./leader-board.component.scss"],

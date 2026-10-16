@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
 import {
     ReactiveFormsModule,
     UntypedFormGroup,
@@ -26,6 +33,7 @@ import { RegionPolicyService } from "@app/_services/region-policy.service";
 
 @Component({
     selector: "app-registration",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./registration.component.html",
     styleUrls: ["./registration.component.scss"],
     imports: [PageTitleComponent, RecaptchaCheckboxComponent, ReactiveFormsModule],

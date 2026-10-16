@@ -1,4 +1,4 @@
-import { Component, inject, Output, EventEmitter } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Output, EventEmitter } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -12,6 +12,7 @@ import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
 
 @Component({
     selector: "app-review-next-popup",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SocialShareComponent],
     templateUrl: "./review-next-popup.component.html",
     styleUrls: ["./review-next-popup.component.scss"],

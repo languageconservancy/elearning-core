@@ -8,6 +8,7 @@
  */
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
+    ChangeDetectionStrategy,
     AfterViewInit,
     Component,
     ElementRef,
@@ -52,6 +53,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-login",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AgePromptComponent,
         EventPromoComponent,

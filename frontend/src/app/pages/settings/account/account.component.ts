@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef, inject, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    ChangeDetectorRef,
+    inject,
+    OnDestroy,
+} from "@angular/core";
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -24,6 +31,7 @@ declare let gapi: any;
 
 @Component({
     selector: "app-account",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
     imports: [FormsModule, ReactiveFormsModule],

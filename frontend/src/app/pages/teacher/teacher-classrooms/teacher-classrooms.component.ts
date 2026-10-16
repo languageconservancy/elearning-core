@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import {
     CdkDragDrop,
     DragDropModule,
@@ -20,6 +20,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-teacher-classrooms",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ClassroomSelectComponent, DatePipe, ReactiveFormsModule, FormsModule, DragDropModule],
     templateUrl: "./teacher-classrooms.component.html",
     styleUrls: ["./teacher-classrooms.component.scss"],

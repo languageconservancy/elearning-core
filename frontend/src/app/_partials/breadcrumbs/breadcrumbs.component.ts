@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { NavigationEnd, Router } from "@angular/router";
 
@@ -7,6 +7,7 @@ import { BreadcrumbsService, Breadcrumb } from "@app/_services/breadcrumbs.servi
 
 @Component({
     selector: "app-breadcrumbs",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./breadcrumbs.component.html",
     styleUrls: ["./breadcrumbs.component.scss"],
     standalone: true,

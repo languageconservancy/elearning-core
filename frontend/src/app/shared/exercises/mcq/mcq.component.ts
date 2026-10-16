@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, inject, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    OnDestroy,
+    inject,
+    Input,
+} from "@angular/core";
 import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
@@ -18,6 +25,7 @@ import { AudioService } from "@app/_services/audio.service";
 
 @Component({
     selector: "app-mcq",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NonSelectableCardComponent, SelectableCardComponent],
     templateUrl: "./mcq.component.html",
     styleUrls: ["./mcq.component.scss"],

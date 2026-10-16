@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
@@ -10,6 +10,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-request-quote",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./request-quote.component.html",
     styleUrls: ["./request-quote.component.scss"],
     standalone: true,

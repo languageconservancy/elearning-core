@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Renderer2 } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, Renderer2 } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { trigger, state, style, animate, transition } from "@angular/animations";
 import { Router } from "@angular/router";
@@ -12,6 +12,7 @@ import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-friend-sidebar",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, ReactiveFormsModule],
     templateUrl: "./friend-sidebar.component.html",
     styleUrls: ["./friend-sidebar.component.scss"],

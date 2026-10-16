@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AccountComponent } from "../account/account.component";
 import { LearningComponent } from "@app/pages/settings/learning/learning.component";
@@ -13,6 +13,7 @@ import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: "app-settings",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AccountComponent,
         LearningComponent,

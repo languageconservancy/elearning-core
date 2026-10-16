@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
@@ -14,6 +14,7 @@ import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
 
 @Component({
     selector: "app-lessons",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ImageZoomComponent, SafeHtmlPipe, NgTemplateOutlet],
     templateUrl: "./lessons.component.html",
     styleUrls: ["./lessons.component.scss"],

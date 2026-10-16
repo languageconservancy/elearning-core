@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     OnInit,
     ViewChild,
@@ -60,6 +61,7 @@ export type ExerciseBlockMap = {
 
 @Component({
     selector: "app-unit-progress-nav",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TimerComponent],
     templateUrl: "./unit-progress-nav.component.html",
     styleUrls: ["./unit-progress-nav.component.css"],

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LessonsService } from "@app/_services/lessons.service";
@@ -7,6 +7,7 @@ import { KeyboardService } from "../keyboard.service";
 
 @Component({
     selector: "app-keyboard-shortcuts",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./keyboard-shortcuts.component.html",
     styleUrls: ["./keyboard-shortcuts.component.scss"],
     standalone: true,

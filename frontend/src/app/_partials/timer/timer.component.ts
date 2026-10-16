@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, inject } from "@angular/core";
 import { take, map } from "rxjs/operators";
 import { Subscription, timer, interval } from "rxjs";
 import { CookieService } from "@app/_services/cookie.service";
@@ -26,6 +26,7 @@ type AllocatedDailyTimeCountdownTimer = {
 
 @Component({
     selector: "app-timer",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./timer.component.html",
     styleUrls: ["./timer.component.scss"],
     standalone: true,

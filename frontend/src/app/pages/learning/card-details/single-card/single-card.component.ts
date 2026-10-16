@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
@@ -9,6 +9,7 @@ import { LessonsService } from "@app/_services/lessons.service";
 
 @Component({
     selector: "app-single-card",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ExerciseComponent, KeyboardShortcutsComponent, LessonsComponent],
     templateUrl: "./single-card.component.html",
     styleUrls: ["./single-card.component.scss"],

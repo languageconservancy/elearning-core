@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, inject, Input } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    OnDestroy,
+    inject,
+    Input,
+} from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
@@ -17,6 +24,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-match-pair",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet, SelectableCardComponent],
     templateUrl: "./match-pair.component.html",
     styleUrls: ["./match-pair.component.scss"],

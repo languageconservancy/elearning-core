@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { ForumService } from "@app/_services/forum.service";
@@ -8,6 +8,7 @@ import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-report-post-modal",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./report-post-modal.component.html",
     styleUrls: ["./report-post-modal.component.scss"],
     standalone: true,

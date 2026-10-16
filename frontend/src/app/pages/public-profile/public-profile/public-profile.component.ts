@@ -1,4 +1,10 @@
-import { Component, inject, OnDestroy, AfterViewInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnDestroy,
+    AfterViewInit,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
@@ -13,6 +19,7 @@ import { BadgeService } from "@app/_services/badge.service";
 
 @Component({
     selector: "app-public-profile",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [PageTitleComponent, BadgeImagePipe],
     templateUrl: "./public-profile.component.html",
     styleUrls: ["./public-profile.component.scss"],

@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ElementRef,
     OnInit,
@@ -25,6 +26,7 @@ import { AudioService } from "@app/_services/audio.service";
 
 @Component({
     selector: "app-anagram",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, NonSelectableCardComponent],
     templateUrl: "./anagram.component.html",
     styleUrls: ["./anagram.component.scss"],

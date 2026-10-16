@@ -1,4 +1,11 @@
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { AnagramComponent } from "@app/shared/exercises/anagram/anagram.component";
@@ -13,6 +20,7 @@ import { DeviceDetectorService } from "ngx-device-detector";
 
 @Component({
     selector: "app-review-exercise",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AnagramComponent,
         FillinComponent,

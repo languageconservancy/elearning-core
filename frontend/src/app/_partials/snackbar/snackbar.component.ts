@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
 import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-snackbar",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SafeHtmlPipe],
     templateUrl: "./snackbar.component.html",
     styleUrls: ["./snackbar.component.scss"],

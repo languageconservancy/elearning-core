@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { AnagramComponent } from "@app/shared/exercises/anagram/anagram.component";
@@ -11,6 +11,7 @@ import { LessonsService } from "@app/_services/lessons.service";
 
 @Component({
     selector: "app-exercise",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./exercise.component.html",
     styleUrls: ["./exercise.component.scss"],
     standalone: true,

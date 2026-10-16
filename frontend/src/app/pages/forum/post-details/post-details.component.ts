@@ -1,4 +1,12 @@
-import { Component, OnInit, ElementRef, inject, ViewChild, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    ElementRef,
+    inject,
+    ViewChild,
+    OnDestroy,
+} from "@angular/core";
 import { Location } from "@angular/common";
 import {
     FormsModule,
@@ -29,6 +37,7 @@ import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-post-details",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FriendSidebarComponent,
         PageTitleComponent,

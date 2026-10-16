@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import {
     ReactiveFormsModule,
     UntypedFormGroup,
@@ -19,6 +19,7 @@ import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-age-prompt",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, RouterLink],
     templateUrl: "./age-prompt.component.html",
     styleUrls: ["./age-prompt.component.css"],

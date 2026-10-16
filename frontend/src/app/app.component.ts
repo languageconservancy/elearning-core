@@ -1,4 +1,10 @@
-import { Component, ApplicationRef, createComponent, inject } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ApplicationRef,
+    createComponent,
+    inject,
+} from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { SettingsService } from "./_services/settings.service";
 import { DeviceDetectorService } from "ngx-device-detector";
@@ -17,6 +23,7 @@ import { UpdateModalComponent } from "./_partials/update-modal/update-modal.comp
 
 @Component({
     selector: "app-root",
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         AgreementsAcceptanceComponent,
         BreadcrumbsComponent,

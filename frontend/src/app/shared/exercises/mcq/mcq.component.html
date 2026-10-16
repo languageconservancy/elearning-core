@@ -18,7 +18,7 @@
             'mt-9': exerciseService.responseTypes.indexOf('a') > -1,
         }"
       >
-      @for (choice of exerciseService.choices; track choice; let i = $index) {
+      @for (choice of exerciseService.choices; track $index; let i = $index) {
         <div
           class="col d-flex justify-content-center text-center mb-7"
           >

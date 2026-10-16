@@ -31,11 +31,11 @@
             }"
         >
         <div class="input-field-area text-center prompt-font-size header-line-height">
-          @for (group of uiGroupedTextArray; track group; let groupIndex = $index) {
+          @for (group of uiGroupedTextArray; track $index; let groupIndex = $index) {
             <div
               class="word-block"
               >
-              @for (part of group; track part; let partIndex = $index) {
+              @for (part of group; track $index; let partIndex = $index) {
                 @if (part.type === 'blank') {
                   <input
                     type="text"
@@ -78,7 +78,7 @@
       </div>
       <!-- MCQ Response Choices -->
       <div class="my-4 d-flex flex-wrap flex-gap-p75 align-items-center justify-content-center">
-        @for (choice of exerciseService.choices; track choice; let i = $index) {
+        @for (choice of exerciseService.choices; track $index; let i = $index) {
           <div class="">
             <span
               class="btn bg-option-default border-option-default border-width-2 font-language prompt-font-size px-4"
@@ -132,11 +132,11 @@
                 }"
           >
           <div class="input-field-area overflow-wrap-anywhere">
-            @for (group of uiGroupedTextArray; track group; let groupIndex = $index) {
+            @for (group of uiGroupedTextArray; track $index; let groupIndex = $index) {
               <div
                 class="word-block"
                 >
-                @for (part of group; track part; let partIndex = $index) {
+                @for (part of group; track $index; let partIndex = $index) {
                   @if (part.type === 'blank') {
                     <input
                       type="text"

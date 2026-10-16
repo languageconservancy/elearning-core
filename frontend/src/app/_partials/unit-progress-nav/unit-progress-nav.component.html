@@ -15,7 +15,7 @@
       [style.width.rem]="getNumUnitAttemptableActivities() * 6"
     ></div>
     <div class="incompletion-bar-horiz position-absolute" [style.width.rem]="activities.length * 6"></div>
-    @for (activity of activities; track activity; let i = $index) {
+    @for (activity of activities; track $index; let i = $index) {
       <div
         class="stepNo-horiz d-flex"
         [attr.data-index]="i"
@@ -75,7 +75,7 @@
       [style.height.rem]="getNumUnitAttemptableActivities() * 6"
     ></div>
     <div class="incompletion-bar-vert position-absolute" [style.height.rem]="activities.length * 6"></div>
-    @for (activity of activities; track activity; let i = $index) {
+    @for (activity of activities; track $index; let i = $index) {
       <div
         class="stepNo-vert d-flex"
         [attr.data-index]="i"

@@ -14,7 +14,7 @@
     <!-- RESPONSE -->
     <div class="col-12 col-lg-6 text-center">
       <div class="input-field-area prompt-font-size spacer-top-20 text-center">
-        @for (box of inputCountArray; track box; let i = $index) {
+        @for (box of inputCountArray; track $index; let i = $index) {
           <input
             #letterInput
             type="text"
@@ -45,7 +45,7 @@
         }
       </div>
       <div class="key-btn-area">
-        @for (key of jumbledKeys; track key) {
+        @for (key of jumbledKeys; track $index) {
           <a
             class="mx-1 my-2 btn btn-lg btn-blue font-language prompt-font-size"
             href="javascript:void(0)"

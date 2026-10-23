@@ -1,13 +1,13 @@
 @use "../modules/theme";
 
 .bg-primary {
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
 }
 .bg-primary-light {
-    background: theme.$primary-color-light;
+    background-color: theme.$primary-color-light;
 }
 .bg-primary-dark {
-    background: theme.$primary-color-dark;
+    background-color: theme.$primary-color-dark;
 }
 
 .border-primary {

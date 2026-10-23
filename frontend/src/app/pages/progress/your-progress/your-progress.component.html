@@ -15,7 +15,7 @@
                 </h3>
                 <div class="inside-point-info">
                     <div class="row">
-                        <div class="summary-img-box cursor-pointer">
+                        <div class="col summary-img-box cursor-pointer">
                             <!-- <img src="./assets/images/fire_med.png" class="ng-star-inserted"> -->
                             @if (fireImage === "dead") {
                                 <img
@@ -105,7 +105,7 @@
                                 <span class="txt-label">0</span>
                             }
                         </div>
-                        <div class="summary-img-box">
+                        <div class="col summary-img-box">
                             @if (user.learningpath?.FullImageUrl) {
                                 <img
                                     [src]="
@@ -125,7 +125,7 @@
                                 <span class="txt-label">0</span>
                             }
                         </div>
-                        <div class="summary-img-box">
+                        <div class="col summary-img-box">
                             <img src="./assets/images/partner-logo.png" class="ng-star-inserted" />
                             @if (getprogress.social_score) {
                                 <span class="txt-label">{{ getprogress.social_score }}</span>
@@ -138,19 +138,19 @@
                 </div>
                 <div class="inside-summary-info">
                     <div class="row">
-                        <div class="summary-icon-box">
+                        <div class="col summary-icon-box">
                             <img src="./assets/images/reading-blue.png" />
                             <span class="txt-label">{{ getprogress.reading_score }}</span>
                         </div>
-                        <div class="summary-icon-box">
+                        <div class="col summary-icon-box">
                             <img src="./assets/images/edit-icon.png" />
                             <span class="txt-label">{{ getprogress.writing_score }}</span>
                         </div>
-                        <div class="summary-icon-box">
+                        <div class="col summary-icon-box">
                             <img src="./assets/images/wi-fi.png" />
                             <span class="txt-label">{{ getprogress.listening_score }}</span>
                         </div>
-                        <div class="summary-icon-box">
+                        <div class="col summary-icon-box">
                             <img src="./assets/images/chat.png" />
                             <span class="txt-label">{{ getprogress.speaking_score }}</span>
                         </div>
@@ -167,7 +167,7 @@
                     <div class="row">
                         <!-- Review badge -->
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{
                                 badgesOpacity: !(
                                     getprogress?.badge?.firebadges?.fire_days > 0 &&
@@ -178,7 +178,7 @@
                             <img src="./assets/images/fire_low.png" alt="" />
                         </div>
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{
                                 badgesOpacity: !(
                                     getprogress?.badge?.firebadges?.fire_days > 3 &&
@@ -189,7 +189,7 @@
                             <img src="./assets/images/fire_med.png" alt="" />
                         </div>
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{
                                 badgesOpacity: !(
                                     getprogress?.badge?.firebadges?.fire_days > 7 &&
@@ -200,7 +200,7 @@
                             <img src="./assets/images/fire_high.png" alt="" />
                         </div>
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{
                                 badgesOpacity: !(getprogress?.badge?.firebadges?.fire_days >= 14),
                             }"
@@ -211,25 +211,25 @@
                     <div class="row">
                         <!-- Social points badge -->
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{ badgesOpacity: !(getprogress?.badge?.socialpoint > 4) }"
                         >
                             <img src="./assets/images/teepee_01.png" alt="" />
                         </div>
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 100) }"
                         >
                             <img src="./assets/images/teepee_02.png" alt="" />
                         </div>
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{ badgesOpacity: !(getprogress?.badge?.socialpoint >= 250) }"
                         >
                             <img src="./assets/images/teepee_03.png" alt="" />
                         </div>
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{
                                 badgesOpacity: !(getprogress?.badge?.socialpoint >= 1000),
                             }"
@@ -237,7 +237,7 @@
                             <img src="./assets/images/teepee_04.png" alt="" />
                         </div>
                         <div
-                            class="summary-img-box"
+                            class="col summary-img-box"
                             [class]="{
                                 badgesOpacity: !(getprogress?.badge?.socialpoint >= 5000),
                             }"

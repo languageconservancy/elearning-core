@@ -3,6 +3,14 @@
 @use "../modules/mixins";
 @use "../modules/bootstrap-helpers";
 
+.btn {
+    @include mixins.buttonDefault(theme.$primary-color, theme.$text-primary-contrast);
+    &:hover {
+        background-color: rgba(theme.$primary-color-light, 0.2);
+        color: theme.$text-primary;
+    }
+}
+
 .btn-primary {
     background-color: theme.$primary-color;
     border-color: theme.$primary-color;

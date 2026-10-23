@@ -1,7 +1,7 @@
 @use "../modules/theme";
 
 .bg-primary {
-    background-color: theme.$primary-color;
+    background-color: theme.$primary-color !important;
 }
 .bg-primary-light {
     background-color: theme.$primary-color-light;

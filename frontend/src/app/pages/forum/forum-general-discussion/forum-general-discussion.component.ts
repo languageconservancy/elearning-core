@@ -45,7 +45,7 @@ interface PostFormValue {
         PageTitleComponent,
     ],
     templateUrl: "./forum-general-discussion.component.html",
-    styleUrls: ["./forum-general-discussion.component.scss"],
+    styleUrl: "./forum-general-discussion.component.scss",
     standalone: true,
 })
 export class ForumGeneralDiscussionComponent implements OnInit, OnDestroy, AfterViewInit {

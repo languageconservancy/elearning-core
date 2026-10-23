@@ -4,7 +4,7 @@
 @use "@angular/material/prebuilt-themes/indigo-pink.css";
 
 // Option A: Include all of Bootstrap
-@import "./node_modules/bootstrap/scss/bootstrap";
+@use "./node_modules/bootstrap/scss/bootstrap";
 
 // Include any default variable overrides here (though functions won't be available)
 @use "./assets/scss/modules/variables";

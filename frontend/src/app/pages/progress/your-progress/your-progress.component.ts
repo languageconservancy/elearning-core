@@ -1,32 +1,37 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
 
-import { Loader } from "app/_services/loader.service";
-import { ProgressService } from "app/_services/progress.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { RegionPolicyService } from "app/_services/region-policy.service";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { ProgressLeftPanelComponent } from "@app/pages/progress/_partials/progress-left-panel/progress-left-panel.component";
+import { CookieService } from "@app/_services/cookie.service";
+import { Loader } from "@app/_services/loader.service";
+import { ProgressService } from "@app/_services/progress.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
 
 @Component({
     selector: "app-your-progress",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [PageTitleComponent, ProgressLeftPanelComponent],
     templateUrl: "./your-progress.component.html",
     styleUrls: ["./your-progress.component.scss"],
+    standalone: true,
 })
 export class YourProgressComponent implements OnInit {
+    private progressService = inject(ProgressService);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private router = inject(Router);
+    private regionPolicyService = inject(RegionPolicyService);
+    private siteSettingsService = inject(SiteSettingsService);
+
     public user: any = [];
     public getprogress: any = [];
     public fireImage: string = "dead";
     private settings: any = null;
     public userCanAccessLeaderboard: boolean = false;
 
-    constructor(
-        private progressService: ProgressService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private router: Router,
-        private regionPolicyService: RegionPolicyService,
-        private siteSettingsService: SiteSettingsService,
-    ) {
+    constructor() {
         this.siteSettingsService
             .getSettings()
             .then((settings) => {

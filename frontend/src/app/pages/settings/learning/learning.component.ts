@@ -1,23 +1,35 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { LearningPathService } from "app/_services/learning-path.service";
-import { LearningSpeedService } from "app/_services/learning-speed.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { environment } from "environments/environment";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { LearningPathService } from "@app/_services/learning-path.service";
+import { LearningSpeedService } from "@app/_services/learning-speed.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { environment } from "@environments/environment";
+import { BaseService } from "@app/_services/base.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-learning",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./learning.component.html",
     styleUrls: ["./learning.component.scss"],
+    standalone: true,
 })
 export class LearningComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    public learningSpeedService = inject(LearningSpeedService);
+    private learningPathService = inject(LearningPathService);
+    private baseService = inject(BaseService);
+    private snackbarService = inject(SnackbarService);
+    private localStorage = inject(LocalStorageService);
+
     private lockSubscription: Subscription;
     public learningSpeeds: any = [];
     public learningPaths: any = [];
@@ -27,30 +39,21 @@ export class LearningComponent implements OnInit, OnDestroy {
     public lockFlag: boolean = false;
     public environment = environment;
 
-    constructor(
-        private settingsService: SettingsService,
-        private router: Router,
-        private loader: Loader,
-        private ref: ChangeDetectorRef,
-        private cookieService: CookieService,
-        public learningSpeedService: LearningSpeedService,
-        private learningPathService: LearningPathService,
-        private baseService: BaseService,
-        private snackbarService: SnackbarService,
-        private localStorage: LocalStorageService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("learning");
     }
 
@@ -59,7 +62,7 @@ export class LearningComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.setLoader(true);
                 const loggedInUser = JSON.parse(value);

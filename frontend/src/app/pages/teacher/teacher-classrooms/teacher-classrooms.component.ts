@@ -1,21 +1,39 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
+import {
+    CdkDragDrop,
+    DragDropModule,
+    moveItemInArray,
+    transferArrayItem,
+} from "@angular/cdk/drag-drop";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { DatePipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { CookieService } from "@app/_services/cookie.service";
 import Swal from "sweetalert2";
 
-import { ClassroomService } from "app/_services/classroom.service";
-import { TeacherService } from "app/_services/teacher.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { ClassroomSelectComponent } from "@app/pages/teacher/_partials/classroom-select/classroom-select.component";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { TeacherService } from "@app/_services/teacher.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-teacher-classrooms",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ClassroomSelectComponent, DatePipe, ReactiveFormsModule, FormsModule, DragDropModule],
     templateUrl: "./teacher-classrooms.component.html",
     styleUrls: ["./teacher-classrooms.component.scss"],
+    standalone: true,
 })
 export class TeacherClassroomsComponent implements OnDestroy {
+    private classroomService = inject(ClassroomService);
+    private teacherService = inject(TeacherService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private snackbarService = inject(SnackbarService);
+
     private schoolSubscription: Subscription;
     private teacherSubscription: Subscription;
     private classroomSubscription: Subscription;
@@ -30,19 +48,12 @@ export class TeacherClassroomsComponent implements OnDestroy {
     public activeEditUser: number = -1;
     public unsavedStudentChanges = false;
 
-    constructor(
-        private classroomService: ClassroomService,
-        private teacherService: TeacherService,
-        private loader: Loader,
-        private router: Router,
-        private cookieService: CookieService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -119,7 +130,13 @@ export class TeacherClassroomsComponent implements OnDestroy {
         this.updateClassroomUnit(classroomUnit);
     }
 
-    updateClassroomUnit(classroomUnit: { id: any; optional: any; active: any; no_repeat: any; release_date: any }) {
+    updateClassroomUnit(classroomUnit: {
+        id: any;
+        optional: any;
+        active: any;
+        no_repeat: any;
+        release_date: any;
+    }) {
         if (!!classroomUnit) {
             this.loader.setLoader(true);
             const params = {
@@ -329,7 +346,10 @@ export class TeacherClassroomsComponent implements OnDestroy {
                 if (!!this.classroomUnits) {
                     this.classroomUnits.forEach((classroomUnit) => {
                         if (!!classroomUnit.release_date) {
-                            classroomUnit.release_date = classroomUnit.release_date.substring(0, 10);
+                            classroomUnit.release_date = classroomUnit.release_date.substring(
+                                0,
+                                10,
+                            );
                         }
                     });
                 }

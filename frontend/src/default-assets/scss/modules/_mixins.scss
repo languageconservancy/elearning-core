@@ -35,7 +35,7 @@
 }
 
 @mixin buttonDefault($background, $color) {
-    background: $background;
+    background-color: $background;
     color: $color;
     padding: 0.5rem 1.4rem;
     border-radius: 1.5rem 1.5rem;
@@ -49,7 +49,7 @@
 }
 
 @mixin inputDefault($fontSize, $marginBottom) {
-    background: theme.$ui-panel-light;
+    background-color: theme.$ui-panel-light;
     font-family: variables.$font-main;
     font-size: $fontSize;
     color: theme.$text-ui-panel-light-contrast;

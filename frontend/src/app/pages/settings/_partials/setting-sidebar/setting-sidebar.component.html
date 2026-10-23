@@ -3,47 +3,43 @@
 <div class="d-flex justify-content-center">
     <div
         class="dropdown d-lg-none settings-dropdown bg-transparent mb-2 mt-0"
-        [ngClass]="{ 'mb-4-2': tabName === 'profile' }"
+        [class]="{ 'mb-4-2': tabName === 'profile' }"
     >
         <button
             class="dropdown-toggle d-flex flex-nowrap text-wrap justify-content-between align-items-center mx-auto px-4 py-2"
             type="button"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-expanded="false"
-            data-display="static"
+            data-bs-display="static"
         >
             {{ tabName | capitalizeFirstLetter }}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a
                 class="dropdown-item"
-                [ngClass]="{ active: tabName === 'profile' }"
+                routerLinkeActive="active"
                 routerLink="/profile-settings"
-                href="javascript:void(0)"
             >
                 Profile
             </a>
             <a
                 class="dropdown-item"
-                [ngClass]="{ active: tabName === 'learning' }"
+                routerLinkeActive="active"
                 routerLink="/learning-settings"
-                href="javascript:void(0)"
             >
                 Learning
             </a>
             <a
                 class="dropdown-item"
-                [ngClass]="{ active: tabName === 'privacy' }"
+                routerLinkeActive="active"
                 routerLink="/privacy-settings"
-                href="javascript:void(0)"
             >
                 Privacy
             </a>
             <a
                 class="dropdown-item"
-                [ngClass]="{ active: tabName === 'account' }"
+                routerLinkeActive="active"
                 routerLink="/account-settings"
-                href="javascript:void(0)"
             >
                 Account
             </a>
@@ -56,30 +52,30 @@
         <li>
             <a
                 href="javascript:void(0)"
-                [ngClass]="{ active: tabName === 'profile' }"
+                [class]="{ active: tabName === 'profile' }"
                 routerLink="/profile-settings"
                 class="active"
                 ><h5 class="mb-0">Profile</h5></a
             >
         </li>
         <!-- <li>
-			<a href="javascript:void(0)" [ngClass]="{'active': tabName == 'notifications'}" routerLink="/notifications-settings">Notifications</a>
+			<a href="javascript:void(0)" [class]="{'active': tabName == 'notifications'}" routerLink="/notifications-settings">Notifications</a>
 		</li> -->
         <li>
-            <a href="javascript:void(0)" [ngClass]="{ active: tabName === 'learning' }" routerLink="/learning-settings"
+            <a href="javascript:void(0)" [class]="{ active: tabName === 'learning' }" routerLink="/learning-settings"
                 ><h5 class="mb-0">Learning</h5></a
             >
         </li>
         <li>
-            <a href="javascript:void(0)" [ngClass]="{ active: tabName === 'privacy' }" routerLink="/privacy-settings"
+            <a href="javascript:void(0)" [class]="{ active: tabName === 'privacy' }" routerLink="/privacy-settings"
                 ><h5 class="mb-0">Privacy</h5></a
             >
         </li>
         <!-- <li>
-			<a href="javascript:void(0)" [ngClass]="{'active': tabName == 'accessibility'}" routerLink="/accessibility-settings">Accessibility</a>
+			<a href="javascript:void(0)" [class]="{'active': tabName == 'accessibility'}" routerLink="/accessibility-settings">Accessibility</a>
 		</li> -->
         <li>
-            <a href="javascript:void(0)" [ngClass]="{ active: tabName === 'account' }" routerLink="/account-settings"
+            <a href="javascript:void(0)" [class]="{ active: tabName === 'account' }" routerLink="/account-settings"
                 ><h5 class="mb-0">Account</h5></a
             >
         </li>

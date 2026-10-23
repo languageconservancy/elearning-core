@@ -1,9 +1,15 @@
-<div *ngIf="type === 'lesson'">
+@if (type === 'lesson') {
+  <div>
     <app-lessons></app-lessons>
-</div>
-<div *ngIf="type === 'exercise'">
+  </div>
+}
+@if (type === 'exercise') {
+  <div>
     <app-exercise></app-exercise>
-</div>
-<div *ngIf="!isMobile && !isTablet">
+  </div>
+}
+@if (!isMobile && !isTablet) {
+  <div>
     <app-keyboard-shortcuts></app-keyboard-shortcuts>
-</div>
+  </div>
+}

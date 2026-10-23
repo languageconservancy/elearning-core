@@ -1,24 +1,24 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 
-import { Loader } from "app/_services/loader.service";
-import { SettingsService } from "app/_services/settings.service";
+import { Loader } from "@app/_services/loader.service";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-maintenance-mode",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./maintenance-mode.component.html",
     styleUrls: ["./maintenance-mode.component.scss"],
+    standalone: true,
 })
 export class MaintenanceModeComponent implements OnInit {
-    public maintenance: any;
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private sanitizer = inject(DomSanitizer);
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private router: Router,
-        private sanitizer: DomSanitizer,
-    ) {}
+    public maintenance: any;
 
     ngOnInit() {
         this.setLoader(true);
@@ -28,9 +28,10 @@ export class MaintenanceModeComponent implements OnInit {
                 this.setLoader(false);
                 if (res.data.status && res.data.results.is_under_construction == "Y") {
                     this.maintenance = res.data.results;
-                    this.maintenance.under_construction_html = this.sanitizer.bypassSecurityTrustHtml(
-                        this.maintenance.under_construction_html,
-                    );
+                    this.maintenance.under_construction_html =
+                        this.sanitizer.bypassSecurityTrustHtml(
+                            this.maintenance.under_construction_html,
+                        );
                     this.settingsService.setMaintenanceMode(true);
                 } else {
                     // this.router.navigate(['']);

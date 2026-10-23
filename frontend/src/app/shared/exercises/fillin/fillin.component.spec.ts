@@ -1,24 +1,25 @@
 /// <reference types="jasmine" />
 import { ComponentFixture, tick, fakeAsync, TestBed } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DeviceDetectorService } from "ngx-device-detector";
 import { of } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { ExerciseService } from "app/_services/exercise.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { AudioService } from "app/_services/audio.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { BaseService } from "app/_services/base.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ExerciseService } from "@app/_services/exercise.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { AudioService } from "@app/_services/audio.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { BaseService } from "@app/_services/base.service";
 import { FillinComponent } from "./fillin.component";
-import { VirtualKeyboardComponent } from "app/_partials/virtual-keyboard/virtual-keyboard.component";
-import { AnswerType } from "app/shared/utils/elearning-types";
+import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
+import { AnswerType } from "@app/shared/utils/elearning-types";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 
 describe("FillinComponent", () => {
     let component: FillinComponent;
@@ -99,6 +100,7 @@ describe("FillinComponent", () => {
 
         TestBed.configureTestingModule({
             declarations: [FillinComponent, VirtualKeyboardComponent],
+            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule],
             providers: [
                 { provide: BaseService, useValue: mockBaseService },
                 { provide: CookieService, useValue: mockCookieService },
@@ -111,12 +113,8 @@ describe("FillinComponent", () => {
                 { provide: DeviceDetectorService, useValue: mockDeviceDetectorService },
                 { provide: SnackbarService, useValue: mockSnackbarService },
                 SettingsService,
-            ],
-            imports: [
-                RouterTestingModule,
-                HttpClientTestingModule,
-                ReactiveFormsModule,
-                FormsModule,
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
+                provideHttpClientTesting(),
             ],
         });
 
@@ -305,12 +303,6 @@ describe("FillinComponent", () => {
             component["createUiResponseTextArray"]();
             component["setUpBlankModel"]();
 
-            // Mock jQuery to return the correct answer
-            const mockJQuery = jasmine.createSpy("jQuery").and.returnValue({
-                val: jasmine.createSpy("val").and.returnValue("Škáte"),
-            });
-            (window as any).jQuery = mockJQuery;
-
             spyOn(component, "submitAnswer");
 
             component.submitButtonClicked();
@@ -322,12 +314,6 @@ describe("FillinComponent", () => {
         it("should submit incorrect answer", fakeAsync(() => {
             component["createUiResponseTextArray"]();
             component["setUpBlankModel"]();
-
-            // Mock jQuery to return wrong answer
-            const mockJQuery = jasmine.createSpy("jQuery").and.returnValue({
-                val: jasmine.createSpy("val").and.returnValue("wrong"),
-            });
-            (window as any).jQuery = mockJQuery;
 
             spyOn(component, "submitAnswer");
 

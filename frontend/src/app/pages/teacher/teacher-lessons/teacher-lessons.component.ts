@@ -1,16 +1,24 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { DragDropModule, CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { TeacherService } from "app/_services/teacher.service";
-import { ClassroomService } from "app/_services/classroom.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
+import { TeacherService } from "@app/_services/teacher.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
 
 type Unit = {
     id: number;
@@ -61,10 +69,20 @@ type Path = {
 
 @Component({
     selector: "app-teacher-lessons",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ReactiveFormsModule, DragDropModule],
     templateUrl: "./teacher-lessons.component.html",
     styleUrls: ["./teacher-lessons.component.scss"],
+    standalone: true,
 })
 export class TeacherLessonsComponent implements OnInit, OnDestroy {
+    private classroomService = inject(ClassroomService);
+    private teacherService = inject(TeacherService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private snackbarService = inject(SnackbarService);
+
     private teacherSubscription: Subscription;
     private schoolSubscription: Subscription;
     @ViewChild("formModal") formModal;
@@ -87,19 +105,12 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
     public listLevelUnits: Array<LevelUnit> = [];
     public unsavedUnitChanges: boolean = false;
 
-    constructor(
-        private classroomService: ClassroomService,
-        private teacherService: TeacherService,
-        private router: Router,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -119,7 +130,7 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
         });
     }
 
-    async ngOnInit() {
+    ngOnInit(): void {
         //setup forms
         this.newLevelForm = new UntypedFormGroup({
             name: new UntypedFormControl("", [
@@ -130,13 +141,17 @@ export class TeacherLessonsComponent implements OnInit, OnDestroy {
             newLevelContent: new UntypedFormControl("-2"),
         });
 
-        await this.getAvailableUnits();
-        await this.getTeacherLevels();
+        void this.loadTeacherLessons();
     }
 
     ngOnDestroy() {
         this.teacherSubscription.unsubscribe();
         this.schoolSubscription.unsubscribe();
+    }
+
+    private async loadTeacherLessons(): Promise<void> {
+        await this.getAvailableUnits();
+        await this.getTeacherLevels();
     }
 
     async getAvailableUnits() {

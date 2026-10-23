@@ -1,41 +1,62 @@
-<div class="d-grid grid-cols-2-6-1 align-items-center column-gap-1 mb-2" *ngIf="reviewCompletionDataFetched && reviewCompletionPercentage > 0">
+@if (reviewCompletionDataFetched && reviewCompletionPercentage > 0) {
+  <div class="d-grid grid-cols-2-6-1 align-items-center column-gap-1 mb-2">
     <div class="text-center">
-        <h6 *ngIf="reviewCompletionPercentage < 100" class="my-auto text-primary">Unlocks next unit :</h6>
-        <h6 *ngIf="reviewCompletionPercentage >= 100" class="my-auto text-primary">Next unit unlocked!</h6>
+      @if (reviewCompletionPercentage < 100) {
+        <h6 class="my-auto text-primary">Unlocks next unit :</h6>
+      }
+      @if (reviewCompletionPercentage >= 100) {
+        <h6 class="my-auto text-primary">Next unit unlocked!</h6>
+      }
     </div>
     <div class="">
-        <div class="progress" title="{{reviewCompletionPercentage}}%">
-            <div
-                aria-valuemax="100"
-                aria-valuemin="0"
-                aria-valuenow=""
-                class="progress-bar"
-                role="progressbar"
-                [style.width.%]="reviewCompletionPercentage"
-            ></div>
-        </div>
+      <div class="progress" title="{{reviewCompletionPercentage}}%">
+        <div
+          aria-valuemax="100"
+          aria-valuemin="0"
+          aria-valuenow=""
+          class="progress-bar"
+          role="progressbar"
+          [style.width.%]="reviewCompletionPercentage"
+        ></div>
+      </div>
     </div>
     <div class="text-center">
-        <!-- Right-facing arrow button -->
+      <!-- Right-facing arrow button -->
+      @if (reviewCompletionPercentage >= 100) {
         <button
-            aria-label="Go to units"
-            title="Go to units"
-            *ngIf="reviewCompletionPercentage >= 100"
-            class="text-primary bg-transparent border-0 header-font-size"
-            [disabled]="reviewCompletionPercentage < 100"
-        >
-            <a routerLink="/start-learning">
-                <i class="fas fa-arrow-right"></i>
-            </a>
+          aria-label="Go to units"
+          title="Go to units"
+          class="text-primary bg-transparent border-0 header-font-size"
+          [disabled]="reviewCompletionPercentage < 100"
+          >
+          <a routerLink="/start-learning">
+            <i class="fas fa-arrow-right"></i>
+          </a>
         </button>
+      }
     </div>
-</div>
+  </div>
+}
 
 <!-- <app-review-mcq *ngIf="exercise.exercise_type == 'multiple-choice'"></app-review-mcq> -->
-<app-mcq *ngIf="exercise.exercise_type === 'multiple-choice'" [sessionType]="'review'"></app-mcq>
-<app-true-false *ngIf="exercise.exercise_type === 'truefalse'" [sessionType]="'review'"></app-true-false>
-<app-match-pair *ngIf="exercise.exercise_type === 'match-the-pair'" [sessionType]="'review'"></app-match-pair>
-<app-anagram *ngIf="exercise.exercise_type === 'anagram'" [sessionType]="'review'"></app-anagram>
-<app-fillin *ngIf="exercise.exercise_type === 'fill_in_the_blanks'" [sessionType]="'review'"></app-fillin>
-<app-recording *ngIf="exercise.exercise_type === 'recording'" [sessionType]="'review'"></app-recording>
-<app-keyboard-shortcuts *ngIf="!this.isMobile && !this.isTablet"></app-keyboard-shortcuts>
+@if (exercise.exercise_type === 'multiple-choice') {
+  <app-mcq [sessionType]="'review'"></app-mcq>
+}
+@if (exercise.exercise_type === 'truefalse') {
+  <app-true-false [sessionType]="'review'"></app-true-false>
+}
+@if (exercise.exercise_type === 'match-the-pair') {
+  <app-match-pair [sessionType]="'review'"></app-match-pair>
+}
+@if (exercise.exercise_type === 'anagram') {
+  <app-anagram [sessionType]="'review'"></app-anagram>
+}
+@if (exercise.exercise_type === 'fill_in_the_blanks') {
+  <app-fillin [sessionType]="'review'"></app-fillin>
+}
+@if (exercise.exercise_type === 'recording') {
+  <app-recording [sessionType]="'review'"></app-recording>
+}
+@if (!this.isMobile && !this.isTablet) {
+  <app-keyboard-shortcuts></app-keyboard-shortcuts>
+}

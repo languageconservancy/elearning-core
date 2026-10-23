@@ -1,13 +1,11 @@
 import { AgePromptComponent } from "./age-prompt.component";
-import { SettingsService } from "app/_services/settings.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
 import { SocialAuthService } from "@abacritt/angularx-social-login";
-import { ModalService } from "app/_services/modal.service";
+import { ModalService } from "@app/_services/modal.service";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { AgePromptService } from "app/_services/age-prompt.service";
-
-declare let jQuery: any;
+import { AgePromptService } from "@app/_services/age-prompt.service";
 
 describe("AgePromptComponent", () => {
     beforeEach(() => {
@@ -41,9 +39,13 @@ describe("AgePromptComponent", () => {
             .then(({ fixture }) => {
                 // Stub updateUserInfo method
                 const componentInstance = fixture.componentInstance;
-                const updateUserInfoStub = cy.stub(componentInstance, "updateUserInfo").resolves(true);
+                const updateUserInfoStub = cy
+                    .stub(componentInstance, "updateUserInfo")
+                    .resolves(true);
+                const modalService = fixture.debugElement.injector.get(ModalService);
+
                 cy.wrap(updateUserInfoStub).as("updateUserInfoSpy");
-                jQuery("#age-prompt").modal("show");
+                modalService.openModal("age-prompt");
 
                 cy.stub(componentInstance, "notifyParentOfChildSignup").resolves(true);
 

@@ -1,24 +1,39 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SettingsService } from "app/_services/settings.service";
-import { ReviewService } from "app/_services/review.service";
-import { ForumService } from "app/_services/forum.service";
-import { environment } from "environments/environment";
-import { LocalizeService } from "app/_services/localize.service";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
+import { EventPromoComponent } from "@app/_partials/event-promo/event-promo.component";
+import { CookieService } from "@app/_services/cookie.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ForumService } from "@app/_services/forum.service";
+import { environment } from "@environments/environment";
+import { LocalizeService } from "@app/_services/localize.service";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 @Component({
     selector: "app-dashboard",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [EventPromoComponent],
     templateUrl: "./dashboard.component.html",
     styleUrls: ["./dashboard.component.scss"],
+    standalone: true,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private registrationService = inject(RegistrationService);
+    private cookieService = inject(CookieService);
+    private loader = inject(Loader);
+    private settingsService = inject(SettingsService);
+    private localStorage = inject(LocalStorageService);
+    private localizeService = inject(LocalizeService);
+    private reviewService = inject(ReviewService);
+    private forumService = inject(ForumService);
+    private breadcrumbsService = inject(BreadcrumbsService);
+
     private userSubscription: Subscription;
     public user: any = {};
     public timeZoneOffset: number = 0;
@@ -33,18 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public showImages: boolean = false;
     public translations: any = null;
 
-    constructor(
-        private router: Router,
-        private registrationService: RegistrationService,
-        private cookieService: CookieService,
-        private loader: Loader,
-        private settingsService: SettingsService,
-        private localStorage: LocalStorageService,
-        private localizeService: LocalizeService,
-        private reviewService: ReviewService,
-        private forumService: ForumService,
-        private breadcrumbsService: BreadcrumbsService,
-    ) {
+    constructor() {
         this.userSubscription = this.registrationService.currentUser.subscribe(
             (user) => (this.user = user),
         );
@@ -53,7 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value: string) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 } else {
                     this.user = JSON.parse(value);
                 }
@@ -77,7 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.settingsService
                     .getAllSettings(this.user.id)

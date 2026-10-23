@@ -1,14 +1,15 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { Loader } from "app/_services/loader.service";
-import { SettingsService } from "app/_services/settings.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { Loader } from "@app/_services/loader.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-gallery",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./gallery.component.html",
     styleUrls: ["./gallery.component.scss"],
     animations: [
@@ -69,25 +70,26 @@ import { SnackbarService } from "app/_services/snackbar.service";
             ),
         ]),
     ],
+    standalone: true,
 })
 export class GalleryComponent implements OnDestroy {
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private snackbarService = inject(SnackbarService);
+
     private gallerySubscription: Subscription;
     private _images: string[] = [];
     public selectedIndex: number = 0;
     private user: any;
     public imageLength: number = 0;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
             })

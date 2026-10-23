@@ -6,8 +6,7 @@ import { KeyboardComponent } from "./keyboard.component";
 import { KeyboardShortcutsComponent } from "./keyboard-shortcuts/keyboard-shortcuts.component";
 
 @NgModule({
-    imports: [CommonModule],
-    declarations: [KeyboardComponent, KeyboardShortcutsComponent],
+    imports: [CommonModule, KeyboardComponent, KeyboardShortcutsComponent],
     exports: [KeyboardComponent, KeyboardShortcutsComponent],
 })
 export class KeyboardModule {

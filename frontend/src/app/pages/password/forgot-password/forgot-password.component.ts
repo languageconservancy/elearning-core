@@ -1,31 +1,42 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from "@angular/core";
+import {
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
 
-import { ResetPasswordService } from "app/_services/reset-password.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { SiteImageComponent } from "@app/_partials/site-image/site-image.component";
+import { ResetPasswordService } from "@app/_services/reset-password.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-forgot-password",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [PageTitleComponent, SiteImageComponent, ReactiveFormsModule],
     templateUrl: "./forgot-password.component.html",
     styleUrls: ["./forgot-password.component.scss"],
+    standalone: true,
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
+    private resetPasswordService = inject(ResetPasswordService);
+    private loader = inject(Loader);
+    private snackbarService = inject(SnackbarService);
+
     public resetForm: UntypedFormGroup;
     public passwordReset: boolean = false;
     public passMsg: string = "";
 
-    constructor(
-        private resetPasswordService: ResetPasswordService,
-        private loader: Loader,
-        private snackbarService: SnackbarService,
-    ) {}
-
     ngOnInit() {
         const emailRegex = `[A-Za-z0-9_]+([\.-]?[A-Za-z0-9_]+)*@[A-Za-z0-9_]+([\.-]?[A-Za-z0-9_]+)*(\.[A-Za-z_]{2,3})+`;
         this.resetForm = new UntypedFormGroup({
-            email: new UntypedFormControl("", [Validators.required, Validators.pattern(emailRegex)]),
+            email: new UntypedFormControl("", [
+                Validators.required,
+                Validators.pattern(emailRegex),
+            ]),
         });
 
         //hide the mobile overlay and always allow reset password functionality

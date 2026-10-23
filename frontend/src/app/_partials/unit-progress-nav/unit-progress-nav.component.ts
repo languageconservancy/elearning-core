@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     OnInit,
     ViewChild,
@@ -7,15 +8,16 @@ import {
     Output,
     EventEmitter,
 } from "@angular/core";
-import { environment } from "environments/environment";
-import { Settings } from "app/_constants/app.constants";
+import { environment } from "@environments/environment";
+import { TimerComponent } from "@app/_partials/timer/timer.component";
+import { Settings } from "@app/_constants/app.constants";
 import {
     Answer,
     Unit,
     Question,
     QuestionQuestion,
     Exercise,
-} from "app/pages/learning/unit/unit.component";
+} from "@app/pages/learning/unit/unit.component";
 
 export enum ActivityState {
     NotAttempted = "Not Attempted",
@@ -59,8 +61,11 @@ export type ExerciseBlockMap = {
 
 @Component({
     selector: "app-unit-progress-nav",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [TimerComponent],
     templateUrl: "./unit-progress-nav.component.html",
     styleUrls: ["./unit-progress-nav.component.css"],
+    standalone: true,
 })
 export class UnitProgressNavComponent implements OnInit {
     @Input() unit: Unit;

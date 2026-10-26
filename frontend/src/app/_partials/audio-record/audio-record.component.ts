@@ -1,19 +1,31 @@
-import { Component, AfterViewInit, ChangeDetectorRef } from "@angular/core";
-import * as MRecordRTC from "recordrtc";
+import {
+    ChangeDetectionStrategy,
+    AfterViewInit,
+    inject,
+    Component,
+    ChangeDetectorRef,
+} from "@angular/core";
+import { MRecordRTC } from "recordrtc";
 import * as DetectRTC from "detectrtc";
 import WaveSurfer from "wavesurfer.js";
 import Microphone from "wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js";
 import { Subscription } from "rxjs";
 
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
 
 @Component({
     selector: "app-audio-record",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./audio-record.component.html",
     styleUrls: ["./audio-record.component.scss"],
+    standalone: true,
 })
 export class AudioRecordComponent implements AfterViewInit {
+    private ref = inject(ChangeDetectorRef);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+
     public audio: any;
     public recorder: any;
     public microphone: any;
@@ -29,11 +41,7 @@ export class AudioRecordComponent implements AfterViewInit {
 
     public popupSubscription: Subscription;
 
-    constructor(
-        private ref: ChangeDetectorRef,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-    ) {
+    constructor() {
         WaveSurfer.microphone = Microphone;
 
         this.popupSubscription = this.lessonService.popup.subscribe((res) => {
@@ -63,9 +71,7 @@ export class AudioRecordComponent implements AfterViewInit {
         this.btnStopRecording = document.getElementById("btn-stop-recording");
         this.btnReleaseMicrophone = document.querySelector("#btn-release-microphone");
         DetectRTC.load(() => {
-            DetectRTC.hasMicrophone;
-            DetectRTC.isWebsiteHasMicrophonePermissions;
-            DetectRTC.audioInputDevices;
+            this.ref.detectChanges();
         });
         this.ref.detectChanges();
         this.setUpWaveSurfer();
@@ -103,7 +109,10 @@ export class AudioRecordComponent implements AfterViewInit {
             bufferSize: 16384,
         };
 
-        if (navigator.platform && navigator.platform.toString().toLowerCase().indexOf("win") === -1) {
+        if (
+            navigator.platform &&
+            navigator.platform.toString().toLowerCase().indexOf("win") === -1
+        ) {
             options.sampleRate = 44100; // or 44100 or remove this line for default
         }
 

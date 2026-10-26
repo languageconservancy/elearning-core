@@ -1,18 +1,38 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
 import { Subscription } from "rxjs";
-import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import {
+    ReactiveFormsModule,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators,
+} from "@angular/forms";
 
-import { ClassroomService } from "app/_services/classroom.service";
-import { TeacherService } from "app/_services/teacher.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { TeacherService } from "@app/_services/teacher.service";
+import { Loader } from "@app/_services/loader.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-classroom-select",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ReactiveFormsModule],
     templateUrl: "./classroom-select.component.html",
     styleUrls: ["./classroom-select.component.scss"],
+    standalone: true,
 })
 export class ClassroomSelectComponent implements OnInit, OnDestroy {
+    private classroomService = inject(ClassroomService);
+    private loader = inject(Loader);
+    private teacherService = inject(TeacherService);
+    private snackbarService = inject(SnackbarService);
+
     private schoolSubscription: Subscription;
     private teacherSubscription: Subscription;
     private classroomSubscription: Subscription;
@@ -27,12 +47,7 @@ export class ClassroomSelectComponent implements OnInit, OnDestroy {
     public currentClassroom: any = [];
     public currentClassroomIndex: number = -1;
 
-    constructor(
-        private classroomService: ClassroomService,
-        private loader: Loader,
-        private teacherService: TeacherService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.teacherSubscription = this.teacherService.teacherObj.subscribe((teacher) => {
             this.teacher = teacher;
         });
@@ -60,9 +75,15 @@ export class ClassroomSelectComponent implements OnInit, OnDestroy {
         this.getTeacherLevels();
         this.ClassroomForm = new UntypedFormGroup({
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            name: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            name: new UntypedFormControl("", [
+                Validators.required.bind(Validators),
+                this.validateBlankValue.bind(this),
+            ]),
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            startDate: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            startDate: new UntypedFormControl("", [
+                Validators.required.bind(Validators),
+                this.validateBlankValue.bind(this),
+            ]),
             level: new UntypedFormControl("0"),
             endDate: new UntypedFormControl("0"),
         });
@@ -170,11 +191,14 @@ export class ClassroomSelectComponent implements OnInit, OnDestroy {
                     Validators.required,
                     this.validateBlankValue.bind(this),
                 ]),
-                startDate: new UntypedFormControl(this.currentClassroom.start_date.substring(0, 10), [
-                    // eslint-disable-next-line @typescript-eslint/unbound-method
-                    Validators.required,
-                    this.validateBlankValue.bind(this),
-                ]),
+                startDate: new UntypedFormControl(
+                    this.currentClassroom.start_date.substring(0, 10),
+                    [
+                        // eslint-disable-next-line @typescript-eslint/unbound-method
+                        Validators.required,
+                        this.validateBlankValue.bind(this),
+                    ],
+                ),
                 endDate: new UntypedFormControl(this.currentClassroom.end_date.substring(0, 10)),
             });
         }

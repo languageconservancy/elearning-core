@@ -1,26 +1,50 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    OnInit,
+    OnDestroy,
+    QueryList,
+    ViewChildren,
+    inject,
+    Input,
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { CookieService } from "@app/_services/cookie.service";
 import { Subscription } from "rxjs";
 
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewService } from "app/_services/review.service";
-import { ExerciseService } from "app/_services/exercise.service";
-import { AnswerType } from "app/shared/utils/elearning-types";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { KeyboardConfigService } from "app/_services/keyboard-config.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { AudioService } from "app/_services/audio.service";
-
-declare let jQuery: any;
+import { NonSelectableCardComponent } from "@app/shared/non-selectable-card/non-selectable-card.component";
+import { LessonsService } from "@app/_services/lessons.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ExerciseService } from "@app/_services/exercise.service";
+import { AnswerType } from "@app/shared/utils/elearning-types";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { KeyboardConfigService } from "@app/_services/keyboard-config.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { AudioService } from "@app/_services/audio.service";
 
 @Component({
     selector: "app-anagram",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule, NonSelectableCardComponent],
     templateUrl: "./anagram.component.html",
     styleUrls: ["./anagram.component.scss"],
     providers: [ExerciseService],
+    standalone: true,
 })
 export class AnagramComponent implements OnInit, OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    public exerciseService = inject(ExerciseService);
+    public audioService = inject(AudioService);
+    private localStorage = inject(LocalStorageService);
+    private keyboardService = inject(KeyboardService);
+    private keyboardConfigService = inject(KeyboardConfigService);
+
+    @ViewChildren("letterInput") letterInputs: QueryList<ElementRef<HTMLInputElement>>;
+
     public answerSubmitted: boolean = false;
     public mainResponse: string = ""; // target language ('l') or English ('e')
     public inputCountArray: any = []; // array of correct answers with replacement of non-standard characters
@@ -43,22 +67,13 @@ export class AnagramComponent implements OnInit, OnDestroy {
     private keyboardTypingSubscription: Subscription; // subscription to typing
     private specifiedService; // service to use (lesson or review)
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private reviewService: ReviewService,
-        public exerciseService: ExerciseService,
-        public audioService: AudioService,
-        private localStorage: LocalStorageService,
-        private keyboardService: KeyboardService,
-        private keyboardConfigService: KeyboardConfigService,
-    ) {
+    constructor() {
         // Ensure the user is logged in
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.exerciseService.user = JSON.parse(value);
             })
@@ -490,13 +505,17 @@ export class AnagramComponent implements OnInit, OnDestroy {
                     this.activeInputIndex < this.inputCountArray.length - 1
                 ) {
                     this.activeInputIndex++;
-                    jQuery("#input-" + this.activeInputIndex).focus();
+                    this.focusActiveInput();
                 }
             } else {
                 this.answer[this.activeInputIndex] = key.key;
             }
         }
         key.disabled = true;
+    }
+
+    private focusActiveInput(): void {
+        this.letterInputs.get(this.activeInputIndex)?.nativeElement.focus();
     }
 
     /**

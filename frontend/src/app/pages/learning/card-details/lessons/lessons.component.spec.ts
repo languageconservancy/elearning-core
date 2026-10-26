@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 import {
     SocialAuthServiceConfig,
@@ -9,14 +9,14 @@ import {
     AmazonLoginProvider,
 } from "@abacritt/angularx-social-login";
 
-import { CookieService } from "app/_services/cookie.service";
-import { PartialsModule } from "app/_partials/partials.module";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { AudioService } from "app/_services/audio.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { PipesModule } from "app/_pipes/pipes.module";
+import { CookieService } from "@app/_services/cookie.service";
+import { PartialsModule } from "@app/_partials/partials.module";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { AudioService } from "@app/_services/audio.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { PipesModule } from "@app/_pipes/pipes.module";
 import { LessonsComponent } from "./lessons.component";
 
 describe("LessonsComponent", () => {
@@ -143,6 +143,7 @@ describe("LessonsComponent", () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [LessonsComponent],
+            imports: [RouterTestingModule, PartialsModule, PipesModule],
             providers: [
                 CookieService,
                 LessonsService,
@@ -170,8 +171,8 @@ describe("LessonsComponent", () => {
                         ],
                     } as SocialAuthServiceConfig,
                 },
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
             ],
-            imports: [RouterTestingModule, HttpClientModule, PartialsModule, PipesModule],
         }).compileComponents();
     }));
 

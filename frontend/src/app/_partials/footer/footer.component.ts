@@ -1,19 +1,29 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ForumService } from "app/_services/forum.service";
-import { ReviewService } from "app/_services/review.service";
-import { environment } from "environments/environment";
-import { SiteSettingsService } from "app/_services/site-settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ForumService } from "@app/_services/forum.service";
+import { ReviewService } from "@app/_services/review.service";
+import { environment } from "@environments/environment";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 @Component({
     selector: "app-footer",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./footer.component.html",
     styleUrls: ["./footer.component.scss"],
+    standalone: true,
 })
 export class FooterComponent {
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private thisRoute = inject(ActivatedRoute);
+    private forumService = inject(ForumService);
+    private cookieService = inject(CookieService);
+    private reviewService = inject(ReviewService);
+    private siteSettingsService = inject(SiteSettingsService);
+
     public user: any;
     public features: any = null;
     public canAccessVillage: boolean = false;
@@ -21,22 +31,12 @@ export class FooterComponent {
     public environment = environment;
     public copyrightDate = new Date().getFullYear();
 
-    constructor(
-        private router: Router,
-        private localStorage: LocalStorageService,
-        private thisRoute: ActivatedRoute,
-        private forumService: ForumService,
-        private cookieService: CookieService,
-        private reviewService: ReviewService,
-        private siteSettingsService: SiteSettingsService,
-    ) {}
-
-    ngOnInit() {
+    OnInit() {
         this.cookieService
             .get("AuthUser")
             .then(async (value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
                 this.canAccessVillage = await this.siteSettingsService.canAccessVillage(

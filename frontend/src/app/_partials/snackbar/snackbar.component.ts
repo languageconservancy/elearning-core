@@ -1,11 +1,15 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-snackbar",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [SafeHtmlPipe],
     templateUrl: "./snackbar.component.html",
     styleUrls: ["./snackbar.component.scss"],
+    standalone: true,
 })
 
 /**
@@ -16,6 +20,8 @@ import { SnackbarService } from "app/_services/snackbar.service";
  * of the message to display and an average reading speed of 50ms per character.
  */
 export class SnackbarComponent implements OnInit, OnDestroy {
+    private snackbarService = inject(SnackbarService);
+
     protected SNACKBAR_AVE_READING_SPEED_MS_PER_CHAR: number = 50;
     protected SNACKBAR_TIMEOUT_MIN_MS: number = 2500;
     protected SNACKBAR_TIMEOUT_MAX_MS: number = 5000;
@@ -24,8 +30,6 @@ export class SnackbarComponent implements OnInit, OnDestroy {
     public snackbarMsg: string = "";
     public snackbarStatus: boolean = false;
     private snackbarSubscription: Subscription;
-
-    constructor(private snackbarService: SnackbarService) {}
 
     ngOnInit(): void {
         // Wait for snackbar messages and when one comes, display the message,

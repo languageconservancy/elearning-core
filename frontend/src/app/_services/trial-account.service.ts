@@ -1,17 +1,15 @@
-import { Injectable } from "@angular/core";
-import { RegistrationService } from "app/_services/registration.service";
-import { LoginService } from "app/_services/login.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { RegistrationData, SiteLoginData } from "app/shared/utils/elearning-types";
+import { inject, Injectable } from "@angular/core";
+import { RegistrationService } from "@app/_services/registration.service";
+import { LoginService } from "@app/_services/login.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { RegistrationData, SiteLoginData } from "@app/shared/utils/elearning-types";
 
 @Injectable({
     providedIn: "root",
 })
 export class TrialAccountService {
-    constructor(
-        private registrationService: RegistrationService,
-        private loginService: LoginService,
-    ) {}
+    private registrationService = inject(RegistrationService);
+    private loginService = inject(LoginService);
 
     generateTrialAccountRegistrationData(email: string): RegistrationData {
         return {

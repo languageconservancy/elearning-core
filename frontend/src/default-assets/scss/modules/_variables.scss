@@ -1,3 +1,4 @@
+@use "sass:map";
 @use "./theme";
 
 $white: #ffffff;
@@ -18,11 +19,9 @@ $font-language: Trebuchet MS, sans-serif;
 $font-brand: MPLUSRounded1c;
 $font-secondary: ArialRoundedMTBold;
 
-$enable-responsive-font-sizes: true;
-
 $generic-size: 1rem;
 $generic-sizes: ();
-$generic-sizes: map-merge(
+$generic-sizes: map.merge(
     (
         0: 0,
         1: (
@@ -71,7 +70,7 @@ $generic-sizes: map-merge(
 
 $decimal-size: 1rem;
 $decimal-sizes: ();
-$decimal-sizes: map-merge(
+$decimal-sizes: map.merge(
     (
         0: 0,
         1: (
@@ -123,7 +122,7 @@ $decimal-sizes: map-merge(
 
 $integer-size: 1rem;
 $integer-sizes: ();
-$integer-sizes: map-merge(
+$integer-sizes: map.merge(
     (
         0: 0,
         1: (
@@ -192,7 +191,7 @@ $integer-sizes: map-merge(
 // Spacer levels
 $spacer: 1rem;
 $spacers: ();
-$spacers: map-merge(
+$spacers: map.merge(
     (
         0: 0,
         1: (
@@ -242,7 +241,7 @@ $spacers: map-merge(
 // Bootstrap OVERRIDE
 // This variable affects the `.h-*` and `.w-*` classes.
 $sizes: () !default;
-$sizes: map-merge(
+$sizes: map.merge(
     (
         10: 10%,
         15: 15%,
@@ -277,5 +276,3 @@ $app-orientations: (
 $primary: theme.$primary-color;
 $success: theme.$correct-color;
 $danger: theme.$incorrect-color;
-
-// $enable-responsive-font-sizes: true;

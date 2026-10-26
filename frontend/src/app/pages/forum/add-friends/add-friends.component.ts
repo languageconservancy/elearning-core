@@ -1,19 +1,31 @@
-import { Component, AfterViewInit, Renderer2 } from "@angular/core";
+import { ChangeDetectionStrategy, Component, AfterViewInit, inject } from "@angular/core";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
 
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { FindFriendsService } from "app/_services/find-friends.service";
-import { SettingsService } from "app/_services/settings.service";
+import { FriendSidebarComponent } from "../_partials/friend-sidebar/friend-sidebar.component";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { CookieService } from "@app/_services/cookie.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { FindFriendsService } from "@app/_services/find-friends.service";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-add-friends",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FriendSidebarComponent, PageTitleComponent, FormsModule, ReactiveFormsModule],
     templateUrl: "./add-friends.component.html",
     styleUrls: ["./add-friends.component.scss"],
+    standalone: true,
 })
 export class AddFriendsComponent implements AfterViewInit {
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private findFriendsService = inject(FindFriendsService);
+    private settingsService = inject(SettingsService);
+
     public user: any = {};
     public friends: any = [];
     public pagenumber = 1;
@@ -26,16 +38,7 @@ export class AddFriendsComponent implements AfterViewInit {
     public searchItem: any = {
         search: "",
     };
-    constructor(
-        private forumService: ForumService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private router: Router,
-        private renderer: Renderer2,
-        private localStorage: LocalStorageService,
-        private findFriendsService: FindFriendsService,
-        private settingsService: SettingsService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
@@ -92,7 +95,10 @@ export class AddFriendsComponent implements AfterViewInit {
         }
 
         this.friends = Object.assign([], this.allUsers).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            );
         });
     }
     clear() {

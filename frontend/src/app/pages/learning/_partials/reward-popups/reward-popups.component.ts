@@ -1,20 +1,23 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 import { Subscription } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { ReviewService } from "app/_services/review.service";
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { AudioService } from "app/_services/audio.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { LocalizeService } from "app/_services/localize.service";
-import * as App from "app/_constants/app.constants";
+import { SocialShareComponent } from "@app/_partials/social-share/social-share.component";
+import { CookieService } from "@app/_services/cookie.service";
+import { ReviewService } from "@app/_services/review.service";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { AudioService } from "@app/_services/audio.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { LocalizeService } from "@app/_services/localize.service";
+import * as App from "@app/_constants/app.constants";
 
 @Component({
     selector: "app-reward-popups",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [SocialShareComponent],
     templateUrl: "./reward-popups.component.html",
     styleUrls: ["./reward-popups.component.scss"],
     animations: [
@@ -22,7 +25,6 @@ import * as App from "app/_constants/app.constants";
         trigger("fadeScaleBounceAnimation", [
             // static state after enter
             state("initial", style({ opacity: 1, transform: "translateY(0)" })),
-
             // Start small and grow to normal size
             transition(":enter", [
                 animate(
@@ -37,16 +39,27 @@ import * as App from "app/_constants/app.constants";
                     ]),
                 ),
             ]),
-
             transition(":enter", [style({ opacity: 0 })]),
-
             transition(":leave", [
-                animate(App.Animation.EXERCISE_POPUP_FADE_OUT_TIME_MS, style({ opacity: 0, transform: "scale(0)" })),
+                animate(
+                    App.Animation.EXERCISE_POPUP_FADE_OUT_TIME_MS,
+                    style({ opacity: 0, transform: "scale(0)" }),
+                ),
             ]),
         ]),
     ],
+    standalone: true,
 })
 export class RewardPopupsComponent implements OnDestroy {
+    private lessonService = inject(LessonsService);
+    private loader = inject(Loader);
+    private reviewService = inject(ReviewService);
+    private cookieService = inject(CookieService);
+    private keyboardService = inject(KeyboardService);
+    private localStorage = inject(LocalStorageService);
+    private localizeService = inject(LocalizeService);
+    public audioService = inject(AudioService);
+
     public popupSubscription: Subscription;
     public wrongAnswerSubscription: Subscription;
     private keyboardSubmitOrCloseSubscription: Subscription;
@@ -74,16 +87,7 @@ export class RewardPopupsComponent implements OnDestroy {
     public OwoksapeUtils = OwoksapeUtils;
     private closeCorrectAnswerPopupTimeoutId = undefined;
 
-    constructor(
-        private lessonService: LessonsService,
-        private loader: Loader,
-        private reviewService: ReviewService,
-        private cookieService: CookieService,
-        private keyboardService: KeyboardService,
-        private localStorage: LocalStorageService,
-        private localizeService: LocalizeService,
-        public audioService: AudioService,
-    ) {
+    constructor() {
         this.wrongAnswerSubscription = this.lessonService.wrongCard.subscribe((res) => {
             if (res) {
                 this.reviewCards = res;
@@ -104,7 +108,7 @@ export class RewardPopupsComponent implements OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
                 this.popupSubscription = this.lessonService.popup.subscribe((res) => {
@@ -114,7 +118,10 @@ export class RewardPopupsComponent implements OnDestroy {
                                 this.showPopup = true;
                             } else if (!res.popup_status) {
                                 this.showPopup = false;
-                                if (this.popupType == "exerciseSetPerfect" || this.popupType == "exerciseSet") {
+                                if (
+                                    this.popupType == "exerciseSetPerfect" ||
+                                    this.popupType == "exerciseSet"
+                                ) {
                                     this.closePopupExSet();
                                 } else {
                                     this.closePopup("exercise question");
@@ -136,7 +143,11 @@ export class RewardPopupsComponent implements OnDestroy {
                     }
 
                     // Hide correct popup after a bit, if a timeout isn't already set
-                    if (this.showPopup && this.popupStatus && !this.closeCorrectAnswerPopupTimeoutId) {
+                    if (
+                        this.showPopup &&
+                        this.popupStatus &&
+                        !this.closeCorrectAnswerPopupTimeoutId
+                    ) {
                         this.closeCorrectAnswerPopupTimeoutId = setTimeout(() => {
                             if (this.showPopup != false) {
                                 this.closePopup("exercise question");
@@ -159,73 +170,80 @@ export class RewardPopupsComponent implements OnDestroy {
 
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
-            if (!!this.keyboardSubmitOrCloseSubscription && !this.keyboardSubmitOrCloseSubscription.closed) {
+            if (
+                !!this.keyboardSubmitOrCloseSubscription &&
+                !this.keyboardSubmitOrCloseSubscription.closed
+            ) {
                 return;
             }
             this.keyboardUnitPopupHighlightIndex = -1;
-            this.keyboardSubmitOrCloseSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                switch (this.popupType) {
-                    case "lesson":
-                        if (this.showPopup) {
-                            this.closePopup("lesson");
-                        }
-                    case "exercise":
-                        if (this.showPopup) {
-                            this.closePopup("exercise question");
-                        }
-                        break;
-                    case "exerciseSetPerfect":
-                    case "exerciseSet":
-                        this.closePopupExSet();
-                        break;
-                    case "unit":
-                        if (this.keyboardUnitPopupHighlightIndex == 1) {
-                            this.closeUnitPopup("lessons-and-exercises");
-                        } else {
-                            if (this.isClassroom) {
-                                this.closeUnitPopup("classroom");
-                            } else {
-                                this.closeUnitPopup("review");
+            this.keyboardSubmitOrCloseSubscription =
+                this.keyboardService.submitOrCloseEvent.subscribe(() => {
+                    switch (this.popupType) {
+                        case "lesson":
+                            if (this.showPopup) {
+                                this.closePopup("lesson");
                             }
-                        }
-                        break;
-                    default:
-                        if (this.showPopup) {
-                            console.warn("Oops! Got unhandled popupType");
-                        }
-                        break;
-                }
-            });
-
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (this.popupType != "unit" && this.reviewCards.length > 1) {
-                    if (event.shiftKey) {
-                        this.previous();
-                    } else {
-                        this.next();
+                        case "exercise":
+                            if (this.showPopup) {
+                                this.closePopup("exercise question");
+                            }
+                            break;
+                        case "exerciseSetPerfect":
+                        case "exerciseSet":
+                            this.closePopupExSet();
+                            break;
+                        case "unit":
+                            if (this.keyboardUnitPopupHighlightIndex == 1) {
+                                this.closeUnitPopup("lessons-and-exercises");
+                            } else {
+                                if (this.isClassroom) {
+                                    this.closeUnitPopup("classroom");
+                                } else {
+                                    this.closeUnitPopup("review");
+                                }
+                            }
+                            break;
+                        default:
+                            if (this.showPopup) {
+                                console.warn("Oops! Got unhandled popupType");
+                            }
+                            break;
                     }
-                } else if (this.popupType == "unit") {
-                    if (event.shiftKey) {
-                        this.keyboardUnitPopupHighlightIndex = OwoksapeUtils.decrementWrap(
-                            this.keyboardUnitPopupHighlightIndex,
-                            0,
-                            1,
-                        );
-                    } else {
-                        this.keyboardUnitPopupHighlightIndex = OwoksapeUtils.incrementWrap(
-                            this.keyboardUnitPopupHighlightIndex,
-                            0,
-                            1,
-                        );
-                    }
-                }
-            });
+                });
 
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (!!this.activeCard && !!this.activeCard.FullAudioUrl) {
-                    this.audioService.playPauseAudio(this.activeCard.FullAudioUrl);
-                }
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (this.popupType != "unit" && this.reviewCards.length > 1) {
+                        if (event.shiftKey) {
+                            this.previous();
+                        } else {
+                            this.next();
+                        }
+                    } else if (this.popupType == "unit") {
+                        if (event.shiftKey) {
+                            this.keyboardUnitPopupHighlightIndex = OwoksapeUtils.decrementWrap(
+                                this.keyboardUnitPopupHighlightIndex,
+                                0,
+                                1,
+                            );
+                        } else {
+                            this.keyboardUnitPopupHighlightIndex = OwoksapeUtils.incrementWrap(
+                                this.keyboardUnitPopupHighlightIndex,
+                                0,
+                                1,
+                            );
+                        }
+                    }
+                });
+
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (!!this.activeCard && !!this.activeCard.FullAudioUrl) {
+                        this.audioService.playPauseAudio(this.activeCard.FullAudioUrl);
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitOrCloseSubscription) {
                 this.keyboardSubmitOrCloseSubscription.unsubscribe();
@@ -494,7 +512,12 @@ export class RewardPopupsComponent implements OnDestroy {
     closePopupExSet() {
         // this.lessonService.setPopup({ popUpClosed: true, exSet: true, containsWrong: (this.popupType == 'exerciseSet') });
         this.cancelClosePopupTimeout();
-        this.lessonService.setPopup({ popUpClosed: true, type: "exercise set", exSet: true, containsWrong: false });
+        this.lessonService.setPopup({
+            popUpClosed: true,
+            type: "exercise set",
+            exSet: true,
+            containsWrong: false,
+        });
         this.clearAll();
     }
 

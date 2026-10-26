@@ -2,26 +2,13 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
 import { BaseService } from "./base.service";
-import { CookieService } from "./cookie.service";
-import * as API from "app/_constants/api.constants";
-import { LocalStorageService } from "./local-storage.service";
-import { Router } from "@angular/router";
-import { SocialAuthService } from "@abacritt/angularx-social-login";
-import { ApiResponse } from "app/shared/utils/elearning-types";
+import * as API from "@app/_constants/api.constants";
+import { ApiResponse } from "@app/shared/utils/elearning-types";
 
 @Injectable()
 export class RegistrationService extends BaseService {
     private userSubject = new BehaviorSubject<any>({});
     public currentUser = this.userSubject.asObservable();
-
-    constructor(
-        public cookieService: CookieService,
-        protected localStorageService: LocalStorageService,
-        protected router: Router,
-        protected socialAuthService: SocialAuthService,
-    ) {
-        super(cookieService, localStorageService, router, socialAuthService);
-    }
 
     register(data: any) {
         const promise = new Promise((resolve, reject) => {
@@ -38,7 +25,7 @@ export class RegistrationService extends BaseService {
                 })
                 .catch((err) => {
                     console.error("[register] ", err);
-                    reject(err);
+                    reject(err instanceof Error ? err : new Error(String(err)));
                 });
         });
         return promise;
@@ -51,7 +38,7 @@ export class RegistrationService extends BaseService {
                     resolve(res);
                 },
                 (msg) => {
-                    reject(msg);
+                    reject(msg instanceof Error ? msg : new Error(String(msg)));
                 },
             );
         });

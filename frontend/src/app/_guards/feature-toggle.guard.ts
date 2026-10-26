@@ -1,6 +1,6 @@
 import { CanActivateFn, Router } from "@angular/router";
 import { inject } from "@angular/core";
-import { SiteSettingsService } from "app/_services/site-settings.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
 
 export const FeatureToggleGuard: (featureKey: string) => CanActivateFn = (featureKey) => {
     return async () => {

@@ -1,15 +1,17 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { Router } from "@angular/router";
-import { environment } from "environments/environment";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-info-space",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./info-space.component.html",
     styleUrls: ["./info-space.component.scss"],
+    standalone: true,
 })
 export class InfoSpaceComponent {
+    private router = inject(Router);
     public environment = environment;
-    constructor(private router: Router) {}
 
     gotoUrl(url: any) {
         void this.router.navigate(["about/" + url]);

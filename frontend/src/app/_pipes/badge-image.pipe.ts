@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
     name: "badgeImage",
+    standalone: true,
 })
 export class BadgeImagePipe implements PipeTransform {
     transform(value: any): any {

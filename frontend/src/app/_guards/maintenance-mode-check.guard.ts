@@ -1,16 +1,14 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 
-import { CookieService } from "app/_services/cookie.service";
-import { SettingsService } from "app/_services/settings.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Injectable()
 export class MaintenanceModeCheckGuard {
-    constructor(
-        private settingsService: SettingsService,
-        private router: Router,
-    ) {}
+    private settingsService = inject(SettingsService);
+    private router = inject(Router);
 
     canActivate(): Observable<boolean> | Promise<boolean> | boolean {
         return this.settingsService
@@ -41,11 +39,9 @@ export class MaintenanceModeCheckGuard {
 
 @Injectable()
 export class MaintenanceModeGuard {
-    constructor(
-        private settingsService: SettingsService,
-        private router: Router,
-        private cookieService: CookieService,
-    ) {}
+    private settingsService = inject(SettingsService);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
 
     canActivate(): Observable<boolean> | Promise<boolean> | boolean {
         return this.settingsService
@@ -58,7 +54,7 @@ export class MaintenanceModeGuard {
                         .get("AuthUser")
                         .then((value) => {
                             if (value == "") {
-                                throw value;
+                                throw new Error(value);
                             }
                             // user already signed in. route to dashboard.
                             void this.router.navigate(["dashboard"]);

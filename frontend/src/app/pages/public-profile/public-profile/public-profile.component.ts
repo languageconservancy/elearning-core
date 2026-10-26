@@ -1,16 +1,26 @@
-import { Component, OnDestroy, AfterViewInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnDestroy,
+    AfterViewInit,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { trigger, transition, query, style, animate, group } from "@angular/animations";
 import { Subscription } from "rxjs";
 
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { Loader } from "app/_services/loader.service";
-import { ForumService } from "app/_services/forum.service";
-import { BadgeService } from "app/_services/badge.service";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { BadgeImagePipe } from "@app/_pipes/badge-image.pipe";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { Loader } from "@app/_services/loader.service";
+import { ForumService } from "@app/_services/forum.service";
+import { BadgeService } from "@app/_services/badge.service";
 
 @Component({
     selector: "app-public-profile",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [PageTitleComponent, BadgeImagePipe],
     templateUrl: "./public-profile.component.html",
     styleUrls: ["./public-profile.component.scss"],
     animations: [
@@ -71,8 +81,16 @@ import { BadgeService } from "app/_services/badge.service";
             ),
         ]),
     ],
+    standalone: true,
 })
 export class PublicProfileComponent implements OnDestroy, AfterViewInit {
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private badgeService = inject(BadgeService);
+    private settingsService = inject(SettingsService);
+    private forumService = inject(ForumService);
+
     public publicUser: any = {};
     public profile: any = {};
     public userId: number = null;
@@ -85,14 +103,7 @@ export class PublicProfileComponent implements OnDestroy, AfterViewInit {
 
     private profileSub: Subscription;
 
-    constructor(
-        private loader: Loader,
-        private router: Router,
-        private localStorage: LocalStorageService,
-        private badgeService: BadgeService,
-        private settingsService: SettingsService,
-        private forumService: ForumService,
-    ) {
+    constructor() {
         this.profileSub = this.settingsService.currentProfile.subscribe((res) => {
             if (res && Object.keys(res).length > 0) {
                 this.userId = res.profile_id;

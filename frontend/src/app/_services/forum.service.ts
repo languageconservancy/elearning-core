@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Subject } from "rxjs";
 
 import { BaseService } from "./base.service";
-import * as API from "app/_constants/api.constants";
+import * as API from "@app/_constants/api.constants";
 
 @Injectable()
 export class ForumService extends BaseService {

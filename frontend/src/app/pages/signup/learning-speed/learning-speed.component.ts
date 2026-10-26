@@ -1,44 +1,48 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { LearningSpeedService } from "app/_services/learning-speed.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { environment } from "environments/environment";
+import { LearningSpeedService } from "@app/_services/learning-speed.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-learning-speed",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule],
     templateUrl: "./learning-speed.component.html",
     styleUrls: ["./learning-speed.component.scss"],
+    standalone: true,
 })
 export class LearningSpeedComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    public learningSpeedService = inject(LearningSpeedService);
+    private registrationService = inject(RegistrationService);
+
     public environment = environment;
     private userSubscription: Subscription;
     public userId: string;
     public speedModel = { selected: null };
     public learningSpeeds: any;
 
-    constructor(
-        private router: Router,
-        private cookieService: CookieService,
-        public learningSpeedService: LearningSpeedService,
-        private registrationService: RegistrationService,
-        private localStorage: LocalStorageService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
                 void this.router.navigate([""]);
             });
 
-        this.userSubscription = this.registrationService.currentUser.subscribe((userId) => (this.userId = userId.id));
+        this.userSubscription = this.registrationService.currentUser.subscribe(
+            (userId) => (this.userId = userId.id),
+        );
     }
 
     ngOnInit() {
@@ -46,7 +50,7 @@ export class LearningSpeedComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 if (this.userId == "") {
                     const user = JSON.parse(value);

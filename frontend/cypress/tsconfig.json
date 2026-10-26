@@ -11,6 +11,7 @@
         "../cypress.config.ts"
     ],
     "compilerOptions": {
+        "rootDir": "../",
         "isolatedModules": false,
         "sourceMap": false,
         "types": ["node"]

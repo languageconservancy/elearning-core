@@ -1,18 +1,17 @@
-import { Directive, ElementRef, OnInit, OnDestroy } from "@angular/core";
+import { Directive, ElementRef, inject, OnInit, OnDestroy } from "@angular/core";
 import { VirtualKeyboardService } from "../_services/virtual-keyboard.service";
 import { Subscription } from "rxjs";
 
 @Directive({
     selector: "[appAdjustModalForKeyboard]",
+    standalone: true,
 })
 export class AdjustModalForKeyboardDirective implements OnInit, OnDestroy {
+    private el = inject(ElementRef);
+    private keyboardService = inject(VirtualKeyboardService);
+
     private keyboardHeightSubscription: Subscription;
     private currentKeyboardHeight: number = 0;
-
-    constructor(
-        private el: ElementRef,
-        private keyboardService: VirtualKeyboardService,
-    ) {}
 
     ngOnInit() {
         this.keyboardHeightSubscription = this.keyboardService.keyboardHeightChanges.subscribe(

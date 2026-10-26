@@ -28,7 +28,7 @@
 }
 
 .welcome-box {
-    background: url(~/assets/images/background-main.jpg?version=1.1) center no-repeat
+    background: url(/assets/images/background-main.jpg?version=1.1) center no-repeat
         theme.$background;
     min-height: 100vh;
     width: 100vw;
@@ -39,10 +39,12 @@
         overflow-y: visible;
         width: 100%;
     }
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-        display: none;
+    & {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
     @include bootstrap-helpers.media-breakpoint-down(md) {
         @supports (padding-top: env(safe-area-inset-top)) {
@@ -111,11 +113,11 @@
 
 .toure-box {
     padding: 40px 0;
-    background: theme.$ui-panel-light;
+    background-color: theme.$ui-panel-light;
 }
 
 .btn-toure {
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
     font-family: variables.$font-main;
     font-size: 36px;
     border-color: theme.$text-primary;
@@ -127,19 +129,19 @@
 .btn.btn-toure {
     &:hover {
         border-color: transparent;
-        background: theme.$primary-color;
+        background-color: theme.$primary-color;
         box-shadow: none;
     }
 
     &:focus {
         border-color: transparent;
-        background: theme.$primary-color;
+        background-color: theme.$primary-color;
         box-shadow: none;
     }
 
     &:active {
         border-color: transparent;
-        background: theme.$primary-color;
+        background-color: theme.$primary-color;
         box-shadow: none;
     }
 
@@ -147,7 +149,7 @@
         &:not(.disabled) {
             &:active {
                 border-color: transparent;
-                background: theme.$primary-color;
+                background-color: theme.$primary-color;
                 box-shadow: none;
             }
         }
@@ -155,7 +157,7 @@
 }
 
 .bg-white-g {
-    background: theme.$ui-panel-light;
+    background-color: theme.$ui-panel-light;
 }
 
 .social-share {
@@ -259,7 +261,7 @@ a.text-blue-hover {
 }
 
 h2.blue-bg {
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
     font-family: variables.$font-main;
     color: theme.$text-primary-contrast;
     border-radius: 5rem;
@@ -287,7 +289,7 @@ h2.blue-bg {
 
         &:after {
             content: "";
-            background: url(~/assets/images/blue-tick.png) top left no-repeat;
+            background: url(/assets/images/blue-tick.png) top left no-repeat;
             position: absolute;
             top: 7px;
             right: 15px;
@@ -301,7 +303,7 @@ h2.blue-bg {
 
         &:after {
             content: "";
-            background: url(~/assets/images/blue-tick.png) top left no-repeat;
+            background: url(/assets/images/blue-tick.png) top left no-repeat;
             position: absolute;
             top: 0px;
             right: -45px;
@@ -340,47 +342,12 @@ h2.blue-bg {
 
     padding: 1% 3%;
 
-    .custom-radio {
-        .custom-control-indicator {
-            border-radius: 42%;
-        }
-
-        .custom-control-input {
-            &:checked ~ .custom-control-indicator {
-                background-image: none;
-            }
-        }
-    }
-
-    .custom-control-indicator {
-        position: absolute;
-        top: 0.25rem;
-        left: 0;
-        display: block;
-        width: 3rem;
-        height: 2.5rem;
-        pointer-events: none;
-        background-color: variables.$white;
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: 40% 40%;
-        border: 1px solid theme.$primary-color;
-        box-shadow: 5px 5px 5px #00000026;
-    }
-
-    .custom-control {
+    .form-check-label {
         position: relative;
         display: inline-flex;
         min-height: 2.5rem;
         padding-left: 3rem;
         margin-right: 1rem;
-    }
-
-    .custom-control-input {
-        &:checked ~ .custom-control-indicator {
-            color: theme.$text-ui-panel-dark-contrast;
-            background-color: theme.$text-primary;
-        }
     }
 }
 
@@ -415,7 +382,7 @@ h2.blue-bg {
 
 a.invite-frd {
     display: inline-block;
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
     padding: 0.4rem 1rem;
     color: theme.$text-primary-contrast;
     border-radius: 1rem;
@@ -424,7 +391,7 @@ a.invite-frd {
     text-decoration: none;
 
     &:hover {
-        background: theme.$primary-color-dark;
+        background-color: theme.$primary-color-dark;
 
         &::after {
             border-bottom: 0.5em solid theme.$primary-color-dark;
@@ -450,7 +417,7 @@ a.invite-frd {
 
 .has-error {
     border: 1px solid theme.$incorrect-color;
-    background: theme.$incorrect-color-light;
+    background-color: theme.$incorrect-color-light;
 }
 
 select.form-control.input-default {
@@ -494,11 +461,11 @@ select.form-control.input-default {
 }
 
 .no-units {
-    margin: 25px 0;
+    margin: 0 0 25px 0;
     display: inline-block;
     padding: 15px;
     border-radius: 20px;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .find-friend-success {
@@ -542,7 +509,7 @@ select.form-control.input-default {
     bottom: -5px;
     width: 25px;
     height: 25px;
-    background: variables.$white;
+    background-color: variables.$white;
     border-radius: 50%;
     color: theme.$text-ui-panel-dark-contrast;
     text-align: center;
@@ -561,14 +528,14 @@ select.form-control.input-default {
 }
 
 .btn-load-more {
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
     font-family: variables.$font-main;
     cursor: pointer;
     border-radius: 10px;
     box-shadow: 5px 5px 5px #00000026;
 
     &:hover {
-        background: theme.$primary-color;
+        background-color: theme.$primary-color;
         box-shadow: none;
     }
 }
@@ -596,7 +563,7 @@ select.form-control.input-default {
         thead {
             th {
                 border-top: 0px;
-                background: theme.$primary-color;
+                background-color: theme.$primary-color;
                 color: theme.$text-primary-contrast;
                 font-size: 18px;
             }
@@ -691,36 +658,12 @@ table.table-fixedheader {
 .check-n {
     text-align: right;
 
-    .custom-checkbox {
-        .custom-control-indicator {
-            border-radius: 0.55rem;
-            position: absolute;
-            top: 0;
-            right: 0;
-            border: 1px solid variables.$gray;
-        }
-    }
-
-    .custom-control-input {
-        &:checked ~ .custom-control-indicator {
-            i {
-                display: block;
-            }
-
-            color: theme.$text-primary-contrast;
-            background-color: theme.$text-primary;
-        }
-
+    .form-check-input {
         right: 0 !important;
-    }
-
-    .custom-control-indicator {
-        width: 2rem;
-        height: 2rem;
     }
 }
 
-.custom-control-indicator {
+.form-check {
     i.fa.fa-check {
         position: absolute;
         top: 6px;
@@ -795,7 +738,7 @@ table.table-fixedheader {
     font-size: 16px;
     font-weight: 600;
     color: theme.$text-ui-panel-dark-contrast;
-    background: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     padding: 20px;
 }
 
@@ -843,7 +786,7 @@ span.partner-name {
 }
 
 .logo-container-box {
-    background: variables.$white;
+    background-color: variables.$white;
     border-radius: 10px;
     box-shadow: 0 0px 7px rgba(0, 0, 0, 0.3);
     padding: 10px 10px 0;
@@ -922,7 +865,7 @@ span.img-overlay {
     height: 100%;
     width: 100%;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.6);
     top: 1px !important;
     left: 0;
 }
@@ -1151,7 +1094,7 @@ a.edit {
 }
 
 .lrn-drop {
-    background: variables.$white;
+    background-color: variables.$white;
     border-radius: 20px;
     border: 2px solid theme.$primary-color;
     font-weight: bold;
@@ -1163,12 +1106,12 @@ a.edit {
     button {
         border-radius: 2rem;
         border: 0.2rem solid theme.$primary-color;
-        background: theme.$text-ui-panel-dark-contrast;
+        background-color: theme.$text-ui-panel-dark-contrast;
     }
 
     a {
         &:hover {
-            background: theme.$primary-color;
+            background-color: theme.$primary-color;
         }
         border-bottom: 0.1rem theme.$text-ui-panel-light-placeholder solid;
     }
@@ -1181,12 +1124,12 @@ a.edit {
     button {
         border-radius: 2rem;
         border: 0.2rem solid theme.$primary-color;
-        background: theme.$text-ui-panel-dark-contrast;
+        background-color: theme.$text-ui-panel-dark-contrast;
     }
 
     a {
         &:hover {
-            background: theme.$primary-color;
+            background-color: theme.$primary-color;
         }
         border-bottom: 0.1rem theme.$text-ui-panel-light-placeholder solid;
     }
@@ -1230,7 +1173,7 @@ a.edit {
 }
 
 .block-container-box {
-    background: variables.$white;
+    background-color: variables.$white;
     border-radius: 10px;
     padding: 0;
 
@@ -1327,7 +1270,7 @@ a.edit {
 
 .btn-example-block {
     display: inline-block;
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
     font-size: 1.2rem;
     border-color: theme.$primary-color;
     border-radius: 20px 20px;
@@ -1336,7 +1279,7 @@ a.edit {
     width: auto;
     margin-bottom: 2rem;
     &.btn-clicked {
-        background: theme.$primary-color-light;
+        background-color: theme.$primary-color-light;
         border: 1px solid theme.$primary-color-light;
         pointer-events: none;
     }
@@ -1520,7 +1463,7 @@ a.edit {
 }
 
 .dragged-answer {
-    background: theme.$primary-color-light;
+    background-color: theme.$primary-color-light;
     border: 1px solid theme.$primary-color-light;
     pointer-events: none;
 }
@@ -1566,7 +1509,7 @@ a.edit {
 }
 
 .popup-overlay {
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
     right: 0;
@@ -1590,7 +1533,7 @@ a.edit {
 }
 
 .popup-blue-bg {
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
     border: 12px solid theme.$primary-color;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
     border-radius: 15px;
@@ -1660,7 +1603,7 @@ a.edit {
 }
 
 .blue-box-small {
-    background: theme.$primary-color-dark;
+    background-color: theme.$primary-color-dark;
     border: 4px solid theme.$primary-color;
     border-radius: 30px;
     padding: 5px 20px;
@@ -1742,7 +1685,7 @@ a.edit {
 }
 
 .review-blue-box {
-    background: theme.$primary-color-dark;
+    background-color: theme.$primary-color-dark;
     border: 6px solid theme.$primary-color;
     padding: 0.7rem 2rem;
     border-radius: 50px;
@@ -1833,7 +1776,7 @@ a.edit {
 
 .divider-line {
     height: 1px;
-    background: theme.$primary-color-light;
+    background-color: theme.$primary-color-light;
     margin: 15px 0 10px;
 }
 
@@ -2008,7 +1951,7 @@ a.edit {
     }
 
     .title-back-btn {
-        background: url(~/assets/images/back-triangle-icon.png) no-repeat 0 0;
+        background: url(/assets/images/back-triangle-icon.png) no-repeat 0 0;
         width: 2rem;
         height: 2rem;
         display: inline-block;
@@ -2126,7 +2069,7 @@ a.edit {
     top: 5.5rem;
     height: calc(100% - 6.5rem);
     width: 15rem;
-    background: transparent;
+    background-color: transparent;
     z-index: 3;
     border-radius: 15px 0 0 15px;
     box-shadow: -1px 40px 40px rgba(0, 0, 0, 0.5);
@@ -2183,7 +2126,7 @@ a.edit {
 }
 
 #drawer-opener {
-    background-image: url(~/assets/images/user_img.png) !important;
+    background-image: url(/assets/images/user_img.png) !important;
     background-size: cover !important;
     margin: 0 !important;
     top: 50% !important;
@@ -2200,7 +2143,7 @@ a.edit {
     height: 100%;
     width: 100%;
     position: relative;
-    background: #fff;
+    background-color: #fff;
     border-radius: 15px 0 0 15px;
 }
 
@@ -2208,7 +2151,7 @@ a.edit {
     display: flex;
     padding: 10px;
     top: 15px;
-    background: #fff;
+    background-color: #fff;
     border-radius: 15px;
     width: auto;
     input {
@@ -2287,7 +2230,7 @@ a.edit {
     padding-top: 15px;
 
     a {
-        background: url(~/assets/images/white-tick.png) no-repeat 90% 50% #2392d0;
+        background: url(/assets/images/white-tick.png) no-repeat 90% 50% #2392d0;
         padding: 10px 35px 10px 15px;
         font-family: variables.$font-main;
         font-size: 14px;
@@ -2310,7 +2253,7 @@ a.edit {
     padding-top: 15px;
 
     a {
-        background: theme.$primary-color;
+        background-color: theme.$primary-color;
         text-align: center;
         padding: 10px 15px;
         font-family: variables.$font-main;
@@ -2345,7 +2288,7 @@ a.edit {
 }
 
 .owl-state-default {
-    background: transparent;
+    background-color: transparent;
     border: none;
 }
 
@@ -2357,7 +2300,7 @@ a.edit {
 }
 
 .owl-timer-wrapper {
-    background: transparent;
+    background-color: transparent;
     border: 2px solid theme.$primary-color;
     margin-top: 5px;
     border-radius: 15px;
@@ -2374,7 +2317,7 @@ a.edit {
     }
 
     .owl-meridian-btn {
-        background: theme.$primary-color;
+        background-color: theme.$primary-color;
         border: 2px solid theme.$primary-color;
         border-radius: 20%;
         color: theme.$text-ui-panel-dark-contrast;
@@ -2384,7 +2327,7 @@ a.edit {
         outline: none;
 
         &:hover {
-            background: transparent;
+            background-color: transparent;
             border: 2px solid theme.$primary-color;
             color: theme.$text-primary;
         }
@@ -2434,7 +2377,7 @@ a.edit {
 
     &:before {
         border: 2px solid variables.$gray;
-        background: variables.$white !important;
+        background-color: variables.$white !important;
         color: variables.$gray !important;
     }
 }
@@ -2506,7 +2449,7 @@ a.greyed-out {
 
     a {
         color: theme.$text-ui-panel-dark-contrast;
-        background: theme.$primary-color;
+        background-color: theme.$primary-color;
         padding: 10px;
         border-radius: 10px;
         display: inline-block;
@@ -2514,7 +2457,7 @@ a.greyed-out {
         &:hover {
             text-decoration: none;
             color: theme.$text-primary;
-            background: theme.$ui-panel-light;
+            background-color: theme.$ui-panel-light;
         }
     }
 }
@@ -2542,12 +2485,12 @@ a.greyed-out {
     button {
         border-radius: 2rem;
         border: 0.2rem solid theme.$primary-color;
-        background: theme.$text-ui-panel-dark-contrast;
+        background-color: theme.$text-ui-panel-dark-contrast;
     }
     a {
         font-size: 1.5rem;
         &:hover {
-            background: theme.$primary-color;
+            background-color: theme.$primary-color;
         }
         border-bottom: 0.1rem theme.$text-ui-panel-light-placeholder solid;
     }
@@ -2561,7 +2504,7 @@ a.greyed-out {
     .level-dropdown-item {
         &:hover,
         &.active-level {
-            background: theme.$primary-color;
+            background-color: theme.$primary-color;
             color: theme.$text-primary-contrast;
         }
     }
@@ -2586,7 +2529,7 @@ a.greyed-out {
 }
 
 .no-reviews {
-    background: rgba(255, 255, 255, 0.7) !important;
+    background-color: rgba(255, 255, 255, 0.7) !important;
     pointer-events: none;
 }
 
@@ -2671,7 +2614,7 @@ img.block-img {
     right: -8%;
     top: 0px;
     z-index: 1;
-    background: #fff;
+    background-color: #fff;
     padding: 15px;
     border-radius: 0 10px 10px 0;
 }
@@ -2694,7 +2637,7 @@ img.block-img {
     margin: 5px;
     justify-content: center;
     align-items: center;
-    background: #eff0f2;
+    background-color: #eff0f2;
     -moz-border-radius: 4px;
     border-radius: 4px;
     border-top: 1px solid #f5f5f5;
@@ -2718,7 +2661,7 @@ img.block-img {
 
 .key.keydown {
     color: #888;
-    background: #ebeced;
+    background-color: #ebeced;
     margin: 7px 5px 3px;
     -webkit-box-shadow:
         inset 0 0 25px #ddd,
@@ -2778,7 +2721,7 @@ img.block-img {
     position: absolute;
     text-align: center;
     color: #000;
-    background: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
     background: radial-gradient(
         circle,
         rgba(255, 255, 255, 1) 0%,
@@ -2802,7 +2745,7 @@ img.block-img {
 }
 
 .background-hover-manual {
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
 }
 
 .border-hover-manual {
@@ -2991,7 +2934,7 @@ img.block-img {
 }
 
 .help-menu {
-    background: variables.$white;
+    background-color: variables.$white;
     width: 80%;
     padding: 10px;
     border-radius: 20px;
@@ -3026,7 +2969,7 @@ a.dash-path {
 
 .disable-review-unit {
     position: absolute;
-    background: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
     z-index: 2;
     min-height: 66px;
     min-width: 66px;
@@ -3040,7 +2983,7 @@ a.dash-path {
 
 .disable-village-unit {
     position: absolute;
-    background: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
     z-index: 2;
     min-height: 66px;
     min-width: 66px;
@@ -3087,7 +3030,7 @@ a.dash-path {
 }
 
 span.disable-play {
-    background: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.6);
     height: 58px;
     width: 58px;
     position: absolute;
@@ -3128,7 +3071,7 @@ span.disable-play {
 }
 
 .btn-main-reply {
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
     color: theme.$text-primary-contrast;
 }
 
@@ -3193,7 +3136,7 @@ input {
 .icon-close {
     width: 20px;
     height: 20px;
-    background: rgb(197, 196, 196);
+    background-color: rgb(197, 196, 196);
     color: #fff;
     font-size: 19px;
     line-height: 18px !important;
@@ -3212,7 +3155,7 @@ input {
 }
 
 button.input-default.btn {
-    background: theme.$primary-color;
+    background-color: theme.$primary-color;
     color: theme.$text-primary-contrast;
     margin: 0;
     padding: 6px 15px;
@@ -3265,18 +3208,18 @@ button.input-default.btn {
                 color: theme.$primary-color-dark;
                 text-decoration: none;
                 text-align: left;
-                background: variables.$white;
+                background-color: variables.$white;
                 display: block;
                 border: 0;
                 border-radius: 15px;
 
                 &:active {
-                    background: theme.$primary-color-dark;
+                    background-color: theme.$primary-color-dark;
                     color: theme.$text-ui-panel-dark-contrast;
                 }
 
                 &:hover {
-                    background: theme.$primary-color-dark;
+                    background-color: theme.$primary-color-dark;
                     color: theme.$text-ui-panel-dark-contrast;
                 }
             }
@@ -3286,7 +3229,7 @@ button.input-default.btn {
     .tab-content {
         flex-grow: 1;
         margin: 0 0 0 15px;
-        background: variables.$white;
+        background-color: variables.$white;
         border: 0;
         border-radius: 15px;
         @include bootstrap-helpers.media-breakpoint-down(md) {
@@ -3305,7 +3248,7 @@ button.input-default.btn {
             text-align: left;
             padding: 0 0 30px 0;
             margin: 0;
-            background: none;
+            background-color: none;
             border-radius: 0;
             box-shadow: none;
         }
@@ -3347,7 +3290,7 @@ button.input-default.btn {
         font-size: 30px;
         margin-top: 7px;
         color: theme.$primary-color-light;
-        background: variables.$white;
+        background-color: variables.$white;
         padding: 6px 7px 0 2px;
         border-radius: 5px;
         width: 30px;
@@ -3492,7 +3435,7 @@ button.input-default.btn {
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
 }
 .pro-img-wrap .edit label {
@@ -3658,7 +3601,7 @@ ul.list-one li .row {
 
 .h-divider {
     height: 2px;
-    background: theme.$text-ui-panel-light-contrast;
+    background-color: theme.$text-ui-panel-light-contrast;
     width: 100%;
 }
 

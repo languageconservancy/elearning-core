@@ -1,20 +1,46 @@
-import { Component, OnDestroy, ElementRef, ChangeDetectorRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    OnDestroy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
 
-import { ReviewService } from "app/_services/review.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { ReviewType } from "app/shared/utils/elearning-types";
+import { KeyboardComponent } from "@app/shared/keyboard/keyboard.component";
+import { ReviewExerciseComponent } from "@app/pages/review/review-exercise/review-exercise.component";
+import { ReviewNextPopupComponent } from "@app/pages/review/_partials/review-next-popup/review-next-popup.component";
+import { ReviewRewardPopupComponent } from "@app/pages/review/_partials/review-reward-popup/review-reward-popup.component";
+import { ReviewTimerComponent } from "@app/pages/review/_partials/review-timer/review-timer.component";
+import { CookieService } from "@app/_services/cookie.service";
+import { ReviewService } from "@app/_services/review.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ReviewType } from "@app/shared/utils/elearning-types";
 
 @Component({
     selector: "app-review-cards",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        KeyboardComponent,
+        ReviewExerciseComponent,
+        ReviewNextPopupComponent,
+        ReviewRewardPopupComponent,
+        ReviewTimerComponent,
+    ],
     templateUrl: "./review-cards.component.html",
     styleUrls: ["./review-cards.component.scss"],
+    standalone: true,
 })
 export class ReviewCardsComponent implements OnDestroy {
+    private cookieService = inject(CookieService);
+    private reviewService = inject(ReviewService);
+    private localStorage = inject(LocalStorageService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private ref = inject(ChangeDetectorRef);
+
     public numCompletedReviewActivitiesToUnlockNextUnit: number = 25;
     public user: any = {};
     public currentExercise: number = null;
@@ -32,21 +58,12 @@ export class ReviewCardsComponent implements OnDestroy {
     public unitSubscription: Subscription;
     public reviewType: ReviewType = ReviewType.PATH;
 
-    constructor(
-        private cookieService: CookieService,
-        private reviewService: ReviewService,
-        private lessonService: LessonsService,
-        private localStorage: LocalStorageService,
-        private router: Router,
-        private loader: Loader,
-        private myElement: ElementRef,
-        private ref: ChangeDetectorRef,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
                 this.getReviewDetails();
@@ -59,7 +76,10 @@ export class ReviewCardsComponent implements OnDestroy {
 
                 this.popupSubscription = this.reviewService.popup.subscribe((res) => {
                     if (res.popUpClosed) {
-                        if (this.reviewDetails[this.currentExercise].exercise_type != "match-the-pair") {
+                        if (
+                            this.reviewDetails[this.currentExercise].exercise_type !=
+                            "match-the-pair"
+                        ) {
                             this.next();
                         }
                     }
@@ -147,7 +167,10 @@ export class ReviewCardsComponent implements OnDestroy {
             console.debug("Setting exercise", this.reviewDetails[this.currentExercise]);
             this.reviewService.setExercise(this.reviewDetails[this.currentExercise]);
             if (this.newSet) {
-                this.reviewService.startTimer({ user_id: this.user.id, path_id: this.user.learningpath_id });
+                this.reviewService.startTimer({
+                    user_id: this.user.id,
+                    path_id: this.user.learningpath_id,
+                });
                 this.newSet = false;
             }
         }
@@ -197,7 +220,9 @@ export class ReviewCardsComponent implements OnDestroy {
                         review: ans.card_id != null,
                         data: res.data.results,
                     });
-                } else if (this.reviewDetails[this.currentExercise].exercise_type == "match-the-pair") {
+                } else if (
+                    this.reviewDetails[this.currentExercise].exercise_type == "match-the-pair"
+                ) {
                     const params: any = {};
                     this.reviewService.nextSubExercise(params);
                 } else {
@@ -224,7 +249,8 @@ export class ReviewCardsComponent implements OnDestroy {
             this.review_counter_arr &&
             this.review_counter_arr.showModal &&
             this.review_counter_arr.review_counter &&
-            this.review_counter_arr.review_counter == this.numCompletedReviewActivitiesToUnlockNextUnit
+            this.review_counter_arr.review_counter ==
+                this.numCompletedReviewActivitiesToUnlockNextUnit
         ) {
             return true;
         } else if (
@@ -232,7 +258,8 @@ export class ReviewCardsComponent implements OnDestroy {
             ex.exercise_type == "match-the-pair" &&
             this.review_counter_arr.review_counter - ex.choices.length <
                 this.numCompletedReviewActivitiesToUnlockNextUnit &&
-            this.review_counter_arr.review_counter > this.numCompletedReviewActivitiesToUnlockNextUnit
+            this.review_counter_arr.review_counter >
+                this.numCompletedReviewActivitiesToUnlockNextUnit
         ) {
             /* if the just-completed exercises is a match-the-pair exercise, check to see if this activity, with each of its cards,
 				 caused the review counter to reach 25. */

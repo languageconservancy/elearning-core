@@ -1,25 +1,45 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    Input,
+} from "@angular/core";
+import { CookieService } from "@app/_services/cookie.service";
 import { Router } from "@angular/router";
 import Swal from "sweetalert2";
 
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
+import { Loader } from "@app/_services/loader.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
 import { Subscription } from "rxjs";
-import { ReviewService } from "app/_services/review.service";
-import { ForumService } from "app/_services/forum.service";
-import { environment } from "environments/environment";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
-import { SiteSettingsService } from "app/_services/site-settings.service";
-import { BaseService } from "app/_services/base.service";
+import { ReviewService } from "@app/_services/review.service";
+import { ForumService } from "@app/_services/forum.service";
+import { environment } from "@environments/environment";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
+import { SiteSettingsService } from "@app/_services/site-settings.service";
+import { BaseService } from "@app/_services/base.service";
 
 @Component({
     selector: "app-units",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./units.component.html",
     styleUrls: ["./units.component.scss"],
+    standalone: true,
 })
 export class UnitsComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private loader = inject(Loader);
+    protected lessonService = inject(LessonsService);
+    private reviewService = inject(ReviewService);
+    protected localStorage = inject(LocalStorageService);
+    private forumService = inject(ForumService);
+    private breadcrumbsService = inject(BreadcrumbsService);
+    private siteSettingsService = inject(SiteSettingsService);
+    private baseService = inject(BaseService);
+
     @Input() path: any = {};
     public level: any = {};
     public fireData: any = {};
@@ -36,37 +56,29 @@ export class UnitsComponent implements OnInit, OnDestroy {
     public canAccessVillage: boolean = false;
     public features: any = {};
 
-    constructor(
-        protected router: Router,
-        protected cookieService: CookieService,
-        protected loader: Loader,
-        protected lessonService: LessonsService,
-        protected reviewService: ReviewService,
-        protected localStorage: LocalStorageService,
-        protected forumService: ForumService,
-        protected breadcrumbsService: BreadcrumbsService,
-        protected siteSettingsService: SiteSettingsService,
-        protected baseService: BaseService,
-    ) {
+    constructor() {
         this.subscribeToLastActiveUnitOrReview();
 
         this.subscribeToUnitReview();
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         this.subscribeToCurrentLevel();
 
-        try {
-            this.features = await this.siteSettingsService.getFeatures();
-        } catch (err) {
-            console.error(err);
-        }
+        this.siteSettingsService
+            .getFeatures()
+            .then((features) => {
+                this.features = features;
+            })
+            .catch((err) => {
+                console.error(err);
+            });
 
         this.cookieService
             .get("AuthUser")
             .then(async (value) => {
                 if (value == "") {
-                    this.baseService.logout();
+                    void this.baseService.logout();
                     return;
                 }
                 this.user = JSON.parse(value);
@@ -76,7 +88,7 @@ export class UnitsComponent implements OnInit, OnDestroy {
             })
             .catch((err) => {
                 console.warn("No AuthUser cookie", err);
-                this.baseService.logout();
+                void this.baseService.logout();
             });
     }
 

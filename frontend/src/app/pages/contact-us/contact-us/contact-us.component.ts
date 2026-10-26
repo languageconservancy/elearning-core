@@ -1,19 +1,33 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { Loader } from "app/_services/loader.service";
-import { RegistrationService } from "app/_services/registration.service";
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from "@angular/core";
+import {
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
-import { VirtualKeyboardComponent } from "app/_partials/virtual-keyboard/virtual-keyboard.component";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
+import { Loader } from "@app/_services/loader.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-contact-us",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ReactiveFormsModule, PageTitleComponent, VirtualKeyboardComponent],
     templateUrl: "./contact-us.component.html",
     styleUrls: ["./contact-us.component.scss"],
+    standalone: true,
 })
 export class ContactUsComponent implements OnInit {
+    public registrationService = inject(RegistrationService);
+    public loader = inject(Loader);
+    public router = inject(Router);
+    public snackbarService = inject(SnackbarService);
+
     public contactUsForm: any;
     public issueList: any = [
         { name: "Bug Report" },
@@ -33,12 +47,7 @@ export class ContactUsComponent implements OnInit {
     };
     @ViewChild("virtualKeyboard") virtualKeyboard: VirtualKeyboardComponent;
 
-    constructor(
-        public registrationService: RegistrationService,
-        private loader: Loader,
-        private router: Router,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         window.scroll(0, 0);
     }
 

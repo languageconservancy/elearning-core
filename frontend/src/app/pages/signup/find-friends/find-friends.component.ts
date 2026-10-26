@@ -1,25 +1,47 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    ChangeDetectorRef,
+    OnDestroy,
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { FindFriendsService } from "app/_services/find-friends.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SocialWebService } from "app/_services/social-web.service";
-import { environment } from "environments/environment";
-import { SettingsService } from "app/_services/settings.service";
-import { SnackbarService } from "app/_services/snackbar.service";
+import { FindFriendsService } from "@app/_services/find-friends.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SocialWebService } from "@app/_services/social-web.service";
+import { environment } from "@environments/environment";
+import { SettingsService } from "@app/_services/settings.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 declare let gapi: any;
 
 @Component({
     selector: "app-find-friends",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule],
     templateUrl: "./find-friends.component.html",
     styleUrls: ["./find-friends.component.scss"],
+    standalone: true,
 })
 export class FindFriendsComponent implements OnInit, OnDestroy {
+    private router = inject(Router);
+    private friendsService = inject(FindFriendsService);
+    private registrationService = inject(RegistrationService);
+    private ref = inject(ChangeDetectorRef);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private settingsService = inject(SettingsService);
+    private socialWebService = inject(SocialWebService);
+    private snackbarService = inject(SnackbarService);
+
     private userSubscription: Subscription;
     public userId: string;
     public socialModel: any = {};
@@ -40,23 +62,12 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
     public limit: number = 20;
     public facebookLoaded: boolean = false;
 
-    constructor(
-        private router: Router,
-        public friendsService: FindFriendsService,
-        private registrationService: RegistrationService,
-        private ref: ChangeDetectorRef,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private settingsService: SettingsService,
-        private socialWebService: SocialWebService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -73,7 +84,9 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
                 console.warn(error);
             });
 
-        this.userSubscription = this.registrationService.currentUser.subscribe((userId) => (this.userId = userId.id));
+        this.userSubscription = this.registrationService.currentUser.subscribe(
+            (userId) => (this.userId = userId.id),
+        );
     }
 
     ngOnInit() {
@@ -82,7 +95,7 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
                 // setTimeout(() => {
@@ -187,10 +200,16 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
             return;
         }
         this.facebookFriendsFiltered = Object.assign([], this.facebookFriends).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            );
         });
         this.googleFriendsFiltered = Object.assign([], this.googleFriends).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            );
         });
         this.allUsersFiltered = Object.assign([], this.allUsers).filter((item) => {
             const googleFriendIdList = [];
@@ -202,7 +221,10 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
             this.facebookFriends.forEach((element) => {
                 fbFriendIdList.push(element.fbId);
             });
-            if (item.name && item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1) {
+            if (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchItem.search.toLowerCase()) > -1
+            ) {
                 if (this.socialModel.google) {
                     if (this.socialModel.facebook) {
                         return (
@@ -216,7 +238,10 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     if (this.socialModel.facebook) {
-                        return typeof item.fbId != "undefined" && fbFriendIdList.indexOf(item.fbId) == -1;
+                        return (
+                            typeof item.fbId != "undefined" &&
+                            fbFriendIdList.indexOf(item.fbId) == -1
+                        );
                     }
                 }
                 return true;
@@ -233,7 +258,10 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
         }
 
         this.googleContactsFiltered = Object.assign([], this.mailingList).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchContact.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchContact.search.toLowerCase()) > -1
+            );
         });
     }
 
@@ -272,7 +300,9 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
             .signInWithFacebook()
             .then((response) => {
                 this.socialWebService
-                    .api("/" + response.authResponse.userID + "?fields=friends.fields(name,picture)")
+                    .api(
+                        "/" + response.authResponse.userID + "?fields=friends.fields(name,picture)",
+                    )
                     .then(async (res) => {
                         await this.checkIfFriends(res, "facebook");
                     })
@@ -297,7 +327,11 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
     authorize() {
         this.setLoader(true);
         gapi.auth.authorize(
-            { client_id: environment.GOOGLE_CLIENT_ID_WEB, scope: environment.GOOGLE_CONTACT_SCOPE, immediate: false },
+            {
+                client_id: environment.GOOGLE_CLIENT_ID_WEB,
+                scope: environment.GOOGLE_CONTACT_SCOPE,
+                immediate: false,
+            },
             (authorizationResult) => {
                 this.handleAuthorization(authorizationResult);
             },
@@ -460,7 +494,10 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
     async googleInvite() {
         this.setLoader(true);
         await this.friendsService
-            .getGoogleInvitees({ google_data: JSON.stringify({ entry: this.googleContacts }), id: this.userId })
+            .getGoogleInvitees({
+                google_data: JSON.stringify({ entry: this.googleContacts }),
+                id: this.userId,
+            })
             .then((res) => {
                 this.mailingList = res.data.results;
                 this.googleContactsFiltered = Object.assign([], this.mailingList);
@@ -479,7 +516,11 @@ export class FindFriendsComponent implements OnInit, OnDestroy {
 
         setTimeout(() => {
             void this.friendsService
-                .sendInvites({ email: this.mailModel.list, userid: this.userId, message: this.mailModel.body })
+                .sendInvites({
+                    email: this.mailModel.list,
+                    userid: this.userId,
+                    message: this.mailModel.body,
+                })
                 .then((res: any) => {
                     this.setLoader(false);
                     this.snackbarService.showSnackbar({ status: true, msg: res.data.message });

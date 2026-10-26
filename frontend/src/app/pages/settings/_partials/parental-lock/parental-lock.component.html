@@ -1,8 +1,8 @@
 <div
     class="modal fade modal-n"
     id="parentalLockInput"
-    data-backdrop="static"
-    data-keyboard="false"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
     tabindex="-1"
     role="dialog"
     aria-labelledby="ParentalLock"
@@ -11,7 +11,7 @@
         <div class="modal-content">
             <div class="modal-header text-center">
                 <h3 class="modal-title" id="myModalLabel">Parental Lock</h3>
-                <button type="button" class="close" aria-label="Close" (click)="backToDashboard()">
+                <button type="button" class="btn-close" aria-label="Close" (click)="backToDashboard()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -26,7 +26,7 @@
                         class="form-control input-default seoc-btn-width"
                         formControlName="parentalLock"
                         name="parentalLock"
-                        [ngClass]="{
+                        [class]="{
                             'has-error':
                                 parentalLockInputForm.controls.parentalLock.invalid &&
                                 parentalLockInputForm.controls.parentalLock.touched,
@@ -38,7 +38,7 @@
                     <button
                         type="button"
                         class="btn btn-gray-text-hover"
-                        data-dismiss="modal"
+                        data-bs-dismiss="modal"
                         (click)="backToDashboard()"
                     >
                         Cancel

@@ -1,19 +1,26 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
-import { Loader } from "app/_services/loader.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
+import { Loader } from "@app/_services/loader.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-request-quote",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./request-quote.component.html",
     styleUrls: ["./request-quote.component.scss"],
+    standalone: true,
 })
 export class RequestQuoteComponent implements OnInit {
+    private registrationService = inject(RegistrationService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private snackbarService = inject(SnackbarService);
+
     public environment = environment;
     public quoteForm: any;
     public techList: any = [
@@ -43,12 +50,7 @@ export class RequestQuoteComponent implements OnInit {
         },
     ];
 
-    constructor(
-        public registrationService: RegistrationService,
-        private loader: Loader,
-        private router: Router,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         window.scroll(0, 0);
     }
 
@@ -60,7 +62,10 @@ export class RequestQuoteComponent implements OnInit {
         const phoneRegex = `^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$`;
 
         this.quoteForm = new UntypedFormGroup({
-            adminName: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            adminName: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             adminPhone: new UntypedFormControl("", [
                 Validators.required,
                 Validators.pattern(phoneRegex),
@@ -71,7 +76,10 @@ export class RequestQuoteComponent implements OnInit {
                 Validators.pattern(emailRegex),
                 this.validateBlankValue.bind(this),
             ]),
-            techName: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            techName: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             techPhone: new UntypedFormControl("", [
                 Validators.required,
                 Validators.pattern(phoneRegex),
@@ -82,7 +90,10 @@ export class RequestQuoteComponent implements OnInit {
                 Validators.pattern(emailRegex),
                 this.validateBlankValue.bind(this),
             ]),
-            schoolName: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            schoolName: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
             schoolPhone: new UntypedFormControl("", [
                 Validators.required,
                 Validators.pattern(phoneRegex),
@@ -93,13 +104,34 @@ export class RequestQuoteComponent implements OnInit {
                 Validators.pattern(emailRegex),
                 this.validateBlankValue.bind(this),
             ]),
-            schoolAddress: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            schoolCity: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            schoolState: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            numSchools: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            numStudents: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            numTeachers: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
-            startDate: new UntypedFormControl("", [Validators.required, this.validateBlankValue.bind(this)]),
+            schoolAddress: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            schoolCity: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            schoolState: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            numSchools: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            numStudents: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            numTeachers: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
+            startDate: new UntypedFormControl("", [
+                Validators.required,
+                this.validateBlankValue.bind(this),
+            ]),
         });
     }
     private validateBlankValue(control: UntypedFormControl): any {

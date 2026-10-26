@@ -8,49 +8,86 @@
  */
 /* eslint-disable @typescript-eslint/unbound-method */
 import {
-    Component,
-    OnInit,
+    ChangeDetectionStrategy,
     AfterViewInit,
-    OnDestroy,
+    Component,
     ElementRef,
-    ViewChild,
+    inject,
     NgZone,
+    OnDestroy,
+    OnInit,
+    ViewChild,
 } from "@angular/core";
 import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { ActivatedRoute } from "@angular/router";
-import { DeviceDetectorService } from "ngx-device-detector";
-import { SocialAuthService } from "@abacritt/angularx-social-login";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ReactiveFormsModule } from "@angular/forms";
 import { Capacitor } from "@capacitor/core";
 import { Subscription, firstValueFrom } from "rxjs";
 import { filter, take } from "rxjs/operators";
-import { BaseService } from "app/_services/base.service";
-import { LoginService } from "app/_services/login.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { Loader } from "app/_services/loader.service";
-import { environment } from "environments/environment";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { RegexConsts } from "app/_constants/app.constants";
-import { SocialWebService } from "app/_services/social-web.service";
-import { SocialMobileService } from "app/_services/social-mobile.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { User as UserApi } from "app/_constants/api.constants";
-import { LearningPathService } from "app/_services/learning-path.service";
-import { Routes } from "app/shared/utils/elearning-types";
-import { SettingsService } from "app/_services/settings.service";
-import { AgreementsService } from "app/_services/agreements.service";
-import { ModalService } from "app/_services/modal.service";
-import { TrialAccountService } from "app/_services/trial-account.service";
-import { AgePromptService } from "app/_services/age-prompt.service";
-import { PlatformRolesService } from "app/_services/platform-roles.service";
-import { SocialLoginError } from "app/_exceptions/social-login.errors";
+import { DeviceDetectorService } from "ngx-device-detector";
+import { SocialAuthService, GoogleSigninButtonModule } from "@abacritt/angularx-social-login";
+import { SocialLoginError } from "@app/_exceptions/social-login.errors";
+
+import { AgePromptComponent } from "@app/_partials/age-prompt/age-prompt.component";
+import { EventPromoComponent } from "@app/_partials/event-promo/event-promo.component";
+import { SignupSuggestionComponent } from "@app/_partials/signup-suggestion/signup-suggestion.component";
+import { BaseService } from "@app/_services/base.service";
+import { LoginService } from "@app/_services/login.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { RegexConsts } from "@app/_constants/app.constants";
+import { SocialWebService } from "@app/_services/social-web.service";
+import { SocialMobileService } from "@app/_services/social-mobile.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { User as UserApi } from "@app/_constants/api.constants";
+import { LearningPathService } from "@app/_services/learning-path.service";
+import { Routes } from "@app/shared/utils/elearning-types";
+import { SettingsService } from "@app/_services/settings.service";
+import { AgreementsService } from "@app/_services/agreements.service";
+import { ModalService } from "@app/_services/modal.service";
+import { TrialAccountService } from "@app/_services/trial-account.service";
+import { AgePromptService } from "@app/_services/age-prompt.service";
+import { PlatformRolesService } from "@app/_services/platform-roles.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-login",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        AgePromptComponent,
+        EventPromoComponent,
+        GoogleSigninButtonModule,
+        SignupSuggestionComponent,
+        RouterLink,
+        ReactiveFormsModule,
+    ],
     templateUrl: "./login.component.html",
     styleUrls: ["./login.component.scss"],
+    standalone: true,
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
+    private agePromptService = inject(AgePromptService);
+    private loginService = inject(LoginService);
+    private authService = inject(SocialAuthService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private registrationService = inject(RegistrationService);
+    private localStorage = inject(LocalStorageService);
+    private route = inject(ActivatedRoute);
+    private socialWebService = inject(SocialWebService);
+    private socialMobileService = inject(SocialMobileService);
+    private snackbarService = inject(SnackbarService);
+    private ngZone = inject(NgZone);
+    private baseService = inject(BaseService);
+    public deviceDetector = inject(DeviceDetectorService);
+    private learningPathService = inject(LearningPathService);
+    private settingsService = inject(SettingsService);
+    private agreementsService = inject(AgreementsService);
+    public modalService = inject(ModalService);
+    private trialAccountService = inject(TrialAccountService);
+    private platformRolesService = inject(PlatformRolesService);
+
     public loginForm: UntypedFormGroup;
     public loggedIn: boolean = false;
     public authUser: any;
@@ -70,34 +107,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private loginData: any;
     @ViewChild("googleSigninWebBtn") googleSigninWebBtn: ElementRef;
 
-    constructor(
-        private agePromptService: AgePromptService,
-        private loginService: LoginService,
-        private authService: SocialAuthService,
-        private router: Router,
-        private loader: Loader,
-        private registrationService: RegistrationService,
-        private localStorage: LocalStorageService,
-        private route: ActivatedRoute,
-        private socialWebService: SocialWebService,
-        private socialMobileService: SocialMobileService,
-        private snackbarService: SnackbarService,
-        private ngZone: NgZone,
-        private baseService: BaseService,
-        public deviceDetector: DeviceDetectorService,
-        private learningPathService: LearningPathService,
-        private settingsService: SettingsService,
-        private agreementsService: AgreementsService,
-        public modalService: ModalService,
-        private trialAccountService: TrialAccountService,
-        private platformRolesService: PlatformRolesService,
-    ) {}
+    constructor() {}
 
     ngOnInit() {
         if (this.deviceDetector.isMobile() || this.deviceDetector.isTablet()) {
-            if (["iOS", "ios", "Mac", "mac"].indexOf(this.deviceDetector.os) > -1) {
+            if (["iOS", "ios", "Mac", "mac"].indexOf(this.deviceDetector.os()) > -1) {
                 this.isIos = true;
-            } else if (["android", "Android"].indexOf(this.deviceDetector.os) > -1) {
+            } else if (["android", "Android"].indexOf(this.deviceDetector.os()) > -1) {
                 this.isAndroid = true;
             }
         }
@@ -116,7 +132,10 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         // Set up query params handling
         this.subscribeToQueryParams();
 
-        if (this.environment.ENABLE_FACEBOOK_LOGIN && this.facebookConfigValid || this.environment.ENABLE_GOOGLE_LOGIN && this.googleConfigValid) {
+        if (
+            (this.environment.ENABLE_FACEBOOK_LOGIN && this.facebookConfigValid) ||
+            (this.environment.ENABLE_GOOGLE_LOGIN && this.googleConfigValid)
+        ) {
             // Set up callback for Facebook and Google login on web
             this.setUpSocialAuthSubscriber();
         }
@@ -214,17 +233,17 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         if (this.deviceDetector.isMobile() || this.deviceDetector.isTablet()) {
             if (this.environment.ENABLE_FACEBOOK_LOGIN && this.facebookConfigValid) {
-                this.socialMobileService.initFacebook();
+                void this.socialMobileService.initFacebook();
             } else {
                 console.info("Facebook config is not valid, skipping initialization");
             }
             if (this.environment.ENABLE_GOOGLE_LOGIN && this.googleConfigValid) {
-                this.socialMobileService.initGoogle();
+                void this.socialMobileService.initGoogle();
             } else {
                 console.info("Google config is not valid, skipping initialization");
             }
             if (this.environment.ENABLE_APPLE_LOGIN && this.appleConfigValid) {
-                this.socialMobileService.initApple();
+                void this.socialMobileService.initApple();
             } else {
                 console.info("Apple config is not valid, skipping initialization");
             }
@@ -510,7 +529,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             await this.baseService.setAuthUserCookie(this.authUser);
             this.registrationService.setUser(this.authUser);
             return true;
-        } catch (error) {
+        } catch {
             return false;
         }
     }
@@ -525,7 +544,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         try {
             const res = await this.loginService.getAuthToken(params);
             if (!res) {
-                throw res;
+                throw new Error(JSON.stringify(res));
             }
             return true;
         } catch (err) {

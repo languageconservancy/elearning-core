@@ -12,8 +12,8 @@ import { ParentalLockComponent } from "./_partials/parental-lock/parental-lock.c
 import { PrivacyComponent } from "./privacy/privacy.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { SettingSidebarComponent } from "./_partials/setting-sidebar/setting-sidebar.component";
-import { PipesModule } from "app/_pipes/pipes.module";
-import { PartialsModule } from "app/_partials/partials.module";
+import { PipesModule } from "@app/_pipes/pipes.module";
+import { PartialsModule } from "@app/_partials/partials.module";
 import { SettingsComponent } from "./settings/settings.component";
 
 @NgModule({
@@ -24,8 +24,6 @@ import { SettingsComponent } from "./settings/settings.component";
         RouterModule,
         PipesModule,
         PartialsModule,
-    ],
-    declarations: [
         AccessibilityComponent,
         AccountComponent,
         GalleryComponent,
@@ -34,8 +32,8 @@ import { SettingsComponent } from "./settings/settings.component";
         ParentalLockComponent,
         PrivacyComponent,
         ProfileComponent,
-        SettingSidebarComponent,
         SettingsComponent,
+        SettingSidebarComponent,
     ],
 })
 export class SettingsModule {}

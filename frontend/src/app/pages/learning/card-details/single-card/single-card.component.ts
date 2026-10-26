@@ -1,24 +1,30 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DeviceDetectorService } from "ngx-device-detector";
 
-import { LessonsService } from "app/_services/lessons.service";
+import { ExerciseComponent } from "../exercises/exercise/exercise.component";
+import { KeyboardShortcutsComponent } from "@app/shared/keyboard/keyboard-shortcuts/keyboard-shortcuts.component";
+import { LessonsComponent } from "@app/pages/learning/card-details/lessons/lessons.component";
+import { LessonsService } from "@app/_services/lessons.service";
 
 @Component({
     selector: "app-single-card",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ExerciseComponent, KeyboardShortcutsComponent, LessonsComponent],
     templateUrl: "./single-card.component.html",
     styleUrls: ["./single-card.component.scss"],
+    standalone: true,
 })
 export class SingleCardComponent implements OnDestroy {
+    private lessonService = inject(LessonsService);
+    private deviceDetector = inject(DeviceDetectorService);
+
     public type: any = "";
     public typeSubscription: Subscription;
     public isMobile: boolean = false;
     public isTablet: boolean = false;
 
-    constructor(
-        private lessonService: LessonsService,
-        private deviceDetector: DeviceDetectorService,
-    ) {
+    constructor() {
         this.getDeviceInfo();
 
         this.typeSubscription = this.lessonService.currentType.subscribe((type) => {

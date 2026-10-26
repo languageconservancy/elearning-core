@@ -2,7 +2,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from "@angular/router";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 import {
     SocialAuthServiceConfig,
@@ -11,13 +11,13 @@ import {
     AmazonLoginProvider,
 } from "@abacritt/angularx-social-login";
 
-import { CookieService } from "app/_services/cookie.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { SettingsService } from "app/_services/settings.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ReviewService } from "app/_services/review.service";
-import { BaseService } from "app/_services/base.service";
-import { ForumService } from "app/_services/forum.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ReviewService } from "@app/_services/review.service";
+import { BaseService } from "@app/_services/base.service";
+import { ForumService } from "@app/_services/forum.service";
 import { NavbarComponent } from "./navbar.component";
 import { ColorThemeRgb } from "../../../../e2e/lib/color-theme";
 
@@ -29,6 +29,7 @@ describe("NavbarComponent", () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [NavbarComponent],
+            imports: [RouterTestingModule],
             providers: [
                 CookieService,
                 NgCookieService,
@@ -57,13 +58,13 @@ describe("NavbarComponent", () => {
                         ],
                     } as SocialAuthServiceConfig,
                 },
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
             ],
-            imports: [RouterTestingModule, HttpClientModule],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        router = TestBed.get(Router);
+        router = TestBed.inject(Router);
         spyOnProperty(router, "url", "get").and.returnValue("/start-learning");
         fixture = TestBed.createComponent(NavbarComponent);
         component = fixture.componentInstance;

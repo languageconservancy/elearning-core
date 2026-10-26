@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import {
+    ReactiveFormsModule,
     UntypedFormArray,
     UntypedFormBuilder,
     UntypedFormControl,
@@ -9,25 +18,39 @@ import {
     Validators,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { TeacherService } from "app/_services/teacher.service";
-import { ClassroomService } from "app/_services/classroom.service";
-import { Loader } from "app/_services/loader.service";
-import { ExcelService } from "app/_services/excel.service";
-import { RegistrationService } from "app/_services/registration.service";
-import { ResetPasswordService } from "app/_services/reset-password.service";
-import { RegexConsts } from "app/_constants/app.constants";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
-import { ErrorCode } from "app/shared/utils/error-code";
+import { TeacherService } from "@app/_services/teacher.service";
+import { ClassroomService } from "@app/_services/classroom.service";
+import { Loader } from "@app/_services/loader.service";
+import { ExcelService } from "@app/_services/excel.service";
+import { RegistrationService } from "@app/_services/registration.service";
+import { ResetPasswordService } from "@app/_services/reset-password.service";
+import { RegexConsts } from "@app/_constants/app.constants";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
+import { ErrorCode } from "@app/shared/utils/error-code";
 
 @Component({
     selector: "app-teacher-admin",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ReactiveFormsModule],
     templateUrl: "./teacher-admin.component.html",
     styleUrls: ["./teacher-admin.component.scss"],
+    standalone: true,
 })
 export class TeacherAdminComponent implements OnInit, OnDestroy {
+    private classroomService = inject(ClassroomService);
+    private teacherService = inject(TeacherService);
+    private registrationService = inject(RegistrationService);
+    private resetPassService = inject(ResetPasswordService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private fb = inject(UntypedFormBuilder);
+    private excelSrv = inject(ExcelService);
+    private snackbarService = inject(SnackbarService);
+
     private teacherSubscription: Subscription;
     private schoolUserSubscription: Subscription;
     @ViewChild("formModal") formModal;
@@ -51,23 +74,12 @@ export class TeacherAdminComponent implements OnInit, OnDestroy {
     public getLinkForm: UntypedFormGroup;
     public newUsersUploadTemplateLink = `${environment.API}templates/download/teacher-portal-new-users-form.xlsx`;
 
-    constructor(
-        private classroomService: ClassroomService,
-        private teacherService: TeacherService,
-        public registrationService: RegistrationService,
-        private resetPassService: ResetPasswordService,
-        private router: Router,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private fb: UntypedFormBuilder,
-        private excelSrv: ExcelService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {

@@ -1,22 +1,33 @@
-import { Component, OnDestroy } from "@angular/core";
-import { CookieService } from "app/_services/cookie.service";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
+import { NgTemplateOutlet } from "@angular/common";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { Loader } from "app/_services/loader.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { AudioService } from "app/_services/audio.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-
-declare let jQuery: any;
+import { ImageZoomComponent } from "@app/_partials/image-zoom/image-zoom.component";
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
+import { AudioService } from "@app/_services/audio.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { Loader } from "@app/_services/loader.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
 
 @Component({
     selector: "app-lessons",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [ImageZoomComponent, SafeHtmlPipe, NgTemplateOutlet],
     templateUrl: "./lessons.component.html",
     styleUrls: ["./lessons.component.scss"],
+    standalone: true,
 })
 export class LessonsComponent implements OnDestroy {
+    private cookieService = inject(CookieService);
+    private lessonService = inject(LessonsService);
+    private keyboardService = inject(KeyboardService);
+    public audioService = inject(AudioService);
+    private router = inject(Router);
+    private loader = inject(Loader);
+
     public frame: any = {};
     public count: number = 0;
 
@@ -26,14 +37,7 @@ export class LessonsComponent implements OnDestroy {
     private keyboardToggleSelectionSubscription: Subscription;
     public keyboardHighlightedBlockIndex: number = 0;
 
-    constructor(
-        private cookieService: CookieService,
-        private lessonService: LessonsService,
-        private keyboardService: KeyboardService,
-        public audioService: AudioService,
-        private router: Router,
-        private loader: Loader,
-    ) {
+    constructor() {
         this.frameSubscription = this.lessonService.currentFrame.subscribe((frame) => {
             if (frame && Object.keys(frame).length) {
                 this.frame = frame;
@@ -81,17 +85,20 @@ export class LessonsComponent implements OnDestroy {
     }
 
     private setSize() {
-        const firstBox = jQuery("#box-1").outerHeight();
-        const secondBox = jQuery("#box-2").outerHeight();
+        const firstBox = document.getElementById("box-1");
+        const secondBox = document.getElementById("box-2");
 
-        if (firstBox >= secondBox) {
-            jQuery("#box-2").css({
-                height: firstBox,
-            });
+        if (!firstBox || !secondBox) {
+            return;
+        }
+
+        const firstHeight = firstBox.offsetHeight;
+        const secondHeight = secondBox.offsetHeight;
+
+        if (firstHeight >= secondHeight) {
+            secondBox.style.height = `${firstHeight}px`;
         } else {
-            jQuery("#box-1").css({
-                height: secondBox,
-            });
+            firstBox.style.height = `${secondHeight}px`;
         }
     }
 
@@ -106,7 +113,10 @@ export class LessonsComponent implements OnDestroy {
             switch (element.type) {
                 case "card":
                     if (element.is_card_audio == "Y") {
-                        this.audioService.addToPlaylist(element.CardDetails.FullAudioUrl, `block-${index}`);
+                        this.audioService.addToPlaylist(
+                            element.CardDetails.FullAudioUrl,
+                            `block-${index}`,
+                        );
                     }
                     break;
                 case "audio":
@@ -137,39 +147,49 @@ export class LessonsComponent implements OnDestroy {
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
             // Only subscribe if not already subscribed
-            if (!!this.keyboardToggleSelectionSubscription && !this.keyboardToggleSelectionSubscription.closed) {
+            if (
+                !!this.keyboardToggleSelectionSubscription &&
+                !this.keyboardToggleSelectionSubscription.closed
+            ) {
                 return;
             }
             // Toggle highlighted lesson frame block
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (event.shiftKey) {
-                    this.keyboardHighlightedBlockIndex = OwoksapeUtils.decrementWrap(
-                        this.keyboardHighlightedBlockIndex,
-                        0,
-                        this.frame.number_of_block - 1,
-                    );
-                } else {
-                    this.keyboardHighlightedBlockIndex = OwoksapeUtils.incrementWrap(
-                        this.keyboardHighlightedBlockIndex,
-                        0,
-                        this.frame.number_of_block - 1,
-                    );
-                }
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (event.shiftKey) {
+                        this.keyboardHighlightedBlockIndex = OwoksapeUtils.decrementWrap(
+                            this.keyboardHighlightedBlockIndex,
+                            0,
+                            this.frame.number_of_block - 1,
+                        );
+                    } else {
+                        this.keyboardHighlightedBlockIndex = OwoksapeUtils.incrementWrap(
+                            this.keyboardHighlightedBlockIndex,
+                            0,
+                            this.frame.number_of_block - 1,
+                        );
+                    }
+                });
             // Play/pause audio
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (
-                    this.keyboardHighlightedBlockIndex > -1 &&
-                    this.keyboardHighlightedBlockIndex < this.frame.number_of_block
-                ) {
-                    this.checkAudio(this.frame.lesson_frame_blocks[this.keyboardHighlightedBlockIndex]);
-                } else {
-                    this.autoPlayAudio();
-                }
-            });
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (
+                        this.keyboardHighlightedBlockIndex > -1 &&
+                        this.keyboardHighlightedBlockIndex < this.frame.number_of_block
+                    ) {
+                        this.checkAudio(
+                            this.frame.lesson_frame_blocks[this.keyboardHighlightedBlockIndex],
+                        );
+                    } else {
+                        this.autoPlayAudio();
+                    }
+                },
+            );
         } else {
-            if (!!this.keyboardToggleSelectionSubscription) this.keyboardToggleSelectionSubscription.unsubscribe();
-            if (!!this.keyboardToggleMediaSubscription) this.keyboardToggleMediaSubscription.unsubscribe();
+            if (!!this.keyboardToggleSelectionSubscription)
+                this.keyboardToggleSelectionSubscription.unsubscribe();
+            if (!!this.keyboardToggleMediaSubscription)
+                this.keyboardToggleMediaSubscription.unsubscribe();
         }
     }
 

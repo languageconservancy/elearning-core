@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { BaseService } from "app/_services/base.service";
-import { Settings } from "app/_constants/api.constants";
+import { inject, Injectable } from "@angular/core";
+import { BaseService } from "@app/_services/base.service";
+import { Settings } from "@app/_constants/api.constants";
 
 export const PlatformRoles = {
     Admin: "superadmin",
@@ -20,10 +20,10 @@ type Role = {
     providedIn: "root",
 })
 export class PlatformRolesService {
+    private baseService = inject(BaseService);
+
     private roleNameToIdMap: Map<string, number> = new Map();
     private roleIdToNameMap: Map<number, string> = new Map();
-
-    constructor(private baseService: BaseService) {}
 
     /**
      * Fetches the platform roles from the server.
@@ -53,7 +53,6 @@ export class PlatformRolesService {
             });
         } catch (error) {
             console.error("Error fetching platform roles", error);
-
         }
     }
 

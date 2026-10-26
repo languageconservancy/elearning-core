@@ -1,8 +1,8 @@
 /// <reference types="jasmine" />
 import { TestBed, inject } from "@angular/core/testing";
 import { Router } from "@angular/router";
-import { CookieService } from "app/_services/cookie.service";
-import { SettingsService } from "app/_services/settings.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { SettingsService } from "@app/_services/settings.service";
 import { MaintenanceModeCheckGuard, MaintenanceModeGuard } from "./maintenance-mode-check.guard";
 
 describe("MaintenanceModeCheckGuard", () => {

@@ -1,27 +1,55 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    ChangeDetectorRef,
+    inject,
+    OnDestroy,
+} from "@angular/core";
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+} from "@angular/forms";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { CookieService } from "@app/_services/cookie.service";
 
-import { FindFriendsService } from "app/_services/find-friends.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { SocialWebService } from "app/_services/social-web.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { environment } from "environments/environment";
-import { BaseService } from "app/_services/base.service";
+import { FindFriendsService } from "@app/_services/find-friends.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ModalService } from "@app/_services/modal.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { SocialWebService } from "@app/_services/social-web.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { BaseService } from "@app/_services/base.service";
+import { environment } from "@environments/environment";
 
 declare let gapi: any;
-declare let jQuery: any;
 
 @Component({
     selector: "app-account",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./account.component.html",
     styleUrls: ["./account.component.scss"],
+    imports: [FormsModule, ReactiveFormsModule],
+    standalone: true,
 })
 export class AccountComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private modalService = inject(ModalService);
+    public friendsService = inject(FindFriendsService);
+    private ref = inject(ChangeDetectorRef);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private router = inject(Router);
+    private socialWebService = inject(SocialWebService);
+    private snackbarService = inject(SnackbarService);
+    private baseService = inject(BaseService);
+
     private lockSubscription: Subscription;
     public socialModel: any = {};
     public googleContacts: any = [];
@@ -46,23 +74,12 @@ export class AccountComponent implements OnInit, OnDestroy {
         inputValue: "",
     };
 
-    constructor(
-        private settingsService: SettingsService,
-        public friendsService: FindFriendsService,
-        private ref: ChangeDetectorRef,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private router: Router,
-        private socialWebService: SocialWebService,
-        private snackbarService: SnackbarService,
-        private baseService: BaseService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
@@ -83,7 +100,9 @@ export class AccountComponent implements OnInit, OnDestroy {
                 });
         }
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("account");
     }
 
@@ -104,7 +123,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.setLoader(true);
                 const loggedInUser = JSON.parse(value);
@@ -153,7 +172,9 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     private validatePasswordConfirmation(control: UntypedFormControl): any {
         if (this.changeForm) {
-            return control.value === this.changeForm.get("password").value ? null : { notSame: true };
+            return control.value === this.changeForm.get("password").value
+                ? null
+                : { notSame: true };
         }
     }
 
@@ -185,7 +206,10 @@ export class AccountComponent implements OnInit, OnDestroy {
         }
 
         this.googleContactsFiltered = Object.assign([], this.mailingList).filter((item) => {
-            return item.name && item.name.toLowerCase().indexOf(this.searchContact.search.toLowerCase()) > -1;
+            return (
+                item.name &&
+                item.name.toLowerCase().indexOf(this.searchContact.search.toLowerCase()) > -1
+            );
         });
     }
 
@@ -195,7 +219,10 @@ export class AccountComponent implements OnInit, OnDestroy {
                 this.setLoader(true);
                 const fbData = this.socialModel.facebook ? "1" : "0";
                 try {
-                    const res = await this.settingsService.updateUserData({ id: this.user.id, fb_status: fbData });
+                    const res = await this.settingsService.updateUserData({
+                        id: this.user.id,
+                        fb_status: fbData,
+                    });
                     this.setLoader(false);
                     this.user = res.data.results[0];
                     try {
@@ -305,7 +332,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     googleInvite() {
         if (this.googleContacts.length > 0) {
             this.setLoader(true);
-            const data = { google_data: JSON.stringify({ entry: this.googleContacts }), id: this.user.id };
+            const data = {
+                google_data: JSON.stringify({ entry: this.googleContacts }),
+                id: this.user.id,
+            };
             this.friendsService
                 .getGoogleInvitees(data)
                 .then((res) => {
@@ -336,7 +366,11 @@ export class AccountComponent implements OnInit, OnDestroy {
         });
 
         setTimeout(() => {
-            const data = { email: this.mailModel.list, user_id: this.user.id, message: this.mailModel.body };
+            const data = {
+                email: this.mailModel.list,
+                user_id: this.user.id,
+                message: this.mailModel.body,
+            };
             this.friendsService
                 .sendInvites(data)
                 .then((res) => {
@@ -371,7 +405,7 @@ export class AccountComponent implements OnInit, OnDestroy {
                         msg: res.data.message,
                     });
                     if (res.data.status) {
-                        jQuery("#resetPass").modal("hide");
+                        this.modalService.closeModal("resetPass");
                     }
                 })
                 .catch((err) => {
@@ -423,7 +457,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             .then((res) => {
                 this.setLoader(false);
                 if (res.data?.status) {
-                    jQuery("#resetProgressData").modal("hide");
+                    this.modalService.closeModal("resetProgressData");
                     this.snackbarService.showSnackbar({
                         status: true,
                         msg: "You progress data has been successfully reset.",
@@ -458,11 +492,11 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
 
     openModal(name) {
-        jQuery("#" + name).modal("show");
+        this.modalService.openModal(name);
     }
 
     hideModal(name) {
-        jQuery("#" + name).modal("hide");
+        this.modalService.closeModal(name);
     }
 
     alreadyDeleted() {

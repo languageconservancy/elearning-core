@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, of, BehaviorSubject } from "rxjs";
 import { catchError, map } from "rxjs/operators";
@@ -34,12 +34,12 @@ export interface KeyboardConfig {
     providedIn: "root",
 })
 export class KeyboardConfigService {
+    private http = inject(HttpClient);
+
     private config: KeyboardConfig | null = null;
     private configPath = "assets/keyboard/keyboard.json";
     private configLoadedSubject = new BehaviorSubject<boolean>(false);
     public configLoaded = this.configLoadedSubject.asObservable();
-
-    constructor(private http: HttpClient) {}
 
     /**
      * Load keyboard configuration from JSON file

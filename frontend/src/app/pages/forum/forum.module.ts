@@ -1,12 +1,12 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
-import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { PipesModule } from "app/_pipes/pipes.module";
-import { PartialsModule } from "app/_partials/partials.module";
-import { DirectivesModule } from "app/_directives/directives.module";
+import { PipesModule } from "@app/_pipes/pipes.module";
+import { PartialsModule } from "@app/_partials/partials.module";
+import { DirectivesModule } from "@app/_directives/directives.module";
 
 import { ForumListComponent } from "./forum-list/forum-list.component";
 import { PostDetailsComponent } from "./post-details/post-details.component";
@@ -17,22 +17,20 @@ import { ReportPostModalComponent } from "./_partials/report-post-modal/report-p
 
 @NgModule({
     imports: [
-        CommonModule,
-        FormsModule,
-        RouterModule,
-        ReactiveFormsModule,
-        InfiniteScrollModule,
-        PipesModule,
-        PartialsModule,
-        DirectivesModule,
-    ],
-    declarations: [
-        ForumListComponent,
-        PostDetailsComponent,
-        FriendSidebarComponent,
-        ForumGeneralDiscussionComponent,
-        ReportPostModalComponent,
         AddFriendsComponent,
+        CommonModule,
+        DirectivesModule,
+        FormsModule,
+        ForumGeneralDiscussionComponent,
+        ForumListComponent,
+        FriendSidebarComponent,
+        InfiniteScrollDirective,
+        PartialsModule,
+        PostDetailsComponent,
+        PipesModule,
+        ReactiveFormsModule,
+        ReportPostModalComponent,
+        RouterModule,
     ],
     exports: [],
 })

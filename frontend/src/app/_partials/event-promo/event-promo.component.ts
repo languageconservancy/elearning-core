@@ -1,21 +1,34 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    OnDestroy,
+    ViewChild,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { SettingsService } from "app/_services/settings.service";
+import { YoutubePipe } from "@app/_pipes/youtube.pipe";
+import { SettingsService } from "@app/_services/settings.service";
 
 @Component({
     selector: "app-event-promo",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [YoutubePipe],
     templateUrl: "./event-promo.component.html",
     styleUrls: ["./event-promo.component.scss"],
+    standalone: true,
 })
 export class EventPromoComponent implements OnInit, OnDestroy {
+    private settingservice = inject(SettingsService);
+
     public eventPromo: any = {};
     public promoSeen: boolean = false;
     @ViewChild("promoModal") promoModal;
 
     public promoSeenSubscription: Subscription;
 
-    constructor(private settingservice: SettingsService) {
+    constructor() {
         this.promoSeenSubscription = this.settingservice.promoSeen.subscribe((seen) => {
             this.promoSeen = seen;
         });

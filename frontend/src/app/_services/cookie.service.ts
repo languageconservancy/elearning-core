@@ -1,22 +1,22 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { CookieService as NgCookieService } from "ngx-cookie-service";
 import { CapacitorCookies } from "@capacitor/core";
 import { Preferences as CapacitorPreferences } from "@capacitor/preferences";
 import { DeviceDetectorService } from "ngx-device-detector";
 
-import { environment } from "environments/environment";
+import { environment } from "@environments/environment";
 
 @Injectable({
     providedIn: "root",
 })
 export class CookieService {
+    private deviceDetector = inject(DeviceDetectorService);
+    private ngCookieService = inject(NgCookieService);
+
     public isMobileOrTablet: boolean = false;
     private DEFAULT_EXPIRY_DAYS: number = 45;
 
-    constructor(
-        private deviceDetector: DeviceDetectorService,
-        private ngCookieService: NgCookieService,
-    ) {
+    constructor() {
         this.isMobileOrTablet = this.deviceDetector.isMobile() || this.deviceDetector.isTablet();
     }
 

@@ -1,24 +1,31 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { SettingsService } from "app/_services/settings.service";
-import { environment } from "environments/environment";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { CapitalizeFirstLetterPipe } from "@app/_pipes/capitalize-first-letter.pipe";
+import { SafeHtmlPipe } from "@app/_pipes/safe-html.pipe";
+import { SafeUrlPipe } from "@app/_pipes/safe-url.pipe";
+import { SettingsService } from "@app/_services/settings.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-about",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [PageTitleComponent, CapitalizeFirstLetterPipe, SafeHtmlPipe, SafeUrlPipe],
     templateUrl: "./about.component.html",
     styleUrls: ["./about.component.scss"],
+    standalone: true,
 })
 export class AboutComponent implements OnInit {
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+    private settingservice = inject(SettingsService);
+
     public environment = environment;
     public content: any = [];
     public activeTab: any = [];
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private settingservice: SettingsService,
-    ) {
+    constructor() {
         this.route.params.subscribe((params) => {
             this.activeTab = params["tabid"];
             window.scroll(0, 0);
@@ -35,6 +42,7 @@ export class AboutComponent implements OnInit {
                     localContent = res.data.results;
                     for (const [i, value] of localContent.entries()) {
                         if (value.Id == "privacy" || value.Id == "terms") {
+                            // eslint-disable-next-line @typescript-eslint/no-array-delete
                             delete localContent[i];
                         }
                     }

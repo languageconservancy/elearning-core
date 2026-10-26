@@ -1,30 +1,71 @@
-import { Component, OnInit, ElementRef, Renderer2, ViewChild, OnDestroy } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    ElementRef,
+    inject,
+    ViewChild,
+    OnDestroy,
+} from "@angular/core";
 import { Location } from "@angular/common";
+import {
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormGroup,
+    UntypedFormControl,
+} from "@angular/forms";
 import { Router } from "@angular/router";
-import { UntypedFormGroup, UntypedFormControl } from "@angular/forms";
-import { CookieService } from "app/_services/cookie.service";
-import { Subscription } from "rxjs";
-
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { SettingsService } from "app/_services/settings.service";
-import { BadgeService } from "app/_services/badge.service";
-import { environment } from "environments/environment";
-import { SnackbarService } from "app/_services/snackbar.service";
-import { VirtualKeyboardComponent } from "app/_partials/virtual-keyboard/virtual-keyboard.component";
-import { VirtualKeyboardService } from "app/_services/virtual-keyboard.service";
 import { DeviceDetectorService } from "ngx-device-detector";
+import { Subscription } from "rxjs";
+import Swal from "sweetalert2";
 
-declare let jQuery: any;
-declare let bootbox: any;
+import { FriendSidebarComponent } from "@app/pages/forum/_partials/friend-sidebar/friend-sidebar.component";
+import { PageTitleComponent } from "@app/_partials/page-title/page-title.component";
+import { ReportPostModalComponent } from "@app/pages/forum/_partials/report-post-modal/report-post-modal.component";
+import { VirtualKeyboardComponent } from "@app/_partials/virtual-keyboard/virtual-keyboard.component";
+import { BadgeImagePipe } from "@app/_pipes/badge-image.pipe";
+import { BadgeService } from "@app/_services/badge.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { ForumService } from "@app/_services/forum.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ModalService } from "@app/_services/modal.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { VirtualKeyboardService } from "@app/_services/virtual-keyboard.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-post-details",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        FriendSidebarComponent,
+        PageTitleComponent,
+        ReportPostModalComponent,
+        VirtualKeyboardComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        BadgeImagePipe,
+    ],
     templateUrl: "./post-details.component.html",
     styleUrls: ["./post-details.component.scss"],
+    standalone: true,
 })
 export class PostDetailsComponent implements OnInit, OnDestroy {
+    private forumService = inject(ForumService);
+    private loader = inject(Loader);
+    private cookieService = inject(CookieService);
+    private router = inject(Router);
+    private localStorage = inject(LocalStorageService);
+    private badgeService = inject(BadgeService);
+    private settingsService = inject(SettingsService);
+    private snackbarService = inject(SnackbarService);
+    private myElement = inject(ElementRef);
+    private _location = inject(Location);
+    private deviceDetector = inject(DeviceDetectorService);
+    private modalService = inject(ModalService);
+    private virtualKeyboardService = inject(VirtualKeyboardService);
+
     public environment = environment;
     public keyType: any = null;
     public keyboardFlag: boolean = false;
@@ -54,31 +95,17 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
     public inputAreaClicked: boolean = false;
     @ViewChild("virtualKeyboard") virtualKeyboard: VirtualKeyboardComponent;
 
-    constructor(
-        private forumService: ForumService,
-        private loader: Loader,
-        private cookieService: CookieService,
-        private router: Router,
-        private renderer: Renderer2,
-        private localStorage: LocalStorageService,
-        private badgeService: BadgeService,
-        private settingsService: SettingsService,
-        private snackbarService: SnackbarService,
-        private myElement: ElementRef,
-        private _location: Location,
-        private deviceDetector: DeviceDetectorService,
-        private virtualKeyboardService: VirtualKeyboardService,
-    ) {
+    constructor() {
         this.getDeviceInfo();
 
         this.cookieService
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 this.user = JSON.parse(value);
-                this.forumIdSubscription = forumService.forumObjId.subscribe((obj) => {
+                this.forumIdSubscription = this.forumService.forumObjId.subscribe((obj) => {
                     if (obj && obj != "") {
                         this.localStorage.setItem("postId", obj);
                         this.getForumDetails(obj);
@@ -86,7 +113,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
                     }
                 });
 
-                this.postReportDoneSubscription = forumService.postReportDone.subscribe(
+                this.postReportDoneSubscription = this.forumService.postReportDone.subscribe(
                     (status) => {
                         // Reload posts is data is available, otherwise reload page
                         if (status == true) {
@@ -191,7 +218,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
     openModal(id, type) {
         this.keyboardFlag = false;
         if (type == "reply") {
-            jQuery("#replyPost").modal("show");
+            this.modalService.openModal("replyPost");
         } else {
             this.modalTitle = "New Post";
             this.newPostForm.patchValue({
@@ -199,7 +226,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
                 content: "",
                 postStatus: "R",
             });
-            jQuery("#newPost").modal("show");
+            this.modalService.openModal("newPost");
         }
     }
 
@@ -213,7 +240,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
                 content: postObj.content,
             });
             setTimeout(() => {
-                jQuery("#" + name).modal("show");
+                this.modalService.openModal(name);
             }, 100);
         } else {
             this.postForm.patchValue({
@@ -221,7 +248,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
                 content: "",
                 postStatus: "R",
             });
-            jQuery("#" + name).modal("show");
+            this.modalService.openModal(name);
         }
     }
 
@@ -248,7 +275,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
                         msg: res.data.message,
                     });
                     if (res.data.status) {
-                        jQuery("#replyPost").modal("hide");
+                        this.modalService.closeModal("replyPost");
                         this.getForumDetails(this.postDetails.id);
                         this.postForm.patchValue({
                             title: "",
@@ -297,7 +324,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
                             msg: res.data.message,
                         });
                         if (res.data.status) {
-                            jQuery("#newPost").modal("hide");
+                            this.modalService.closeModal("newPost");
                             void this.router.navigate(["/village"]);
                         }
                     })
@@ -333,7 +360,7 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
                             msg: res.data.message,
                         });
                         if (res.data.status) {
-                            jQuery("#newPost").modal("hide");
+                            this.modalService.closeModal("newPost");
                             this.getForumDetails(this.postId);
                         }
                     })
@@ -380,48 +407,44 @@ export class PostDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
-    deletePost(postobj) {
-        bootbox.confirm({
-            message: "Are you sure? You want to delete this post?",
-            buttons: {
-                confirm: {
-                    label: "Yes",
-                    className: "btn-success",
-                },
-                cancel: {
-                    label: "No",
-                    className: "btn-danger",
-                },
-            },
-            callback: (result) => {
-                if (result) {
-                    // deletePost
-                    const data = {
-                        post_id: postobj.id,
-                    };
-                    this.forumService
-                        .deletePost(data)
-                        .then((res: any) => {
-                            this.loader.setLoader(false);
-                            this.snackbarService.showSnackbar({
-                                status: true,
-                                msg: res.data.message,
-                            });
-                            if (res.data.status) {
-                                window.history.back();
-                            }
-                        })
-                        .catch((err) => {
-                            console.error(err);
-                            this.loader.setLoader(false);
-                            this.snackbarService.showSnackbar({
-                                status: false,
-                                msg: "There has been an error. Please try again after some time while we fix it.",
-                            });
-                        });
-                }
-            },
+    async deletePost(postobj) {
+        const result = await Swal.fire({
+            text: "Are you sure? You want to delete this post?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            confirmButtonColor: "#198754",
+            cancelButtonColor: "#dc3545",
         });
+
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        const data = {
+            post_id: postobj.id,
+        };
+        this.forumService
+            .deletePost(data)
+            .then((res: any) => {
+                this.loader.setLoader(false);
+                this.snackbarService.showSnackbar({
+                    status: true,
+                    msg: res.data.message,
+                });
+                if (res.data.status) {
+                    window.history.back();
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                this.loader.setLoader(false);
+                this.snackbarService.showSnackbar({
+                    status: false,
+                    msg: "There has been an error. Please try again after some time while we fix it.",
+                });
+            });
     }
 
     toggleReplyPostKeyboard(flag: boolean): void {

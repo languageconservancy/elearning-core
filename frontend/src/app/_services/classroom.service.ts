@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BaseService } from "./base.service";
-import * as API from "app/_constants/api.constants";
+import * as API from "@app/_constants/api.constants";
 
 @Injectable()
 export class ClassroomService extends BaseService {
@@ -8,7 +8,14 @@ export class ClassroomService extends BaseService {
         return this.callApi(API.Classrooms.GET_SCHOOLS_AND_ROLES, "POST", params, {}, "site", true);
     }
     getTeacherLevelUnits(params: any) {
-        return this.callApi(API.Classrooms.GET_TEACHER_LEVEL_UNITS, "POST", params, {}, "site", true);
+        return this.callApi(
+            API.Classrooms.GET_TEACHER_LEVEL_UNITS,
+            "POST",
+            params,
+            {},
+            "site",
+            true,
+        );
     }
     getAvailablePaths(params: any) {
         return this.callApi(API.Classrooms.GET_AVAILABLE_PATHS, "POST", params, {}, "site", true);
@@ -22,15 +29,36 @@ export class ClassroomService extends BaseService {
     }
 
     getTeacherClassrooms(params): any {
-        return this.callApi(API.Classrooms.GET_TEACHER_CLASSROOMS, "POST", params, {}, "site", true);
+        return this.callApi(
+            API.Classrooms.GET_TEACHER_CLASSROOMS,
+            "POST",
+            params,
+            {},
+            "site",
+            true,
+        );
     }
 
     getTeacherClassroomUnitsAndStudents(params): any {
-        return this.callApi(API.Classrooms.GET_TEACHER_CLASSROOM_UNITS_AND_STUDENTS, "POST", params, {}, "site", true);
+        return this.callApi(
+            API.Classrooms.GET_TEACHER_CLASSROOM_UNITS_AND_STUDENTS,
+            "POST",
+            params,
+            {},
+            "site",
+            true,
+        );
     }
 
     getStudentActivities(params): any {
-        return this.callApi(API.Classrooms.GET_STUDENT_ACTIVITIES, "POST", params, {}, "site", true);
+        return this.callApi(
+            API.Classrooms.GET_STUDENT_ACTIVITIES,
+            "POST",
+            params,
+            {},
+            "site",
+            true,
+        );
     }
 
     updateClassroomData(params): any {

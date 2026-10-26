@@ -1,19 +1,30 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    AfterViewInit,
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from "@angular/core";
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 
-import { Settings } from "app/_constants/app.constants";
-import { CookieService } from "app/_services/cookie.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { LessonsService } from "app/_services/lessons.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { ReviewService } from "app/_services/review.service";
-import { UnitProgressNavComponent } from "app/_partials/unit-progress-nav/unit-progress-nav.component";
-import { environment } from "environments/environment";
-import { Throttle } from "app/_decorators/throttle.decorator";
-import { AudioService } from "app/_services/audio.service";
-import { BreadcrumbsService } from "app/_services/breadcrumbs.service";
+import { Settings } from "@app/_constants/app.constants";
+import { KeyboardComponent } from "@app/shared/keyboard/keyboard.component";
+import { RewardPopupsComponent } from "@app/pages/learning/_partials/reward-popups/reward-popups.component";
+import { SingleCardComponent } from "@app/pages/learning/card-details/single-card/single-card.component";
+import { UnitProgressNavComponent } from "@app/_partials/unit-progress-nav/unit-progress-nav.component";
+import { CookieService } from "@app/_services/cookie.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { LessonsService } from "@app/_services/lessons.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ReviewService } from "@app/_services/review.service";
+import { environment } from "@environments/environment";
+import { Throttle } from "@app/_decorators/throttle.decorator";
+import { AudioService } from "@app/_services/audio.service";
+import { BreadcrumbsService } from "@app/_services/breadcrumbs.service";
 
 /**
  * Queue of events to be processed in order.
@@ -288,10 +299,28 @@ export declare type StateMachine = {
 
 @Component({
     selector: "app-unit-component",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [
+        KeyboardComponent,
+        RewardPopupsComponent,
+        SingleCardComponent,
+        UnitProgressNavComponent,
+    ],
     templateUrl: "./unit.component.html",
     styleUrls: ["./unit.component.css"],
+    standalone: true,
 })
 export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
+    private cookieService = inject(CookieService);
+    private keyboardService = inject(KeyboardService);
+    private lessonService = inject(LessonsService);
+    private loader = inject(Loader);
+    private localStorage = inject(LocalStorageService);
+    private reviewService = inject(ReviewService);
+    private router = inject(Router);
+    private audioService = inject(AudioService);
+    private breadcrumbsService = inject(BreadcrumbsService);
+
     // A Rxjs subscriptions for conveniently managing multiple subscriptions
     // and unsubscribing from them all at once.
     private subscriptions: Subscription = new Subscription();
@@ -418,12 +447,14 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.machine.transition(MachineState.DoingLesson);
                 },
                 [MachineEvent.GoToReviewBtnPressed]: () => {
+                    // Mark the current lesson complete first, since it may be the last
+                    // incomplete activity in the unit.
+                    this.unitProgressNav.updateLessonState();
                     if (!this.unitProgressNav.unitCompleteOrPreviouslyCompleted) {
                         throw new Error(
                             "Review button displayed and pressed when unit is not complete",
                         );
                     }
-                    this.unitProgressNav.updateLessonState();
                     this.machine.transition(MachineState.PresentingUnitEndOptions);
                 },
                 [MachineEvent.LessonEndPopupClosed]: () => {
@@ -744,18 +775,6 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // State machine and it's data
     unitStateMachine: StateMachine = Object.create(this.machine);
-
-    constructor(
-        private cookieService: CookieService,
-        private keyboardService: KeyboardService,
-        private lessonService: LessonsService,
-        private loader: Loader,
-        private localStorage: LocalStorageService,
-        private reviewService: ReviewService,
-        private router: Router,
-        private audioService: AudioService,
-        private breadcrumbsService: BreadcrumbsService,
-    ) {}
 
     ngOnInit(): void {
         this.subscribeToLevelIdAndName();

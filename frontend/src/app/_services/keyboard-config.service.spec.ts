@@ -1,8 +1,9 @@
 import { TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { KeyboardConfigService, KeyboardConfig } from "./keyboard-config.service";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 
-fdescribe("KeyboardConfigService", () => {
+describe("KeyboardConfigService", () => {
     let service: KeyboardConfigService;
     let httpMock: HttpTestingController;
 
@@ -74,8 +75,12 @@ fdescribe("KeyboardConfigService", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [KeyboardConfigService],
+            imports: [],
+            providers: [
+                KeyboardConfigService,
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
         });
         service = TestBed.inject(KeyboardConfigService);
         httpMock = TestBed.inject(HttpTestingController);
@@ -90,7 +95,7 @@ fdescribe("KeyboardConfigService", () => {
         expect(service).toBeTruthy();
     });
 
-    fit("should load config from HTTP", (done) => {
+    it("should load config from HTTP", (done) => {
         service.loadConfig().subscribe((config) => {
             // ensure config has expected keys
             expect(config.defaultLayoutObject).toBeDefined();

@@ -113,6 +113,154 @@
       "detail": "Production build + cap:sync"
     },
     {
+      "label": "eLearning: Deploy staging (frontend + backend)",
+      "type": "shell",
+      "command": "${workspaceFolder:core}/scripts/deploy.sh",
+      "args": [
+        "--build-type",
+        "staging",
+        "--command",
+        "install",
+        "--frontend",
+        "--backend"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder:core}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Build and deploy both staging frontend and backend; requires language repo scripts/deploy-vars.sh"
+    },
+    {
+      "label": "eLearning: Deploy staging frontend",
+      "type": "shell",
+      "command": "${workspaceFolder:core}/scripts/deploy.sh",
+      "args": [
+        "--build-type",
+        "staging",
+        "--command",
+        "install",
+        "--frontend"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder:core}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Build and deploy only the staging frontend"
+    },
+    {
+      "label": "eLearning: Deploy staging backend",
+      "type": "shell",
+      "command": "${workspaceFolder:core}/scripts/deploy.sh",
+      "args": [
+        "--build-type",
+        "staging",
+        "--command",
+        "install",
+        "--backend"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder:core}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Build and deploy only the staging backend"
+    },
+    {
+      "label": "eLearning: Dry-run production deploy (frontend + backend)",
+      "type": "shell",
+      "command": "${workspaceFolder:core}/scripts/deploy.sh",
+      "args": [
+        "--build-type",
+        "production",
+        "--command",
+        "install",
+        "--frontend",
+        "--backend",
+        "--dryrun"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder:core}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Preview production deployment commands without making server changes"
+    },
+    {
+      "label": "eLearning: Deploy production (frontend + backend)",
+      "type": "shell",
+      "command": "${workspaceFolder:core}/scripts/deploy.sh",
+      "args": [
+        "--build-type",
+        "production",
+        "--command",
+        "install",
+        "--frontend",
+        "--backend"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder:core}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true
+      },
+      "detail": "Deploy production frontend and backend; requires interactive confirmation"
+    },
+    {
+      "label": "eLearning: Back up staging public_html",
+      "type": "shell",
+      "command": "${workspaceFolder:core}/scripts/deploy.sh",
+      "args": [
+        "--build-type",
+        "staging",
+        "--backup"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder:core}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Create a timestamped staging public_html backup on the server"
+    },
+    {
+      "label": "eLearning: Back up production public_html",
+      "type": "shell",
+      "command": "${workspaceFolder:core}/scripts/deploy.sh",
+      "args": [
+        "--build-type",
+        "production",
+        "--backup"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder:core}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "detail": "Create a timestamped production public_html backup on the server"
+    },
+    {
       "label": "eLearning: Sync mobile to core (platform → core)",
       "dependsOn": [
         "eLearning: Sync Android to core (platform → core)",

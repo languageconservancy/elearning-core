@@ -1,11 +1,13 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { Device } from "@capacitor/device";
-import { environment } from "environments/environment";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-update-modal",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./update-modal.component.html",
     styleUrls: ["./update-modal.component.css"],
+    standalone: true,
 })
 /**
  * UpdateModalComponent is responsible for displaying a modal that prompts the user to update the

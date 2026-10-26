@@ -1,25 +1,43 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { UntypedFormGroup, UntypedFormControl, Validators } from "@angular/forms";
-import { Subscription } from "rxjs";
-import { CookieService } from "app/_services/cookie.service";
+import { ChangeDetectionStrategy, Component, inject, OnInit, OnDestroy } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import {
+    UntypedFormGroup,
+    UntypedFormControl,
+    Validators,
+    ReactiveFormsModule,
+} from "@angular/forms";
 import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
-import { SettingsService } from "app/_services/settings.service";
-import { Loader } from "app/_services/loader.service";
-import { LocalStorageService } from "app/_services/local-storage.service";
-import { environment } from "environments/environment";
-import { RegionPolicyService } from "app/_services/region-policy.service";
-import { BaseService } from "app/_services/base.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-
-declare let jQuery: any;
+import { BaseService } from "@app/_services/base.service";
+import { CookieService } from "@app/_services/cookie.service";
+import { Loader } from "@app/_services/loader.service";
+import { LocalStorageService } from "@app/_services/local-storage.service";
+import { ModalService } from "@app/_services/modal.service";
+import { RegionPolicyService } from "@app/_services/region-policy.service";
+import { SettingsService } from "@app/_services/settings.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
+import { environment } from "@environments/environment";
 
 @Component({
     selector: "app-privacy",
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule, ReactiveFormsModule],
     templateUrl: "./privacy.component.html",
     styleUrls: ["./privacy.component.scss"],
+    standalone: true,
 })
 export class PrivacyComponent implements OnInit, OnDestroy {
+    private settingsService = inject(SettingsService);
+    private loader = inject(Loader);
+    private router = inject(Router);
+    private cookieService = inject(CookieService);
+    private localStorage = inject(LocalStorageService);
+    private regionPolicyService = inject(RegionPolicyService);
+    private baseService = inject(BaseService);
+    private snackbarService = inject(SnackbarService);
+    private modalService = inject(ModalService);
+
     public environment = environment;
     private lockSubscription: Subscription;
     public user: any;
@@ -29,28 +47,21 @@ export class PrivacyComponent implements OnInit, OnDestroy {
     public parentalForm: UntypedFormGroup;
     public parentalEditForm: UntypedFormGroup;
 
-    constructor(
-        private settingsService: SettingsService,
-        private loader: Loader,
-        private router: Router,
-        private cookieService: CookieService,
-        private localStorage: LocalStorageService,
-        private regionPolicyService: RegionPolicyService,
-        private baseService: BaseService,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.cookieService
             .get("AuthToken")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
             })
             .catch(() => {
                 void this.router.navigate([""]);
             });
 
-        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(() => (this.lockFlag = false));
+        this.lockSubscription = this.settingsService.parentalLockCode.subscribe(
+            () => (this.lockFlag = false),
+        );
         this.settingsService.setTab("privacy");
     }
 
@@ -64,9 +75,12 @@ export class PrivacyComponent implements OnInit, OnDestroy {
         this.getSettings();
         this.parentalEditForm = new UntypedFormGroup({
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            parentalLockOld: new UntypedFormControl("", [Validators.required, this.validateParentalLock.bind(this)]),
+            parentalLockOld: new UntypedFormControl("", [
+                (control) => Validators.required(control),
+                this.validateParentalLock.bind(this),
+            ]),
             // eslint-disable-next-line @typescript-eslint/unbound-method
-            parentalLockNew: new UntypedFormControl("", Validators.required),
+            parentalLockNew: new UntypedFormControl("", (control) => Validators.required(control)),
         });
     }
 
@@ -85,7 +99,7 @@ export class PrivacyComponent implements OnInit, OnDestroy {
             .get("AuthUser")
             .then((value) => {
                 if (value == "") {
-                    throw value;
+                    throw new Error(value);
                 }
                 const loggedInUser = JSON.parse(value);
                 this.settingsService
@@ -98,7 +112,8 @@ export class PrivacyComponent implements OnInit, OnDestroy {
                             const parentalLock = this.localStorage.getItem("parentalLockCode");
                             if (this.user.usersetting.parental_lock_on == "1") {
                                 this.lockFlag = this.user.usersetting.parental_lock
-                                    ? parentalLock && parentalLock == this.user.usersetting.parental_lock
+                                    ? parentalLock &&
+                                      parentalLock == this.user.usersetting.parental_lock
                                         ? false
                                         : true
                                     : false;
@@ -200,7 +215,7 @@ export class PrivacyComponent implements OnInit, OnDestroy {
 
     openParentalLockModal() {
         if (this.privacy.parental_toggle && !this.user.usersetting.parental_lock) {
-            jQuery("#parentalLockModal").modal("show");
+            this.modalService.openModal("parentalLockModal");
         }
         this.setParentalToggle(this.privacy.parental_toggle);
     }
@@ -220,9 +235,11 @@ export class PrivacyComponent implements OnInit, OnDestroy {
 
     changeParentalLock(form) {
         if (form.valid) {
-            this.privacy.parental_lock = this.lockEditFlag ? form.value.parentalLockNew : form.value.parentalLock;
+            this.privacy.parental_lock = this.lockEditFlag
+                ? form.value.parentalLockNew
+                : form.value.parentalLock;
             this.setPrivacy("parentalLock");
-            jQuery("#parentalLockModal").modal("hide");
+            this.modalService.closeModal("parentalLockModal");
             form.reset();
         }
     }

@@ -1,19 +1,20 @@
-import { CommonModule } from "@angular/common";
 import {
+    ChangeDetectionStrategy,
     Component,
-    Input,
-    Output,
-    EventEmitter,
     ElementRef,
+    EventEmitter,
+    inject,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
     ViewChild,
     ViewEncapsulation,
-    OnInit,
-    OnChanges,
 } from "@angular/core";
-import { PipesModule } from "app/_pipes/pipes.module";
-import { AudioService } from "app/_services/audio.service";
+import { PipesModule } from "@app/_pipes/pipes.module";
+import { AudioService } from "@app/_services/audio.service";
 import { DeviceDetectorService } from "ngx-device-detector";
-import { AnswerType, CardDataType } from "app/shared/utils/elearning-types";
+import { AnswerType, CardDataType } from "@app/shared/utils/elearning-types";
 
 type Media = {
     FullUrl: string;
@@ -34,14 +35,18 @@ type Card = {
 };
 
 @Component({
-    standalone: true,
     selector: "app-selectable-card",
-    imports: [CommonModule, PipesModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    standalone: true,
+    imports: [PipesModule],
     templateUrl: "./selectable-card.component.html",
     styleUrls: ["./selectable-card.component.scss"],
     encapsulation: ViewEncapsulation.None,
 })
 export class SelectableCardComponent implements OnInit, OnChanges {
+    private audioService = inject(AudioService);
+    private deviceService = inject(DeviceDetectorService);
+
     @Input() card: Card;
     @Input() index: number;
     @Input() highlightedCardIndex: number;
@@ -71,11 +76,6 @@ export class SelectableCardComponent implements OnInit, OnChanges {
 
     // Check if device is desktop or not for responsive design
     isDesktop: boolean = !this.deviceService.isMobile() && !this.deviceService.isTablet();
-
-    constructor(
-        private audioService: AudioService,
-        private deviceService: DeviceDetectorService,
-    ) {}
 
     ngOnInit() {
         this.updateSelectButtonVisibility();

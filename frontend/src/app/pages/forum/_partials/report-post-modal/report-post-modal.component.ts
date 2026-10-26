@@ -1,30 +1,34 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 
-import { ForumService } from "app/_services/forum.service";
-import { Loader } from "app/_services/loader.service";
-import { SnackbarService } from "app/_services/snackbar.service";
-
-declare let jQuery: any;
+import { ForumService } from "@app/_services/forum.service";
+import { Loader } from "@app/_services/loader.service";
+import { ModalService } from "@app/_services/modal.service";
+import { SnackbarService } from "@app/_services/snackbar.service";
 
 @Component({
     selector: "app-report-post-modal",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./report-post-modal.component.html",
     styleUrls: ["./report-post-modal.component.scss"],
+    standalone: true,
+    imports: [FormsModule],
 })
 export class ReportPostModalComponent implements OnInit {
+    private forumService = inject(ForumService);
+    private loaderService = inject(Loader);
+    private modalService = inject(ModalService);
+    private snackbarService = inject(SnackbarService);
+
     // Report
     public OTHER_REASON: string = "other (explain)";
     private MODAL_SELECTOR: string = "#report-post";
     private reportData: any; // { userId, postToReport }
     public reportReason: string = "";
-    public reportExplanation: any = "";
+    public reportExplanation: string = "";
     public reportReasons: any;
 
-    constructor(
-        private forumService: ForumService,
-        private loaderService: Loader,
-        private snackbarService: SnackbarService,
-    ) {
+    constructor() {
         this.getFlagReasons();
     }
 
@@ -58,11 +62,11 @@ export class ReportPostModalComponent implements OnInit {
     }
 
     openModal() {
-        jQuery(this.MODAL_SELECTOR).modal("show");
+        this.modalService.openModal(this.MODAL_SELECTOR);
     }
 
     closeModal() {
-        jQuery(this.MODAL_SELECTOR).modal("hide");
+        this.modalService.closeModal(this.MODAL_SELECTOR);
     }
 
     reportPost() {
@@ -71,6 +75,7 @@ export class ReportPostModalComponent implements OnInit {
                 status: false,
                 msg: "Woops! Data isn't ready. Try again.",
             });
+            return;
         }
 
         this.reportExplanation = this.reportExplanation.trim();
@@ -97,7 +102,10 @@ export class ReportPostModalComponent implements OnInit {
         const data = {
             user_id: this.reportData.userId,
             post_id: this.reportData.postToReport.id,
-            report_type: this.reportExplanation ? this.reportExplanation : this.reportReason,
+            report_type:
+                this.reportReason === this.OTHER_REASON
+                    ? this.reportExplanation
+                    : this.reportReason,
         };
 
         // Send to backend

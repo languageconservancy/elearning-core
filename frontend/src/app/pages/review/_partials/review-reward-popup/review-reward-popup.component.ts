@@ -1,17 +1,18 @@
-import { Component, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { trigger, state, style, animate, transition, keyframes } from "@angular/animations";
 
-import { Loader } from "app/_services/loader.service";
-import { ReviewService } from "app/_services/review.service";
-import { KeyboardService } from "app/shared/keyboard/keyboard.service";
-import { OwoksapeUtils } from "app/shared/utils/owoksape-utils";
-import { AudioService } from "app/_services/audio.service";
-import * as App from "app/_constants/app.constants";
-import { LocalizeService } from "app/_services/localize.service";
+import { Loader } from "@app/_services/loader.service";
+import { ReviewService } from "@app/_services/review.service";
+import { KeyboardService } from "@app/shared/keyboard/keyboard.service";
+import { OwoksapeUtils } from "@app/shared/utils/owoksape-utils";
+import { AudioService } from "@app/_services/audio.service";
+import * as App from "@app/_constants/app.constants";
+import { LocalizeService } from "@app/_services/localize.service";
 
 @Component({
     selector: "app-review-reward-popup",
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: "./review-reward-popup.component.html",
     styleUrls: ["./review-reward-popup.component.scss"],
     animations: [
@@ -33,16 +34,24 @@ import { LocalizeService } from "app/_services/localize.service";
                     ]),
                 ),
             ]),
-
             transition(":enter", [style({ opacity: 0 })]),
-
             transition(":leave", [
-                animate(App.Animation.EXERCISE_POPUP_FADE_OUT_TIME_MS, style({ opacity: 0, transform: "scale(0)" })),
+                animate(
+                    App.Animation.EXERCISE_POPUP_FADE_OUT_TIME_MS,
+                    style({ opacity: 0, transform: "scale(0)" }),
+                ),
             ]),
         ]),
     ],
+    standalone: true,
 })
 export class ReviewRewardPopupComponent implements OnDestroy {
+    private reviewService = inject(ReviewService);
+    private keyboardService = inject(KeyboardService);
+    public audioService = inject(AudioService);
+    private loader = inject(Loader);
+    private localizeService = inject(LocalizeService);
+
     public popupSubscription: Subscription;
     public wrongAnswerSubscription: Subscription;
     private keyboardSubmitOrCloseSubscription: Subscription;
@@ -64,13 +73,7 @@ export class ReviewRewardPopupComponent implements OnDestroy {
     public translations: any = {};
     public OwoksapeUtils = OwoksapeUtils;
 
-    constructor(
-        private reviewService: ReviewService,
-        private keyboardService: KeyboardService,
-        public audioService: AudioService,
-        private loader: Loader,
-        private localizeService: LocalizeService,
-    ) {
+    constructor() {
         this.wrongAnswerSubscription = this.reviewService.wrongCard.subscribe((res) => {
             this.reviewCards = res;
             this.activeCard = Object.assign({}, this.reviewCards[0]);
@@ -117,41 +120,48 @@ export class ReviewRewardPopupComponent implements OnDestroy {
 
     setKeyboardListeners(turnOn: boolean) {
         if (turnOn) {
-            if (!!this.keyboardSubmitOrCloseSubscription && !this.keyboardSubmitOrCloseSubscription.closed) {
+            if (
+                !!this.keyboardSubmitOrCloseSubscription &&
+                !this.keyboardSubmitOrCloseSubscription.closed
+            ) {
                 return;
             }
 
-            this.keyboardSubmitOrCloseSubscription = this.keyboardService.submitOrCloseEvent.subscribe(() => {
-                switch (this.popupType) {
-                    case "exercise":
-                        if (this.showPopup) {
-                            this.closePopup();
-                        }
-                        break;
-                    case "reviewScore":
-                        this.closePopupReview();
-                        break;
-                    default:
-                        console.warn("Oops! Unhandled popupType.");
-                        break;
-                }
-            });
-
-            this.keyboardToggleSelectionSubscription = this.keyboardService.toggleSelectionEvent.subscribe((event) => {
-                if (this.popupType == "exercise" && this.reviewCards.length > 1) {
-                    if (event.shiftKey) {
-                        this.previous();
-                    } else {
-                        this.next();
+            this.keyboardSubmitOrCloseSubscription =
+                this.keyboardService.submitOrCloseEvent.subscribe(() => {
+                    switch (this.popupType) {
+                        case "exercise":
+                            if (this.showPopup) {
+                                this.closePopup();
+                            }
+                            break;
+                        case "reviewScore":
+                            this.closePopupReview();
+                            break;
+                        default:
+                            console.warn("Oops! Unhandled popupType.");
+                            break;
                     }
-                }
-            });
+                });
 
-            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(() => {
-                if (!!this.activeCard && !!this.activeCard.FullAudioUrl) {
-                    this.audioService.playPauseAudio(this.activeCard.FullAudioUrl);
-                }
-            });
+            this.keyboardToggleSelectionSubscription =
+                this.keyboardService.toggleSelectionEvent.subscribe((event) => {
+                    if (this.popupType == "exercise" && this.reviewCards.length > 1) {
+                        if (event.shiftKey) {
+                            this.previous();
+                        } else {
+                            this.next();
+                        }
+                    }
+                });
+
+            this.keyboardToggleMediaSubscription = this.keyboardService.toggleMediaEvent.subscribe(
+                () => {
+                    if (!!this.activeCard && !!this.activeCard.FullAudioUrl) {
+                        this.audioService.playPauseAudio(this.activeCard.FullAudioUrl);
+                    }
+                },
+            );
         } else {
             if (!!this.keyboardSubmitOrCloseSubscription) {
                 this.keyboardSubmitOrCloseSubscription.unsubscribe();

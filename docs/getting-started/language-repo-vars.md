@@ -39,11 +39,34 @@ cp core/scripts/examples/deploy-vars.example.sh scripts/deploy-vars.sh   # new p
 
 **`scripts/deploy-vars.sh`** — set staging/production server users, document roots, and SSH hosts for **this** language app. Commit to the language repo. Secrets (passwords, API keys) belong in `platform/config/*/.env`, not here.
 
+### Server CLI PHP and Composer
+
+WHM MultiPHP selects the domain's **web** PHP, not necessarily the PHP used over
+SSH. A Composer error reporting PHP 7.4 after selecting web PHP 8.3 means the
+CLI runtime also needs to be selected.
+
+Deployment invokes Composer explicitly with cPanel's PHP 8.3, including for
+its PHP subprocesses. Defaults are:
+
+```bash
+export PRODUCTION_PHP_BINARY="/opt/cpanel/ea-php83/root/usr/bin/php"
+export PRODUCTION_COMPOSER_BINARY="/opt/cpanel/composer/bin/composer"
+export STAGING_PHP_BINARY="/opt/cpanel/ea-php83/root/usr/bin/php"
+export STAGING_COMPOSER_BINARY="/opt/cpanel/composer/bin/composer"
+```
+
+Override these in `scripts/deploy-vars.sh` if the server uses different paths.
+The Composer path must point to a PHP script/PHAR, not a shell wrapper.
+Existing target files can omit these variables to use the defaults.
+Before building or replacing server files, backend installation checks PHP
+>=8.3 and runs Composer `--version` as the target server user. A failed check
+stops deployment; it does not bypass platform requirements.
+
 ## Who reads these files
 
 | File | Used by |
 |------|---------|
-| `scripts/local-dev-vars.sh` | `core/scripts/sync-local-backend.sh` |
+| `scripts/local-dev-vars.sh` | `core/scripts/sync-local-backend.sh`, `core/scripts/composer-update-local-php.sh` |
 | `scripts/deploy-vars.sh` | `core/scripts/deploy.sh` |
 
 Both scripts resolve paths relative to the language repo root (`elearning-<app-name>/`).

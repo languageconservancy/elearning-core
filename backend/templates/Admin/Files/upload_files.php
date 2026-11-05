@@ -18,6 +18,8 @@ use Cake\Routing\Router;
     <p>Use this form to upload one or more files to AWS S3, where curriculum
         images, audio, and video are stored. For each file, an entry in the
         Files table will be created to allow the files to be used in content creation.<br/>
+        Filenames must use ASCII letters, numbers, spaces, and <code>. _ - ( ) , ; [ ] ~</code> only.
+        Use the Name/Description fields (or spreadsheet columns) for display text in other languages.
     </p>
     <div class="box box-primary">
         <?= $this->Form->create(null, ['type' => 'file', 'id' => 'files-upload-form']) ?>

@@ -16,7 +16,7 @@ class SiteLoginService extends LoginService
     {
         parent::__construct($request);
         $this->user = $user;
-        $this->payload = $request->getData();
+        $this->payload = $request?->getData() ?? [];
     }
 
     /**

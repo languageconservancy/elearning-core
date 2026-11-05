@@ -148,13 +148,18 @@ class FilesController extends AppController
                             return $this->redirect(['action' => 'uploadFiles']);
                         }
                         // Determine file name based on user settings
-                        $fileMeta = $this->getFtpUploadFilename(
-                            $file,
-                            $data['name'],
-                            $data['description'],
-                            $data['filenames-method'],
-                            $i + 1
-                        );
+                        try {
+                            $fileMeta = $this->getFtpUploadFilename(
+                                $file,
+                                $data['name'],
+                                $data['description'],
+                                $data['filenames-method'],
+                                $i + 1
+                            );
+                        } catch (\InvalidArgumentException $e) {
+                            $this->Flash->error(__($e->getMessage()));
+                            return $this->redirect(['action' => 'uploadFiles']);
+                        }
 
                         // Check if file already exists and if to overwrite
                         $awsFilePath = Configure::read('AWS_LINK') . $fileMeta['new_name'];
@@ -270,6 +275,7 @@ class FilesController extends AppController
             $fileMeta['name'] = pathinfo($file->getClientFilename(), PATHINFO_FILENAME);
             $fileMeta['description'] = $fileMeta['name'];
             $fileMeta['new_name'] = $file->getClientFilename();
+            $this->FilesCommon->validateFilename($fileMeta['new_name']);
         } elseif ($filenameMethod == 'constants') {
             if (!$idx) {
                 throw new \InvalidArgumentException('No index value passed in: ' . $idx);
@@ -283,6 +289,7 @@ class FilesController extends AppController
             $fileMeta['name'] = $name . '_' . $idx;
             $fileMeta['description'] = $description . '_' . $idx;
             $fileMeta['new_name'] = $name . '_' . $idx . '.' . $format;
+            $this->FilesCommon->validateFilename($fileMeta['new_name']);
         } else {
             throw new \UnexpectedValueException("Unhandled filenames method: " . $filenameMethod);
         }
@@ -521,13 +528,25 @@ class FilesController extends AppController
         $fileStatuses = array();
         $i = 0;
         foreach ($clientFiles as $key => $file) {
-            $fileMeta = $this->getFtpUploadFilename(
-                $file,
-                $data['name'],
-                $data['description'],
-                $data['filenames-method'],
-                $i + 1
-            );
+            try {
+                $fileMeta = $this->getFtpUploadFilename(
+                    $file,
+                    $data['name'],
+                    $data['description'],
+                    $data['filenames-method'],
+                    $i + 1
+                );
+            } catch (\InvalidArgumentException $e) {
+                $fileStatuses[] = [
+                    'originalFilename' => $file->getClientFilename(),
+                    'uploadFilename' => '',
+                    'exists' => false,
+                    'awsFilepaths' => [],
+                    'validationError' => $e->getMessage(),
+                ];
+                ++$i;
+                continue;
+            }
             $filePaths = array();
             $awsFilePath = Configure::read('AWS_LINK') . $fileMeta['new_name'];
             $awsFilePathSpaces = Configure::read('AWS_LINK') . str_replace(' ', '+', $fileMeta['new_name']);
@@ -548,7 +567,8 @@ class FilesController extends AppController
                 'originalFilename' => $file->getClientFilename(),
                 'uploadFilename' => $fileMeta['new_name'],
                 'exists' => $fileAlreadyExists,
-                'awsFilepaths' => $filePaths
+                'awsFilepaths' => $filePaths,
+                'validationError' => null,
             );
             $fileStatuses[] = $fileStatus;
             ++$i;

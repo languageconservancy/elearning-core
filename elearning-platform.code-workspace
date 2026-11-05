@@ -10,6 +10,9 @@
     {
       "name": "frontend",
       "path": "./frontend"
+    },
+    {
+      "path": "../../vocab-builder-library"
     }
   ],
   "settings": {}

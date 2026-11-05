@@ -21,5 +21,11 @@ Reference and ad-hoc SQL for schema changes, reporting, and content audits. For 
 | `lessons_count_in_public_paths.sql` | Count lessons in public paths |
 | `units_count_in_path_id.sql` | Count units in specific learning path IDs |
 | `units_count_in_public_paths.sql` | Count units in public paths |
+| [`charset_audit.sql`](../../scripts/sql/charset_audit.sql) | Entry point for charset audit (run metadata + data files separately) |
+| [`charset_audit_metadata.sql`](../../scripts/sql/charset_audit_metadata.sql) | Pre/post migration: table and column charset inventory |
+| [`charset_audit_data.sql`](../../scripts/sql/charset_audit_data.sql) | Pre/post migration: Lakota text and mojibake spot-checks |
+| [`charset_migrate_to_utf8mb4.sql`](../../scripts/sql/charset_migrate_to_utf8mb4.sql) | Convert all tables to `utf8mb4` / `utf8mb4_0900_ai_ci` |
+
+**Charset migration (MySQL 8):** see [Database charset migration](../backend/database-charset-migration.md) for the full audit → migrate → verify procedure.
 
 Content migration between databases is handled by PHP scripts in [`core/scripts/php/`](../php/README.md) (`migrate-path.php`, `migrate-unit.php`).

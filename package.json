@@ -17,7 +17,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "install-dependencies": "npm install && cd ./frontend && npm install && cd ../backend && npm install && composer install && brew install cocoapods",
+    "install-dependencies": "npm install && cd ./frontend && npm install && cd ../backend && npm install && ../scripts/composer-update-local-php.sh install --no-interaction && brew install cocoapods",
     "prepare-platform:demo": "npm run copy-assets:demo && npm run generate-config-based-files:demo",
     "prepare-platform:local": "npm run copy-assets:local && npm run generate-config-based-files:local",
     "prepare-platform:staging": "npm run copy-assets:staging && npm run generate-config-based-files:staging",
@@ -40,6 +40,7 @@
     "cap:add-android": "cd ./frontend && npx cap add android",
     "cap:sync": "cd ./frontend && npx cap sync",
     "sync-local-backend": "./scripts/sync-local-backend.sh",
+    "composer-update:local-php": "./scripts/composer-update-local-php.sh",
     "init-language-repo-vars": "node scripts/init-language-repo-vars.js",
     "copy-demo-assets": "mkdir -p ./backend/webroot && cp -r ./demo/webroot/* ./backend/webroot/",
     "copy-ios-to-core": "mkdir -p ./frontend/ios && rsync -a --delete ../platform/ios/ ./frontend/ios/",

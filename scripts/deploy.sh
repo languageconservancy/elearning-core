@@ -56,6 +56,8 @@ sshIdentityFile=""
 serverUser=""
 documentRoot=""
 extraBackendFilesToInstall=""
+serverPhpBinary=""
+serverComposerBinary=""
 
 # Global constants
 readonly VALID_BUILD_TYPES=(
@@ -67,7 +69,6 @@ readonly VALID_COMMANDS=("install" "createrelease")
 readonly FRONTEND_DIR="${CORE_DIR}/frontend"
 readonly BACKEND_DIR="${CORE_DIR}/backend"
 readonly NG_BINARY="${FRONTEND_DIR}/node_modules/@angular/cli/bin/ng.js"
-readonly COMPOSER_BINARY="composer"
 readonly FRONTEND_DIST_FILES="*.js *.css dist-resources assets favicon.ico 3rdpartylicenses.txt index.html"
 readonly BACKEND_DIST_FILES=".htaccess .bowerrc src templates bin config/Migrations config/app.php config/app_local.php config/schema config/bootstrap.php config/bootstrap_cli.php config/paths.php config/requirements.php config/routes.php config/allowed_routes.php info plugins composer.json index.php info.php web.config webroot/.htaccess webroot/favicon.ico webroot/index.php webroot/css webroot/font webroot/js webroot/templates" # webroot/img/*.*"
 readonly BACKEND_EXTRA_DIST_FILES_TO_REMOVE="vendor composer.lock"
@@ -103,6 +104,8 @@ set_server_user() {
             sshIdentityFile="${PRODUCTION_SSH_IDENTITY_FILE}"
             sshHost="${PRODUCTION_SSH_HOST}"
             sshUser="${PRODUCTION_SSH_USER}"
+            serverPhpBinary="${PRODUCTION_PHP_BINARY:-/opt/cpanel/ea-php83/root/usr/bin/php}"
+            serverComposerBinary="${PRODUCTION_COMPOSER_BINARY:-/opt/cpanel/composer/bin/composer}"
             # ensure all variables are set
             check_variable ${serverUser} "PRODUCTION_SERVER_USER environment variable not set."
             check_variable ${documentRoot} "PRODUCTION_DOCUMENT_ROOT environment variable not set."
@@ -118,6 +121,8 @@ set_server_user() {
             sshIdentityFile="${STAGING_SSH_IDENTITY_FILE}"
             sshHost="${STAGING_SSH_HOST}"
             sshUser="${STAGING_SSH_USER}"
+            serverPhpBinary="${STAGING_PHP_BINARY:-/opt/cpanel/ea-php83/root/usr/bin/php}"
+            serverComposerBinary="${STAGING_COMPOSER_BINARY:-/opt/cpanel/composer/bin/composer}"
             # ensure all variables are set
             check_variable ${serverUser} "STAGING_SERVER_USER environment variable not set."
             check_variable ${documentRoot} "STAGING_DOCUMENT_ROOT environment variable not set."
@@ -260,7 +265,7 @@ build_backend() {
         echo "Updating local backend composer packages"
     else
         set -x # turn on mode that prints all commands to terminal
-        cd ${BACKEND_DIR} && composer update --no-interaction --no-dev
+        "${SCRIPT_DIR}/composer-update-local-php.sh" update --no-interaction --no-dev
         set +x # turn off mode that prints all commands to terminal
     fi
 }
@@ -306,17 +311,32 @@ copy_backend_to_server() {
     fi
 }
 
+run_server_composer() {
+    local command remoteCommand phpVersionCheck composerArgs
+    phpVersionCheck='if (PHP_VERSION_ID < 80300) { fwrite(STDERR, "Error: Server CLI PHP must be >=8.3; WHM MultiPHP only sets web PHP.\n"); exit(1); }'
+    printf -v command 'export PATH=%q:"$PATH"; if [ ! -x %q ] || [ ! -r %q ]; then echo %q >&2; exit 1; fi; %q -r %q && cd %q && %q %q' \
+        "$(dirname "${serverPhpBinary}")" "${serverPhpBinary}" "${serverComposerBinary}" \
+        "Error: Server PHP or Composer not found; configure the ${buildType} PHP_BINARY and COMPOSER_BINARY paths in scripts/deploy-vars.sh." \
+        "${serverPhpBinary}" "${phpVersionCheck}" "${domainRoot}" "${serverPhpBinary}" "${serverComposerBinary}"
+    if [ "${1:-}" != "--version" ]; then
+        printf -v command '%s --working-dir=%q' "${command}" "${documentRoot}/backend"
+    fi
+    printf -v composerArgs ' %q' "$@"
+    command="${command}${composerArgs}"
+    printf -v remoteCommand 'su -s /bin/bash -c %q %q' "${command}" "${serverUser}"
+
+    if ${dryRun}; then
+        print_dryrun_msg "ssh -t -i ${sshIdentityFile} ${sshUser}@${sshHost} ${remoteCommand}"
+    else
+        echo "The following password prompt is for the ${serverUser} user on the server"
+        ssh -t -i "${sshIdentityFile}" "${sshUser}@${sshHost}" "${remoteCommand}"
+    fi
+}
+
 install_backend_composer_packages() {
     print_heading "\nInstalling server backend composer packages"
 
-    if ${dryRun} ; then
-        echo "Installing server backend composer packages"
-    else
-        echo "The following password prompt is for the ${serverUser} user on the server"
-        set -x # turn on mode that prints all commands to terminal
-        ssh -t -i ${sshIdentityFile} ${sshUser}@${sshHost} "su -c 'cd ${documentRoot}/backend && composer update --no-interaction --no-dev' ${serverUser}"
-        set +x # turn off mode that prints all commands to terminal
-    fi
+    run_server_composer update --no-interaction --no-dev
 }
 
 # Creates version file on server with the following information:
@@ -384,7 +404,8 @@ print_settings() {
     echo "  FRONTEND_DIR:        ${FRONTEND_DIR}"
     echo "  BACKEND_DIR:         ${BACKEND_DIR}"
     echo "  NG_BINARY:           ${NG_BINARY}"
-    echo "  COMPOSER_BINARY:     ${COMPOSER_BINARY}"
+    echo "  SERVER_PHP_BINARY:   ${serverPhpBinary}"
+    echo "  SERVER_COMPOSER:     ${serverComposerBinary}"
     echo "  SSH_USER:            ${sshUser}"
     echo "  SSH_HOST:            ${sshHost}"
     echo "  FRONTEND_DIST_FILES: ${FRONTEND_DIST_FILES}"
@@ -589,6 +610,11 @@ run_main() {
     if ${versionFile} ; then
         add_version_file_to_server
         exit 0
+    fi
+
+    if [[ $runBackend == true && "${commandType}" == "install" ]]; then
+        print_heading "\nChecking server CLI PHP and Composer before deployment"
+        run_server_composer --version
     fi
 
     if [[ $runFrontend == true || $runBackend == true ]]; then

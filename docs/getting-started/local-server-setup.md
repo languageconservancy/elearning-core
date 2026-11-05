@@ -6,13 +6,13 @@ Pick **MAMP** (macOS) or **XAMPP** (Windows, Linux, or macOS). Both bundle Apach
 
 ## Required settings
 
-These values match what the project is tested against:
+Use these settings for local development:
 
 
 | Setting       | Value                           | Notes                                                                                                |
 | ------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | Web server    | Apache                          | Not Nginx alone — use Apache for the backend                                                         |
-| PHP           | **7.4.33**                      | Required for CakePHP compatibility                                                                   |
+| PHP           | **8.3 or newer**                | Required by backend `composer.json`; use 8.3 to match deployment                                      |
 | MySQL         | **5.7.44** (or 5.7.x)           | Demo DB and migrations target MySQL 5.7                                                              |
 | Apache port   | **80**                          | API URL becomes `http://localhost/backend/api/`. Admin URL becomes `http://localhost/backend/admin/` |
 | MySQL port    | **3306**                        | Default                                                                                              |
@@ -103,7 +103,7 @@ Open **MAMP → Settings** (or **Preferences** on older versions) and set:
 
 | Setting       | Value                                                         |
 | ------------- | ------------------------------------------------------------- |
-| PHP version   | **7.4.33**                                                    |
+| PHP version   | **8.3** (e.g. 8.3.30)                                         |
 | Web server    | **Apache**                                                    |
 | Apache port   | **80**                                                        |
 | MySQL port    | **3306**                                                      |
@@ -112,10 +112,9 @@ Open **MAMP → Settings** (or **Preferences** on older versions) and set:
 | Document root | **Application → MAMP → htdocs** (`/Applications/MAMP/htdocs`) |
 
 
-**PHP 7.4.33 missing from the dropdown?**
+**PHP 8.3 missing from the dropdown?**
 
-1. Go to `/Applications/MAMP/bin/php/`
-2. Rename PHP versions you do **not** want by prefixing the folder name with `_` (e.g. `_php8.3.14`), leaving only the versions you need.
+Install a MAMP release that includes PHP 8.3, then select it in MAMP settings.
 
 **Terminal PHP version**
 
@@ -125,16 +124,28 @@ MAMP’s PHP may differ from your system `php`. To check which version is being 
 php -v
 ```
 
-To use 7.4.33 in the terminal:
+For Composer, run this from the language repo root:
 
 ```bash
-echo 'export PATH="/Applications/MAMP/bin/php/php7.4.33/bin/:$PATH"' >> ~/.bash_profile   # bash
-# or
-echo 'export PATH="/Applications/MAMP/bin/php/php7.4.33/bin/:$PATH"' >> ~/.zshenv           # zsh
-source ~/.bash_profile   # or source ~/.zshenv
+npm run core composer-update:local-php
 ```
 
+The helper resolves the selected MAMP PHP from `ELEARNING_WWW_PATH`, requires
+PHP >=8.3, and prefers MAMP's bundled Composer. It also puts that PHP on `PATH`
+for Composer scripts. XAMPP uses its bundled PHP and Composer from `PATH`.
+Additional arguments replace the default `update --no-interaction`, for example:
 
+```bash
+npm --prefix core run composer-update:local-php -- install --no-interaction
+npm --prefix core run composer-update:local-php -- --version
+```
+
+To use the selected MAMP PHP for other terminal commands in the current shell:
+
+```bash
+export PATH="/Applications/MAMP/bin/php/php/bin:$PATH"
+php -v
+```
 
 ### 3. Enable Apache URL rewriting
 
@@ -183,9 +194,12 @@ After you import the demo DB and run `npm run core sync-local-backend`, check [h
 
 [XAMPP](https://www.apachefriends.org/) is a common alternative, especially on Windows. Paths differ by OS; the settings above are the same.
 
-### 1. Install XAMPP with PHP 7.4
+### 1. Install XAMPP with PHP 8.3 or newer
 
-Download an XAMPP release that includes **PHP 7.4** from [apachefriends.org/download.html](https://www.apachefriends.org/download.html). Newer XAMPP bundles may ship PHP 8.x only — if 7.4 is not available, install an older 7.4.x XAMPP build or use MAMP on macOS.
+Use a distribution that includes **PHP >=8.3**. Check the bundled PHP version
+before installing from [apachefriends.org/download.html](https://www.apachefriends.org/download.html);
+older bundles do not meet this backend's requirement. MAMP with PHP 8.3 is an
+alternative on macOS.
 
 ### 2. Default paths
 
@@ -301,5 +315,3 @@ Demo DB details: [demo/README.md](../demo/README.md).
 | **500 / rewrite errors**       | `mod_rewrite` enabled? `AllowOverride All` on htdocs (XAMPP)?                                                                     |
 | **SQL mode errors on import**  | Applied `my.cnf` / `my.ini` from `core/demo/mamp/my.cnf` and restarted MySQL.                                                     |
 | **Wrong PHP version**          | MAMP/XAMPP settings UI set to 7.4.33; terminal `php -v` matches if you run Composer scripts manually.                             |
-
-

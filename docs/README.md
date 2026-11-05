@@ -7,7 +7,7 @@ Index for eLearning Core documentation. The [main README](../README.md) is the G
 | Doc | Description |
 |-----|-------------|
 | [Developing on a platform](getting-started/developing.md) | Daily workflow, VS Code workspace, tasks, and troubleshooting |
-| [Local server setup](getting-started/local-server-setup.md) | MAMP or XAMPP — Apache, PHP 7.4, MySQL, document root, `ELEARNING_WWW_PATH` |
+| [Local server setup](getting-started/local-server-setup.md) | MAMP or XAMPP — Apache, PHP >=8.3, MySQL, document root, `ELEARNING_WWW_PATH` |
 | [Language repo vars](getting-started/language-repo-vars.md) | `local-dev-vars.sh`, `deploy-vars.sh` — templates in core, copies in language repo |
 | [Main README](../README.md) | Overview, quick start, npm commands, repo structure |
 

@@ -4,6 +4,39 @@ This backend package contains two features in a single project.
 1. An admin panel interface allowing database manipulation.
 1. An API for the frontend endpoints.
 
+### Admin UI and local Apache setup
+
+The admin UI uses the `maiconpinto/cakephp-adminlte-theme` CakePHP plugin.
+AdminLTE provides the presentation layer; the admin controllers, authorization,
+and application menus remain in this project.
+
+Apache must load `mod_rewrite` and allow the backend's `.htaccess` rules
+(`AllowOverride All` on the document-root directory). In MAMP, check
+`/Applications/MAMP/conf/apache/httpd.conf` for:
+
+```apache
+LoadModule rewrite_module modules/mod_rewrite.so
+```
+
+Validate the Apache configuration and restart Apache after changing it.
+MAMP may regenerate this configuration when server settings change.
+
+If `/backend/` renders an unstyled login page but
+`/backend/admin_l_t_e/css/AdminLTE.min.css` and
+`/backend/admin/users/login` return Apache 404 pages, check rewriting before
+changing Composer dependencies. CakePHP's asset middleware serves the plugin
+assets from `vendor/`; these requests must reach the front controller.
+Verify that the login URL and its local CSS/JavaScript URLs return HTTP 200.
+
+For menu and layout redesigns, edit the application overrides in
+[`templates/plugin/AdminLTE/`](../../backend/templates/plugin/AdminLTE/),
+especially
+[`element/aside/sidebar-menu.php`](../../backend/templates/plugin/AdminLTE/element/aside/sidebar-menu.php)
+and [`layout/default.php`](../../backend/templates/plugin/AdminLTE/layout/default.php).
+Keep role-based menu visibility and controller authorization intact. Changes
+belong in these application templates, not in `vendor/`, and must be synced to
+the local server before testing.
+
 Configuration
 ===
 

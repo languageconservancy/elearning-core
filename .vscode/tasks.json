@@ -69,6 +69,17 @@
       "detail": "Push core/backend to $ELEARNING_WWW_PATH — run after PHP or backend config changes (reads scripts/local-dev-vars.sh)"
     },
     {
+      "label": "eLearning: Update backend composer packages (local PHP)",
+      "type": "shell",
+      "command": "npm run composer-update:local-php",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "detail": "composer update on core/backend using the PHP bundled in your local MAMP/XAMPP stack (resolved from ELEARNING_WWW_PATH), not whatever php/composer resolve to on PATH"
+    },
+    {
       "label": "eLearning: Copy demo assets to backend",
       "type": "shell",
       "command": "npm run copy-demo-assets",

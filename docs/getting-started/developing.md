@@ -41,7 +41,7 @@ Tasks and docs live in core so they stay in sync when you `npm run update-core`.
 1. Clone your language repo (`elearning-<app-name>/`) and init the submodule: `npm run init`
 2. Install dependencies: `npm run core install-dependencies`
 3. Create language repo var files if missing: `npm run core init-language-repo-vars` (or task **Init language repo vars**) — see [language-repo-vars.md](language-repo-vars.md)
-4. Set up a local Apache + MySQL stack — see **[local-server-setup.md](local-server-setup.md)** (MAMP or XAMPP, PHP 7.4.33, edit `scripts/local-dev-vars.sh`, demo DB import)
+4. Set up a local Apache + MySQL stack — see **[local-server-setup.md](local-server-setup.md)** (MAMP or XAMPP, PHP >=8.3, edit `scripts/local-dev-vars.sh`, demo DB import)
 5. Run task **eLearning: First-time web setup** (or `copy-demo-assets` then `sync-local-backend`)
 6. For mobile builds: run **eLearning: Sync mobile to core (platform → core)** so `platform/android/` and `platform/ios/` are copied into `core/frontend/` (required after a fresh clone before opening Android Studio or Xcode)
 
@@ -62,6 +62,7 @@ In Cursor/VS Code (with `elearning-platform.code-workspace` open): **Terminal �
 | **Start demo dev server** | Normal web development (most days) |
 | **Apply backend config changes (demo)** | You edited `app_local.php` or `platform/config/demo/.env` |
 | **Sync backend to local server** | You changed PHP under `core/backend/` |
+| **Update backend composer packages (local PHP)** | You changed `core/backend/composer.json` — runs `composer update` with the PHP bundled in your local MAMP/XAMPP stack (resolved from `ELEARNING_WWW_PATH`), not whatever `php`/`composer` resolve to on `PATH` |
 | **Build demo** | Verify a production-like frontend build |
 | **Build staging / production** | Mobile or web release builds (includes Capacitor sync) |
 | **Sync mobile to core (platform → core)** | After clone, or when `platform/android/` or `platform/ios/` changed — copies into `core/frontend/` for builds |

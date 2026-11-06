@@ -379,7 +379,7 @@ class AppController extends \App\Controller\AppController
             'conditions' => array_merge($conditions, [
                 'user_unit_activity_id IS' => $activityParams['user_unit_activity_id']
             ])
-        ])->group(['UserActivities.card_id']);
+        ])->select(['UserActivities.card_id'])->distinct();
 
         $count = $activities->count();
         $numCorrectNullActivities = $this->getUserActivitiesTable()->find('all', [
@@ -436,7 +436,7 @@ class AppController extends \App\Controller\AppController
     {
         if ($cardType == 'card' &&
             in_array($exerciseType, [
-                'anagram', 'truefalse', 'fill_in_the_blanks', 'multiple-choice', 'recording'
+                'anagram', 'truefalse', 'fill_in_the_blanks', 'multiple-choice', 'recording', 'vocab-builder'
             ])
         ) {
             return $activityDetailsCounter >= 1;
@@ -1045,11 +1045,7 @@ class AppController extends \App\Controller\AppController
         if (empty($users)) {
             return null;
         }
-        $users[0]['classroom_count'] = $this->getClassroomUsersTable()
-            ->find()
-            ->distinct('classroom_id')
-            ->where(['user_id' => $id])
-            ->count();
+        $users[0]['classroom_count'] = $this->getClassroomCount($id);
         if ($users[0]['id'] == $id) {
             //convert login data to registration type for signin validation steps
             if ($users[0]['google_id'] == null && $users[0]['fb_id'] == null) {
@@ -1066,6 +1062,16 @@ class AppController extends \App\Controller\AppController
         } else {
             return null;
         }
+    }
+
+    protected function getClassroomCount(int $userId): int
+    {
+        return $this->getClassroomUsersTable()
+            ->find()
+            ->select(['classroom_id'])
+            ->distinct()
+            ->where(['user_id' => $userId])
+            ->count();
     }
 
     //general function user data,

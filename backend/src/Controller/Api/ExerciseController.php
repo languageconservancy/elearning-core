@@ -4,8 +4,11 @@ namespace App\Controller\Api;
 
 use Cake\Core\Configure;
 use Cake\Log\Log;
-use App\Lib\HttpStatusCodes;
+use App\Lib\HttpStatusCode;
 use FFMpeg;
+use App\Lib\VocabBuilder;
+use InvalidArgumentException;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 class ExerciseController extends AppController
 {
@@ -21,9 +24,15 @@ class ExerciseController extends AppController
     {
         $data = $this->request->getData();
         if (!empty($data['exercise_id'])) {
-            $exercise = $this->generateExercise($data);
+            try {
+                $exercise = $this->generateExercise($data);
+            } catch (InvalidArgumentException | RecordNotFoundException $error) {
+                Log::warning('Exercise content unavailable: ' . $error->getMessage());
+                $this->sendApiData(false, 'Exercise content unavailable: ' . $error->getMessage(), [], HttpStatusCode::BAD_REQUEST);
+                return;
+            }
         } else {
-            $this->sendApiData(false, 'Please Send Id.', [], HttpStatusCodes::BAD_REQUEST);
+            $this->sendApiData(false, 'Please Send Id.', [], HttpStatusCode::BAD_REQUEST);
             return;
         }
 
@@ -40,7 +49,7 @@ class ExerciseController extends AppController
         $exercise = $this->getExercisesTable()->get($data['exercise_id'])->toArray();
         if (empty($exercise)) {
             Log::error("Exercise not found: " . $data['exercise_id']);
-            $this->sendApiData(false, 'Exercise not found.', [], HttpStatusCodes::NOT_FOUND);
+            $this->sendApiData(false, 'Exercise not found.', [], HttpStatusCode::NOT_FOUND);
             return;
         }
         $exerciseOptions = $this->getExerciseoptionsTable()
@@ -48,7 +57,11 @@ class ExerciseController extends AppController
             ->where(['exercise_id' => $data['exercise_id']])
             ->toArray();
 
-        $response = $exercise;
+        $response = $exercise['exercise_type'] === VocabBuilder::TYPE
+            ? (new VocabBuilder())->exercise($exercise, array_map(static function ($option) {
+                return $option->toArray();
+            }, $exerciseOptions))
+            : $exercise;
 
         $questions = [];
         $responses = [];

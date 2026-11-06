@@ -83,7 +83,12 @@
     }
 
     <!-- Message: No activities in unit -->
-    @if (unitFetched && !unit.activities.length) {
+    @if (unitLoadError) {
+      <div class="col-10 text-center">
+        <h3 class="text-white no-units" role="alert">{{ unitLoadError }}</h3>
+      </div>
+    }
+    @if (unitFetched && !unitLoadError && !unit.activities.length) {
       <div
         class="col-10 d-none d-lg-block text-center"
         >

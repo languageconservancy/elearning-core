@@ -2009,6 +2009,12 @@ function SetFile(fileID, inputType) {
             success: function (res) {
                 var resultSet = JSON.parse(res);
                 if (resultSet.status == 'success') {
+                    if (inputType.indexOf('vbl-') === 0) {
+                        $('#' + inputType).val(resultSet.data.id);
+                        $('#' + inputType + '-label').text(resultSet.data.file_name);
+                        $('#fileLibrary').modal('hide');
+                        return;
+                    }
                     switch (resultSet.data.type) {
                         case 'audio':
                             var audioSrc = resultSet.data.FullUrl;

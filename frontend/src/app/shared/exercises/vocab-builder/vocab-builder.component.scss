@@ -1,0 +1,33 @@
+:host {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
+.vocab-builder-exercise {
+    margin: 0 auto;
+    padding: 1rem;
+    max-width: 64rem;
+    border-radius: 1rem;
+    background: #fff;
+    color: #17364b;
+}
+
+.activity-space {
+    width: 100%;
+    min-width: 0;
+    height: clamp(28rem, 65vh, 48rem);
+    container-type: size;
+    overflow: auto;
+}
+
+.activity-instructions {
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+    .vocab-builder-exercise {
+        padding: 0.5rem;
+    }
+}

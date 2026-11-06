@@ -128,6 +128,9 @@ class AppController extends \App\Controller\AppController
                                 $cardIds[] = $options->card_id;
                             }
                             break;
+                        case 'vocab-builder':
+                            $cardIds[] = $options->card_id;
+                            break;
                         default:
                             break;
                     }

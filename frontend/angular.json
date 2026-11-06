@@ -35,8 +35,16 @@
                             "sweetalert2"
                         ],
                         "polyfills": ["src/polyfills.ts"],
-                        "assets": ["src/assets", "src/.htaccess", "src/favicon.ico"],
+                        "assets": [
+                            "src/assets", "src/.htaccess", "src/favicon.ico",
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@languageconservancy/vocab-builder-library/assets",
+                                "output": "/assets"
+                            }
+                        ],
                         "styles": [
+                            "node_modules/@languageconservancy/vocab-builder-library/styles/tokens.css",
                             "node_modules/ng-drag-drop/style.css",
                             "src/styles.scss",
                             "node_modules/simple-keyboard/build/css/index.css"
@@ -143,8 +151,27 @@
                             "node_modules/wavesurfer.js/dist/wavesurfer.min.js",
                             "node_modules/wavesurfer.js/dist/plugin/wavesurfer.microphone.min.js"
                         ],
-                        "styles": ["node_modules/ng-drag-drop/style.css", "src/styles.scss"],
-                        "assets": ["src/assets", "src/.htaccess", "src/favicon.ico"]
+                        "styles": [
+                            "node_modules/@languageconservancy/vocab-builder-library/styles/tokens.css",
+                            "node_modules/ng-drag-drop/style.css", "src/styles.scss"
+                        ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["."]
+                        },
+                        "assets": [
+                            "src/assets", "src/.htaccess", "src/favicon.ico",
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@languageconservancy/vocab-builder-library/assets",
+                                "output": "/assets"
+                            }
+                        ]
+                    },
+                    "configurations": {
+                        "vocab-builder": {
+                            "tsConfig": "tests/tsconfig.vocab-builder.json",
+                            "include": ["src/app/shared/exercises/vocab-builder/*.spec.ts"]
+                        }
                     }
                 },
                 "cypress-run": {

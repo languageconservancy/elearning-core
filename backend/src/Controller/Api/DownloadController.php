@@ -2,6 +2,12 @@
 
 namespace App\Controller\Api;
 
+use App\Lib\VocabBuilder;
+use App\Lib\HttpStatusCode;
+use Cake\Log\Log;
+use InvalidArgumentException;
+use Cake\Datasource\Exception\RecordNotFoundException;
+
 class DownloadController extends AppController
 {
     public function initialize(): void
@@ -58,7 +64,13 @@ class DownloadController extends AppController
                 $unitElements[] = $lesson;
             } else {
                 $accessElement['exercise_id'] = $unitElement['exercise']['id'];
-                $exercise = $this->generateExercise($accessElement);
+                try {
+                    $exercise = $this->generateExercise($accessElement);
+                } catch (InvalidArgumentException | RecordNotFoundException $error) {
+                    Log::warning('Unit exercise content unavailable: ' . $error->getMessage());
+                    $this->sendApiData(false, 'Exercise content unavailable: ' . $error->getMessage(), [], HttpStatusCode::BAD_REQUEST);
+                    return;
+                }
                 $exercise['element_type'] = 'exercise';
                 $unitElements[] = $exercise;
             }
@@ -120,6 +132,16 @@ class DownloadController extends AppController
             ->toArray();
         $response = array();
         $response = $Exercise;
+        if ($Exercise['exercise_type'] === VocabBuilder::TYPE) {
+            $response = (new VocabBuilder())->exercise($Exercise, array_map(static function ($option) {
+                return $option->toArray();
+            }, $ExercisOption));
+            $attempt = $this->getUnitAttemptIdAndIsCompleted($data['level_id'], $data['unit_id'], $userId);
+            $data['user_unit_activity_id'] = $attempt['last_id'];
+            $response['IsCompleted'] = $attempt['isunitComplete']
+                ? ['status' => false] : $this->isCompleted($data);
+            return $response;
+        }
 
         $exerciseType = $Exercise['exercise_type'];
         $cardType = $Exercise['card_type'];

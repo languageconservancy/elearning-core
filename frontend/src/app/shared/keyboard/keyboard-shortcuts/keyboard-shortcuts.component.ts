@@ -77,6 +77,7 @@ export class KeyboardShortcutsComponent implements OnDestroy {
                             this.showTyping = this.activityHasTyping(data);
                             break;
                         case "recording":
+                        case "vocab-builder":
                             break;
                         default:
                             console.warn("Oops! Got unhandled exercise type");
@@ -104,6 +105,7 @@ export class KeyboardShortcutsComponent implements OnDestroy {
                         this.showTyping = this.activityHasTyping(data);
                         break;
                     case "recording":
+                    case "vocab-builder":
                         break;
                     default:
                         console.warn("Oops! Got unhandled exercise type");

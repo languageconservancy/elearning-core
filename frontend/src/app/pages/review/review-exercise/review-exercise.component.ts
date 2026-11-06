@@ -17,6 +17,7 @@ import { RecordingComponent } from "@app/shared/exercises/recording/recording.co
 import { TrueFalseComponent } from "@app/shared/exercises/true-false/true-false.component";
 import { ReviewService } from "@app/_services/review.service";
 import { DeviceDetectorService } from "ngx-device-detector";
+import { VocabBuilderComponent } from "@app/shared/exercises/vocab-builder/vocab-builder.component";
 
 @Component({
     selector: "app-review-exercise",
@@ -29,6 +30,7 @@ import { DeviceDetectorService } from "ngx-device-detector";
         McqComponent,
         RecordingComponent,
         TrueFalseComponent,
+        VocabBuilderComponent,
     ],
     templateUrl: "./review-exercise.component.html",
     styleUrls: ["./review-exercise.component.scss"],

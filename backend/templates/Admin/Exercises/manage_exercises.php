@@ -190,7 +190,8 @@ echo $this->Html->css('fastselect.min');
                                                 'truefalse' => 'True/False',
                                                 'anagram' => 'Anagram',
                                                 'fill_in_the_blanks' => 'Fill In the Blanks',
-                                                'recording' => 'Recording'
+                                                'recording' => 'Recording',
+                                                'vocab-builder' => 'Vocab Builder'
                                             ],
                                             [
                                                 'class' => "form-control",
@@ -225,6 +226,8 @@ echo $this->Html->css('fastselect.min');
                                 </div>
                             </div>
                         </div>
+
+                        <?= $this->element('vocab_builder_form', compact('exercise', 'vblActivities')) ?>
 
                         <!--Start conditional forms-->
 
@@ -2165,5 +2168,6 @@ if (isset($exercise->id)) {
     // General JavaScript functions
     echo $this->Html->script('select2CardList.js', ['block' => 'scriptBottom']);
     echo $this->Html->script('exerciseScript', ['block' => 'scriptBottom']);
+    echo $this->Html->script('vocabBuilderExercises', ['block' => 'scriptBottom']);
 }
 ?>

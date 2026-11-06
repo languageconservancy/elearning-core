@@ -1,0 +1,21 @@
+<section class="vocab-builder-exercise">
+    @if (exercise.instruction) {
+        <p class="activity-instructions">{{ exercise.instruction }}</p>
+    }
+    @if (error) {
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+    }
+    <div class="activity-space">
+        <ng-container #activity></ng-container>
+    </div>
+    @if (payload?.activity === "word-list") {
+        <button
+            type="button"
+            class="btn btn-primary mt-3"
+            [disabled]="submitted || !userId || !!error"
+            (click)="complete()"
+        >
+            Continue
+        </button>
+    }
+</section>

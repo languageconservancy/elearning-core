@@ -35,6 +35,11 @@ function initializeSelect2(id, url, preselectedData) {
         console.warn('initializeSelect2 called with an empty ID.');
         return;
     }
+    preselectedData.forEach(function (item) {
+        $(`#${id} option`).filter(function () {
+            return this.value === String(item.id);
+        }).text(item.text);
+    });
     $(`#${id}`).select2({
         data: preselectedData,
         ajax: {

@@ -8,6 +8,7 @@ import { McqComponent } from "@app/shared/exercises/mcq/mcq.component";
 import { RecordingComponent } from "@app/shared/exercises/recording/recording.component";
 import { TrueFalseComponent } from "@app/shared/exercises/true-false/true-false.component";
 import { LessonsService } from "@app/_services/lessons.service";
+import { VocabBuilderComponent } from "@app/shared/exercises/vocab-builder/vocab-builder.component";
 
 @Component({
     selector: "app-exercise",
@@ -22,6 +23,7 @@ import { LessonsService } from "@app/_services/lessons.service";
         McqComponent,
         RecordingComponent,
         TrueFalseComponent,
+        VocabBuilderComponent,
     ],
 })
 export class ExerciseComponent implements OnDestroy {

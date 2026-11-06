@@ -6,6 +6,10 @@ use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Log\Log;
 use Cake\Routing\Router;
+use App\Lib\VocabBuilder;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\ORM\Exception\PersistenceFailedException;
+use InvalidArgumentException;
 
 class ExercisesController extends AppController
 {
@@ -208,6 +212,19 @@ class ExercisesController extends AppController
         $exFormType = '';
 
         $exercise = $this->getOrCreateExercise($exerciseId);
+        $this->set('vblActivities', VocabBuilder::labels());
+        if ($validRequest && $this->request->is(['PATCH', 'POST', 'PUT'])
+            && ($data['exercise_type'] ?? '') === VocabBuilder::TYPE) {
+            $validRequest = false;
+            try {
+                $this->saveVocabBuilder($exercise, $data);
+                $this->Flash->success(__('The Exercise has been saved.'));
+                return $this->redirect(['action' => 'manageExercises', $exercise->id]);
+            } catch (InvalidArgumentException | RecordNotFoundException | PersistenceFailedException $error) {
+                Log::warning('Vocab builder exercise save failed: ' . $error->getMessage());
+                $this->Flash->error(__('The Exercise could not be saved: {0}', $error->getMessage()));
+            }
+        }
         if ($exerciseId == null) {
             $exFormType = 'new-exercise';
         } else {
@@ -582,6 +599,11 @@ class ExercisesController extends AppController
                 }
 
                 // Store data in exercise object and save it to Exercises table
+                if ($data['formtype'] !== 'namevalue') {
+                    $data['vbl_activity'] = null;
+                    $data['vbl_mode'] = null;
+                    $data['vbl_review_enabled'] = false;
+                }
                 $exerciseData = $this->getExercisesTable()->patchEntity($exercise, $data);
                 $exerciseData = $this->getExercisesTable()->save($exerciseData);
                 if ($exerciseData == false) {
@@ -669,6 +691,54 @@ class ExercisesController extends AppController
     }
 
     //delete Exercise data
+
+    private function saveVocabBuilder($exercise, array $data): void
+    {
+        $builder = new VocabBuilder();
+        $rows = $data['vbl_options'] ?? [];
+        if (!is_array($rows)) {
+            throw new InvalidArgumentException('Invalid vocab builder content.');
+        }
+        $activity = $data['vbl_activity'] ?? '';
+        $config = ['vbl_activity' => $activity, 'vbl_mode' => $data['vbl_mode'] ?? null];
+        $mode = VocabBuilder::mode($config);
+        $options = $builder->normalizeOptions($rows, $config);
+        $builder->payload($config, $options);
+        if ($mode === 'letter' && !empty($data['vbl_review_enabled'])) {
+            throw new InvalidArgumentException('Generated word review is only available for word activities.');
+        }
+        if (!empty($data['vbl_review_enabled']) && !VocabBuilder::ACTIVITIES[$activity]['review']) {
+            throw new InvalidArgumentException('Word List cannot be used in scored review.');
+        }
+        $fields = [
+            'name' => trim((string)($data['name'] ?? '')),
+            'instruction' => $data['instruction'] ?? '',
+            'bonus' => max(0, (int)ceil((float)($data['bonus'] ?? 0))),
+            'exercise_type' => VocabBuilder::TYPE,
+            'card_type' => 'card',
+            'promteresponsetype' => 'a-l',
+            'promotetype' => 'a',
+            'responsetype' => 'l',
+            'noofcard' => 1,
+            'vbl_activity' => $activity,
+            'vbl_mode' => $mode,
+            'vbl_review_enabled' => !empty($data['vbl_review_enabled']),
+        ];
+        $this->getExercisesTable()->getConnection()->transactional(function () use ($exercise, $fields, $options) {
+            $entity = $this->getExercisesTable()->patchEntity($exercise, $fields, ['associated' => []]);
+            $this->getExercisesTable()->saveOrFail($entity, ['associated' => []]);
+            $this->getExerciseoptionsTable()->deleteAll(['exercise_id' => $entity->id]);
+            foreach ($options as $option) {
+                $option['exercise_id'] = $entity->id;
+                $this->getExerciseoptionsTable()->saveOrFail(
+                    $this->getExerciseoptionsTable()->newEntity($option)
+                );
+            }
+            if (!$this->updateCardUnitsAccordingToExercise($entity)) {
+                throw new InvalidArgumentException('Could not update unit word content.');
+            }
+        });
+    }
 
     private function getFile($id)
     {
@@ -1675,6 +1745,10 @@ class ExercisesController extends AppController
             if (!empty($newCardUnits)) {
                 $entities = $this->getCardUnitsTable()->newEntities($newCardUnits);
                 $result = $this->getCardUnitsTable()->saveMany($entities);
+                if (!$result) {
+                    Log::error('Could not save card units for exercise ' . $exercise->id);
+                    return false;
+                }
             }
         }
 

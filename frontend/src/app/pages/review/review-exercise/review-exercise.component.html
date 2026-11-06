@@ -57,6 +57,9 @@
 @if (exercise.exercise_type === 'recording') {
   <app-recording [sessionType]="'review'"></app-recording>
 }
+@if (exercise.exercise_type === 'vocab-builder') {
+  <app-vocab-builder sessionType="review"></app-vocab-builder>
+}
 @if (!this.isMobile && !this.isTablet) {
   <app-keyboard-shortcuts></app-keyboard-shortcuts>
 }

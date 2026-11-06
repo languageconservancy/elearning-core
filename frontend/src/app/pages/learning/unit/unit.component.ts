@@ -83,7 +83,7 @@ class EventQueue {
 export type Answer = {
     activity_type: string;
     answar_type: string;
-    card_id: number;
+    card_id: number | null;
     exercise_id: number;
     exercise_option_id: number;
     experiencecard_ids: string;
@@ -121,7 +121,7 @@ type Lesson = {
 
 export type QuestionQuestion = {
     PromptType: string; // html, card
-    id: number;
+    id: number | null;
     // Card type fields
     english: string | undefined;
     exerciseOptions: ExerciseOptions | undefined;
@@ -139,7 +139,7 @@ type ExerciseCustomOption = {
 type ExerciseOptions = {
     id: number;
     exercise_custom_options: ExerciseCustomOption[];
-    card_id: number;
+    card_id: number | null;
     text_option: string | null;
     type: string;
 };
@@ -344,6 +344,7 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     _currentExercise?: Exercise;
     // Whether or not the unit data has been fetched from the API
     unitFetched: boolean = false;
+    unitLoadError = "";
     // Whether the current exercise has been fetched from the API
     // Used to prevent display error messages before the exercise is fetched
     exerciseFetched: boolean = false;
@@ -368,6 +369,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                 [MachineEvent.Entry]: async () => {
                     this.resetUnitData();
                     await this.initUnitData();
+                    if (!this.unitFetchedAndHasContent()) {
+                        return;
+                    }
                     const startingActivityIdx =
                         this.unitProgressNav.getFirstUnattemptedOrIncompleteActivityIdx();
                     this.currentActivityIdx = startingActivityIdx;
@@ -387,6 +391,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
                 [MachineEvent.Entry]: async () => {
                     this.resetUnitData();
                     await this.initUnitData();
+                    if (!this.unitFetchedAndHasContent()) {
+                        return;
+                    }
                     this.currentActivityIdx = 0;
                     const startingState = this.getMachineStateBasedOnActivityType(
                         this.currentActivityType(),
@@ -815,6 +822,8 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
             this.unitProgressNav.init();
         } catch (error) {
             console.error("[initUnitData]: ", error);
+            this.unitLoadError = "Unable to load this unit. Please reload to try again.";
+            this.unitFetched = true;
         }
     }
 
@@ -1220,12 +1229,10 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
 
         try {
             const res: any = await this.lessonService.getUnitDetails(params);
-            if (!res.data.status) {
-                throw new Error(res.message);
+            if (!res?.data?.status || !Array.isArray(res.data.results)) {
+                throw new Error(res?.data?.message || "The unit API returned an invalid response.");
             }
             this.unit.activities = res.data.results;
-        } catch (error) {
-            console.error("[fetchUnitActivities] ", error);
         } finally {
             this.loader.setLoader(false);
         }
@@ -1473,7 +1480,7 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     unitFetchedAndHasContent(): boolean {
-        return this.unitFetched && this.unit.activities.length > 0;
+        return this.unitFetched && !this.unitLoadError && this.unit.activities.length > 0;
     }
 
     async getUser() {
@@ -1555,6 +1562,7 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
         this.currentLessonFrameIdx = undefined;
         this.currentExerciseQuestionIdx = undefined;
         this.unitFetched = false;
+        this.unitLoadError = "";
         this.unitProgressNav.resetData();
     }
     // #endregion Setters
@@ -1577,6 +1585,9 @@ export class UnitComponent implements OnInit, OnDestroy, AfterViewInit {
     // #endregion Progress Navigation
 
     private getHtmlResponse(exercise: Exercise) {
+        if (exercise.exercise_type === "vocab-builder") {
+            return undefined;
+        }
         if (this.currentExerciseQuestionIdx === undefined) {
             throw new Error("currentActivityQuestionIdx is undefined");
         }

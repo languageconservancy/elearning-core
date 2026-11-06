@@ -11,7 +11,7 @@ function  validateForm(type = 'validate') {
         valid = false;
         message = 'Name field cannot be left blank.';
     }
-    else if (promteResponseType == '') {
+    else if (promteResponseType == '' && exercise_type != 'vocab-builder') {
         valid = false;
         message = 'Please select Prompt -> Response Type';
     }
@@ -19,7 +19,7 @@ function  validateForm(type = 'validate') {
         valid = false;
         message = 'Please select an Exercise Type';
     }
-    else if (cardType == '') {
+    else if (cardType == '' && exercise_type != 'vocab-builder') {
         valid = false;
         message = 'Please select a Card Type';
     }

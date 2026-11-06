@@ -5,6 +5,94 @@ This is the frontend of a learning platform for specific endangered languages th
 This repo supports multiple language platforms built and released to different websites and apps.
 It utilizes the [CapacitorJS](https://capacitorjs.com/) framework to build Android and iOS apps.
 
+## Vocab Builder activities
+
+The exercise and review screens use a shared [VocabBuilderComponent](../../frontend/src/app/shared/exercises/vocab-builder/vocab-builder.component.ts)
+to render Bird, Coloring, Fill Letter, Match Sound, Memory, Select Grid and Word List.
+Each guided activity reports completion through the existing lesson/review answer pipeline.
+Word List has an explicit Continue button. Completion counts as correct practice; it
+does not measure mistakes or award reading/writing/speaking/listening XP. Existing
+exercise bonuses and review-unlock counters continue to apply.
+
+### Local package setup
+
+The frontend currently consumes a **built local package**, not the published 1.0.2
+package, whose Angular peer requirements exclude Angular 22. Check out the library
+alongside the platform repository:
+
+```text
+Source/
+  elearning-ammilaau/core/frontend/
+  vocab-builder-library/
+```
+
+Build the sibling library before installing the frontend:
+
+```bash
+cd vocab-builder-library
+npm ci
+npm run build
+cd ../elearning-ammilaau/core/frontend
+npm ci
+npm run build:production
+npm run test:vocab-builder
+```
+
+The frontend's [`.npmrc`](../../frontend/.npmrc) copies local dependencies rather
+than symlinking them, so the library uses the host's Angular 22 runtime instead of
+loading Angular 21 from its development checkout. After rebuilding the library,
+refresh its installed copy with `npm ci`. Stop the dev server, run `npx ng cache clean`
+and restart it after replacing a local package; Vite may otherwise retain its old
+prebundled code and styles across restarts.
+
+For deployment/CI without a sibling checkout, publish a **new** library version
+with the Angular 22-compatible peer declarations, replace the `file:` dependency
+in [package.json](../../frontend/package.json) with that released version, and
+regenerate the lockfile. Do not reinstall published 1.0.2 with forced peer resolution.
+
+The build and test targets in [angular.json](../../frontend/angular.json) include
+the library design tokens and bundled assets, including the Coloring module worker.
+The host resolves those assets against the document base URI and receives absolute
+word/letter media URLs from the backend. Remote line-art images must allow CORS
+for canvas pixel access, and CSP must permit the same-origin module worker.
+The backend webroot's Apache configuration adds `Access-Control-Allow-Origin: *`
+to public static images when `mod_headers` is enabled. Deploy that configuration
+alongside the images; API CORS settings alone do not cover static files. After
+changing those headers, hard-refresh or invalidate previously cached images.
+The backend's `mode` selects the native word or letter target. Match Sound and
+Coloring receive exactly one target type, so a word question is not accidentally
+turned into a letter question. Fill Letter receives its word and missing letter.
+The host rebinds word targets to the indexed content word after JSON parsing.
+Letter-only activities accept a null target card and no experienced word cards.
+The library currently filters letter choices by `words.length`; the host supplies
+an internal letter-shaped word entry for otherwise empty letter groups. Authors
+do not need to create dummy word cards, and those entries never enter word review.
+Library audio and Coloring services are scoped to the host so media paths and
+worker cleanup follow the exercise lifetime.
+The activity frame supplies explicit height and width for the library's responsive
+layouts. Coloring in the rebuilt local library (1.0.3) uses its own named size
+container: desktop controls appear only when the activity itself is at least
+1024px wide, regardless of the browser viewport.
+
+Unit completion queries select distinct card IDs rather than grouping full rows,
+so MySQL's `ONLY_FULL_GROUP_BY` mode does not prevent units from loading. Unit
+API failures display an explicit load error rather than "This unit has no activities";
+empty-unit text is reserved for successful responses with an empty activity list.
+
+### Adding an activity
+
+1. Upgrade/rebuild the library so its component and activity ID are exported.
+2. Add the component to the typed [activity registry](../../frontend/src/app/shared/exercises/vocab-builder/vocab-builder-activities.ts).
+   Set `guided` for components accepting `config` and emitting `completed`.
+3. Add its content requirements and review eligibility to the backend
+   [VocabBuilder registry](../../backend/src/Lib/VocabBuilder.php).
+4. Extend host/payload tests. Components needing different inputs or outputs must
+   have their host wiring added explicitly; they are not treated as auto-completing.
+
+The focused host suite uses [its own TypeScript configuration](../../frontend/tests/tsconfig.vocab-builder.json)
+because some unrelated legacy specs and the old test bootstrap are incompatible
+with the current Angular toolchain.
+
 ## Software Versions
 This project is currently using the following software
 - [Angular](https://angular.io/) v14

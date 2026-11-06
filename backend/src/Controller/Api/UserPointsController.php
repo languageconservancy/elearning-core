@@ -431,6 +431,10 @@ class UserPointsController extends AppController
     private function getPointByExercise($exerciseId, $cardId = null)
     {
         $Exercise = $this->getExercisesTable()->get($exerciseId, ['contain' => ['Exerciseoptions']]);
+        if ($Exercise->exercise_type === 'vocab-builder') {
+            // Completion is practice, not a measured skill answer.
+            return ['reading_pts' => 0, 'writing_pts' => 0, 'speaking_pts' => 0, 'listening_pts' => 0];
+        }
         $type = explode('-', $Exercise->promteresponsetype);
         $exerciseType = $Exercise->exercise_type;
         $promptType = $type[0];
@@ -517,6 +521,9 @@ class UserPointsController extends AppController
      */
     private function getPointByReview($cardId, $promptType, $responseType, $exerciseType)
     {
+        if ($exerciseType === 'vocab-builder') {
+            return ['reading_pts' => 0, 'writing_pts' => 0, 'speaking_pts' => 0, 'listening_pts' => 0];
+        }
         /* Get card based on card ID and associated image and video, as an array */
         $options = array('contain' => ['Cardtype', 'image', 'video'], 'conditions' => ['Card.id IS' => $cardId]);
         $cards = $this->getCardTable()->find('all', $options)->first();

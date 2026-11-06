@@ -56,10 +56,7 @@ abstract class LoginService extends AppController
         $users = $this->getUsersTable()->find('all', ['contain' => $contain])
             ->where(['Users.' . $field . ' =' => $value])->toArray();
         if (!empty($users)) {
-            $users['classroom_count'] = $this->getClassroomUsersTable()->find()
-                ->distinct('classroom_id')
-                ->where(['user_id' => $users[0]['id']])
-                ->count();
+            $users[0]['classroom_count'] = $this->getClassroomCount($users[0]['id']);
             if ($users[0][$field] == $value) {
                 $users[0]['registration_type'] = $registrationType;
                 return $users;

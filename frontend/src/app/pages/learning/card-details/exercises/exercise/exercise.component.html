@@ -16,3 +16,6 @@
 @if (exercise.exercise_type === 'recording') {
   <app-recording [sessionType]="'exercise'"></app-recording>
 }
+@if (exercise.exercise_type === 'vocab-builder') {
+  <app-vocab-builder sessionType="exercise"></app-vocab-builder>
+}

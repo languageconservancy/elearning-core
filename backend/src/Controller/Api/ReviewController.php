@@ -5,6 +5,9 @@ namespace App\Controller\Api;
 use App\Lib\UtilLibrary;
 use App\Model\Table\ActivityTypesTable; // Needed for enums
 use Cake\Log\Log;
+use App\Lib\VocabBuilder;
+use InvalidArgumentException;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 const MIN_CARDS_FOR_REVIEW = 2;
 const NUM_EXERCISES_TO_SEND = 4;
@@ -265,7 +268,68 @@ class ReviewController extends AppController
         /*----------------------------*/
         /* Send Exercises To Frontend */
         /*----------------------------*/
+        $vocabReview = $this->generateVocabBuilderReview($userReviewQueue, $unitId);
+        if ($vocabReview !== null) {
+            array_unshift($exercises, $vocabReview);
+            $exercises = array_slice($exercises, 0, NUM_EXERCISES_TO_SEND);
+        }
         return $exercises;
+    }
+
+    private function generateVocabBuilderReview(array $queue, $unitId): ?array
+    {
+        $assigned = $this->getUnitdetailsTable()->find()->select(['exercise_id'])
+            ->where(['exercise_id IS NOT NULL']);
+        if ($unitId !== null) {
+            $assigned->where(['unit_id' => $unitId]);
+        }
+        $sources = $this->getExercisesTable()->find()->contain(['Exerciseoptions'])
+            ->where([
+                'Exercises.exercise_type' => VocabBuilder::TYPE,
+                'Exercises.vbl_review_enabled' => true,
+                'Exercises.id IN' => $assigned,
+            ])->toArray();
+        shuffle($sources);
+        foreach ($queue as $queuedCard) {
+            foreach ($sources as $source) {
+                $activity = $source->vbl_activity;
+                if (empty(VocabBuilder::ACTIVITIES[$activity]['review'])) {
+                    continue;
+                }
+                $options = array_map(static function ($option) {
+                    return $option->toArray();
+                }, $source->exerciseoptions);
+                foreach ($options as $option) {
+                    if ((int)$option['card_id'] !== (int)$queuedCard['card_id']) {
+                        continue;
+                    }
+                    if ($activity === 'coloring' && empty($option['vbl_coloring_image_id'])) {
+                        continue;
+                    }
+                    try {
+                        $payload = (new VocabBuilder())->payload(
+                            $source->toArray(), $options, (int)$queuedCard['card_id']
+                        );
+                    } catch (InvalidArgumentException | RecordNotFoundException $error) {
+                        Log::warning("Skipping invalid vocab builder review source {$source->id}: " . $error->getMessage());
+                        continue;
+                    }
+                    return [
+                        'exercise_type' => VocabBuilder::TYPE,
+                        'card_type' => 'card',
+                        'source_exercise_id' => $source->id,
+                        'instruction' => $source->instruction,
+                        'promteresponsetype' => 'a-l',
+                        'promotetype' => 'a',
+                        'responsetype' => 'l',
+                        'question' => $payload['question'],
+                        'response' => $payload['response'],
+                        'vocab_builder' => $payload,
+                    ];
+                }
+            }
+        }
+        return null;
     }
 
 

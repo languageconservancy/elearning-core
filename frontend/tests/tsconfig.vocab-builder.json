@@ -1,0 +1,5 @@
+{
+    "extends": "../src/tsconfig.spec.json",
+    "files": ["../src/polyfills.ts"],
+    "include": ["../src/app/shared/exercises/vocab-builder/*.spec.ts"]
+}

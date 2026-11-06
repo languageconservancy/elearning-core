@@ -14,6 +14,7 @@ import { RecordingComponent } from "./recording/recording.component";
 import { SelectableCardComponent } from "@app/shared/selectable-card/selectable-card.component";
 import { NonSelectableCardComponent } from "@app/shared/non-selectable-card/non-selectable-card.component";
 import { DirectivesModule } from "@app/_directives/directives.module";
+import { VocabBuilderComponent } from "./vocab-builder/vocab-builder.component";
 
 @NgModule({
     // External modules needed by this module
@@ -32,6 +33,7 @@ import { DirectivesModule } from "@app/_directives/directives.module";
         RecordingComponent,
         SelectableCardComponent,
         TrueFalseComponent,
+        VocabBuilderComponent,
     ],
     // Components of this module used outside this module
     exports: [
@@ -41,6 +43,7 @@ import { DirectivesModule } from "@app/_directives/directives.module";
         FillinComponent,
         AnagramComponent,
         RecordingComponent,
+        VocabBuilderComponent,
     ],
 })
 export class ExercisesModule {}

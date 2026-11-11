@@ -339,6 +339,23 @@ install_backend_composer_packages() {
     run_server_composer update --no-interaction --no-dev
 }
 
+run_backend_migrations() {
+    local command remoteCommand
+    print_heading "\nChecking and applying pending server backend migrations"
+
+    printf -v command 'export PATH=%q:"$PATH"; cd %q && %q bin/cake.php migrations status --connection default && %q bin/cake.php migrations migrate --connection default && %q bin/cake.php migrations status --connection default' \
+        "$(dirname "${serverPhpBinary}")" "${documentRoot}/backend" \
+        "${serverPhpBinary}" "${serverPhpBinary}" "${serverPhpBinary}"
+    printf -v remoteCommand 'su -s /bin/bash -c %q %q' "${command}" "${serverUser}"
+
+    if ${dryRun}; then
+        print_dryrun_msg "ssh -t -i ${sshIdentityFile} ${sshUser}@${sshHost} ${remoteCommand}"
+    else
+        echo "The following password prompt is for the ${serverUser} user on the server"
+        ssh -t -i "${sshIdentityFile}" "${sshUser}@${sshHost}" "${remoteCommand}"
+    fi
+}
+
 # Creates version file on server with the following information:
 # Platform: <name>, Tag: <tag>, Commit hash: <commit hash>, Commit date: <commit date>
 # Core: <name>, Tag: <tag>, Commit hash: <commit hash>, Commit date: <commit date>
@@ -638,6 +655,7 @@ run_main() {
             copy_backend_to_server
             change_ownership_and_permissions ${documentRoot}
             install_backend_composer_packages
+            run_backend_migrations
             change_ownership_and_permissions ${documentRoot}
         fi
     fi

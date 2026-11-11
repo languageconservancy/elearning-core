@@ -2,6 +2,20 @@
 
 This directory contains CakePHP migration files for database schema changes.
 
+## Deployment
+
+Backend installs through [deploy.sh](../../scripts/deploy.sh) automatically check
+migration status, apply all pending migrations on the default connection, and
+print status again after installing the backend files and Composer dependencies.
+Commands run as the application user with the configured server PHP binary.
+Any failed command stops deployment before its success/version marker.
+Frontend-only deployments do not run migrations, and `--dryrun` only prints the
+remote migration command.
+
+Back up the database and review **all pending migrations** before a backend
+deployment, including older migrations unrelated to the current release.
+Deploy backend updates before frontend updates when deploying them separately.
+
 ## Available Migrations
 
 ### 20261106000000_AddVocabBuilderTargetMode.php
@@ -19,8 +33,9 @@ letter audio/image attachment IDs and Coloring line-art attachment IDs to
 reused. Existing exercises are unchanged and review generation defaults to off.
 See [authoring and review](README.md#vocab-builder-authoring-and-review).
 
-Run `./bin/cake migrations migrate` from `core/backend` **before deploying the
-updated backend/frontend**. The reversible `change()` migration removes only its
+Backend deployment applies these automatically. For manual deployments, run
+`./bin/cake migrations migrate` from the backend directory before serving the
+updated application. The reversible `change()` migration removes only its
 new columns on rollback; export Vocab Builder content before rolling it back,
 and roll back application code too. Pending migrations may include earlier
 schema changes, so check `./bin/cake migrations status` first.

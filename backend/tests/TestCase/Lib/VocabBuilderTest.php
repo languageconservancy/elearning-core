@@ -86,7 +86,13 @@ class VocabBuilderTest extends TestCase
     {
         foreach (array_keys(VocabBuilder::ACTIVITIES) as $activity) {
             $rows = $activity === 'memory-activity' ? $this->memoryRows() : $this->rows();
-            $options = $this->builder->normalizeOptions($rows);
+            if ($activity === 'slider-activity') {
+                $rows[0]['vbl_alignment'] = '[{"unit":"apple","start":0,"end":1}]';
+            }
+            $options = $this->builder->normalizeOptions(
+                $rows,
+                $activity === 'slider-activity' ? ['vbl_activity' => $activity] : []
+            );
             $options[0]['id'] = 99;
             $exercise = $this->builder->exercise(['vbl_activity' => $activity], $options);
             $this->assertCount(1, $exercise['questions']);
@@ -122,13 +128,13 @@ class VocabBuilderTest extends TestCase
         return $rows;
     }
 
-    public function testMemoryRequiresEnoughLettersForEveryOfferedGridSize(): void
+    public function testMemoryRequiresOnlyEnoughLettersForTheSmallestGrid(): void
     {
-        $rows = $this->memoryRows();
+        $rows = array_slice($this->memoryRows(), 0, 4);
         $this->builder->payload(['vbl_activity' => 'memory-activity'], $this->builder->normalizeOptions($rows));
         array_pop($rows);
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('8 distinct letters');
+        $this->expectExceptionMessage('4 distinct letters');
         $this->builder->payload(['vbl_activity' => 'memory-activity'], $this->builder->normalizeOptions($rows));
     }
 
@@ -192,8 +198,8 @@ class VocabBuilderTest extends TestCase
     {
         $this->cards[1]['audio'] = '';
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('language text, audio and an image');
-        $this->builder->payload(['vbl_activity' => 'word-list'], $this->builder->normalizeOptions($this->rows()));
+        $this->expectExceptionMessage('language text and audio');
+        $this->builder->payload(['vbl_activity' => 'match-sound'], $this->builder->normalizeOptions($this->rows()));
     }
 
     public function testRejectsMissingColoringImage(): void
@@ -254,13 +260,14 @@ class VocabBuilderTest extends TestCase
         $connection->execute('CREATE TABLE exercises (
             id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, instruction TEXT, bonus INTEGER,
             exercise_type TEXT, card_type TEXT, promteresponsetype TEXT, promotetype TEXT,
-            responsetype TEXT, noofcard INTEGER, vbl_activity TEXT, vbl_mode TEXT, vbl_review_enabled BOOLEAN,
+            responsetype TEXT, noofcard INTEGER, vbl_activity TEXT, vbl_mode TEXT, vbl_variant TEXT,
+            vbl_review_enabled BOOLEAN,
             created DATETIME, modified DATETIME
         )');
         $connection->execute('CREATE TABLE exercise_options (
             id INTEGER PRIMARY KEY AUTOINCREMENT, exercise_id INTEGER, card_id INTEGER, type TEXT,
             card_type TEXT, text_option TEXT, vbl_letter TEXT, vbl_letter_audio_id INTEGER,
-            vbl_letter_image_id INTEGER, vbl_coloring_image_id INTEGER
+            vbl_letter_image_id INTEGER, vbl_coloring_image_id INTEGER, vbl_alignment TEXT
         )');
         $connection->execute('CREATE TABLE exercise_custom_options (
             id INTEGER PRIMARY KEY AUTOINCREMENT, exercise_option_id INTEGER
@@ -449,14 +456,18 @@ class VocabBuilderTest extends TestCase
     public static function supportedVersions(): array
     {
         return [
-            'Bird word' => ['bird-activity', 'word', 2],
+            'Bird word' => ['bird-activity', 'word', 1],
             'Coloring word' => ['coloring', 'word', 1],
             'Coloring letter' => ['coloring', 'letter', 1],
             'Fill Letter' => ['fill-letter', 'word', 3],
             'Match Sound word' => ['match-sound', 'word', 3],
             'Match Sound letter' => ['match-sound', 'letter', 3],
-            'Memory letter' => ['memory-activity', 'letter', 8],
+            'Memory letter' => ['memory-activity', 'letter', 4],
+            'Memory word' => ['memory-activity', 'word', 2],
             'Select Grid letter' => ['select-grid', 'letter', 2],
+            'Select Grid word' => ['select-grid', 'word', 2],
+            'Slider' => ['slider-activity', 'word', 1],
+            'Word Clusters' => ['word-clusters-activity', 'word', 3],
             'Word List' => ['word-list', 'word', 1],
         ];
     }
@@ -466,6 +477,9 @@ class VocabBuilderTest extends TestCase
     {
         $config = ['vbl_activity' => $activity, 'vbl_mode' => $mode];
         $rows = array_slice($this->memoryRows(), 0, $count);
+        if ($activity === 'slider-activity') {
+            $rows[0]['vbl_alignment'] = '[{"unit":"apple","start":0,"end":1}]';
+        }
         foreach ($rows as $index => &$row) {
             if ($mode === 'letter' || ($activity === 'fill-letter' && $index > 0)) {
                 unset($row['card_id']);
@@ -478,9 +492,7 @@ class VocabBuilderTest extends TestCase
         if ($activity === 'coloring' && $mode === 'letter') {
             $rows[0]['vbl_letter_image_id'] = 21;
         }
-        if (in_array($activity, ['match-sound', 'coloring'], true)) {
-            $this->cards[1]['image_id'] = null;
-        }
+        $this->cards[1]['image_id'] = null;
         $options = $this->builder->normalizeOptions($rows, $config);
         $options[0]['id'] = 99;
         $payload = $this->builder->payload($config, $options);
@@ -494,6 +506,9 @@ class VocabBuilderTest extends TestCase
             $this->assertSame('a', $payload['config']['targetLetter']['letter']);
         } else {
             $this->assertNotNull($payload['config']['targetWord']);
+            if (in_array($activity, ['memory-activity', 'select-grid'], true)) {
+                $this->assertCount($count, $payload['config']['words']);
+            }
             $this->assertSame($activity === 'fill-letter' ? [1] : range(1, $count), $payload['card_ids']);
             if ($activity !== 'fill-letter') {
                 $this->assertNull($options[0]['vbl_letter_audio_id']);
@@ -507,10 +522,169 @@ class VocabBuilderTest extends TestCase
         }
     }
 
-    public function testRejectsUnsupportedWordGridVersion(): void
+    public function testRejectsUnsupportedLetterSliderVersion(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        VocabBuilder::mode(['vbl_activity' => 'select-grid', 'vbl_mode' => 'word']);
+        VocabBuilder::mode(['vbl_activity' => 'slider-activity', 'vbl_mode' => 'letter']);
+    }
+
+    public function testVisualWordActivitiesAllowTextOnlyCards(): void
+    {
+        $activities = ['bird-activity', 'coloring', 'fill-letter', 'memory-activity', 'select-grid', 'word-list'];
+        foreach ($activities as $activity) {
+            foreach ($this->cards as &$card) {
+                $card['audio'] = '';
+                $card['image_id'] = null;
+            }
+            unset($card);
+            $config = ['vbl_activity' => $activity, 'vbl_mode' => 'word'];
+            $rows = $this->rows();
+            foreach ($rows as &$row) {
+                unset($row['vbl_letter_audio_id']);
+            }
+            unset($row);
+            $payload = $this->builder->payload($config, $this->builder->normalizeOptions($rows, $config));
+            $this->assertSame([], $payload['config']['targetWord']['mp3'], $activity);
+            $this->assertSame('', $payload['config']['targetWord']['img'], $activity);
+        }
+    }
+
+    public function testVisualLetterActivitiesAllowNoAudio(): void
+    {
+        foreach (['coloring', 'memory-activity', 'select-grid'] as $activity) {
+            $config = ['vbl_activity' => $activity, 'vbl_mode' => 'letter'];
+            $rows = array_slice($this->memoryRows(), 0, VocabBuilder::ACTIVITIES[$activity]['letters']);
+            foreach ($rows as &$row) {
+                unset($row['vbl_letter_audio_id']);
+            }
+            unset($row);
+            $rows[0]['vbl_letter_image_id'] = 21;
+            $payload = $this->builder->payload($config, $this->builder->normalizeOptions($rows, $config));
+            $this->assertSame('', $payload['config']['targetLetter']['mp3'], $activity);
+        }
+    }
+
+    public function testPictureMemoryRequiresDistinctImagesButNotAudio(): void
+    {
+        $config = ['vbl_activity' => 'memory-activity', 'vbl_mode' => 'word', 'vbl_variant' => 'image'];
+        $this->cards[1]['audio'] = '';
+        $this->cards[2]['audio'] = '';
+        $this->cards[2]['image_id'] = 21;
+        $options = $this->builder->normalizeOptions(array_slice($this->rows(), 0, 2), $config);
+        $payload = $this->builder->payload($config, $options);
+        $this->assertSame('image', $payload['config']['variant']);
+        $this->cards[2]['image_id'] = 20;
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('two different images');
+        $this->builder->payload($config, $options);
+    }
+
+    public function testPictureMemoryRejectsMissingImages(): void
+    {
+        $config = ['vbl_activity' => 'memory-activity', 'vbl_mode' => 'word', 'vbl_variant' => 'image'];
+        $this->cards[1]['image_id'] = null;
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('and an image');
+        $this->builder->payload($config, $this->builder->normalizeOptions($this->rows(), $config));
+    }
+
+    public function testRejectsUnsupportedPicturePresentation(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        VocabBuilder::variant(['vbl_activity' => 'select-grid', 'vbl_mode' => 'word', 'vbl_variant' => 'image']);
+    }
+
+    public function testSliderRequiresTargetAudioWithoutRequiringAnImage(): void
+    {
+        $config = ['vbl_activity' => 'slider-activity'];
+        $rows = [['card_id' => 1, 'target' => 1, 'vbl_alignment' => '[{"unit":"apple","start":0,"end":1}]']];
+        $this->cards[1]['audio'] = '';
+        $this->cards[1]['image_id'] = null;
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('language text and audio');
+        $this->builder->payload($config, $this->builder->normalizeOptions($rows, $config));
+    }
+
+    public static function invalidAlignments(): array
+    {
+        return [
+            'missing' => [null],
+            'invalid JSON' => ['not JSON'],
+            'empty' => ['[]'],
+            'object' => ['{"unit":"a","start":0,"end":1}'],
+            'negative' => ['[{"unit":"a","start":-1,"end":1}]'],
+            'zero duration' => ['[{"unit":"a","start":1,"end":1}]'],
+            'empty syllable' => ['[{"unit":" ","start":0,"end":1}]'],
+            'numeric string' => ['[{"unit":"a","start":"0","end":1}]'],
+            'overlapping' => ['[{"unit":"a","start":0,"end":1},{"unit":"b","start":0.5,"end":2}]'],
+            'wrong order' => ['[{"unit":"b","start":1,"end":2},{"unit":"a","start":0,"end":1}]'],
+        ];
+    }
+
+    /** @dataProvider invalidAlignments */
+    public function testSliderRejectsInvalidAlignment(?string $alignment): void
+    {
+        $config = ['vbl_activity' => 'slider-activity'];
+        $rows = array_slice($this->rows(), 0, 1);
+        $rows[0]['vbl_alignment'] = $alignment;
+        $this->expectException(InvalidArgumentException::class);
+        $this->builder->payload($config, $this->builder->normalizeOptions($rows, $config));
+    }
+
+    public function testSliderPersistsTimingAndCanRetargetAlignedWordsForReview(): void
+    {
+        [$exercises, $options] = $this->authoringTables();
+        $controller = $this->authoringController($exercises, $options, true);
+        $rows = array_slice($this->rows(), 0, 2);
+        $rows[0]['vbl_alignment'] = '[{"unit":"ap","start":0.1,"end":0.5},{"unit":"ple","start":0.6,"end":1}]';
+        $rows[1]['vbl_alignment'] = '[{"unit":"boat","start":0,"end":1}]';
+        $this->cards[1]['image_id'] = null;
+        (new ReflectionMethod(ExercisesController::class, 'saveVocabBuilder'))->invoke(
+            $controller,
+            $exercises->newEmptyEntity(),
+            ['name' => 'Slider', 'vbl_activity' => 'slider-activity', 'vbl_options' => $rows]
+        );
+        $source = $exercises->find()->first()->toArray();
+        $saved = array_map(static function ($option) {
+            return $option->toArray();
+        }, $options->find()->toArray());
+        $payload = $this->builder->payload($source, $saved);
+        $this->assertSame(json_decode($rows[0]['vbl_alignment'], true), $payload['config']['targetWord']['alignment']);
+        $review = $this->builder->payload($source, $saved, 2);
+        $this->assertSame('boat', $review['config']['targetWord']['alignment'][0]['unit']);
+    }
+
+    public function testWordClustersRejectsPhrasesAndSingleCharacterWords(): void
+    {
+        $this->cards[2]['lakota'] = 'two words';
+        $this->cards[3]['lakota'] = 'x';
+        $config = ['vbl_activity' => 'word-clusters-activity'];
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('3 distinct single words');
+        $this->builder->payload($config, $this->builder->normalizeOptions($this->rows(), $config));
+    }
+
+    public function testActivityOptionsMigrationPreservesDataAndReverses(): void
+    {
+        require_once dirname(__DIR__, 3) . '/config/Migrations/20261113000000_AddVocabBuilderActivityOptions.php';
+        $pdo = new PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE exercises (id INTEGER PRIMARY KEY, name TEXT)');
+        $pdo->exec('CREATE TABLE exercise_options (id INTEGER PRIMARY KEY, card_id INTEGER)');
+        $pdo->exec("INSERT INTO exercises VALUES (1, 'Existing')");
+        $adapter = new SQLiteAdapter(['name' => ':memory:', 'connection' => $pdo]);
+        $migration = new \AddVocabBuilderActivityOptions('test', 20261113000000);
+        $migration->setAdapter($adapter);
+        $migration->change();
+        $this->assertTrue($adapter->hasColumn('exercises', 'vbl_variant'));
+        $this->assertTrue($adapter->hasColumn('exercise_options', 'vbl_alignment'));
+        $this->assertNull($pdo->query('SELECT vbl_variant FROM exercises')->fetchColumn());
+        $proxy = new ProxyAdapter($adapter);
+        $migration->setAdapter($proxy);
+        $migration->change();
+        $proxy->executeInvertedCommands();
+        $this->assertFalse($adapter->hasColumn('exercises', 'vbl_variant'));
+        $this->assertFalse($adapter->hasColumn('exercise_options', 'vbl_alignment'));
+        $this->assertSame('Existing', $pdo->query('SELECT name FROM exercises')->fetchColumn());
     }
 
     public function testLetterColoringRequiresLineArt(): void
@@ -641,10 +815,10 @@ class VocabBuilderTest extends TestCase
         $this->assertSame('<b>apple</b> &amp; pear', $payload['question']['lakota']);
     }
 
-    public function testBirdRequiresDistractorsDistinctUnderLibraryCaseMatching(): void
+    public function testWordGridsRequireDistractorsDistinctUnderLibraryCaseMatching(): void
     {
         $this->cards[2]['lakota'] = 'APPLE';
-        $config = ['vbl_activity' => 'bird-activity', 'vbl_mode' => 'word'];
+        $config = ['vbl_activity' => 'select-grid', 'vbl_mode' => 'word'];
         $options = $this->builder->normalizeOptions([
             ['card_id' => 1, 'target' => 1], ['card_id' => 2],
         ], $config);

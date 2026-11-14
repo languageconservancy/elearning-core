@@ -7,6 +7,8 @@ import {
     MemoryActivityComponent,
     ColoringActivityComponent,
     ColoringService,
+    SliderActivityComponent,
+    WordClustersActivityComponent,
 } from "@languageconservancy/vocab-builder-library";
 import { LessonsService } from "@app/_services/lessons.service";
 import { ReviewService } from "@app/_services/review.service";
@@ -43,9 +45,17 @@ describe("VocabBuilderComponent", () => {
                     img: image,
                     mp3: "word.mp3",
                     coloring: image,
+                    alignment: [{ unit: `${letter}word`, start: 0, end: 1 }],
                 },
             ],
         }));
+        if (activity === "word-clusters-activity") {
+            const words = letters.map((letter, index) => ({
+                ...letter.words[0],
+                word: ["cat", "car", "art"][index],
+            }));
+            letters.splice(0, letters.length, { ...letters[0], words });
+        }
         return {
             activity,
             content: { availableLetters: letters, selectedLetter: letters[0] },
@@ -99,6 +109,24 @@ describe("VocabBuilderComponent", () => {
         const audio = fixture.debugElement.injector.get(VblAudioService);
         spyOn(audio, "play");
         spyOn(audio, "playWithCallback");
+        const samples = 8000;
+        const wave = new ArrayBuffer(44 + samples * 2);
+        const header = new DataView(wave);
+        new Uint8Array(wave).set(new TextEncoder().encode("RIFF"), 0);
+        header.setUint32(4, wave.byteLength - 8, true);
+        new Uint8Array(wave).set(new TextEncoder().encode("WAVEfmt "), 8);
+        header.setUint32(16, 16, true);
+        header.setUint16(20, 1, true);
+        header.setUint16(22, 1, true);
+        header.setUint32(24, samples, true);
+        header.setUint32(28, samples * 2, true);
+        header.setUint16(32, 2, true);
+        header.setUint16(34, 16, true);
+        new Uint8Array(wave).set(new TextEncoder().encode("data"), 36);
+        header.setUint32(40, samples * 2, true);
+        spyOn(window, "fetch").and.callFake(() =>
+            Promise.resolve(new Response(wave, { headers: { "Content-Type": "audio/wav" } })),
+        );
         spyOn(ColoringService.prototype, "saveToHistory").and.returnValue(Promise.resolve());
         imageLoad = spyOn(ColoringActivityComponent.prototype, "loadImage").and.callThrough();
     });
@@ -110,7 +138,7 @@ describe("VocabBuilderComponent", () => {
         exercise.next({ id: 10, exercise_type: "vocab-builder", instruction: "Find the letter" });
     }
 
-    it("registers and renders all seven library activities in the exercise space", async () => {
+    it("registers and renders all nine library activities in the exercise space", async () => {
         await start();
         const activities: ActivityType[] = [
             "bird-activity",
@@ -119,6 +147,8 @@ describe("VocabBuilderComponent", () => {
             "match-sound",
             "memory-activity",
             "select-grid",
+            "slider-activity",
+            "word-clusters-activity",
             "word-list",
         ];
         expect(Object.keys(VOCAB_BUILDER_ACTIVITIES).length).toBe(activities.length);
@@ -155,6 +185,139 @@ describe("VocabBuilderComponent", () => {
                 await imageLoad.calls.mostRecent().returnValue;
             }
         }
+    });
+
+    it("renders text-only word grids from the full pool after JSON serialization", async () => {
+        await start();
+        for (const activity of ["memory-activity", "select-grid"] as const) {
+            const data = payload(activity);
+            data.mode = "word";
+            data.content.availableLetters = data.content.availableLetters.slice(0, 2);
+            data.content.availableLetters.forEach((letter) => {
+                letter.words[0].mp3 = [];
+                letter.words[0].img = "";
+            });
+            question.next(JSON.parse(JSON.stringify({ vocab_builder: data })));
+            fixture.detectChanges();
+            const rendered = fixture.debugElement.query(
+                By.directive(VOCAB_BUILDER_ACTIVITIES[activity].component),
+            ).componentInstance;
+            expect(rendered.setupError()).withContext(activity).toBeNull();
+            expect(rendered.inWordMode()).toBeTrue();
+            expect(rendered.config().words.length).toBe(2);
+            if (activity === "memory-activity") {
+                expect(rendered.gridCards().length).toBe(4);
+            } else {
+                expect(rendered.gridLetters().some((cell) => !cell.isTarget)).toBeTrue();
+            }
+        }
+    });
+
+    it("preserves picture Memory presentation and uses both pictures", async () => {
+        await start();
+        const data = payload("memory-activity");
+        data.mode = "word";
+        data.config.variant = "image";
+        data.content.availableLetters = data.content.availableLetters.slice(0, 2);
+        data.content.availableLetters[1].words[0].img += "#second";
+        question.next(JSON.parse(JSON.stringify({ vocab_builder: data })));
+        fixture.detectChanges();
+        const rendered: MemoryActivityComponent = fixture.debugElement.query(
+            By.directive(MemoryActivityComponent),
+        ).componentInstance;
+        expect(rendered.setupError()).toBeNull();
+        expect(rendered.isImageMode()).toBeTrue();
+        expect(rendered.gridCards().length).toBe(4);
+        expect(new Set(rendered.gridCards().map((card) => card.item.img)).size).toBe(2);
+    });
+
+    it("renders minimum visual word activities without audio or card images", async () => {
+        await start();
+        imageLoad.and.returnValue(Promise.resolve());
+        for (const activity of ["bird-activity", "coloring", "fill-letter", "word-list"] as const) {
+            const data = payload(activity);
+            data.mode = "word";
+            if (activity !== "fill-letter") {
+                data.content.availableLetters = data.content.availableLetters.slice(0, 1);
+            }
+            data.content.availableLetters.forEach((letter, index) => {
+                letter.mp3 = "";
+                letter.img = "";
+                letter.words[0].mp3 = [];
+                letter.words[0].img = "";
+                if (activity === "fill-letter" && index > 0) {
+                    letter.words.splice(0);
+                }
+            });
+            question.next({ vocab_builder: data });
+            fixture.detectChanges();
+            const rendered = fixture.debugElement.query(
+                By.directive(VOCAB_BUILDER_ACTIVITIES[activity].component),
+            ).componentInstance;
+            expect(fixture.componentInstance.error).withContext(activity).toBe("");
+            if (rendered.setupError) {
+                expect(rendered.setupError()).withContext(activity).toBeNull();
+            }
+        }
+    });
+
+    it("offers only playable letter Memory grid sizes for minimum pools", async () => {
+        await start();
+        for (const count of [4, 6, 8]) {
+            const data = payload("memory-activity");
+            data.mode = "letter";
+            data.target_word_index = null;
+            data.question.id = null;
+            data.card_ids = [];
+            data.content.availableLetters = data.content.availableLetters.slice(0, count);
+            data.content.availableLetters.forEach((letter) => {
+                letter.words.splice(0);
+                letter.mp3 = "";
+            });
+            question.next({ vocab_builder: data });
+            fixture.detectChanges();
+            const rendered: MemoryActivityComponent = fixture.debugElement.query(
+                By.directive(MemoryActivityComponent),
+            ).componentInstance;
+            expect(rendered.gridSizes()).toEqual([8, 12, 16].filter((size) => size <= count * 2));
+            for (const [index, size] of rendered.gridSizes().entries()) {
+                rendered.setGridSize(size, rendered.gridRows()[index]);
+                expect(rendered.setupError()).toBeNull();
+                expect(rendered.gridCards().length).toBe(size);
+            }
+        }
+    });
+
+    it("loads aligned Slider audio and submits completion once", async () => {
+        await start();
+        question.next({ vocab_builder: payload("slider-activity") });
+        fixture.detectChanges();
+        const slider: SliderActivityComponent = fixture.debugElement.query(
+            By.directive(SliderActivityComponent),
+        ).componentInstance;
+        await fixture.whenStable();
+        expect(slider.setupError()).toBeNull();
+        expect(slider.audioError()).toBeNull();
+        expect(slider.currentWord().alignment.length).toBe(1);
+        slider.completed.emit();
+        slider.completed.emit();
+        expect(lessonAnswer).toHaveBeenCalledTimes(1);
+    });
+
+    it("builds a three-word cluster puzzle and tracks guided completion once", async () => {
+        await start();
+        const data = payload("word-clusters-activity");
+        data.content.selectedLetter.words.forEach((word) => (word.img = ""));
+        question.next({ vocab_builder: data });
+        fixture.detectChanges();
+        const clusters: WordClustersActivityComponent = fixture.debugElement.query(
+            By.directive(WordClustersActivityComponent),
+        ).componentInstance;
+        expect(clusters.setupError()).toBeNull();
+        expect(clusters.puzzle().words.length).toBe(3);
+        clusters.completed.emit();
+        clusters.completed.emit();
+        expect(lessonAnswer).toHaveBeenCalledTimes(1);
     });
 
     it("submits exactly one lesson answer with the target option and experienced cards", async () => {

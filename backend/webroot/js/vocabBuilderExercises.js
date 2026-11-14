@@ -9,29 +9,43 @@ $(function () {
         var mode = $('#vbl-mode').val();
         var active = $('#exercise_type').val() === 'vocab-builder';
         var letters = mode === 'letter' || activity === 'fill-letter';
+        var pictures = mode === 'word' && (activity === 'memory-activity' || activity === 'bird-activity');
+        $('#vbl-variant-field').toggle(pictures);
+        $('#vbl-variant').prop('disabled', !active || !pictures);
         var help = '';
         if (definition) {
             if (activity === 'fill-letter') {
                 help = 'Choose a target word card and its missing letter, then add at least two other letters. '
-                    + 'Only the target needs a word card. Each letter needs its own pronunciation audio.';
+                    + 'Only the target needs a word card. Images and pronunciation audio are optional.';
             } else if (mode === 'letter') {
-                help = 'Add at least ' + definition.letters + ' distinct letters with pronunciation audio. '
+                help = 'Add at least ' + definition.letters + ' distinct letters. '
+                    + (activity === 'match-sound' ? 'Pronunciation audio is required. ' : 'Pronunciation audio is optional. ')
                     + 'No word cards are needed.';
                 if (activity === 'memory-activity') {
-                    help += ' Eight letters support all 8, 12 and 16-card grids.';
+                    help += ' Four letters allow 8 cards; six allow 12; eight allow 16.';
                 }
                 if (activity === 'coloring') {
                     help += ' The target letter needs a line-art image.';
                 }
             } else {
-                help = 'Add at least ' + definition.words + ' distinct word card(s) with language text and audio'
-                    + (activity === 'match-sound' || activity === 'coloring' ? '. ' : ' and images. ')
+                help = 'Add at least ' + definition.words + ' distinct word card(s) with language text. '
+                    + (activity === 'match-sound' || activity === 'word-clusters-activity'
+                        ? 'Pronunciation audio is required. ' : activity === 'slider-activity'
+                            ? 'The target needs pronunciation audio and syllable timing. ' : 'Audio is optional. ')
+                    + (pictures && $('#vbl-variant').val() === 'image'
+                        ? 'Pictures are required. '
+                            + (activity === 'memory-activity' ? 'Use at least two different images. ' : '')
+                        : 'Images are optional. ')
                     + 'No letter attachments are needed.';
                 if (activity === 'coloring') {
                     help += ' The target word needs a line-art image.';
                 }
                 if (activity === 'word-list') {
                     help += ' All cards appear in the word list; Continue completes this activity.';
+                }
+                if (activity === 'word-clusters-activity') {
+                    help += ' Use single words of at least two characters with exact shared characters. '
+                        + 'The library builds a connected 3-5-word puzzle and reports incompatible pools.';
                 }
             }
         }
@@ -51,6 +65,7 @@ $(function () {
                 vbl_letter_audio_id: letters,
                 vbl_letter_image_id: activity === 'coloring' && mode === 'letter' && target,
                 vbl_coloring_image_id: activity === 'coloring' && mode === 'word' && target,
+                vbl_alignment: activity === 'slider-activity' && target,
                 text_option: activity === 'fill-letter' && target
             };
             row.find('[data-vbl-field]').each(function () {
@@ -120,6 +135,7 @@ $(function () {
     });
     $('#vbl-activity').on('change', updateModes);
     $('#vbl-mode').on('change', updateResponses);
+    $('#vbl-variant').on('change', updateResponses);
     $('#vbl-content-rows').on('change', '.vbl-role', function () {
         if ($(this).val() === '1') {
             $('#vbl-content-rows .vbl-role').not(this).val('0');

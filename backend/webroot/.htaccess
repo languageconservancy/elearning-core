@@ -9,7 +9,7 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-    <FilesMatch "\.(?i:png|jpe?g|gif|webp|avif|svg)$">
+    <FilesMatch "\.(?i:png|jpe?g|gif|webp|avif|svg|mp3|wav|ogg|m4a|aac|flac|opus)$">
         Header set Access-Control-Allow-Origin "*"
     </FilesMatch>
 </IfModule>

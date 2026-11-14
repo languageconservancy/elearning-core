@@ -19,9 +19,11 @@ import {
     ActivityTargetConfig,
     ActivityType,
     ColoringService,
+    MemoryActivityComponent,
     AudioService as VblAudioService,
     defaultAssetPaths,
     PlayModeConfig,
+    WordData,
     vblAssetPaths,
 } from "@languageconservancy/vocab-builder-library";
 
@@ -211,6 +213,18 @@ export class VocabBuilderComponent implements OnInit, OnDestroy {
         element.style.height = "100%";
         element.style.width = "100%";
         this.componentRef.setInput("content", content);
+        const instance = this.componentRef.instance;
+        if (instance instanceof MemoryActivityComponent && mode === "letter") {
+            const sizes = instance.letterGridSizes.filter(
+                (size) => size / 2 <= availableLetters.length,
+            );
+            instance.letterGridRows.splice(
+                0,
+                instance.letterGridRows.length,
+                ...sizes.map((size) => size / 4),
+            );
+            instance.letterGridSizes.splice(0, instance.letterGridSizes.length, ...sizes);
+        }
         if (activity.guided) {
             this.componentRef.setInput("config", {
                 ...payload.config,
@@ -220,9 +234,17 @@ export class VocabBuilderComponent implements OnInit, OnDestroy {
                 // JSON cannot preserve the reference identity Coloring uses to select a word.
                 targetWord:
                     mode === "word" ? selectedLetter.words[payload.target_word_index] : null,
+                ...(mode === "word" &&
+                (payload.activity === "memory-activity" || payload.activity === "select-grid")
+                    ? {
+                          words: availableLetters.reduce<WordData[]>(
+                              (words, letter) => words.concat(letter.words),
+                              [],
+                          ),
+                      }
+                    : {}),
             });
         }
-        const instance = this.componentRef.instance;
         if ("completed" in instance) {
             instance.completed.subscribe(() => this.complete(payload));
         }

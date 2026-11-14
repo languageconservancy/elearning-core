@@ -700,15 +700,21 @@ class ExercisesController extends AppController
             throw new InvalidArgumentException('Invalid vocab builder content.');
         }
         $activity = $data['vbl_activity'] ?? '';
-        $config = ['vbl_activity' => $activity, 'vbl_mode' => $data['vbl_mode'] ?? null];
+        $config = [
+            'vbl_activity' => $activity, 'vbl_mode' => $data['vbl_mode'] ?? null,
+            'vbl_variant' => $data['vbl_variant'] ?? null,
+        ];
         $mode = VocabBuilder::mode($config);
+        $variant = VocabBuilder::variant($config);
         $options = $builder->normalizeOptions($rows, $config);
         $builder->payload($config, $options);
         if ($mode === 'letter' && !empty($data['vbl_review_enabled'])) {
             throw new InvalidArgumentException('Generated word review is only available for word activities.');
         }
         if (!empty($data['vbl_review_enabled']) && !VocabBuilder::ACTIVITIES[$activity]['review']) {
-            throw new InvalidArgumentException('Word List cannot be used in scored review.');
+            throw new InvalidArgumentException(
+                VocabBuilder::ACTIVITIES[$activity]['label'] . ' cannot be used in scored review.'
+            );
         }
         $fields = [
             'name' => trim((string)($data['name'] ?? '')),
@@ -722,6 +728,7 @@ class ExercisesController extends AppController
             'noofcard' => 1,
             'vbl_activity' => $activity,
             'vbl_mode' => $mode,
+            'vbl_variant' => $variant,
             'vbl_review_enabled' => !empty($data['vbl_review_enabled']),
         ];
         $this->getExercisesTable()->getConnection()->transactional(function () use ($exercise, $fields, $options) {

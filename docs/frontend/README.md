@@ -8,7 +8,8 @@ It utilizes the [CapacitorJS](https://capacitorjs.com/) framework to build Andro
 ## Vocab Builder activities
 
 The exercise and review screens use a shared [VocabBuilderComponent](../../frontend/src/app/shared/exercises/vocab-builder/vocab-builder.component.ts)
-to render Bird, Coloring, Fill Letter, Match Sound, Memory, Select Grid and Word List.
+to render Bird, Coloring, Fill Letter, Match Sound, Memory, Select Grid, Slider,
+Word Clusters and Word List.
 Each guided activity reports completion through the existing lesson/review answer pipeline.
 Word List has an explicit Continue button. Completion counts as correct practice; it
 does not measure mistakes or award reading/writing/speaking/listening XP. Existing
@@ -26,7 +27,9 @@ Source/
   vocab-builder-library/
 ```
 
-Build the sibling library before installing the frontend:
+Build the sibling library with the word-grid, Slider and Word Clusters exports
+before installing the frontend (the lockfile currently records the local
+`1.0.5-word-activities` build):
 
 ```bash
 cd vocab-builder-library
@@ -56,13 +59,29 @@ The host resolves those assets against the document base URI and receives absolu
 word/letter media URLs from the backend. Remote line-art images must allow CORS
 for canvas pixel access, and CSP must permit the same-origin module worker.
 The backend webroot's Apache configuration adds `Access-Control-Allow-Origin: *`
-to public static images when `mod_headers` is enabled. Deploy that configuration
-alongside the images; API CORS settings alone do not cover static files. After
+to public static images and audio when `mod_headers` is enabled. Deploy that configuration
+alongside the media; API CORS settings alone do not cover static files. After
 changing those headers, hard-refresh or invalidate previously cached images.
 The backend's `mode` selects the native word or letter target. Match Sound and
 Coloring receive exactly one target type, so a word question is not accidentally
 turned into a letter question. Fill Letter receives its word and missing letter.
 The host rebinds word targets to the indexed content word after JSON parsing.
+Word Memory and Select Grid receive the complete authored word pool through
+`config.words`, rather than the target alone. Memory and Bird preserve the
+backend's text/picture `variant`. Letter Memory exposes only grid sizes supported
+by the authored letter count, so four letters suffice for its smallest grid.
+Visual activities can run without audio, and images are optional except for
+Coloring line art and picture presentation.
+
+Slider receives the target word's syllable `alignment` and first recording URL.
+It fetches/decodes that recording itself; audio URLs must allow cross-origin fetch
+when hosted on another origin. Its Listen/Speak rounds use the same guided
+completion pipeline and its component disposes its audio on exercise changes.
+Word Clusters generates its puzzle from the selected pool (at least three words)
+and emits completion after the learner acknowledges its celebration cards.
+Incompatible pools show the library's setup error rather than auto-completing.
+See [backend authoring requirements](../backend/README.md#vocab-builder-authoring-and-review)
+for minimum content and timing authoring.
 Letter-only activities accept a null target card and no experienced word cards.
 The library currently filters letter choices by `words.length`; the host supplies
 an internal letter-shaped word entry for otherwise empty letter groups. Authors
@@ -70,7 +89,7 @@ do not need to create dummy word cards, and those entries never enter word revie
 Library audio and Coloring services are scoped to the host so media paths and
 worker cleanup follow the exercise lifetime.
 The activity frame supplies explicit height and width for the library's responsive
-layouts. Coloring in the rebuilt local library (1.0.3) uses its own named size
+layouts. Coloring in the rebuilt local library uses its own named size
 container: desktop controls appear only when the activity itself is at least
 1024px wide, regardless of the browser viewport.
 

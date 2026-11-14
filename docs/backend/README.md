@@ -64,7 +64,8 @@ Tests
 ### Vocab Builder authoring and review
 
 Apply [the Vocab Builder migration](../../backend/config/Migrations/20261105000000_AddVocabBuilderExercises.php)
-and [target-mode migration](../../backend/config/Migrations/20261106000000_AddVocabBuilderTargetMode.php)
+and [target-mode migration](../../backend/config/Migrations/20261106000000_AddVocabBuilderTargetMode.php),
+then [activity-options migration](../../backend/config/Migrations/20261113000000_AddVocabBuilderActivityOptions.php)
 before serving the updated app; see [migration instructions](migrations.md).
 Create/name an exercise as usual, select **Vocab Builder** as its exercise type,
 then select an activity and its supported word/letter version. Attach the exercise to units
@@ -74,7 +75,7 @@ The editor only shows fields needed by that version. Each response has a role
 menu: target/correct response or other response/distractor. Exactly one is the
 target; selecting a new target updates the other response menus automatically.
 Word versions use searchable word cards; letter versions use letter text
-(including multi-character letters) and pronunciation audio, without requiring
+(including multi-character letters) and optional pronunciation audio, without requiring
 word cards. Use the file-library pickers for audio and Coloring line art.
 Fill Letter uses one target word card plus letter responses, not a word card for
 every distractor. Word-only activities do not request letter attachments.
@@ -88,27 +89,45 @@ Minimum distinct content:
 
 | Activity / version | Required content |
 | --- | --- |
-| Bird / word | 2 distinct word cards with text, audio and images |
-| Coloring / word | Target word card with text and audio, plus word line art |
-| Coloring / letter | Target letter, pronunciation audio and letter line art |
-| Fill Letter / word | 1 target word card with text, audio and image; 3 distinct letters with audio. The target word contains its missing letter |
+| Bird / word | 1 word card with text; more words add distractors. Audio/images optional in text presentation |
+| Coloring / word | Target word card with text, plus word line art; audio optional |
+| Coloring / letter | Target letter and letter line art; audio optional |
+| Fill Letter / word | 1 target word card with text; 3 distinct letters. The target word contains its missing letter. Images/audio optional |
 | Match Sound / word | 3 distinct word cards with text and audio; no letter audio or word images |
 | Match Sound / letter | 3 distinct letters with audio; no word cards |
-| Memory / letter | 8 distinct letters with audio, supporting all offered 8/12/16-card grids |
-| Select Grid / letter | 2 distinct letters with audio |
-| Word List / word | 1 or more word cards with text, audio and images; explicit Continue |
+| Memory / letter | 4 distinct letters for 8 cards; 6 for 12 cards; 8 for 16 cards. Only supported sizes are offered; audio optional |
+| Memory / word | 2 distinct words; audio/images optional in text presentation |
+| Select Grid / letter | 2 distinct letters; audio optional |
+| Select Grid / word | 2 distinct words; audio/images optional |
+| Slider / word | 1 target word with audio and chronological syllable timing; image optional |
+| Word Clusters / word | At least 3 distinct single words of two or more characters, with audio; images optional |
+| Word List / word | 1 or more word cards with text; audio/images optional; explicit Continue |
 
-Only native library variants are offered: Bird and Word List use words; Fill
-Letter fills a missing letter in a word; Memory and Select Grid use letters.
-Coloring and Match Sound offer separate word and letter versions.
+Memory and Bird also offer picture presentation. Every word in a picture pool
+needs an image; picture Memory needs at least two different images. Word grids
+deduplicate case-insensitively, matching the library.
+
+Slider timing is entered on the target response as a JSON array, for example
+`[{"unit":"ap","start":0.1,"end":0.5},{"unit":"ple","start":0.6,"end":1}]`.
+Times describe syllables in the **first** attached audio recording, in seconds.
+Units must be nonempty; times must be numeric, nonnegative, chronological and
+non-overlapping, with `end > start`. Check timings against the actual recording;
+the runtime reports audio fetch/decode errors or intervals beyond its duration.
+
+Word Clusters uses the word pool, not just the tracked target. Choose words with
+exact shared characters (case and diacritics matter). The library chooses a
+connected 3–5-word puzzle and shows incompatible pools or search-limit failures
+explicitly. Extra/nonviable words may be omitted by the puzzle generator.
 
 The `exercises` table stores `exercise_type = vocab-builder`, `vbl_activity` and
-`vbl_mode` (`word`/`letter`) and the opt-in `vbl_review_enabled` flag.
+`vbl_mode` (`word`/`letter`), `vbl_variant` (`text`/`image`) and the opt-in
+`vbl_review_enabled` flag. A null variant preserves text presentation.
 The additive mode migration leaves existing exercises unchanged: a null mode
 defaults to letters for Memory/Select Grid and words for other activities.
 `exercise_options` stores nullable card references,
 `P`/`O` target/content roles, `vbl_letter`, letter media and line-art file IDs.
-The existing `text_option` stores an optional marked word. A save validates the
+The existing `text_option` stores an optional marked word; `vbl_alignment` stores
+Slider syllable timing as JSON text. A save validates the
 whole pool and atomically replaces exercise/options and updates unit-card content.
 
 The [shared payload builder](../../backend/src/Lib/VocabBuilder.php) produces one
@@ -128,16 +147,17 @@ unit. At most one generated Vocab Builder activity is placed in each review batc
 keeping the existing batch limit and legacy activities for the other slots.
 The target must already be in the learner's eligible review queue, and unit
 review only uses pools assigned to that unit. An authored distractor can become a
-review target. Coloring candidates without line art are ineligible, and Word List
-is always excluded. New letter-only pools have no word cards to add to word review;
+review target. Coloring candidates without line art and Slider candidates without
+usable timing are ineligible. Word List and Word Clusters (which practice a pool,
+not a targeted review word) are excluded. New letter-only pools have no word cards to add to word review;
 the editor hides that option. Existing card-backed letter pools remain readable.
 Invalid authored pools are logged and skipped. Completion
 counts as correct practice for review unlocks but awards no measured skill XP,
 because the library does not expose incorrect-answer scoring.
 
 The [focused backend tests](../../backend/tests/TestCase/Lib/VocabBuilderTest.php)
-cover all nine supported activity/version combinations, version-specific
-content thresholds, cardless letter targets, attachments, multi-character letters, transaction
+cover all supported activity/version combinations, optional media, picture variants,
+Slider timing, version-specific content thresholds, cardless letter targets, attachments, multi-character letters, transaction
 rollback, migration reversal, queue/unit review eligibility and API/download parity:
 
 ```bash

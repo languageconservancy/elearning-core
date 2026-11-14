@@ -12,12 +12,14 @@ class VocabBuilder
     public const TYPE = 'vocab-builder';
 
     public const ACTIVITIES = [
-        'bird-activity' => ['label' => 'Bird', 'letters' => 1, 'words' => 2, 'review' => true],
+        'bird-activity' => ['label' => 'Bird', 'letters' => 1, 'words' => 1, 'review' => true],
         'coloring' => ['label' => 'Coloring', 'letters' => 1, 'words' => 1, 'review' => true],
         'fill-letter' => ['label' => 'Fill Letter', 'letters' => 3, 'words' => 1, 'review' => true],
         'match-sound' => ['label' => 'Match Sound', 'letters' => 3, 'words' => 3, 'review' => true],
-        'memory-activity' => ['label' => 'Memory', 'letters' => 8, 'words' => 1, 'review' => true],
-        'select-grid' => ['label' => 'Select Grid', 'letters' => 2, 'words' => 1, 'review' => true],
+        'memory-activity' => ['label' => 'Memory', 'letters' => 4, 'words' => 2, 'review' => true],
+        'select-grid' => ['label' => 'Select Grid', 'letters' => 2, 'words' => 2, 'review' => true],
+        'slider-activity' => ['label' => 'Slider', 'letters' => 1, 'words' => 1, 'review' => true],
+        'word-clusters-activity' => ['label' => 'Word Clusters', 'letters' => 1, 'words' => 3, 'review' => false],
         'word-list' => ['label' => 'Word List', 'letters' => 1, 'words' => 1, 'review' => false],
     ];
 
@@ -36,7 +38,7 @@ class VocabBuilder
                 return ['word' => 'Word', 'letter' => 'Letter'];
             case 'memory-activity':
             case 'select-grid':
-                return ['letter' => 'Letter'];
+                return ['letter' => 'Letter', 'word' => 'Word'];
             default:
                 return ['word' => 'Word'];
         }
@@ -54,6 +56,43 @@ class VocabBuilder
             throw new InvalidArgumentException('Select a supported word or letter version for this activity.');
         }
         return $mode;
+    }
+
+    public static function variant(array $exercise): string
+    {
+        $variant = $exercise['vbl_variant'] ?? 'text';
+        $supportsImages = self::mode($exercise) === 'word'
+            && in_array($exercise['vbl_activity'], ['memory-activity', 'bird-activity'], true);
+        if ($variant !== 'text' && !($variant === 'image' && $supportsImages)) {
+            throw new InvalidArgumentException('Select a supported text or picture presentation.');
+        }
+        return $variant;
+    }
+
+    private function alignment($value): array
+    {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+        if (!is_array($value) || !$value || !array_is_list($value)) {
+            throw new InvalidArgumentException('Slider needs a JSON array of syllable timing entries.');
+        }
+        $end = 0;
+        foreach ($value as $unit) {
+            if (
+                !is_array($unit) || !is_string($unit['unit'] ?? null) || trim($unit['unit']) === ''
+                || (!is_int($unit['start'] ?? null) && !is_float($unit['start'] ?? null))
+                || (!is_int($unit['end'] ?? null) && !is_float($unit['end'] ?? null))
+                || !is_finite((float)$unit['start']) || !is_finite((float)$unit['end'])
+                || $unit['start'] < $end || $unit['end'] <= $unit['start']
+            ) {
+                throw new InvalidArgumentException(
+                    'Slider syllables need nonempty unit text and ordered, non-overlapping numeric start/end seconds.'
+                );
+            }
+            $end = $unit['end'];
+        }
+        return $value;
     }
 
     public function normalizeOptions(array $rows, array $exercise = []): array
@@ -79,6 +118,8 @@ class VocabBuilder
                 'vbl_letter' => $needsLetter ? $letter : null,
                 'text_option' => ($activity === 'fill-letter' && !empty($row['target'])) || $mode === null
                     ? trim((string)($row['text_option'] ?? '')) : '',
+                'vbl_alignment' => $activity === 'slider-activity' && !empty($row['vbl_alignment'])
+                    ? json_encode($this->alignment($row['vbl_alignment']), JSON_THROW_ON_ERROR) : null,
             ];
             foreach (['vbl_letter_audio_id', 'vbl_letter_image_id', 'vbl_coloring_image_id'] as $field) {
                 $needed = $mode === null
@@ -124,6 +165,7 @@ class VocabBuilder
     {
         $activity = $exercise['vbl_activity'] ?? '';
         $mode = self::mode($exercise);
+        $variant = self::variant($exercise);
         $needsLetters = $mode === 'letter' || $activity === 'fill-letter';
         $letters = [];
         $cardIds = [];
@@ -182,11 +224,14 @@ class VocabBuilder
                 foreach (array_filter(explode(',', (string)$card['audio'])) as $audioId) {
                     $audio[] = $this->fileUrl(trim($audioId), 'audio');
                 }
-                $needsImage = !in_array($activity, ['match-sound', 'coloring'], true);
-                $image = $needsImage ? $this->fileUrl($card['image_id'], 'image') : '';
-                if ($wordText === '' || !$audio || ($needsImage && $image === '')) {
+                $needsAudio = in_array($activity, ['match-sound', 'word-clusters-activity'], true)
+                    || ($activity === 'slider-activity' && $isTarget);
+                $image = $this->fileUrl($card['image_id'] ?? null, 'image');
+                if ($wordText === '' || ($needsAudio && !$audio) || ($variant === 'image' && $image === '')) {
                     throw new InvalidArgumentException(
-                        "Word card {$cardId} needs language text, audio" . ($needsImage ? ' and an image.' : '.')
+                        "Word card {$cardId} needs language text"
+                        . ($needsAudio ? ' and audio' : '')
+                        . ($variant === 'image' ? ' and an image' : '') . '.'
                     );
                 }
                 $word = [
@@ -197,11 +242,14 @@ class VocabBuilder
                     'coloring' => $activity === 'coloring'
                         ? $this->fileUrl($option['vbl_coloring_image_id'] ?? null, 'image') : '',
                 ];
+                if ($activity === 'slider-activity' && ($isTarget || !empty($option['vbl_alignment']))) {
+                    $word['alignment'] = $this->alignment($option['vbl_alignment'] ?? null);
+                }
             }
             $letterAudio = $needsLetters ? $this->fileUrl($option['vbl_letter_audio_id'] ?? null, 'audio') : '';
             $letterImage = $activity === 'coloring' && $mode === 'letter'
                 ? $this->fileUrl($option['vbl_letter_image_id'] ?? null, 'image') : '';
-            if ($needsLetters && $letterAudio === '') {
+            if ($needsLetters && $activity === 'match-sound' && $letterAudio === '') {
                 throw new InvalidArgumentException("Letter {$letter} needs a letter audio attachment.");
             }
             if (
@@ -228,20 +276,25 @@ class VocabBuilder
                 $target = $entry;
             }
         }
-        $this->validatePool($activity, array_values($letters), $target, $mode);
+        $this->validatePool($activity, array_values($letters), $target, $mode, $variant);
         $selectedLetter = $letters[$target['letter']];
         if ($activity === 'coloring' && $mode === 'letter' && $selectedLetter['img'] === '') {
             throw new InvalidArgumentException('The Coloring target needs a letter line-art image attachment.');
+        }
+        $config = [
+            'playMode' => 'guided',
+            'variant' => $variant,
+            'targetLetter' => $needsLetters ? $selectedLetter : null,
+            'targetWord' => $mode === 'word' ? $target['word'] : null,
+        ];
+        if ($mode === 'word' && in_array($activity, ['memory-activity', 'select-grid'], true)) {
+            $config['words'] = $selectedLetter['words'];
         }
         return [
             'activity' => $activity,
             'mode' => $mode,
             'content' => ['availableLetters' => array_values($letters), 'selectedLetter' => $selectedLetter],
-            'config' => [
-                'playMode' => 'guided',
-                'targetLetter' => $needsLetters ? $selectedLetter : null,
-                'targetWord' => $mode === 'word' ? $target['word'] : null,
-            ],
+            'config' => $config,
             'target_word_index' => $target['word_index'],
             'card_ids' => $cardIds,
             'question' => $target['card'],
@@ -249,8 +302,13 @@ class VocabBuilder
         ];
     }
 
-    public function validatePool(string $activity, array $letters, ?array $target, ?string $mode = null): void
-    {
+    public function validatePool(
+        string $activity,
+        array $letters,
+        ?array $target,
+        ?string $mode = null,
+        string $variant = 'text'
+    ): void {
         $mode = $mode ?? self::mode(['vbl_activity' => $activity]);
         $requirements = self::ACTIVITIES[$activity] ?? null;
         if (!$requirements || !$target) {
@@ -260,7 +318,8 @@ class VocabBuilder
         foreach ($letters as $letter) {
             foreach ($letter['words'] as $word) {
                 $text = str_replace(['[', ']'], '', $word['word']);
-                $words[] = $activity === 'bird-activity' ? mb_strtolower($text) : $text;
+                $words[] = in_array($activity, ['bird-activity', 'memory-activity', 'select-grid'], true)
+                    ? mb_strtolower(trim($text)) : $text;
             }
         }
         $minLetters = $mode === 'letter' || $activity === 'fill-letter' ? $requirements['letters'] : 1;
@@ -275,6 +334,27 @@ class VocabBuilder
         }
         if ($activity === 'coloring' && $mode === 'word' && empty($target['word']['coloring'])) {
             throw new InvalidArgumentException('The Coloring target needs a line-art image attachment.');
+        }
+        if ($variant === 'image' && $activity === 'memory-activity') {
+            $images = [];
+            foreach ($letters as $letter) {
+                foreach ($letter['words'] as $word) {
+                    $images[] = $word['img'];
+                }
+            }
+            if (count(array_unique(array_filter($images))) < 2) {
+                throw new InvalidArgumentException('Picture Memory needs at least two different images.');
+            }
+        }
+        if ($activity === 'word-clusters-activity') {
+            $viable = array_filter(array_unique($words), static function ($word) {
+                return !preg_match('/\s/u', $word) && preg_match_all('/\X/u', $word) >= 2;
+            });
+            if (count($viable) < 3) {
+                throw new InvalidArgumentException(
+                    'Word Clusters needs at least 3 distinct single words of two or more characters.'
+                );
+            }
         }
     }
 

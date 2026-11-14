@@ -35,6 +35,13 @@ if (!$mode && isset($activities[$exercise->vbl_activity ?? ''])) {
         <label for="vbl-mode"><?= __('Version / response type') ?></label>
         <select id="vbl-mode" name="vbl_mode" class="form-control"></select>
     </div>
+    <div id="vbl-variant-field">
+        <?= $this->Form->control('vbl_variant', [
+            'label' => __('Presentation'), 'type' => 'select',
+            'options' => ['text' => __('Words'), 'image' => __('Pictures')],
+            'class' => 'form-control',
+        ]) ?>
+    </div>
     <p id="vbl-requirements" class="alert alert-info" aria-live="polite"></p>
     <?= $this->Form->control('vbl_review_enabled', [
         'type' => 'checkbox',

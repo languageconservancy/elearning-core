@@ -26,6 +26,16 @@ $prefix = 'vbl_options[' . $index . ']';
             <?php } ?>
         </select>
     </div>
+    <div class="form-group" data-vbl-field="vbl_alignment">
+        <label for="vbl-<?= h($index) ?>-alignment"><?= __('Slider syllable timing (JSON)') ?></label>
+        <textarea class="form-control" id="vbl-<?= h($index) ?>-alignment"
+            name="<?= h($prefix) ?>[vbl_alignment]" rows="4"
+            placeholder='[{"unit":"apple","start":0,"end":1}]'><?= h($row['vbl_alignment'] ?? '') ?></textarea>
+        <small><?= __(
+            'Use syllables from the first audio recording, with start/end times in seconds. '
+            . 'Entries must be chronological and must not overlap. Images are optional.'
+        ) ?></small>
+    </div>
     <?php foreach (
     [
         'vbl_letter' => ['Letter / multi-character letter', 'text'],

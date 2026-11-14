@@ -7,6 +7,8 @@ import {
     MatchSoundActivityComponent,
     MemoryActivityComponent,
     SelectGridActivityComponent,
+    SliderActivityComponent,
+    WordClustersActivityComponent,
     WordListActivityComponent,
 } from "@languageconservancy/vocab-builder-library";
 
@@ -17,6 +19,8 @@ export type VocabBuilderActivity =
     | MatchSoundActivityComponent
     | MemoryActivityComponent
     | SelectGridActivityComponent
+    | SliderActivityComponent
+    | WordClustersActivityComponent
     | WordListActivityComponent;
 
 export const VOCAB_BUILDER_ACTIVITIES: Record<
@@ -29,5 +33,7 @@ export const VOCAB_BUILDER_ACTIVITIES: Record<
     "match-sound": { component: MatchSoundActivityComponent, guided: true },
     "memory-activity": { component: MemoryActivityComponent, guided: true },
     "select-grid": { component: SelectGridActivityComponent, guided: true },
+    "slider-activity": { component: SliderActivityComponent, guided: true },
+    "word-clusters-activity": { component: WordClustersActivityComponent, guided: true },
     "word-list": { component: WordListActivityComponent, guided: false },
 };

@@ -267,69 +267,12 @@ class LessonsController extends AppController
             array_push($frameBlockData, $element);
         }
 
-        // check validation
-        $validate = 1;
-        $message = '';
-        for ($i = 0; $i < $noOfblock; $i++) {
-            if (isset($frameBlockData[$i]['type'])) {
-                //validation for card
-                if ($frameBlockData[$i]['type'] == 'card') {
-                    if ($frameBlockData[$i]['card_id'] == '' || $frameBlockData[$i]['card_id'] == 0) {
-                        $validate = 0;
-                        $message = 'Please select a card for block ' . ($i + 1);
-                        break;
-                    }
-                    if (
-                        $frameBlockData[$i]['is_card_lakota'] == 'N'
-                        && $frameBlockData[$i]['is_card_english'] == 'N'
-                        && $frameBlockData[$i]['is_card_audio'] == 'N'
-                        && $frameBlockData[$i]['is_card_video'] == 'N'
-                        && $frameBlockData[$i]['is_card_image'] == 'N'
-                    ) {
-                        $validate = 0;
-                        $message = 'Please check at least one card type under \'Select Card\' in block ' . ($i + 1);
-                        break;
-                    }
-                }
-                //validation for html
-                if ($frameBlockData[$i]['type'] == 'html') {
-                    if (trim($frameBlockData[$i]['custom_html']) == '') {
-                        $validate = 0;
-                        $message = 'Please enter html for block ' . ($i + 1);
-                        break;
-                    }
-                }
-                //validation for audio
-                if ($frameBlockData[$i]['type'] == 'audio') {
-                    if (trim($frameBlockData[$i]['audio_id']) == '') {
-                        $validate = 0;
-                        $message = 'Please select Audio from picker for block ' . ($i + 1);
-                        break;
-                    }
-                }
-                //validation for video
-                if ($frameBlockData[$i]['type'] == 'video') {
-                    if (trim($frameBlockData[$i]['video_id']) == '') {
-                        $validate = 0;
-                        $message = 'Please select video from picker for block ' . ($i + 1);
-                        break;
-                    }
-                }
-                //validation for image
-                if ($frameBlockData[$i]['type'] == 'image') {
-                    if (trim($frameBlockData[$i]['image_id']) == '') {
-                        $validate = 0;
-                        $message = 'Please select image from picker for block ' . ($i + 1);
-                        break;
-                    }
-                }
-            } else {
-                $validate = 0;
-                $message = 'Please Select Type for block ' . ($i + 1);
-                break;
-            }
+        try {
+            \App\Lib\LessonBlockContent::validate($frameBlockData);
+            return ['status' => 1, 'message' => '', 'data' => $frameBlockData];
+        } catch (\InvalidArgumentException $error) {
+            return ['status' => 0, 'message' => $error->getMessage(), 'data' => $frameBlockData];
         }
-        return array('status' => $validate, 'message' => $message, 'data' => $frameBlockData);
     }
 
     //the intermediate page where cards are inspected before creation
@@ -412,69 +355,10 @@ class LessonsController extends AppController
             return false;
         }
 
-        /* Use LessonFrame to determine Lesson, find Units with that lesson,
-             find CardUnits with that Unit, add cards from lesson frame if they don't exist already
-             in that unit */
-        /* Find unit details that contain the lesson with the frame being added/changed/deleted, to get list of units */
-        $unitOptions = array(
-            'conditions' => array(
-                'lesson_id' => $LessonFrame->lesson_id
-            ),
-            'keyField' => 'id',
-            'valueField' => 'unit_id'
-        );
-        $unitsWithThisLesson = $this->getUnitdetailsTable()->find('list', $unitOptions)->toArray();
-        $unitsWithThisLesson = array_values(array_unique($unitsWithThisLesson));
-
-        /* Use list of units to find unit details for those units */
-        foreach ($unitsWithThisLesson as $unit_id) {
-            $unitOptions = array(
-                'conditions' => array(
-                    'unit_id' => $unit_id
-                ),
-                'contain' => array(
-                    'Lessons',
-                    'Lessons.Lessonframes',
-                    'Lessons.Lessonframes.LessonFrameBlocks',
-                    'Exercises',
-                    'Exercises.Exerciseoptions'
-                )
-            );
-            $unitsDetails = $this->getUnitdetailsTable()->find('all', $unitOptions)->toArray();
-
-            /* Get all the cards in the lesson being edited */
-            $cardIds = array();
-            foreach ($unitsDetails as $key => $unitActivity) {
-                $this->addCardsFromActivityToCardUnits($unitActivity, $cardIds);
-            }
-            $cardIds = array_values(array_unique($cardIds));
-            $unitOptions = array(
-                'conditions' => array(
-                    'unit_id' => $unit_id
-                ),
-                'keyField' => 'id',
-                'valueField' => 'card_id'
-            );
-            $unitCardIds = $this->getCardUnitsTable()->find('list', $unitOptions)->toArray();
-            $unitCardIds = array_values(array_unique($unitCardIds));
-
-            /* Delete cards that are no longer in a lesson or exercise */
-            if (!empty($cardIds)) {
-                $this->getCardUnitsTable()->deleteAll(['unit_id' => $unit_id, 'card_id NOT IN' => $cardIds]);
-            }
-
-            /* Create array of new items to batch save to the database table */
-            $newCards = array();
-            foreach ($cardIds as $card_id) {
-                if (!in_array($cardIds, $unitCardIds)) {
-                    array_push($newCards, ['card_id' => $card_id, 'unit_id' => $unit_id]);
-                }
-            }
-            /* Batch create entities from above array and save atomically to database table using
-                 cakephp Saving Multiple Entities functionality since v3.2.8 */
-            $entities = $this->getCardUnitsTable()->newEntities($newCards);
-            $result = $this->getCardUnitsTable()->saveMany($entities);
-        }
+        $this->getLessonsTable()->getConnection()->transactional(function () use ($LessonFrame) {
+            (new \App\Lib\UnitCardContent($this->getTableLocator()))
+                ->synchronize('lesson_id', (int)$LessonFrame->lesson_id);
+        });
         return true;
     }
 

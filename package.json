@@ -39,6 +39,7 @@
     "cap:add-ios": "cd ./frontend && npx cap add ios",
     "cap:add-android": "cd ./frontend && npx cap add android",
     "cap:sync": "cd ./frontend && npx cap sync",
+    "build:admin": "cd frontend && npm run build:admin",
     "sync-local-backend": "./scripts/sync-local-backend.sh",
     "composer-update:local-php": "./scripts/composer-update-local-php.sh",
     "init-language-repo-vars": "node scripts/init-language-repo-vars.js",

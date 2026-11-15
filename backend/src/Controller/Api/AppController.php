@@ -499,6 +499,7 @@ class AppController extends \App\Controller\AppController
         $lesson = $this->getLessonsTable()->get($activityParams['lesson_id'], $lessonOptions);
         $numFrames = count($lesson['lessonframes']);
         $numActivities = $this->getUserActivitiesTable()->find()
+            ->select(['UserActivities.lessonframe_id'])
             ->where($conditions)
             ->group(['UserActivities.lessonframe_id'])
             ->count();

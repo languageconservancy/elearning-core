@@ -9,6 +9,10 @@ $SuperAdminRoleId = TableRegistry::getTableLocator()->get('Roles')->getRoleId(Ut
 <ul class="sidebar-menu" data-widget="tree">
 
     <li class="header">MAIN NAVIGATION</li>
+    <li><?= $this->Html->link(
+        'Learning Studio',
+        ['prefix' => 'Admin', 'controller' => 'Workspace', 'action' => 'index']
+    ) ?></li>
     <li>
         <a href="<?php echo Router::url(
             [

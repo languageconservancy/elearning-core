@@ -1,0 +1,222 @@
+<fieldset class="content-workbench" [disabled]="saving() || loading()">
+    <div
+        class="frame-strip"
+        aria-label="Lesson frames"
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        [cdkDropListData]="frames()"
+        [cdkDropListDisabled]="!order() || reordering()"
+        (cdkDropListDropped)="frameDropped($event)"
+    >
+        @for (item of frames(); track item.id; let i = $index) {
+        <button
+            type="button"
+            class="frame-choice"
+            cdkDrag
+            [cdkDragDisabled]="!order() || reordering()"
+            [class.sortable]="order()"
+            [attr.aria-pressed]="frame()?.id === item.id"
+            [attr.aria-label]="item.name + ', frame ' + (i + 1) + ' of ' + frames().length"
+            [title]="order() ? 'Drag (or Alt + arrow keys) to reorder frames' : item.name"
+            (click)="selectFrame(item.id)"
+            (keydown)="frameKey($event, i)"
+        >
+            <strong>{{ item.name }}</strong
+            ><small
+                >{{ item.blocks || 0 }} blocks · {{ item.duration || 0 }} s · {{ item.orientation ||
+                "portrait" }}</small
+            >
+        </button>
+        }
+        <button type="button" class="primary" (click)="create()">+ New frame</button>
+    </div>
+    <p class="sr-only" aria-live="polite">{{ announcement() }}</p>
+    @if (total() > pageSize()) {
+    <div class="frame-pagination">
+        <button
+            type="button"
+            [disabled]="page() <= 1 || loading()"
+            (click)="changePage(page() - 1)"
+        >
+            Previous frames
+        </button>
+        <span>{{ total() }} frames · Page {{ page() }}</span
+        ><button
+            type="button"
+            [disabled]="page() >= pages() || loading()"
+            (click)="changePage(page() + 1)"
+        >
+            Next frames
+        </button>
+    </div>
+    } @if (loading()) {
+    <p role="status">Loading lesson content...</p>
+    } @if (error()) {
+    <p role="alert" class="error">{{ error() }}</p>
+    } @if (notice()) {
+    <p role="status" class="success">{{ notice() }}</p>
+    } @if (frame(); as current) {
+    <div class="frame-settings">
+        <label
+            >Frame name<input [value]="value('name')" (input)="setField('name', text($event))"
+        /></label>
+        <label
+            >Duration (seconds)<input
+                type="number"
+                min="0"
+                step="0.1"
+                [value]="value('duration')"
+                (input)="setField('duration', text($event))"
+        /></label>
+        <label
+            >Layout<select
+                [ngModel]="value('frame_preview')"
+                (ngModelChange)="setField('frame_preview', $event)"
+            >
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+            </select></label
+        >
+    </div>
+    <div class="frame-audio">
+        <studio-content-asset
+            kind="audio"
+            label="Frame narration"
+            [value]="value('audio_id')"
+            [references]="current"
+            (changed)="setField('audio_id', $event)"
+        />
+    </div>
+    <div
+        class="option-strip"
+        aria-label="Frame blocks"
+        cdkDropList
+        cdkDropListOrientation="horizontal"
+        [cdkDropListData]="current.blocks"
+        (cdkDropListDropped)="blockDropped($event)"
+    >
+        @for (item of current.blocks; track item; let i = $index) {
+        <button
+            type="button"
+            class="block-choice"
+            cdkDrag
+            [cdkDragDisabled]="current.blocks.length < 2"
+            [class.sortable]="current.blocks.length > 1"
+            [attr.aria-pressed]="selectedBlock() === i"
+            title="Drag (or Alt + arrow keys) to reorder blocks"
+            (click)="selectedBlock.set(i)"
+            (keydown)="blockKey($event, i)"
+        >
+            Block {{ i + 1 }} · {{ item.fields["type"] }}
+        </button>
+        }
+        <button type="button" [disabled]="current.blocks.length >= 3" (click)="addBlock()">
+            + Add block
+        </button>
+    </div>
+    <div class="content-scroll">
+        @if (block(); as selected) {
+        <div class="option-toolbar">
+            <label
+                >Block type<select
+                    [ngModel]="blockValue('type')"
+                    (ngModelChange)="setBlock('type', $event)"
+                >
+                    <option value="card">Card</option>
+                    <option value="html">HTML / text</option>
+                    <option value="image">Image</option>
+                    <option value="audio">Audio</option>
+                    <option value="video">Video</option>
+                </select></label
+            >
+            <button
+                type="button"
+                class="quiet"
+                [disabled]="selectedBlock() === 0"
+                (click)="moveBlock(-1)"
+            >
+                Move earlier
+            </button>
+            <button
+                type="button"
+                class="quiet"
+                [disabled]="selectedBlock() === current.blocks.length - 1"
+                (click)="moveBlock(1)"
+            >
+                Move later
+            </button>
+            <button
+                type="button"
+                class="danger quiet"
+                [disabled]="current.blocks.length <= 1"
+                (click)="removingBlock.set(true)"
+            >
+                Remove block
+            </button>
+        </div>
+        @if (blockValue("type") === "card") {
+        <studio-content-asset
+            kind="card"
+            label="Card"
+            [value]="blockValue('card_id')"
+            [references]="current"
+            (changed)="setBlock('card_id', $event)"
+        />
+        <h3>Show on this card</h3>
+        <div class="field-chips">
+            @for (display of displayFields; track display.key) {
+            <button
+                type="button"
+                [attr.aria-pressed]="blockValue(display.key) === 'Y'"
+                (click)="setBlock(display.key, blockValue(display.key) === 'Y' ? 'N' : 'Y')"
+            >
+                {{ display.label }}
+            </button>
+            }
+        </div>
+        } @else if (blockValue("type") === "html") {
+        <label
+            >HTML / text<textarea
+                rows="7"
+                [value]="blockValue('custom_html')"
+                (input)="setBlock('custom_html', text($event))"
+            ></textarea>
+        </label>
+        <div class="safe-html-preview" [innerHTML]="blockValue('custom_html')"></div>
+        } @else {
+        <studio-content-asset
+            [kind]="'' + blockValue('type')"
+            [label]="'' + blockValue('type')"
+            [value]="blockValue(blockValue('type') + '_id')"
+            [references]="current"
+            (changed)="setBlock(blockValue('type') + '_id', $event)"
+        />
+        } }
+    </div>
+    <footer class="content-actions">
+        <span>{{ dirty() ? "Unsaved frame changes" : current.blocks.length + " blocks" }}</span>
+        <button type="button" class="primary" [disabled]="saving() || !dirty()" (click)="save()">
+            {{ saving() ? "Saving..." : "Save lesson frame" }}
+        </button>
+    </footer>
+    } @else if (!loading() && !error() && total() === 0) {
+    <p class="empty">
+        This lesson has no frames yet. Create a frame, choose its blocks, then save.
+    </p>
+    }
+</fieldset>
+@if (pending()) {
+<studio-context-panel heading="Discard unsaved frame changes?" (closed)="pending.set(null)">
+    <p>Save this frame first, or discard its edits before choosing another frame.</p>
+    <button type="button" (click)="pending.set(null)">Keep editing</button
+    ><button type="button" class="danger" (click)="discardAndContinue()">
+        Discard and continue
+    </button>
+</studio-context-panel>
+} @if (removingBlock()) {
+<studio-context-panel heading="Remove this block?" (closed)="removingBlock.set(false)">
+    <p>The block will be removed when you save the frame. Cards and media will not be deleted.</p>
+    <button type="button" (click)="removingBlock.set(false)">Keep block</button
+    ><button type="button" class="danger" (click)="removeBlock()">Remove block</button>
+</studio-context-panel>
+}

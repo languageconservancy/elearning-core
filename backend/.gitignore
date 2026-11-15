@@ -57,3 +57,5 @@ auth.json
 .idea/phpunit.xml
 
 composer.lock
+/webroot/learning-admin/*
+!/webroot/learning-admin/.gitignore

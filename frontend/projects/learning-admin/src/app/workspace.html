@@ -1,0 +1,58 @@
+<a class="skip-link" href="#workspace-main">Skip to workspace</a>
+<header class="app-header">
+    <div class="brand"><span class="brand-icon" aria-hidden="true">L</span>
+        <span>Learning Studio<small>CONTENT WORKSPACE</small></span></div>
+    <div class="global-search">
+        <label class="sr-only" for="global-search">Search all learning records</label>
+        <input id="global-search" type="search" placeholder="Jump to any path, lesson, exercise or card..." [value]="globalQuery()" (input)="search($event)" />
+        @if (globalQuery().trim().length >= 2) {
+            <section class="search-results" aria-label="Global search results">
+                @if (searching()) { <p role="status">Searching...</p> }
+                @for (result of results(); track result.type + result.id) {
+                    <button type="button" (click)="open(result)">
+                        <span>{{ result.title }}</span><small>{{ result.type }} · #{{ result.id }}</small>
+                    </button>
+                } @empty { @if (!searching()) { <p>No matching records.</p> } }
+                <button type="button" (click)="globalQuery.set(''); results.set([])">Close search results</button>
+            </section>
+        }
+    </div>
+    @if (api.config(); as config) { <a class="legacy-link" [href]="config.legacy">Legacy admin</a> }
+</header>
+@if (error()) { <div class="app-error error" role="alert">{{ error() }} <button type="button" (click)="error.set('')">Dismiss</button></div> }
+@if (api.config(); as config) {
+    <main id="workspace-main" class="flow-workspace">
+        <div class="flow-toolbar">
+            <nav class="workspace-switcher" aria-label="Content workspaces">
+                @for (item of types; track item) {
+                    <button type="button" [class.active]="type() === item" (click)="selectType(item)" [attr.aria-current]="type() === item ? 'page' : null">
+                        {{ item === "paths" ? "Learning map" : config.types[item].label }}
+                    </button>
+                }
+            </nav>
+            @if (config.types[type()].create) {
+                <button class="primary" type="button" (click)="creating.set(true)">+ New {{ type() === "paths" ? "path" : type() === "groups" ? "group" : type() === "lessons" ? "lesson" : "card" }}</button>
+            }
+        </div>
+        <studio-drilldown [initial]="columns()" [version]="version()" (changed)="navigate($event)" (inspected)="inspect($event)" />
+        @if (loading()) { <div class="flow-loading" role="status">Loading record...</div> }
+    </main>
+    @if (drawer(); as related) {
+        <studio-context-panel [heading]="'Edit ' + config.types[related.type].label.toLowerCase() + ' · #' + related.id" [drawer]="true" (closed)="closeDrawer()">
+            <studio-record-editor [type]="related.type" [record]="related" (saved)="drawerSaved($event)" (inspect)="inspect($event)" (dirtyChange)="drawerDirty.set($event)" />
+        </studio-context-panel>
+    }
+    @if (creating()) {
+        <studio-context-panel heading="Create learning record" (closed)="closeCreate()">
+            <studio-record-editor [type]="type()" (saved)="created($event)" (dirtyChange)="createDirty.set($event)" />
+        </studio-context-panel>
+    }
+}
+@if (pending()) {
+    <studio-context-panel heading="Leave unsaved changes?" (closed)="pending.set(null)">
+        <p>Your current edits have not been saved. Keep editing, or discard them and continue.</p>
+        <div class="actions"><button type="button" (click)="pending.set(null)">Keep editing</button>
+            <button type="button" class="danger" (click)="confirmDiscard()">Discard and continue</button></div>
+    </studio-context-panel>
+}
+@if (loading() && !api.config()) { <p role="status" class="empty">Opening Learning Studio...</p> }

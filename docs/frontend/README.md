@@ -112,6 +112,57 @@ The focused host suite uses [its own TypeScript configuration](../../frontend/te
 because some unrelated legacy specs and the old test bootstrap are incompatible
 with the current Angular toolchain.
 
+## Learning Studio admin
+
+The separate [learning-admin application](../../frontend/projects/learning-admin/)
+uses the existing CakePHP admin session at `/admin/workspace`. It does not replace
+the learner application or its routes.
+
+```bash
+cd core/frontend
+npm run build:admin
+# Development server (proxies the local CakePHP backend):
+npm run serve:admin
+```
+
+The production build writes to `core/backend/webroot/learning-admin/`. Deploy the
+bundle with the workspace controller, shared content services, and updated admin
+sidebar. Install backend dependencies with Composer for archive YAML support.
+Sign in to the existing administrative backend before opening Learning Studio.
+
+Select a path, level, then unit to advance through horizontal columns.
+Selecting a lesson or exercise opens its **Content** editor directly. Rows show
+configuration, instructions, frame/block counts, unit usage, card images and
+audio playback when available.
+
+- Exercises: edit content items in a horizontal strip; configure exercise type,
+  source, prompt/response modalities, bonus, instructions and vocabulary activity
+  in Setup. Paired cards, custom HTML/media, blank answers and display overrides
+  are edited in the same workspace.
+- Lessons: select or create a frame, edit narration/duration/layout, then choose
+  one of its one-to-three blocks. Card display fields, HTML, image, audio and
+  video use reusable contextual asset pickers. Blocks can be reordered.
+- Switching tabs and blocks retains drafts. Switching frames or closing an editor
+  warns about unsaved changes. Content saves are asynchronous, transactional and
+  revision-checked; related row metadata refreshes without a page reload.
+- Asset pickers support the indexed image archive and audio/video capture.
+  Browser microphone/camera access requires localhost or HTTPS.
+
+Hierarchy restructuring, frame deletion and record deletion remain available
+through the advanced legacy editor. Audit history and recovery are not yet
+provided by Learning Studio. Vocabulary controls follow the deployed schema;
+Slider syllable timings require the corresponding database migration.
+
+The isolated backend regression suite covers option/frame persistence, stale
+revisions, validation, rollback, ownership, derived unit-card associations and
+row media/count metadata:
+
+```bash
+cd core/backend
+php vendor/bin/phpunit --do-not-cache-result \
+  --filter 'WorkspaceControllerTest|ImageArchiveTest' tests/TestCase
+```
+
 ## Software Versions
 This project is currently using the following software
 - [Angular](https://angular.io/) v14

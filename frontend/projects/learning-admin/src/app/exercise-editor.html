@@ -1,0 +1,500 @@
+<fieldset class="content-workbench" [disabled]="saving() || loading()">
+    <nav class="content-tabs step-tabs" aria-label="Exercise editing steps">
+        @for (section of steps; track section; let i = $index) {
+        <button
+            type="button"
+            [attr.aria-pressed]="tab() === section"
+            [class.has-problems]="
+                (section === 'Setup' && setupProblems().length) ||
+                (section === 'Content' && contentProblems().length)
+            "
+            (click)="tab.set(section)"
+        >
+            <span class="step-number" aria-hidden="true">{{ i + 1 }}</span>{{ section }}
+            @if (section === "Setup" && data() && setupProblems().length) {
+            <span class="step-flag">· needs attention</span>
+            } @if (section === "Content" && data() && contentProblems().length) {
+            <span class="step-flag">· {{ contentProblems().length }} to fix</span>
+            }
+        </button>
+        }
+        @if (data() && rule()) {
+        <span class="setup-summary" aria-label="Current setup">
+            {{ data()!.types[kind()] }} · {{ sourceLabel(source()) }} ·
+            {{ data()!.modalities[modality("prompt")] }} → {{ data()!.modalities[modality("response")] }}
+        </span>
+        }
+    </nav>
+    @if (loading()) {
+    <p role="status">Loading exercise options...</p>
+    } @if (error()) {
+    <p role="alert" class="error">{{ error() }}</p>
+    } @if (notice()) {
+    <p role="status" class="success">{{ notice() }}</p>
+    } @if (data(); as current) {
+    <div class="content-scroll" [hidden]="tab() !== 'Setup'">
+        <p class="step-intro">
+            Setup decides what content this exercise needs. Only combinations the app supports are
+            offered.
+        </p>
+        <div class="setup-choice" role="group" aria-labelledby="setup-type">
+            <h3 id="setup-type">Exercise type</h3>
+            <div class="field-chips">
+                @for (type of exerciseTypes(); track type[0]) {
+                <button
+                    type="button"
+                    [attr.aria-pressed]="kind() === type[0]"
+                    (click)="setSetup(type[0], source())"
+                >
+                    {{ type[1] }}
+                </button>
+                }
+            </div>
+        </div>
+        <div class="setup-choice" role="group" aria-labelledby="setup-source">
+            <h3 id="setup-source">Content comes from</h3>
+            <div class="field-chips">
+                @for (type of allSources; track type.value) {
+                <button
+                    type="button"
+                    [attr.aria-pressed]="source() === type.value"
+                    [disabled]="!sourceAllowed(type.value)"
+                    [title]="sourceAllowed(type.value) ? type.hint : 'Not available for this exercise type.'"
+                    (click)="setSetup(kind(), type.value)"
+                >
+                    {{ type.label }}
+                </button>
+                }
+            </div>
+        </div>
+        @for (side of sides; track side) {
+        <div class="setup-choice" role="group" [attr.aria-labelledby]="'setup-' + side">
+            <h3 [id]="'setup-' + side">
+                {{ side === "prompt" ? "Learner sees (prompt)" : "Learner answers with (response)" }}
+            </h3>
+            <div class="field-chips">
+                @for (choice of modalities(); track choice[0]) {
+                <button
+                    type="button"
+                    [attr.aria-pressed]="modality(side) === choice[0]"
+                    [disabled]="!modalityAvailable(side, choice[0])"
+                    [title]="modalityAvailable(side, choice[0]) ? choice[1] : side === 'prompt' ? 'Not available for this setup.' : pairReason(modality('prompt'), choice[0])"
+                    (click)="pickModality(side, choice[0])"
+                >
+                    {{ choice[1] }}
+                </button>
+                }
+            </div>
+        </div>
+        }
+        <div class="field-grid compact-grid">
+            <label
+                >Name <span class="required-mark" aria-hidden="true">*</span
+                ><input
+                    required
+                    [value]="field('name')"
+                    (input)="setField('name', text($event))"
+            /></label>
+            @if (rule()?.roundSize === "required") {
+            <label
+                >Cards per round <span class="required-mark" aria-hidden="true">*</span
+                ><input
+                    type="number"
+                    min="1"
+                    required
+                    [value]="field('noofcard')"
+                    (input)="setField('noofcard', text($event))"
+            /></label>
+            } @else if (rule()?.roundSize === "derived") {
+            <p class="derived-field">
+                <span>Pairs per round</span><strong>{{ counts()["O"] ?? 0 }}</strong
+                ><small>Set automatically: one per pair.</small>
+            </p>
+            }
+            <label
+                >Bonus points<input
+                    type="number"
+                    min="0"
+                    [value]="field('bonus')"
+                    (input)="setField('bonus', text($event))"
+            /></label>
+            <label class="full-width"
+                >Instructions<textarea
+                    rows="2"
+                    [value]="field('instruction')"
+                    (input)="setField('instruction', text($event))"
+                ></textarea>
+            </label>
+            @if (kind() === "vocab-builder") {
+            <label
+                >Vocabulary activity<select
+                    [ngModel]="field('vbl_activity')"
+                    (ngModelChange)="setField('vbl_activity', $event)"
+                >
+                    <option value="">Select activity</option>
+                    @for (activity of activities(); track activity[0]) {
+                    <option [value]="activity[0]">{{ activity[1].label }}</option>
+                    }
+                </select></label
+            >
+            <label
+                >Vocabulary mode<select
+                    [ngModel]="field('vbl_mode')"
+                    (ngModelChange)="setField('vbl_mode', $event)"
+                >
+                    @for (mode of vocabularyModes(); track mode[0]) {
+                    <option [value]="mode[0]">{{ mode[1] }}</option>
+                    }
+                </select></label
+            >
+            @if (current.fieldSchema.includes("vbl_variant")) {
+            <label
+                >Presentation<select
+                    [ngModel]="field('vbl_variant')"
+                    (ngModelChange)="setField('vbl_variant', $event)"
+                >
+                    <option value="text">Text</option>
+                    <option value="image">Pictures</option>
+                </select></label
+            >
+            }
+            <label class="check-label"
+                ><input
+                    type="checkbox"
+                    [checked]="field('vbl_review_enabled') === true || field('vbl_review_enabled') === 1 || field('vbl_review_enabled') === '1'"
+                    (change)="setField('vbl_review_enabled', checked($event))"
+                />Include scored review</label
+            >
+            }
+        </div>
+    </div>
+    @if (tab() === "Setup" && setupProblems().length) {
+    <ul class="problem-list" aria-label="Setup needs attention">
+        @for (problem of setupProblems(); track problem) {
+        <li>{{ problem }}</li>
+        }
+    </ul>
+    }
+    <div class="content-scroll" [hidden]="tab() !== 'Display'">
+        <p class="muted">
+            Choose global display fields. Per-item overrides remain available in each content item.
+        </p>
+        @for (side of ["prompt", "response"]; track side) {
+        <h3>{{ side }}</h3>
+        <div class="field-chips">
+            @for (modality of modalities(); track modality[0]) {
+            <button
+                type="button"
+                [attr.aria-pressed]="codes(side === 'prompt' ? 'promotetype' : 'responsetype').includes(modality[0])"
+                (click)="toggleCode(side === 'prompt' ? 'promotetype' : 'responsetype', modality[0])"
+            >
+                {{ modality[1] }}
+            </button>
+            }
+        </div>
+        }
+    </div>
+    <div class="options-workbench" [hidden]="tab() !== 'Content'">
+        <div class="requirements-bar" aria-label="Content this setup needs">
+            @for (role of requirements(); track role.value) {
+            <span class="requirement" [class.unmet]="!role.ok">
+                <span aria-hidden="true">{{ role.ok ? "✓" : "!" }}</span>
+                {{ role.label }} {{ role.count }}<small>/ {{ role.range }}</small>
+                <button
+                    type="button"
+                    class="quiet"
+                    [disabled]="role.full"
+                    [title]="role.full ? 'This exercise already has the maximum.' : 'Add ' + role.label.toLowerCase()"
+                    (click)="add(role.value)"
+                >
+                    + Add
+                </button>
+            </span>
+            } @if (unused().length) {
+            <button type="button" class="danger quiet" (click)="removeUnused()">
+                Remove {{ unused().length }} empty / unused item{{ unused().length === 1 ? "" : "s" }}
+            </button>
+            }
+        </div>
+        @if (contentProblems().length) {
+        <ul class="problem-list" aria-label="Content needs attention">
+            @for (problem of contentProblems(); track problem) {
+            <li>{{ problem }}</li>
+            }
+        </ul>
+        }
+        <div class="option-strip" aria-label="Exercise content items">
+            @for (item of current.options; track $index; let i = $index) {
+            <button
+                type="button"
+                [attr.aria-pressed]="selected() === i"
+                (click)="selected.set(i)"
+                [class.incomplete]="incomplete(item) || !roleFits(item)"
+                [title]="title(item, i)"
+            >
+                {{ title(item, i) }}
+            </button>
+            }
+        </div>
+        <div class="content-scroll">
+            @if (option(); as item) {
+            <div class="option-toolbar">
+                <label
+                    >Role<select
+                        [ngModel]="value('card_type')"
+                        (ngModelChange)="setOption('card_type', $event)"
+                    >
+                        @if (!roleFits(item)) {
+                        <option [value]="value('card_type')">Not used by this setup</option>
+                        } @for (role of roleChoices(); track role.value) {
+                        <option [value]="role.value">{{ role.label }}</option>
+                        }
+                    </select></label
+                >
+                @if (source() === "card_group" && !groupOnly()) {
+                <label
+                    >Selection source<select
+                        [ngModel]="value('type')"
+                        (ngModelChange)="setOption('type', $event)"
+                    >
+                        <option value="card">Individual card</option>
+                        <option value="group">Group / selected group card</option>
+                    </select></label
+                >
+                }
+                <button type="button" class="danger quiet" (click)="confirmRemove.set(true)">
+                    Remove item
+                </button>
+            </div>
+            @if (source() === "card_group" && value("type") === "group") {
+            <studio-content-asset
+                kind="group"
+                label="Card group"
+                [value]="value('group_id')"
+                [references]="current"
+                (changed)="setOption('group_id', $event)"
+            />
+            <studio-content-asset
+                kind="card"
+                label="Specific group card (optional)"
+                [value]="value('card_id')"
+                [references]="current"
+                (changed)="setOption('card_id', $event)"
+            />
+            } @else if (kind() === "vocab-builder") {
+            <div class="content-pair">
+                @if (field("vbl_mode") !== "letter") {
+                <studio-content-asset
+                    kind="card"
+                    label="Word card"
+                    [value]="value('card_id')"
+                    [references]="current"
+                    (changed)="setOption('card_id', $event)"
+                />
+                }
+                <label
+                    >Letter / sound<input
+                        [value]="value('vbl_letter')"
+                        (input)="setOption('vbl_letter', text($event))"
+                /></label>
+                <studio-content-asset
+                    kind="audio"
+                    label="Letter audio"
+                    [value]="value('vbl_letter_audio_id')"
+                    [references]="current"
+                    (changed)="setOption('vbl_letter_audio_id', $event)"
+                />
+                <studio-content-asset
+                    kind="image"
+                    label="Letter image"
+                    [value]="value('vbl_letter_image_id')"
+                    [references]="current"
+                    (changed)="setOption('vbl_letter_image_id', $event)"
+                />
+                <studio-content-asset
+                    kind="image"
+                    label="Coloring image"
+                    [value]="value('vbl_coloring_image_id')"
+                    [references]="current"
+                    (changed)="setOption('vbl_coloring_image_id', $event)"
+                />
+            </div>
+            <label
+                >Activity text / blank pattern<input
+                    [value]="value('text_option')"
+                    (input)="setOption('text_option', text($event))"
+            /></label>
+            @if (current.schema.includes("vbl_alignment")) {
+            <label
+                >Syllable timings (JSON)<textarea
+                    rows="3"
+                    [value]="value('vbl_alignment')"
+                    (input)="setOption('vbl_alignment', text($event))"
+                ></textarea>
+            </label>
+            } } @else {
+            <div class="content-pair">
+                @for (side of paired() ? (kind() === "multiple-choice" && value("card_type") === "O"
+                ? ["response"] : ["prompt", "response"]) : ["prompt"]; track side) {
+                <section class="content-side">
+                    @if (source() === "custom") {
+                    <div class="field-chips">
+                        <button
+                            type="button"
+                            [attr.aria-pressed]="!isCustom(side)"
+                            (click)="changeSide(side, false)"
+                        >
+                            {{ side }} card
+                        </button>
+                        <button
+                            type="button"
+                            [attr.aria-pressed]="isCustom(side)"
+                            (click)="changeSide(side, true)"
+                        >
+                            Custom {{ side }}
+                        </button>
+                    </div>
+                    } @if (isCustom(side)) {
+                    <label
+                        >{{ side }} HTML / text<textarea
+                            rows="4"
+                            [value]="customValue(side + '_html')"
+                            (input)="setOption(side + '_html', text($event), true)"
+                        ></textarea>
+                    </label>
+                    <div class="safe-html-preview" [innerHTML]="customValue(side + '_html')"></div>
+                    <div class="content-pair">
+                        <studio-content-asset
+                            kind="audio"
+                            [label]="side + ' audio'"
+                            [value]="customValue(side + '_audio_id')"
+                            [references]="current"
+                            (changed)="setOption(side + '_audio_id', $event, true)"
+                        />
+                        <studio-content-asset
+                            kind="image"
+                            [label]="side + ' image'"
+                            [value]="customValue(side + '_image_id')"
+                            [references]="current"
+                            (changed)="setOption(side + '_image_id', $event, true)"
+                        />
+                    </div>
+                    } @else if (!(kind() === "fill_in_the_blanks" && value("card_type") === "O")) {
+                    <studio-content-asset
+                        kind="card"
+                        [label]="paired() ? side + ' card' : 'Card'"
+                        [value]="value(side === 'prompt' ? 'card_id' : 'responce_card_id')"
+                        [references]="current"
+                        (changed)="setOption(side === 'prompt' ? 'card_id' : 'responce_card_id', $event)"
+                    />
+                    }
+                </section>
+                }
+            </div>
+            @if (kind() === "truefalse" || kind() === "recording") {
+            <label
+                >{{ kind() === "truefalse" ? "Correct result" : "Response / evaluation flag"
+                }}<select
+                    [ngModel]="value('response_true_false')"
+                    (ngModelChange)="setOption('response_true_false', $event)"
+                >
+                    <option value="Y">True / Yes</option>
+                    <option value="N">False / No</option>
+                </select></label
+            >
+            } @if (kind() === "fill_in_the_blanks") {
+            <div class="content-pair">
+                <label
+                    >{{ value("card_type") === "P" ? "Prompt text (mark blanks with brackets)" :
+                    "Answer text" }}<textarea
+                        rows="3"
+                        [value]="value('text_option')"
+                        (input)="setOption('text_option', text($event))"
+                    ></textarea>
+                </label>
+                <label
+                    >Answer mode<select
+                        [ngModel]="value('fill_in_the_blank_type')"
+                        (ngModelChange)="setOption('fill_in_the_blank_type', $event)"
+                    >
+                        <option value="typing">Typing</option>
+                        <option value="mcq">Multiple choice</option>
+                    </select></label
+                >
+                @if (value("card_type") === "O") {
+                <label
+                    >Correct blank position (0 = distractor)<input
+                        type="number"
+                        min="0"
+                        [value]="value('option_position')"
+                        (input)="setOption('option_position', text($event))"
+                /></label>
+                }
+            </div>
+            }
+            <details>
+                <summary>Per-item display fields (optional overrides)</summary>
+                @for (side of ["prompt", "response"]; track side) {
+                <h3>{{ side }}</h3>
+                <div class="field-chips">
+                    @for (modality of modalities(); track modality[0]) {
+                    <button
+                        type="button"
+                        [attr.aria-pressed]="codes(side === 'prompt' ? 'prompt_preview_option' : 'responce_preview_option', true).includes(modality[0])"
+                        (click)="toggleCode(side === 'prompt' ? 'prompt_preview_option' : 'responce_preview_option', modality[0], true)"
+                    >
+                        {{ modality[1] }}
+                    </button>
+                    }
+                </div>
+                }
+            </details>
+            } } @else {
+            <p class="empty">
+                Use the + Add buttons above to add the content this setup needs.
+            </p>
+            }
+        </div>
+    </div>
+    <footer class="content-actions">
+        <span
+            >{{ dirty() ? "Unsaved content changes" : current.options.length + " content items"
+            }}</span
+        >
+        <button
+            type="button"
+            [disabled]="saving()"
+            (click)="dirty() ? confirmReload.set(true) : reloadData()"
+        >
+            Reload
+        </button>
+        <button
+            type="button"
+            class="primary"
+            [disabled]="saving() || !dirty() || setupProblems().length > 0 || contentProblems().length > 0"
+            [title]="setupProblems().concat(contentProblems()).join(' ')"
+            (click)="save()"
+        >
+            {{ saving() ? "Saving..." : "Save exercise content" }}
+        </button>
+    </footer>
+    }
+</fieldset>
+@if (confirmRemove()) {
+<studio-context-panel heading="Remove this content item?" (closed)="confirmRemove.set(false)">
+    <p>
+        This removes the option from the exercise when you save. Cards and media will not be
+        deleted.
+    </p>
+    <button type="button" (click)="confirmRemove.set(false)">Keep item</button
+    ><button type="button" class="danger" (click)="remove()">Remove item</button>
+</studio-context-panel>
+} @if (confirmReload()) {
+<studio-context-panel
+    heading="Discard unsaved exercise content?"
+    (closed)="confirmReload.set(false)"
+>
+    <button type="button" (click)="confirmReload.set(false)">Keep editing</button
+    ><button type="button" class="danger" (click)="reloadData()">Discard and reload</button>
+</studio-context-panel>
+}

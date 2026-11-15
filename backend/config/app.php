@@ -353,6 +353,8 @@ return [
      */
     'Session' => [
         'defaults' => 'php',
+        // Idle minutes before admin sign-out; each request restarts the clock.
+        'timeout' => (int)env('SESSION_TIMEOUT', 480),
     ],
     'MAILFUNCTION' => true,
     'AWSUPLOAD' => env('AWSUPLOAD', false),

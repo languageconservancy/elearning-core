@@ -27,6 +27,13 @@ if [ -z "${SERVER_DIR}" ]; then
     exit 1
 fi
 
+# Build the Learning Studio admin app into backend/webroot/learning-admin
+echo "Building Learning Studio admin (frontend/projects/learning-admin)..."
+if ! (cd "${CORE_DIR}/frontend" && npm run build:admin); then
+    echo "❗Error: Learning Studio admin build failed; backend was not synced."
+    exit 1
+fi
+
 # The files to rsync are the ones that are needed to run the backend
 BACKEND_FILES_TO_RSYNC="config info src templates webroot index.php info.php .htaccess web.config vendor"
 
@@ -36,6 +43,9 @@ mkdir -p "${SERVER_DIR}/backend"
 cd "${BACKEND_DIR}"
 rsync -a ${BACKEND_FILES_TO_RSYNC} --exclude="config/.env" "${SERVER_DIR}/backend/"
 rsync -a info "${SERVER_DIR}/"
+# Hashed bundle names change every build, so mirror the admin app to drop stale files
+mkdir -p "${SERVER_DIR}/backend/webroot/learning-admin"
+rsync -a --delete webroot/learning-admin/ "${SERVER_DIR}/backend/webroot/learning-admin/"
 
 rm -rf "${SERVER_DIR}/backend/tmp/cache/models/"*
 rm -rf "${SERVER_DIR}/backend/tmp/cache/persistent/"*

@@ -754,37 +754,12 @@ class ExercisesController extends AppController
 
     private function validateExercise($data)
     {
-        $validate = true;
-        $message = '';
-        if ($data['formtype'] != 'namevalue') {
-            if (!isset($data['name']) || trim($data['name']) == '') {
-                $validate = false;
-                $message = 'Please enter valid name.';
-                return array('message' => $message, 'validate' => $validate);
-            }
-            if (!isset($data['card_type']) || $data['card_type'] == '') {
-                $validate = false;
-                $message = 'Please select card type';
-                return array('message' => $message, 'validate' => $validate);
-            }
-            if (!isset($data['promteresponsetype']) || $data['promteresponsetype'] == '') {
-                $validate = false;
-                $message = 'Please select prompt->response type';
-                return array('message' => $message, 'validate' => $validate);
-            }
-            if (!isset($data['exercise_type']) || $data['exercise_type'] == '') {
-                $validate = false;
-                $message = 'Please select exercise type';
-                return array('message' => $message, 'validate' => $validate);
-            }
-        } else {
-            if (!isset($data['name']) || trim($data['name']) == '') {
-                $validate = false;
-                $message = 'Please enter valid name.';
-                return array('message' => $message, 'validate' => $validate);
-            }
+        try {
+            \App\Lib\ExerciseContent::validateForm($data);
+            return ['message' => '', 'validate' => true];
+        } catch (InvalidArgumentException $error) {
+            return ['message' => $error->getMessage(), 'validate' => false];
         }
-        return array('message' => $message, 'validate' => $validate);
     }
 
     //save Exercise data
@@ -1666,99 +1641,9 @@ class ExercisesController extends AppController
             return false;
         }
 
-        // Use LessonFrame to determine Lesson, find Units with that lesson,
-        // find CardUnits with that Unit, add cards from lesson frame if
-        // they don't exist already in that unit
-
-        // Find unit details that contain the lesson with the frame being
-        // added/changed/deleted, to get list of units
-        $unitsWithThisExercise = $this->getUnitdetailsTable()
-            ->find()
-            ->select('unit_id')
-            ->distinct(['unit_id'])
-            ->where(['exercise_id' => $exercise->id])
-            ->all()
-            ->toList();
-
-        $unitsWithThisExerciseCount = $this->getUnitdetailsTable()
-            ->find()
-            ->select('unit_id')
-            ->distinct(['unit_id'])
-            ->where(['exercise_id' => $exercise->id])
-            ->count();
-
-
-        if ($unitsWithThisExerciseCount <= 0) {
-            return true;
-        }
-
-        // Use list of units to find unit details for those units
-        foreach ($unitsWithThisExercise as $unit_id) {
-            $unitOptions = array(
-                'conditions' => array(
-                    'unit_id IS' => $unit_id->unit_id
-                ),
-                'contain' => array(
-                    'Lessons',
-                    'Lessons.Lessonframes',
-                    'Lessons.Lessonframes.LessonFrameBlocks',
-                    'Exercises',
-                    'Exercises.Exerciseoptions'
-                )
-            );
-
-            $unitsDetails = $this->getUnitdetailsTable()->find('all', $unitOptions);
-
-            // For the current unit in the loop, get all the cards in any exercises or lessons
-            $cardIds = array();
-            foreach ($unitsDetails as $key => $unit) {
-                $this->addCardsFromActivityToCardUnits($unit, $cardIds);
-            }
-
-            if (empty($cardIds)) {
-                continue;
-            }
-
-            $cardIds = array_values(array_unique($cardIds));
-
-            // Find cardUnits for the current unit
-            $unitOptions = array(
-                'conditions' => array(
-                    'unit_id IS' => $unit_id->unit_id
-                ),
-                'keyField' => 'id',
-                'valueField' => 'card_id'
-            );
-            $unitCardIds = $this->getCardUnitsTable()->find('list', $unitOptions)->toArray();
-
-            // If some cardUnits exist for the current unit, get the cardIds, without duplicates
-            if (!empty($unitCardIds)) {
-                $unitCardIds = array_values(array_unique($unitCardIds));
-            }
-
-            // Delete cards that are no longer in the unit
-            $this->getCardUnitsTable()->deleteAll(['unit_id' => $unit_id->unit_id, 'card_id NOT IN' => $cardIds]);
-
-            // Create array of new items to batch save to the database table
-            $newCardUnits = [];
-            foreach ($cardIds as $cardId) {
-                if (!in_array($cardId, $unitCardIds)) {
-                    $newCardUnits[] = ['card_id' => $cardId, 'unit_id' => $unit_id->unit_id];
-                }
-            }
-
-            // Batch create entities from above array and save atomically to database table using
-            // cakephp Saving Multiple Entities functionality since v3.2.8
-            if (!empty($newCardUnits)) {
-                $entities = $this->getCardUnitsTable()->newEntities($newCardUnits);
-                $result = $this->getCardUnitsTable()->saveMany($entities);
-                if (!$result) {
-                    Log::error('Could not save card units for exercise ' . $exercise->id);
-                    return false;
-                }
-            }
-        }
-
+        $this->getExercisesTable()->getConnection()->transactional(function () use ($exercise) {
+            (new \App\Lib\UnitCardContent($this->getTableLocator()))->synchronize('exercise_id', (int)$exercise->id);
+        });
         return true;
     }
 

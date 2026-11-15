@@ -66,7 +66,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "detail": "Push core/backend to $ELEARNING_WWW_PATH — run after PHP or backend config changes (reads scripts/local-dev-vars.sh)"
+      "detail": "Build the Learning Studio admin, then push core/backend to $ELEARNING_WWW_PATH — run after PHP, backend config, or learning-admin changes (reads scripts/local-dev-vars.sh)"
     },
     {
       "label": "eLearning: Migrate local database (elearning_demo_db)",

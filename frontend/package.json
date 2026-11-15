@@ -3,6 +3,8 @@
     "version": "2.0.4",
     "license": "MIT",
     "scripts": {
+        "build:admin": "ng build learning-admin",
+        "serve:admin": "ng serve learning-admin --port=4201 --proxy-config=projects/learning-admin/proxy.conf.json",
         "build:demo": "ng build --configuration=demo",
         "build:local": "ng build --configuration=local",
         "build:staging": "ng build --configuration=staging",

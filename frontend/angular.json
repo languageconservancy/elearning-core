@@ -326,6 +326,11 @@
                             {
                                 "glob": "**/*",
                                 "input": "projects/learning-admin/public"
+                            },
+                            {
+                                "glob": "icon_02.png",
+                                "input": "src/assets/images",
+                                "output": "branding"
                             }
                         ],
                         "styles": ["projects/learning-admin/src/styles.css"]

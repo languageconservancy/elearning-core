@@ -1,7 +1,7 @@
 <a class="skip-link" href="#workspace-main">Skip to workspace</a>
 <header class="app-header">
-    <div class="brand"><span class="brand-icon" aria-hidden="true">L</span>
-        <span>Learning Studio<small>CONTENT WORKSPACE</small></span></div>
+    <div class="brand"><img class="brand-icon" src="branding/icon_02.png" alt="" />
+        <span>{{ api.config()?.appName ?? "Learning Studio" }}<small>CONTENT WORKSPACE</small></span></div>
     <div class="global-search">
         <label class="sr-only" for="global-search">Search all learning records</label>
         <input id="global-search" type="search" placeholder="Jump to any path, lesson, exercise or card..." [value]="globalQuery()" (input)="search($event)" />
@@ -55,4 +55,4 @@
             <button type="button" class="danger" (click)="confirmDiscard()">Discard and continue</button></div>
     </studio-context-panel>
 }
-@if (loading() && !api.config()) { <p role="status" class="empty">Opening Learning Studio...</p> }
+@if (loading() && !api.config()) { <p role="status" class="empty">Opening the studio...</p> }

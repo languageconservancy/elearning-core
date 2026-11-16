@@ -16,6 +16,7 @@ import { MediaPicker } from "./media-picker";
 import { RecordTable } from "./record-table";
 import { errorMessage, WorkspaceApi } from "./workspace-api";
 import { ReferenceSelect } from "./reference-select";
+import { RecordChooser } from "./record-chooser";
 import { ExerciseEditor } from "./exercise-editor";
 import { LessonEditor } from "./lesson-editor";
 
@@ -29,6 +30,7 @@ import { LessonEditor } from "./lesson-editor";
         ReferenceSelect,
         ExerciseEditor,
         LessonEditor,
+        RecordChooser,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -96,6 +98,12 @@ import { LessonEditor } from "./lesson-editor";
                                 [value]="form.controls[field].value"
                                 (chosen)="setReference(field, $event)"
                             />
+                        } @else if (definition().options?.[field]; as options) {
+                            <select [formControlName]="field">
+                                @for (option of options; track option) {
+                                    <option [value]="option">{{ option }}</option>
+                                }
+                            </select>
                         } @else if (field === "description") {
                             <textarea
                                 [formControlName]="field"
@@ -157,7 +165,7 @@ import { LessonEditor } from "./lesson-editor";
                             (click)="selectingCard.set(true)"
                             [disabled]="dirty() || saving()"
                         >
-                            + Add existing card
+                            + Add card
                         </button>
                         @if (dirty()) {
                             <p class="muted">
@@ -304,13 +312,11 @@ import { LessonEditor } from "./lesson-editor";
             </studio-context-panel>
         }
         @if (selectingCard()) {
-            <studio-context-panel heading="Choose a card" (closed)="selectingCard.set(false)">
-                <studio-record-table
-                    type="cards"
-                    [editable]="false"
-                    (selected)="chooseCard($event)"
-                />
-            </studio-context-panel>
+            <studio-record-chooser
+                type="cards"
+                (chosen)="chooseCard($event)"
+                (closed)="selectingCard.set(false)"
+            />
         }
         @if (removeCard(); as card) {
             <studio-context-panel
@@ -377,7 +383,8 @@ export class RecordEditor {
         }),
     );
     readonly label = fieldLabel;
-    private loadedId: number | null = null;
+    /** undefined until the first record (or blank form) has been shown. */
+    private loadedId: number | null | undefined = undefined;
 
     constructor() {
         effect(() => {
@@ -386,10 +393,14 @@ export class RecordEditor {
             untracked(() => {
                 if (this.loadedId === record?.id && this.dirty()) return;
                 if (this.loadedId !== (record?.id ?? null)) {
+                    // A group that was just created has no cards beyond the first; go add them.
+                    const created = this.loadedId === null && !!record;
                     this.tab.set(
                         record && ["exercises", "lessons"].includes(this.type())
                             ? "Content"
-                            : "Overview",
+                            : created && this.type() === "groups"
+                              ? "Relationships"
+                              : "Overview",
                     );
                     this.contentDirty.set(false);
                 }
@@ -411,7 +422,9 @@ export class RecordEditor {
         for (const field of fields) {
             this.form.addControl(
                 field,
-                new FormControl<FieldValue>(record?.fields[field] ?? null),
+                new FormControl<FieldValue>(
+                    record ? (record.fields[field] ?? null) : (this.definition().defaults?.[field] ?? null),
+                ),
                 { emitEvent: false },
             );
         }

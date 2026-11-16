@@ -885,6 +885,7 @@ class ExerciseController extends AppController
                     'level_id' => $data['level_id'],
                     'user_unit_activity_id' => $data['user_unit_activity_id']
                 ]])
+            ->select(['UserActivities.card_id'])
             ->group(['UserActivities.card_id']);
         $numUniqueUserActivities = $Activities->count();
         $response['remainingcardcount'] = $numOptionsInExercise - $numUniqueUserActivities;
@@ -911,6 +912,7 @@ class ExerciseController extends AppController
                     'level_id' => $data['level_id'],
                     'user_unit_activity_id' => $data['user_unit_activity_id']
                 ]])
+            ->select(['UserActivities.card_id'])
             ->group(['UserActivities.card_id'])->toArray();
 
         $cardsUserHasntAnsweredCorrectly = array();

@@ -48,7 +48,9 @@ class WorkspaceControllerTest extends TestCase
             'card_groups' => 'id INTEGER PRIMARY KEY, name TEXT, card_group_type_id INTEGER, created DATETIME, modified DATETIME',
             'card_card_groups' => 'id INTEGER PRIMARY KEY, card_group_id INTEGER, card_id INTEGER, created DATETIME, modified DATETIME',
             'cards' => 'id INTEGER PRIMARY KEY, lakota TEXT, english TEXT, alt_lakota TEXT, alt_english TEXT, '
-                . 'image_id INTEGER, video_id INTEGER, audio TEXT, created DATETIME, modified DATETIME',
+                . 'image_id INTEGER, video_id INTEGER, audio TEXT, card_type_id INTEGER, gender TEXT, '
+                . 'created DATETIME, modified DATETIME',
+            'card_types' => 'id INTEGER PRIMARY KEY, title TEXT',
             'exercise_options' => 'id INTEGER PRIMARY KEY AUTOINCREMENT, exercise_id INTEGER, card_id INTEGER, '
                 . 'responce_card_id INTEGER, group_id INTEGER, type TEXT, card_type TEXT, prompt_preview_option TEXT, '
                 . 'responce_preview_option TEXT, response_true_false TEXT, fill_in_the_blank_type TEXT, text_option TEXT, '
@@ -82,6 +84,7 @@ class WorkspaceControllerTest extends TestCase
         $connection->execute("INSERT INTO card_groups (id, name, card_group_type_id) VALUES (1, 'Group', 1)");
         $connection->execute("INSERT INTO cards (id, lakota, english) VALUES (1, 'One', 'One'), (2, 'Two', 'Two')");
         $connection->execute('INSERT INTO card_card_groups (id, card_group_id, card_id) VALUES (1, 1, 1)');
+        $connection->execute("INSERT INTO card_types (id, title) VALUES (1, 'Word')");
         $connection->execute("INSERT INTO exercises (id, name, exercise_type, card_type, promteresponsetype, bonus) "
             . "VALUES (1, 'Pairs', 'match-the-pair', 'custom', 'l-e', 0)");
         $connection->execute('INSERT INTO unit_details (id, exercise_id, unit_id) VALUES (2, 1, 1)');
@@ -89,11 +92,13 @@ class WorkspaceControllerTest extends TestCase
             . "(1, 'Image', 'image', 'https://example.test/image.png'), (2, 'Audio', 'audio', 'https://example.test/audio.mp3'), "
             . "(3, 'Other audio', 'audio', 'https://example.test/other.mp3')");
         $this->tables = new TableLocator();
-        foreach ([
+        foreach (
+            [
             'Lessons', 'Units', 'Unitdetails', 'Cardgroup', 'Cardcardgroup', 'Card',
             'Exerciseoptions', 'ExerciseCustomOptions', 'Exercises', 'LessonFrames', 'Lessonframes', 'LessonFrameBlocks', 'CardUnits', 'Files',
-            'Levels', 'Pathlevel', 'LevelUnits',
-        ] as $alias) {
+            'Levels', 'Pathlevel', 'LevelUnits', 'Cardtype',
+            ] as $alias
+        ) {
             $this->tables->setConfig($alias, ['connection' => $connection]);
         }
         $this->originalTables = TableRegistry::getTableLocator();
@@ -252,7 +257,8 @@ class WorkspaceControllerTest extends TestCase
         $payload['fields']['instruction'] = '<p>Pick the matching picture</p>';
         $this->controller('POST', $payload)->exerciseContent('1');
         $card = $this->tables->get('Card')->get(1);
-        $card->image_id = 1; $card->audio = '2, 3';
+        $card->image_id = 1;
+        $card->audio = '2, 3';
         $this->tables->get('Card')->saveOrFail($card);
         $rows = $this->body($this->controller()->activities('1'))['items'];
         $this->assertCount(2, $rows);
@@ -375,6 +381,30 @@ class WorkspaceControllerTest extends TestCase
         $created = $this->controller('POST', ['fields' => ['name' => 'New lesson']])->save('lessons');
         $this->assertSame(200, $created->getStatusCode());
         $this->assertSame('New lesson', $this->body($created)['title']);
+    }
+
+    public function testCreatedCardsGetRequiredDefaultsAndAPreview(): void
+    {
+        $created = $this->controller('POST', ['fields' => [
+            'lakota' => 'New', 'english' => 'New card', 'card_type_id' => 1,
+        ]])->save('cards');
+        $this->assertSame(200, $created->getStatusCode());
+        $body = $this->body($created);
+        $this->assertSame('default', $this->tables->get('Card')->get($body['id'])->gender);
+        $this->assertSame('New card', $body['previewCards'][0]['english']);
+    }
+
+    public function testCardGenderIsEditableButLimitedToKnownValues(): void
+    {
+        $created = $this->body($this->controller('POST', ['fields' => [
+            'lakota' => 'Wíŋyaŋ', 'english' => 'Woman', 'card_type_id' => 1, 'gender' => 'female',
+        ]])->save('cards'));
+        $this->assertSame('female', $created['fields']['gender']);
+
+        $invalid = $this->controller('POST', ['fields' => ['gender' => 'other'], 'revision' => $created['revision']])
+            ->save('cards', (string)$created['id']);
+        $this->assertSame(422, $invalid->getStatusCode());
+        $this->assertSame('female', $this->tables->get('Card')->get($created['id'])->gender);
     }
 
     public function testUnknownFieldsCannotBeMassAssigned(): void

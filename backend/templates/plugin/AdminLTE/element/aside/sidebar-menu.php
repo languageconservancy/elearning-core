@@ -1,5 +1,6 @@
 <?php
 
+use Cake\Core\Configure;
 use Cake\Routing\Router;
 use App\Lib\UtilLibrary;
 use Cake\ORM\TableRegistry;
@@ -10,7 +11,7 @@ $SuperAdminRoleId = TableRegistry::getTableLocator()->get('Roles')->getRoleId(Ut
 
     <li class="header">MAIN NAVIGATION</li>
     <li><?= $this->Html->link(
-        'Learning Studio',
+        (Configure::read('App.name') ?: 'Learning') . ' Studio',
         ['prefix' => 'Admin', 'controller' => 'Workspace', 'action' => 'index']
     ) ?></li>
     <li>

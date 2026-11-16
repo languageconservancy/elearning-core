@@ -46,6 +46,7 @@ class WorkspaceController extends AppController
         $html = file_get_contents($file);
         $base = Router::url('/learning-admin/');
         $html = preg_replace('#<base href="[^"]*">#', '<base href="' . h($base) . '">', $html);
+        $html = preg_replace('#<title>[^<]*</title>#', '<title>' . h($this->studioName()) . '</title>', $html);
         $config = json_encode([
             'api' => Router::url(['controller' => 'Workspace', 'action' => 'bootstrap', 'prefix' => 'Admin']),
         ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
@@ -63,9 +64,15 @@ class WorkspaceController extends AppController
             'types' => LearningWorkspace::TYPES,
             'exerciseTypes' => \App\Lib\ExerciseContent::TYPES,
             'language' => Configure::read('LANGUAGE'),
+            'appName' => $this->studioName(),
             'legacy' => Router::url('/admin/learning-path/manage-paths'),
             'userId' => $this->getAuthUser()->id,
         ]);
+    }
+
+    private function studioName(): string
+    {
+        return trim((string)(Configure::read('App.name') ?: 'Learning')) . ' Studio';
     }
 
     public function records(string $type): Response
@@ -394,6 +401,13 @@ class WorkspaceController extends AppController
                 }
             }
         }
+        foreach ($definition['options'] ?? [] as $field => $options) {
+            if (array_key_exists($field, $data) && !in_array($data[$field], $options, true)) {
+                return $this->json(['message' => 'Choose one of the listed values.', 'errors' => [
+                    $field => ['inList' => 'Choose one of: ' . implode(', ', $options) . '.'],
+                ]], 422);
+            }
+        }
         foreach ($definition['references'] ?? [] as $field => $reference) {
             if (isset($data[$field])) {
                 $this->getTableLocator()->get($reference === 'card-types' ? 'Cardtype' : 'Cardgrouptype')
@@ -405,7 +419,7 @@ class WorkspaceController extends AppController
             $initialCard = $this->getCardTable()->get($this->request->getData('initialCardId'));
         }
         $table = $this->getTableLocator()->get($definition['table']);
-        return $table->getConnection()->transactional(function () use ($table, $type, $id, $data, $initialCard) {
+        return $table->getConnection()->transactional(function () use ($table, $type, $id, $data, $initialCard, $definition) {
             // Lock the row so two clients cannot both pass the same revision check.
             $entity = $id === null ? $table->newEmptyEntity() : $this->lockedRecord($table, $id);
             if (
@@ -416,7 +430,7 @@ class WorkspaceController extends AppController
             ) {
                 return $this->json(['message' => 'This record changed in another workspace. Reload before saving.'], 409);
             }
-            $patch = $id === null ? $data : ['id' => $entity->id] + $data;
+            $patch = $id === null ? $data + ($definition['defaults'] ?? []) : ['id' => $entity->id] + $data;
             $table->patchEntity($entity, $patch, ['fields' => array_keys($patch)]);
             if (!$table->save($entity)) {
                 return $this->json([
@@ -637,7 +651,9 @@ class WorkspaceController extends AppController
             $relations[] = ['type' => $target, 'label' => LearningWorkspace::TYPES[$target]['label'],
                 'count' => $query->count()];
         }
-        return $this->summary($type, $entity) + [
+        $summary = (new WorkspacePresentation($this->getTableLocator()))
+            ->decorate([$this->summary($type, $entity)])[0];
+        return $summary + [
             'fields' => $fields, 'revision' => $this->revision($type, $entity),
             'media' => $media, 'relations' => $relations,
             'created' => $entity->get('created'), 'modified' => $entity->get('modified'),

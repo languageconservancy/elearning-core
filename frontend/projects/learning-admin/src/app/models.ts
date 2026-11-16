@@ -10,6 +10,10 @@ export interface Definition {
     media: Record<string, string>;
     create: boolean;
     references?: Record<string, string>;
+    /** Fixed allowed values, rendered as a dropdown. */
+    options?: Record<string, string[]>;
+    /** Values prefilled on new records. */
+    defaults?: Record<string, FieldValue>;
 }
 export interface Summary {
     id: number;
@@ -135,6 +139,7 @@ export interface Bootstrap {
     token: string;
     types: Record<RecordType, Definition>;
     language: string;
+    appName: string;
     legacy: string;
     userId: number;
     exerciseTypes: Record<string, string>;
@@ -177,6 +182,7 @@ export function fieldLabel(field: string): string {
         label: "Name",
         card_type_id: "Card type",
         card_group_type_id: "Group type",
+        gender: "Gender",
     };
     return labels[field] ?? field.replaceAll("_", " ").replace(/^\w/, (s) => s.toUpperCase());
 }

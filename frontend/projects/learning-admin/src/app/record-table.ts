@@ -281,6 +281,16 @@ import { ActionMenu, MenuItem } from "./structure";
                                     }
                                 </td>
                                 <td>
+                                    @if (openable()) {
+                                        <button
+                                            type="button"
+                                            class="quiet"
+                                            (click)="opened.emit(row)"
+                                            [attr.aria-label]="'Edit ' + row.title"
+                                        >
+                                            Edit
+                                        </button>
+                                    }
                                     @if (editable()) {
                                         <button
                                             type="button"
@@ -339,6 +349,8 @@ export class RecordTable {
     readonly parent = input<Parent>();
     readonly editable = input(true);
     readonly removable = input(false);
+    readonly openable = input(false);
+    readonly opened = output<Summary>();
     readonly selectedId = input<number | null>(null);
     readonly selected = output<Summary>();
     readonly changed = output<void>();

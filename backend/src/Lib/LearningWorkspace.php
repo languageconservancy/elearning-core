@@ -42,11 +42,14 @@ class LearningWorkspace
         ],
         'cards' => [
             'table' => 'Card', 'label' => 'Cards', 'title' => 'lakota',
-            'fields' => ['lakota', 'english', 'alt_lakota', 'alt_english', 'card_type_id'],
+            'fields' => ['lakota', 'english', 'alt_lakota', 'alt_english', 'card_type_id', 'gender'],
             'required' => ['lakota', 'english', 'card_type_id'],
             'references' => ['card_type_id' => 'card-types'],
+            'options' => ['gender' => ['default', 'male', 'female', 'neuter']],
             'media' => ['image_id' => 'image', 'audio' => 'audio', 'video_id' => 'video'],
             'editor' => ['Cards', 'edit'], 'create' => true,
+            // Values used for new records when the request omits them; the database requires gender.
+            'defaults' => ['gender' => 'default'],
         ],
         'groups' => [
             'table' => 'Cardgroup', 'label' => 'Card groups', 'title' => 'name',

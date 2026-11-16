@@ -243,7 +243,8 @@ class UserPointsController extends AppController
 
 
             $Act = $this->getUserActivitiesTable()
-                ->find('list', ['keyField' => 'id', 'valueField' => 'lessonframe_id'])
+                ->find()
+                ->select(['UserActivities.lessonframe_id'])
                 ->where([
                     'user_id' => $data['user_id'],
                     'lesson_id' => $data['lesson_id'],
@@ -251,7 +252,7 @@ class UserPointsController extends AppController
                     'level_id' => $data['level_id'],
                     'user_unit_activity_id' => $unitresponse['lastid']])
                 ->group(['UserActivities.lessonframe_id']);
-            $Frameids = array_values($Act->toArray());
+            $Frameids = $Act->all()->extract('lessonframe_id')->toList();
             $ActCounter = $Act->count();
             if (($Framecounter - 1) == $ActCounter && !in_array($data['lessonframe_id'], $Frameids)) {
                 $UnitAttemptcounter = $unitresponse['attempt'];

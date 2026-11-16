@@ -200,14 +200,11 @@ button.danger {
     font-weight: 600;
 }
 .brand-icon {
-    display: grid;
-    place-items: center;
-    width: 35px;
+    width: 38px;
     height: 38px;
-    border-radius: 10px;
-    background: var(--accent);
-    color: white;
-    font-size: 22px;
+    border-radius: 50%;
+    object-fit: contain;
+    flex: none;
 }
 .global-search {
     max-width: 610px;
@@ -1057,9 +1054,8 @@ studio-drilldown {
         display: none;
     }
     .brand-icon {
-        width: 30px;
+        width: 32px;
         height: 32px;
-        font-size: 18px;
     }
     .browse-column {
         flex-basis: 260px;
@@ -1872,4 +1868,17 @@ fieldset.content-workbench {
 }
 .copy-choice:disabled {
     opacity: 0.5;
+}
+.chooser-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.chooser-toolbar .muted {
+    font-size: 12px;
+}
+.panel-body .chooser-editor .editor {
+    margin: 0 -20px;
 }

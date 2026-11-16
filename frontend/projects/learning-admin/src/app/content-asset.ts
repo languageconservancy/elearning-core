@@ -3,11 +3,11 @@ import { AudioButton } from "./audio-button";
 import { ContextPanel } from "./context-panel";
 import { CardPreview, ContentReferences, FieldValue, MediaFile, Summary } from "./models";
 import { MediaPicker } from "./media-picker";
-import { RecordTable } from "./record-table";
+import { RecordChooser } from "./record-chooser";
 
 @Component({
     selector: "studio-content-asset",
-    imports: [AudioButton, ContextPanel, MediaPicker, RecordTable],
+    imports: [AudioButton, ContextPanel, MediaPicker, RecordChooser],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="content-asset">
@@ -16,6 +16,9 @@ import { RecordTable } from "./record-table";
                 <button type="button" class="quiet" (click)="choosing.set(true)">
                     {{ value() ? "Replace" : "Choose" }}
                 </button>
+                @if (value() && record()) {
+                    <button type="button" class="quiet" (click)="editing.set(true)">Edit</button>
+                }
                 @if (value()) {
                     <button type="button" class="quiet" (click)="changed.emit(null)">Clear</button>
                 }
@@ -47,18 +50,21 @@ import { RecordTable } from "./record-table";
                 <small class="muted">Not selected</small>
             }
         </div>
-        @if (choosing()) {
-            <studio-context-panel [heading]="'Choose ' + label()" (closed)="choosing.set(false)">
-                @if (kind() === "card" || kind() === "group") {
-                    <studio-record-table
-                        [type]="kind() === 'card' ? 'cards' : 'groups'"
-                        [editable]="false"
-                        (selected)="chooseRecord($event)"
-                    />
-                } @else {
+        @if (choosing() || editing()) {
+            @if (record(); as type) {
+                <studio-record-chooser
+                    [type]="type"
+                    [selectedId]="numeric()"
+                    [editId]="editing() ? numeric() : null"
+                    (chosen)="chooseRecord($event)"
+                    (updated)="refresh($event)"
+                    (closed)="choosing.set(false); editing.set(false)"
+                />
+            } @else {
+                <studio-context-panel [heading]="'Choose ' + label()" (closed)="choosing.set(false)">
                     <studio-media-picker [kind]="kind()" (selected)="chooseMedia($event)" />
-                }
-            </studio-context-panel>
+                </studio-context-panel>
+            }
         }
     `,
 })
@@ -69,6 +75,11 @@ export class ContentAsset {
     readonly references = input.required<ContentReferences>();
     readonly changed = output<number | null>();
     readonly choosing = signal(false);
+    readonly editing = signal(false);
+    readonly record = computed<"cards" | "groups" | null>(() =>
+        this.kind() === "card" ? "cards" : this.kind() === "group" ? "groups" : null,
+    );
+    readonly numeric = computed(() => (this.value() ? Number(this.value()) : null));
     readonly localCard = signal<CardPreview | null>(null);
     readonly localSelection = signal<{ id: number; url?: string; title: string } | null>(null);
     readonly selected = computed(() =>
@@ -85,10 +96,17 @@ export class ContentAsset {
         () => this.selected()?.url || this.references().files[Number(this.value())] || "",
     );
     chooseRecord(row: Summary) {
-        this.localCard.set(row.previewCards?.[0] ?? null);
-        this.localSelection.set({ id: row.id, title: row.title });
-        this.changed.emit(row.id);
+        this.refresh(row);
+        if (row.id !== this.numeric()) this.changed.emit(row.id);
         this.choosing.set(false);
+        this.editing.set(false);
+    }
+    /** Keep the preview in step with edits made to the chosen record. */
+    refresh(row: Summary) {
+        if (this.choosing() || row.id === this.numeric()) {
+            this.localCard.set(row.previewCards?.[0] ?? null);
+            this.localSelection.set({ id: row.id, title: row.title });
+        }
     }
     chooseMedia(file: MediaFile) {
         this.localSelection.set({ id: file.id, url: file.url, title: file.name });

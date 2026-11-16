@@ -1203,6 +1203,7 @@ class DownloadController extends AppController
                     'level_id' => $levelId,
                     'user_unit_activity_id' => $userUnitactivityId
                 ]])
+            ->select(['UserActivities.card_id'])
             ->group(['UserActivities.card_id']);
         $count = $activities->count();
         $response['remainingcardcount'] = $limitMCard - $count;
@@ -1232,6 +1233,7 @@ class DownloadController extends AppController
                     'level_id' => $levelId,
                     'user_unit_activity_id' => $userUnitactivityId
                 ]])
+            ->select(['UserActivities.card_id'])
             ->group(['UserActivities.card_id'])->toArray();
 
         $cards = array();

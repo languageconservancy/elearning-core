@@ -33,10 +33,7 @@
     <p role="status" class="success">{{ notice() }}</p>
     } @if (data(); as current) {
     <div class="content-scroll" [hidden]="tab() !== 'Setup'">
-        <p class="step-intro">
-            Setup decides what content this exercise needs. Only combinations the app supports are
-            offered.
-        </p>
+        <studio-help topic="exercise-setup" heading="About this setup" [lines]="setupHelp()" />
         <div class="setup-choice" role="group" aria-labelledby="setup-type">
             <h3 id="setup-type">Exercise type</h3>
             <div class="field-chips">
@@ -176,9 +173,7 @@
     </ul>
     }
     <div class="content-scroll" [hidden]="tab() !== 'Display'">
-        <p class="muted">
-            Choose global display fields. Per-item overrides remain available in each content item.
-        </p>
+        <studio-help topic="exercise-display" heading="About display fields" [lines]="displayHelp" />
         @for (side of ["prompt", "response"]; track side) {
         <h3>{{ side }}</h3>
         <div class="field-chips">
@@ -237,6 +232,7 @@
             }
         </div>
         <div class="content-scroll">
+            <studio-help topic="exercise-content" heading="What to add" [lines]="contentHelp()" />
             @if (option(); as item) {
             <div class="option-toolbar">
                 <label

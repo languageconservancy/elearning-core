@@ -12,6 +12,7 @@ import {
 import { ContentAsset } from "./content-asset";
 import { FormsModule } from "@angular/forms";
 import { ContextPanel } from "./context-panel";
+import { DISPLAY_HELP, EXERCISE_TYPE_HELP, roleHelp, sourceHelp, StudioHelp, vocabularyHelp } from "./help";
 import { ContentOption, ExerciseData, ExerciseRule, FieldValue } from "./models";
 import { errorMessage, WorkspaceApi } from "./workspace-api";
 
@@ -23,7 +24,7 @@ const sources = [
 
 @Component({
     selector: "studio-exercise-editor",
-    imports: [ContentAsset, ContextPanel, FormsModule],
+    imports: [ContentAsset, ContextPanel, FormsModule, StudioHelp],
     templateUrl: "./exercise-editor.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -63,6 +64,28 @@ export class ExerciseEditor {
         () => this.data()?.rules?.[this.kind()]?.[this.source()] ?? null,
     );
     readonly roles = computed(() => this.rule()?.roles ?? []);
+    readonly displayHelp = DISPLAY_HELP;
+    private readonly vocabularyHelp = computed(() => {
+        if (this.kind() !== "vocab-builder") return [];
+        const activity = String(this.field("vbl_activity") ?? "");
+        return [
+            vocabularyHelp(activity, this.data()?.activities[activity], this.field("vbl_mode"), this.field("vbl_variant")),
+        ];
+    });
+    readonly setupHelp = computed(() => [
+        "Setup decides what content this exercise needs. Only combinations the app supports can be chosen; hover a disabled choice to see why.",
+        ...(EXERCISE_TYPE_HELP[this.kind()] ? [EXERCISE_TYPE_HELP[this.kind()]] : []),
+        ...sourceHelp(this.kind(), this.source(), this.rule()),
+        ...this.vocabularyHelp(),
+    ]);
+    readonly contentHelp = computed(() => {
+        const role = this.option() ? roleHelp(this.kind(), this.source(), this.option()!.fields["card_type"]) : "";
+        return [
+            ...(role ? ["Selected item: " + role] : []),
+            ...sourceHelp(this.kind(), this.source(), this.rule()),
+            ...this.vocabularyHelp(),
+        ];
+    });
     readonly counts = computed(() => {
         const counts: Record<string, number> = {};
         for (const option of this.data()?.options ?? []) {

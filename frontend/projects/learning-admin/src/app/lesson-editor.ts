@@ -14,17 +14,19 @@ import { Subscription } from "rxjs";
 import { FormsModule } from "@angular/forms";
 import { ContentAsset } from "./content-asset";
 import { ContextPanel } from "./context-panel";
+import { LESSON_HELP, StudioHelp } from "./help";
 import { ContentBlock, FieldValue, FrameData, FrameSummary, OrderScope, Page } from "./models";
 import { arrowTarget, isConflict } from "./sortable";
 import { errorMessage, WorkspaceApi } from "./workspace-api";
 
 @Component({
     selector: "studio-lesson-editor",
-    imports: [ContentAsset, ContextPanel, FormsModule, CdkDropList, CdkDrag],
+    imports: [ContentAsset, ContextPanel, FormsModule, CdkDropList, CdkDrag, StudioHelp],
     templateUrl: "./lesson-editor.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LessonEditor {
+    readonly lessonHelp = LESSON_HELP;
     readonly id = input.required<number>();
     readonly saved = output<void>();
     readonly dirtyChange = output<boolean>();

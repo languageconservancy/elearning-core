@@ -19,6 +19,7 @@ import { ReferenceSelect } from "./reference-select";
 import { RecordChooser } from "./record-chooser";
 import { ExerciseEditor } from "./exercise-editor";
 import { LessonEditor } from "./lesson-editor";
+import { RECORD_HELP, StudioHelp } from "./help";
 
 @Component({
     selector: "studio-record-editor",
@@ -31,6 +32,7 @@ import { LessonEditor } from "./lesson-editor";
         ExerciseEditor,
         LessonEditor,
         RecordChooser,
+        StudioHelp,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -87,6 +89,14 @@ import { LessonEditor } from "./lesson-editor";
                 [hidden]="tab() !== 'Overview'"
                 class="field-grid"
             >
+                @if (help("Overview").length) {
+                    <studio-help
+                        class="full-width"
+                        [topic]="type() + '-overview'"
+                        [heading]="'About ' + definition().label.toLowerCase()"
+                        [lines]="help('Overview')"
+                    />
+                }
                 @for (field of definition().fields; track field) {
                     <label [class.full-width]="field === 'description'">
                         {{ label(field) }}
@@ -137,6 +147,13 @@ import { LessonEditor } from "./lesson-editor";
                 <button type="submit" class="sr-only" tabindex="-1">Save record</button>
             </form>
             <section [hidden]="tab() !== 'Relationships'">
+                @if (help("Relationships").length) {
+                    <studio-help
+                        [topic]="type() + '-relationships'"
+                        heading="About relationships"
+                        [lines]="help('Relationships')"
+                    />
+                }
                 @if (record(); as current) {
                     <div class="relationship-summary">
                         @for (relation of current.relations; track relation.type) {
@@ -187,6 +204,9 @@ import { LessonEditor } from "./lesson-editor";
                 }
             </section>
             <section [hidden]="tab() !== 'Media'">
+                @if (help("Media").length) {
+                    <studio-help [topic]="type() + '-media'" heading="About media" [lines]="help('Media')" />
+                }
                 <div class="media-grid">
                     @for (entry of media(); track entry.field) {
                         <section class="media-card">
@@ -354,6 +374,9 @@ export class RecordEditor {
             : ["Overview", "Relationships", "Media", "Details"],
     );
     readonly tab = signal("Overview");
+    help(tab: "Overview" | "Relationships" | "Media"): string[] {
+        return RECORD_HELP[this.type()]?.[tab] ?? [];
+    }
     readonly relationType = signal<RecordType | null>(null);
     readonly mediaField = signal<string | null>(null);
     readonly confirmDiscard = signal(false);

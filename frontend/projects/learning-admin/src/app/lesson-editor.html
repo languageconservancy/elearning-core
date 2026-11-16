@@ -31,6 +31,7 @@
         <button type="button" class="primary" (click)="create()">+ New frame</button>
     </div>
     <p class="sr-only" aria-live="polite">{{ announcement() }}</p>
+    <studio-help topic="lesson-content" heading="How lessons work" [lines]="lessonHelp" />
     @if (total() > pageSize()) {
     <div class="frame-pagination">
         <button

@@ -125,9 +125,11 @@ npm run build:admin
 npm run serve:admin
 ```
 
-The production build writes to `core/backend/webroot/learning-admin/`. Deploy the
-bundle with the workspace controller, shared content services, and updated admin
-sidebar. Install backend dependencies with Composer for archive YAML support.
+The production build writes to `core/backend/webroot/learning-admin/`. Backend
+installs with `scripts/deploy.sh -b -c install` build it automatically, copy it
+with the backend files, and check that it is on the server. `npm run
+sync-local-backend` builds it for the local server. Install backend dependencies
+with Composer for archive YAML support.
 Sign in to the existing administrative backend before opening Learning Studio.
 
 Select a path, level, then unit to advance through horizontal columns.

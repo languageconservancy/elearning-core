@@ -12,8 +12,9 @@
 #   5. Deletes old frontend dist directory
 #   6. Deletes old server frontend files
 #   7. Copies frontend files to server
-#   8. Changes ownership and permissions on server
-#   9. Adds version file to server
+#   8. Builds the Learning Studio admin and copies it with the backend (backend installs)
+#   9. Changes ownership and permissions on server
+#  10. Adds version file to server
 
 # Exit on error and pipefail
 set -euo pipefail
@@ -70,7 +71,8 @@ readonly FRONTEND_DIR="${CORE_DIR}/frontend"
 readonly BACKEND_DIR="${CORE_DIR}/backend"
 readonly NG_BINARY="${FRONTEND_DIR}/node_modules/@angular/cli/bin/ng.js"
 readonly FRONTEND_DIST_FILES="*.js *.css dist-resources assets favicon.ico 3rdpartylicenses.txt index.html"
-readonly BACKEND_DIST_FILES=".htaccess .bowerrc src templates bin config/Migrations config/app.php config/app_local.php config/schema config/bootstrap.php config/bootstrap_cli.php config/paths.php config/requirements.php config/routes.php config/allowed_routes.php info plugins composer.json index.php info.php web.config webroot/.htaccess webroot/favicon.ico webroot/index.php webroot/css webroot/font webroot/js webroot/templates" # webroot/img/*.*"
+readonly BACKEND_DIST_FILES=".htaccess .bowerrc src templates bin config/Migrations config/app.php config/app_local.php config/schema config/bootstrap.php config/bootstrap_cli.php config/paths.php config/requirements.php config/routes.php config/allowed_routes.php info plugins composer.json index.php info.php web.config webroot/.htaccess webroot/favicon.ico webroot/index.php webroot/css webroot/font webroot/js webroot/templates webroot/learning-admin" # webroot/img/*.*"
+readonly ADMIN_DIST_DIR="${BACKEND_DIR}/webroot/learning-admin"
 readonly BACKEND_EXTRA_DIST_FILES_TO_REMOVE="vendor composer.lock"
 readonly -a REQUIRED_CMDS=("zip" "awk" "rm" "mkdir" "ssh" "scp")
 readonly TEMP_DIR_NAME="tmpdir"
@@ -268,6 +270,42 @@ build_backend() {
         "${SCRIPT_DIR}/composer-update-local-php.sh" update --no-interaction --no-dev
         set +x # turn off mode that prints all commands to terminal
     fi
+}
+
+build_admin() {
+    print_heading "\nBuilding Learning Studio admin into backend/webroot/learning-admin"
+
+    if ${dryRun} ; then
+        print_dryrun_msg "cd ${FRONTEND_DIR} && npm run build:admin"
+        return
+    fi
+
+    rm -rf "${ADMIN_DIST_DIR}"
+    if ! (cd "${FRONTEND_DIR}" && npm run build:admin); then
+        print_error "⚠️ Error: Learning Studio admin build failed. Exiting..."
+        exit 1
+    fi
+    for file in index.html branding/icon_02.png; do
+        if [ ! -s "${ADMIN_DIST_DIR}/${file}" ]; then
+            print_error "⚠️ Error: admin build is missing ${ADMIN_DIST_DIR}/${file}. Exiting..."
+            exit 1
+        fi
+    done
+}
+
+verify_admin_on_server() {
+    print_heading "\nVerifying Learning Studio admin on server"
+
+    if ${dryRun} ; then
+        print_dryrun_msg "ssh ... test -s ${documentRoot}/backend/webroot/learning-admin/index.html"
+        return
+    fi
+
+    if ! ssh -i ${sshIdentityFile} ${sshUser}@${sshHost} "sudo test -s ${documentRoot}/backend/webroot/learning-admin/index.html && sudo test -s ${documentRoot}/backend/webroot/learning-admin/branding/icon_02.png"; then
+        print_error "⚠️ Error: Learning Studio admin files were not found on the server after copying."
+        exit 1
+    fi
+    echo "Learning Studio admin is installed at ${documentRoot}/backend/webroot/learning-admin"
 }
 
 delete_backend_old_server_files() {
@@ -639,6 +677,12 @@ run_main() {
         cd ${PLATFORM_REPO_DIR} && npm run core build:${buildType}
     fi
 
+    # The admin is served by the backend, and its branding comes from the
+    # platform assets copied by the build above, so build it afterwards.
+    if [[ $runBackend == true && "${commandType}" == "install" ]]; then
+        build_admin
+    fi
+
     # Build the frontend and copy distribution files to public_html
     if [[ $runFrontend == true ]] ; then
         if [ "${commandType}" == "install" ]; then
@@ -657,6 +701,8 @@ run_main() {
             install_backend_composer_packages
             run_backend_migrations
             change_ownership_and_permissions ${documentRoot}
+            # Checked last so a failure never interrupts the vendor reinstall above
+            verify_admin_on_server
         fi
     fi
 
